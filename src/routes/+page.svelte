@@ -308,4 +308,80 @@
             font-size: 0.9rem;
         }
     }
+
+    @media (max-width: 428px) {
+        .container {
+            padding: 0.5rem;
+            height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero {
+            padding: 1rem 0.5rem;
+            margin: 0;
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            margin: 0.3rem 0;
+        }
+
+        .tagline {
+            font-size: 0.9rem;
+            padding: 0.2rem 0.6rem;
+            margin: 0.5rem 0 1rem 0;
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1rem;
+        }
+
+        .skills {
+            gap: 0.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-tag {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .cta {
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0 1rem;
+            max-width: 250px;
+            margin: 1rem auto 0;
+        }
+
+        .btn {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.85rem;
+            width: 100%;
+            text-align: center;
+        }
+    }
+
 </style>
