@@ -62,6 +62,7 @@
     :root {
         --primary-color: #FF1E1E;
         --secondary-color: #1E90FF;
+        --tertiary-color: #3bbf2b;
         --bg-color: #121212;
         --text-color: #ffffff;
     }
@@ -121,14 +122,15 @@
         background: linear-gradient(
                 120deg,
                 var(--primary-color) 0%,
-                var(--secondary-color) 50%,
+                var(--secondary-color) 35%,
+                var(--tertiary-color) 70%,
                 var(--primary-color) 100%
         );
         background-size: 200% auto;
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: shine 20s alternate infinite;
+        animation: shine 10s alternate ease-in-out;
         text-shadow: 0 0 30px rgba(30, 144, 255, 0.1);
         letter-spacing: -0.02em;
     }
@@ -172,15 +174,15 @@
         box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15);
         position: relative;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        animation: glow 4s ease-in-out infinite;
+        animation: blur 3s ease-in;
     }
 
-    .profile-image:hover {
-        transform: scale(1.05) rotate(2deg);
-        border-color: rgba(255, 30, 30, 0.2);
-        box-shadow: 0 12px 40px rgba(30, 144, 255, 0.3);
-        cursor: pointer;
-    }
+    /*.profile-image:hover {*/
+    /*    transform: scale(1.05) rotate(2deg);*/
+    /*    border-color: rgba(255, 30, 30, 0.2);*/
+    /*    box-shadow: 0 12px 40px rgba(30, 144, 255, 0.3);*/
+    /*    cursor: pointer;*/
+    /*}*/
 
     .profile-image::after {
         content: '';
@@ -196,9 +198,9 @@
         transition: opacity 0.3s ease;
     }
 
-    .profile-image:hover::after {
-        opacity: 0.5;
-    }
+    /*.profile-image:hover::after {*/
+    /*    opacity: 0.5;*/
+    /*}*/
 
     .tagline {
         font-size: 1.4rem;
@@ -267,7 +269,7 @@
         font-weight: 500;
         font-size: 1rem;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.5s ease-in-out;
         position: relative;
         overflow: hidden;
         box-shadow: 0 4px 15px rgba(30, 144, 255, 0.2);
@@ -401,6 +403,15 @@
         }
         100% {
             background-position: -200% center;
+        }
+    }
+
+    @keyframes blur {
+        0% {
+           filter: blur(2px);
+        }
+        100% {
+            filter: blur(0);
         }
     }
 </style>
