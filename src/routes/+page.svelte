@@ -12,7 +12,6 @@
 
     let isVisible = false;
 
-    // Initialize Particle.js
     onMount(() => {
         isVisible = true;
         particlesJS.load('particles-js', './particles-config.json');
@@ -44,22 +43,29 @@
 </main>
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+    :root {
+        --primary-color: #FF1E1E;
+        --secondary-color: #1E90FF;
+        --bg-color: #121212;
+        --text-color: #ffffff;
+    }
 
     :global(body) {
         margin: 0;
-        font-family: 'Roboto', sans-serif;
+        font-family: 'JetBrains Mono', monospace;
         background: #121212;
         color: #ffffff;
     }
 
     .container {
-        position: relative;
+        position: fixed;
+        width: 100%;
         height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 2rem;
         overflow: hidden;
     }
 
@@ -83,8 +89,8 @@
         text-align: center;
         z-index: 1;
         position: relative;
-        max-height: 100vh;
-        padding: 1rem;
+        padding: 4rem 1rem;
+        margin-top: 2rem;
     }
 
     .content {
@@ -99,24 +105,85 @@
     }
 
     h1 {
-        font-size: 3.5rem;
-        font-weight: 700;
+        font-size: 4rem;
+        font-weight: 800;
         margin: 0;
-        background: linear-gradient(45deg, #FF1E1E, #1E90FF);
+        line-height: 1.1;
+        background: linear-gradient(
+                120deg,
+                var(--primary-color) 0%,
+                var(--secondary-color) 50%,
+                var(--primary-color) 100%
+        );
+        background-size: 200% auto;
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
+        animation: shine 4s linear infinite;
+        text-shadow: 0 0 30px rgba(30, 144, 255, 0.1);
+        letter-spacing: -0.02em;
     }
 
     h2 {
-        font-size: 1.5rem;
-        color: #1E90FF;
-        margin: 1rem 0;
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0.5rem 0;
+        position: relative;
+        display: inline-block;
+        line-height: 1.2;
+    }
+
+    h2::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--secondary-color);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.3s ease;
+    }
+
+    h2:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
     }
 
     .tagline {
-        font-size: 1.25rem;
-        color: #FF1E1E;
-        margin-bottom: 2rem;
+        font-size: 1.4rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0.75rem 0 1.5rem 0;
+        font-weight: 400;
+        position: relative;
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        background: rgba(30, 144, 255, 0.1);
+        border-radius: 4px;
+        backdrop-filter: blur(4px);
+        line-height: 1.3;
+
+    }
+
+    @keyframes shine {
+        0% { background-position: 200% center; }
+        100% { background-position: -200% center; }
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 2.8rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+        }
     }
     .skills {
         display: flex;
@@ -131,7 +198,7 @@
         padding: 0.5rem 1rem;
         border-radius: 2rem;
         font-size: 0.9rem;
-        color: #ffffff;
+        color: var(white);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
@@ -139,6 +206,7 @@
         display: flex;
         gap: 1rem;
         justify-content: center;
+        margin-top: 2rem;
     }
 
     .btn {
@@ -147,6 +215,7 @@
         text-decoration: none;
         font-weight: 500;
         transition: transform 0.2s;
+        font-size: 1rem;
     }
 
     .btn:hover {
@@ -154,23 +223,89 @@
     }
 
     .primary {
-        background: #FF1E1E;
+        background: var(--primary-color);
         color: white;
     }
 
     .secondary {
         background: rgba(30, 144, 255, 0.1);
-        color: #1E90FF;
+        color: var(--secondary-color);
     }
 
     .profile-image {
         width: 150px;
         height: 150px;
         border-radius: 50%;
-        border: 1px solid #FF1E1E;
+        border: 3px solid rgba(30, 144, 255, 0.2);
         object-fit: cover;
-        margin: 0 auto 1rem;
+        margin: 0 auto 1.5rem;
         display: block;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15);
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: glow 4s ease-in-out infinite;
+    }
+
+    .profile-image:hover {
+        transform: scale(1.05) rotate(2deg);
+        border-color: rgba(255, 30, 30, 0.2);
+        box-shadow: 0 12px 40px rgba(30, 144, 255, 0.3);
+        cursor: none;
+    }
+
+    @keyframes glow {
+        0% { box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15); }
+        50% { box-shadow: 0 8px 32px rgba(255, 30, 30, 0.25); }
+        100% { box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15); }
+    }
+
+    .profile-image::after {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        border-radius: 50%;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .profile-image:hover::after {
+        opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 1rem;
+        }
+
+        .hero {
+            padding: 2rem 1rem;
+            margin-top: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+        }
+
+        .cta {
+            flex-direction: column;
+            gap: 0.75rem;
+            padding: 0 2rem;
+            max-width: 300px;
+            margin: 2rem auto 0;
+        }
+
+        .btn {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
     }
 </style>
