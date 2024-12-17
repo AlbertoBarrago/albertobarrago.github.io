@@ -55,11 +55,17 @@
 
     .container {
         position: relative;
-        min-height: 100vh;
+        height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 2rem;
+        overflow: hidden;
+    }
+
+    :global(html, body) {
+        height: 100%;
+        margin: 0;
         overflow: hidden;
     }
 
@@ -77,6 +83,8 @@
         text-align: center;
         z-index: 1;
         position: relative;
+        max-height: 100vh;
+        padding: 1rem;
     }
 
     .content {
@@ -94,23 +102,22 @@
         font-size: 3.5rem;
         font-weight: 700;
         margin: 0;
-        background: linear-gradient(45deg, #BB86FC, #03DAC6);
+        background: linear-gradient(45deg, #FF1E1E, #1E90FF);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
     h2 {
         font-size: 1.5rem;
-        color: #03DAC6;
+        color: #1E90FF;
         margin: 1rem 0;
     }
 
     .tagline {
         font-size: 1.25rem;
-        color: #b0bec5;
+        color: #FF1E1E;
         margin-bottom: 2rem;
     }
-
     .skills {
         display: flex;
         flex-wrap: wrap;
@@ -120,7 +127,7 @@
     }
 
     .skill-tag {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 0, 0, 0.1);
         padding: 0.5rem 1rem;
         border-radius: 2rem;
         font-size: 0.9rem;
@@ -147,20 +154,20 @@
     }
 
     .primary {
-        background: #BB86FC;
+        background: #FF1E1E;
         color: white;
     }
 
     .secondary {
-        background: rgba(255, 255, 255, 0.1);
-        color: #BB86FC;
+        background: rgba(30, 144, 255, 0.1);
+        color: #1E90FF;
     }
 
     .profile-image {
         width: 150px;
         height: 150px;
         border-radius: 50%;
-        border: 4px solid #BB86FC;
+        border: 1px solid #FF1E1E;
         object-fit: cover;
         margin: 0 auto 1rem;
         display: block;
