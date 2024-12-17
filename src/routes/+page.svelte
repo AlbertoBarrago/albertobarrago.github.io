@@ -1,7 +1,7 @@
 <script>
-    import { onMount } from 'svelte';
+    import {onMount} from 'svelte';
 
-    let name = "Alberto Barrago";
+    let name = "alBz";
     let role = "Senior Developer";
     let skills = [
         "Frontend Development",
@@ -22,7 +22,7 @@
     <div id="particles-js"></div>
     <section class="hero">
         <div class="content" class:visible={isVisible}>
-            <img src="https://github.com/albertobarrago.png" alt="Alberto Barrago" class="profile-image" />
+            <img src="https://github.com/albertobarrago.png" alt="alBz (Alberto Barrago)" class="profile-image"/>
 
             <h1>{name}</h1>
             <h2>{role}</h2>
@@ -35,8 +35,10 @@
             </div>
 
             <div class="cta">
-                <a href="https://github.com/AlbertoBarrago?tab=repositories" target="_blank" class="btn primary">View Projects</a>
-                <a href="mailto:albertobarrago@gmail.com?subject=Let's%20Collaborate&body=Hi%20Alberto%2C%0A%0AI%20would%20like%20to%20discuss%20a%20project%20with%20you.%0A%0ABest%20regards%2C%0AYour%20Name" class="btn secondary">Get in Touch</a>
+                <a href="https://github.com/AlbertoBarrago?tab=repositories" target="_blank" class="btn primary">View
+                    Projects</a>
+                <a href="mailto:albertobarrago@gmail.com?subject=Let's%20Collaborate&body=Hi%20Alberto%2C%0A%0AI%20would%20like%20to%20discuss%20a%20project%20with%20you.%0A%0ABest%20regards%2C%0AYour%20Name"
+                   class="btn secondary">Get in Touch</a>
             </div>
         </div>
     </section>
@@ -52,11 +54,13 @@
         --text-color: #ffffff;
     }
 
-    :global(body) {
+    :global(html, body) {
+        height: 100%;
         margin: 0;
+        overflow: hidden;
         font-family: 'JetBrains Mono', monospace;
-        background: #121212;
-        color: #ffffff;
+        background: var(--bg-color);
+        color: var(--text-color);
     }
 
     .container {
@@ -66,12 +70,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
-    }
-
-    :global(html, body) {
-        height: 100%;
-        margin: 0;
         overflow: hidden;
     }
 
@@ -102,6 +100,46 @@
     .visible {
         opacity: 1;
         transform: translateY(0);
+    }
+
+
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 3px solid rgba(30, 144, 255, 0.2);
+        object-fit: cover;
+        margin: 0 auto 1.5rem;
+        display: block;
+        box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15);
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: glow 4s ease-in-out infinite;
+    }
+
+    .profile-image:hover {
+        transform: scale(1.05) rotate(2deg);
+        border-color: rgba(255, 30, 30, 0.2);
+        box-shadow: 0 12px 40px rgba(30, 144, 255, 0.3);
+        cursor: pointer;
+    }
+
+    .profile-image::after {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        border-radius: 50%;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .profile-image:hover::after {
+        opacity: 0.5;
     }
 
     h1 {
@@ -155,7 +193,7 @@
     .tagline {
         font-size: 1.4rem;
         color: rgba(255, 255, 255, 0.7);
-        margin: 0.75rem 0 1.5rem 0;
+        margin: 0.75rem 0 1.5rem;
         font-weight: 400;
         position: relative;
         display: inline-block;
@@ -164,27 +202,8 @@
         border-radius: 4px;
         backdrop-filter: blur(4px);
         line-height: 1.3;
-
     }
 
-    @keyframes shine {
-        0% { background-position: 200% center; }
-        100% { background-position: -200% center; }
-    }
-
-    @media (max-width: 768px) {
-        h1 {
-            font-size: 2.8rem;
-        }
-
-        h2 {
-            font-size: 1.4rem;
-        }
-
-        .tagline {
-            font-size: 1.1rem;
-        }
-    }
     .skills {
         display: flex;
         flex-wrap: wrap;
@@ -198,7 +217,7 @@
         padding: 0.5rem 1rem;
         border-radius: 2rem;
         font-size: 0.9rem;
-        color: var(white);
+        color: var(--text-color);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
@@ -224,7 +243,7 @@
 
     .primary {
         background: var(--primary-color);
-        color: white;
+        color: var(--text-color);
     }
 
     .secondary {
@@ -232,56 +251,25 @@
         color: var(--secondary-color);
     }
 
-    .profile-image {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        border: 3px solid rgba(30, 144, 255, 0.2);
-        object-fit: cover;
-        margin: 0 auto 1.5rem;
-        display: block;
-        box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15);
-        position: relative;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        animation: glow 4s ease-in-out infinite;
-    }
-
-    .profile-image:hover {
-        transform: scale(1.05) rotate(2deg);
-        border-color: rgba(255, 30, 30, 0.2);
-        box-shadow: 0 12px 40px rgba(30, 144, 255, 0.3);
-        cursor: none;
-    }
-
     @keyframes glow {
-        0% { box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15); }
-        50% { box-shadow: 0 8px 32px rgba(255, 30, 30, 0.25); }
-        100% { box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15); }
+        0%, 100% {
+            box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15);
+        }
+        50% {
+            box-shadow: 0 8px 32px rgba(255, 30, 30, 0.25);
+        }
     }
 
-    .profile-image::after {
-        content: '';
-        position: absolute;
-        top: -5px;
-        left: -5px;
-        right: -5px;
-        bottom: -5px;
-        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-        border-radius: 50%;
-        z-index: -1;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .profile-image:hover::after {
-        opacity: 0.5;
+    @keyframes shine {
+        0% {
+            background-position: 200% center;
+        }
+        100% {
+            background-position: -200% center;
+        }
     }
 
     @media (max-width: 768px) {
-        .container {
-            padding: 1rem;
-        }
-
         .hero {
             padding: 2rem 1rem;
             margin-top: 1rem;
@@ -307,17 +295,15 @@
             padding: 0.6rem 1rem;
             font-size: 0.9rem;
         }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
     }
 
     @media (max-width: 428px) {
-        .container {
-            padding: 0.5rem;
-            height: 100dvh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         .hero {
             padding: 1rem 0.5rem;
             margin: 0;
@@ -349,7 +335,7 @@
         .tagline {
             font-size: 0.9rem;
             padding: 0.2rem 0.6rem;
-            margin: 0.5rem 0 1rem 0;
+            margin: 0.5rem 0 1rem;
         }
 
         .profile-image {
@@ -369,7 +355,6 @@
         }
 
         .cta {
-            flex-direction: column;
             gap: 0.5rem;
             padding: 0 1rem;
             max-width: 250px;
@@ -383,5 +368,4 @@
             text-align: center;
         }
     }
-
 </style>
