@@ -22,7 +22,7 @@
     <div id="particles-js"></div>
     <section class="hero">
         <div class="content" class:visible={isVisible}>
-            <img src="https://github.com/albertobarrago.png" alt="Alberto Barrago" class="profile-image"/>
+            <img src="https://github.com/albertobarrago.png" alt="alBz (Alberto Barrago)" class="profile-image"/>
 
             <h1>{name}</h1>
             <h2>{role}</h2>
