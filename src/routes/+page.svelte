@@ -119,7 +119,7 @@
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: shine 4s linear infinite;
+        animation: shine 20s alternate infinite;
         text-shadow: 0 0 30px rgba(30, 144, 255, 0.1);
         letter-spacing: -0.02em;
     }
