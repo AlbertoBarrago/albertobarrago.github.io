@@ -3,6 +3,7 @@
 
     let name = "alBz";
     let role = "Senior Developer";
+    let cv_filename = "albertobarrago_cv_2024.pdf"
     let skills = [
         "Frontend Development",
         "Backend Architecture",
@@ -11,6 +12,13 @@
     ];
 
     let isVisible = false;
+
+    const downloadCv = () => {
+        const link = document.createElement('a');
+        link.href = cv_filename;
+        link.download = cv_filename;
+        link.dispatchEvent(new MouseEvent('click'));
+    }
 
     onMount(() => {
         isVisible = true;
@@ -33,6 +41,10 @@
                     <span class="skill-tag">{skill}</span>
                 {/each}
             </div>
+
+            <button class="btn cta_download" onclick={downloadCv}>
+                Download CV
+            </button>
 
             <div class="cta">
                 <a href="https://github.com/AlbertoBarrago?tab=repositories" target="_blank" class="btn primary">View
@@ -88,7 +100,6 @@
         z-index: 1;
         position: relative;
         padding: 4rem 1rem;
-        margin-top: 2rem;
     }
 
     .content {
@@ -100,46 +111,6 @@
     .visible {
         opacity: 1;
         transform: translateY(0);
-    }
-
-
-    .profile-image {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        border: 3px solid rgba(30, 144, 255, 0.2);
-        object-fit: cover;
-        margin: 0 auto 1.5rem;
-        display: block;
-        box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15);
-        position: relative;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        animation: glow 4s ease-in-out infinite;
-    }
-
-    .profile-image:hover {
-        transform: scale(1.05) rotate(2deg);
-        border-color: rgba(255, 30, 30, 0.2);
-        box-shadow: 0 12px 40px rgba(30, 144, 255, 0.3);
-        cursor: pointer;
-    }
-
-    .profile-image::after {
-        content: '';
-        position: absolute;
-        top: -5px;
-        left: -5px;
-        right: -5px;
-        bottom: -5px;
-        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-        border-radius: 50%;
-        z-index: -1;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-
-    .profile-image:hover::after {
-        opacity: 0.5;
     }
 
     h1 {
@@ -188,6 +159,45 @@
     h2:hover::after {
         transform: scaleX(1);
         transform-origin: left;
+    }
+
+    .profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 3px solid rgba(30, 144, 255, 0.2);
+        object-fit: cover;
+        margin: 0 auto 1.5rem;
+        display: block;
+        box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15);
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: glow 4s ease-in-out infinite;
+    }
+
+    .profile-image:hover {
+        transform: scale(1.05) rotate(2deg);
+        border-color: rgba(255, 30, 30, 0.2);
+        box-shadow: 0 12px 40px rgba(30, 144, 255, 0.3);
+        cursor: pointer;
+    }
+
+    .profile-image::after {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+        border-radius: 50%;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .profile-image:hover::after {
+        opacity: 0.5;
     }
 
     .tagline {
@@ -251,29 +261,49 @@
         color: var(--secondary-color);
     }
 
-    @keyframes glow {
-        0%, 100% {
-            box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15);
-        }
-        50% {
-            box-shadow: 0 8px 32px rgba(255, 30, 30, 0.25);
-        }
+    .cta_download {
+        color: var(linear-gradient(45deg, var(--primary-color), var(--secondary-color)));
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 500;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(30, 144, 255, 0.2);
+        margin: .7rem 0;
     }
 
-    @keyframes shine {
-        0% {
-            background-position: 200% center;
-        }
-        100% {
-            background-position: -200% center;
-        }
+    .cta_download:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 30, 30, 0.3);
+    }
+
+    .cta_download:active {
+        transform: translateY(1px);
+    }
+
+    .cta_download::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+        );
+        transition: 0.5s;
+    }
+
+    .cta_download:hover::before {
+        left: 100%;
     }
 
     @media (max-width: 768px) {
-        .hero {
-            padding: 2rem 1rem;
-            margin-top: 1rem;
-        }
 
         h1 {
             font-size: 2.5rem;
@@ -291,11 +321,6 @@
             margin: 2rem auto 0;
         }
 
-        .btn {
-            padding: 0.6rem 1rem;
-            font-size: 0.9rem;
-        }
-
         .profile-image {
             width: 150px;
             height: 150px;
@@ -305,11 +330,10 @@
 
     @media (max-width: 428px) {
         .hero {
-            padding: 1rem 0.5rem;
             margin: 0;
             width: 100%;
             position: absolute;
-            top: 50%;
+            top: 45%;
             left: 50%;
             transform: translate(-50%, -50%);
         }
@@ -360,12 +384,23 @@
             max-width: 250px;
             margin: 1rem auto 0;
         }
+    }
 
-        .btn {
-            padding: 0.5rem 0.8rem;
-            font-size: 0.85rem;
-            width: 100%;
-            text-align: center;
+    @keyframes glow {
+        0%, 100% {
+            box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15);
+        }
+        50% {
+            box-shadow: 0 8px 32px rgba(255, 30, 30, 0.25);
+        }
+    }
+
+    @keyframes shine {
+        0% {
+            background-position: 200% center;
+        }
+        100% {
+            background-position: -200% center;
         }
     }
 </style>
