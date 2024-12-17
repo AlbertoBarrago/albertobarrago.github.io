@@ -100,7 +100,6 @@
         z-index: 1;
         position: relative;
         padding: 4rem 1rem;
-        margin-top: 2rem;
     }
 
     .content {
@@ -305,10 +304,6 @@
     }
 
     @media (max-width: 768px) {
-        .hero {
-            padding: 2rem 1rem;
-            margin-top: 1rem;
-        }
 
         h1 {
             font-size: 2.5rem;
@@ -335,11 +330,10 @@
 
     @media (max-width: 428px) {
         .hero {
-            padding: 1rem 0.5rem;
             margin: 0;
             width: 100%;
             position: absolute;
-            top: 50%;
+            top: 45%;
             left: 50%;
             transform: translate(-50%, -50%);
         }
