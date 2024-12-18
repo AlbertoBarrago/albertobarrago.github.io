@@ -6,7 +6,7 @@ Personal card on GitHub pages where it is possible to download my latest résum�
 If you like, you can clone repo and modify as you prefer and gift me a ⭐️
 
 ### Features
-- `Oniko.js`
+- `Oneko.js`(Improved)
 - `Particles.js`
 - Responsive Design
 - Pure `CSS`
