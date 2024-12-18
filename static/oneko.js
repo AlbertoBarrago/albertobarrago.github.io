@@ -169,9 +169,10 @@
             mousePosX = event.clientX;
             mousePosY = event.clientY;
         });
-        let clickCounter = 0;
 
         document.addEventListener("click", () => {
+            let clickCounter = 0;
+
             if (
                 mousePosX > nekoPosX - 16 &&
                 mousePosX < nekoPosX + 1 &&
@@ -179,23 +180,13 @@
                 mousePosY < nekoPosY + 1
             ) {
                 clickCounter++;
-                if (clickCounter >= 7) {
-                    document
-                        .querySelectorAll("p,h1,h2,h3,h4,h5,h6,title")
-                        .forEach((a) => {
-                            a.innerHTML = a.innerHTML
-                                .replaceAll("eva", "ezra")
-                                .replaceAll("Eva", "Ezra");
-                        });
-                    clickCounter = 0;
-                }
             }
         });
 
         window.requestAnimationFrame(onAnimationFrame);
     }
 
-    let lastFrameTimestamp;
+    let lastFrameTimestamp = 0;
 
     function onAnimationFrame(timestamp) {
         // Stops execution if the neko element is removed from DOM
