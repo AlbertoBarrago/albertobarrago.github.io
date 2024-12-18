@@ -9,13 +9,8 @@ declare global {
 		// interface Platform {}
 	}
 
-	/**
-	 * @typedef {Object} ParticlesJS
-	 * @property {(id: string, path: string) => void} load - Loads particles configuration
-	 */
 
-	/** @type {ParticlesJS} */
-	var particlesJS: {
+	const particlesJS: {
 		load: (id: string, path: string) => void;
 	};
 }

@@ -2,7 +2,7 @@
     import {onMount} from 'svelte';
 
     let name = "alBz";
-    let role = "Senior Human Being";
+    let role = "Senior Fullstack Developer";
     let cv_filename = "albertobarrago_cv_2024.pdf"
     let skills = [
         "Frontend Development",
