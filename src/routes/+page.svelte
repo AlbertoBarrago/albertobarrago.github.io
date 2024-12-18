@@ -179,7 +179,7 @@
         box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15);
         position: relative;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        animation: blur 3s ease-in;
+        animation: blur 1s ease-in;
     }
 
     /*.profile-image:hover {*/
