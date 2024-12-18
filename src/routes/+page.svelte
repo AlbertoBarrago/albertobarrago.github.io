@@ -23,6 +23,11 @@
     onMount(() => {
         isVisible = true;
         particlesJS.load('particles-js', './particles-config.json');
+
+        const script = document.createElement('script');
+        script.src = '/oneko.js';
+        script.async = true;
+        document.body.appendChild(script);
     });
 </script>
 
