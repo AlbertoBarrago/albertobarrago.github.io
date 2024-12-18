@@ -2,7 +2,7 @@
     import {onMount} from 'svelte';
 
     let name = "alBz";
-    let role = "Senior Developer";
+    let role = "Senior Fullstack Developer";
     let cv_filename = "albertobarrago_cv_2024.pdf"
     let skills = [
         "Frontend Development",
@@ -23,6 +23,11 @@
     onMount(() => {
         isVisible = true;
         particlesJS.load('particles-js', './particles-config.json');
+
+        const script = document.createElement('script');
+        script.src = '/oneko.js';
+        script.async = true;
+        document.body.appendChild(script);
     });
 </script>
 
@@ -174,7 +179,7 @@
         box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15);
         position: relative;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        animation: blur 3s ease-in;
+        animation: blur 1s ease-in;
     }
 
     /*.profile-image:hover {*/
