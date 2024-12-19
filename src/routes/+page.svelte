@@ -310,6 +310,10 @@
         left: 100%;
     }
 
+    .profile-image, .hero h1, .hero h2, .hero p {
+        user-select: none;
+    }
+
     @media (max-width: 768px) {
 
         h1 {
