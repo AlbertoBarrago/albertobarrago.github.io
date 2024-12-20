@@ -4,6 +4,8 @@
     let name = "alBz";
     let role = "Senior Fullstack Developer";
     let cv_filename = "albertobarrago_cv_2024.pdf"
+    let mailString = "mailto:albertobarrago@gmail.com?subject=Let's%20Collaborate&body=Hi%20Alberto%2C%0A%0AI%20would%20like%20to%20discuss%20a%20project%20with%20you.%0A%0ABest%20regards%2C%0AYour%20Name"
+    let githubRepoString = "https://github.com/AlbertoBarrago?tab=repositories"
     let skills = [
         "Frontend Development",
         "Backend Architecture",
@@ -52,9 +54,9 @@
             </button>
 
             <div class="cta">
-                <a href="https://github.com/AlbertoBarrago?tab=repositories" target="_blank" class="btn primary">View
+                <a href="{githubRepoString}" target="_blank" class="btn primary">View
                     Projects</a>
-                <a href="mailto:albertobarrago@gmail.com?subject=Let's%20Collaborate&body=Hi%20Alberto%2C%0A%0AI%20would%20like%20to%20discuss%20a%20project%20with%20you.%0A%0ABest%20regards%2C%0AYour%20Name"
+                <a href="{mailString}"
                    class="btn secondary">Get in Touch</a>
             </div>
         </div>
@@ -182,13 +184,6 @@
         animation: blur 1s ease-in;
     }
 
-    /*.profile-image:hover {*/
-    /*    transform: scale(1.05) rotate(2deg);*/
-    /*    border-color: rgba(255, 30, 30, 0.2);*/
-    /*    box-shadow: 0 12px 40px rgba(30, 144, 255, 0.3);*/
-    /*    cursor: pointer;*/
-    /*}*/
-
     .profile-image::after {
         content: '';
         position: absolute;
@@ -202,10 +197,6 @@
         opacity: 0;
         transition: opacity 0.3s ease;
     }
-
-    /*.profile-image:hover::after {*/
-    /*    opacity: 0.5;*/
-    /*}*/
 
     .tagline {
         font-size: 1.4rem;
@@ -417,7 +408,7 @@
 
     @keyframes blur {
         0% {
-           filter: blur(2px);
+            filter: blur(2px);
         }
         100% {
             filter: blur(0);
