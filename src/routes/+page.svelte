@@ -6,6 +6,7 @@
     let cv_filename = "albertobarrago_cv_2024.pdf"
     let mailString = "mailto:albertobarrago@gmail.com?subject=Let's%20Collaborate&body=Hi%20Alberto%2C%0A%0AI%20would%20like%20to%20discuss%20a%20project%20with%20you.%0A%0ABest%20regards%2C%0AYour%20Name"
     let githubRepoString = "https://github.com/AlbertoBarrago?tab=repositories"
+    let tagline = "Building digital experiences that matter"
     let skills = [
         "Frontend Development",
         "Backend Architecture",
@@ -41,7 +42,7 @@
 
             <h1>{name}</h1>
             <h2>{role}</h2>
-            <p class="tagline">Building digital experiences that matter</p>
+            <p class="tagline">{tagline}</p>
 
             <div class="skills">
                 {#each skills as skill}
