@@ -13,6 +13,8 @@
         "Team Leadership"
     ];
     let version = "v1.0.0"
+    let email = "albertobarrago@gmail.com";
+
 
     let isVisible = false;
 
@@ -56,9 +58,11 @@
 
             <div class="cta">
                 <a href="{githubRepoString}" target="_blank" class="btn primary">View
-                    Projects</a>
-                <a href="mailto:albertobarrago@gmail.com?subject=Let%27s%20Collaborate&body=Hi%20Alberto%2C%0A%0AI%20would%20like%20to%20discuss%20a%20project%20with%20you.%0A%0ABest%20regards%2C%0AYour%20Name">
-                   class="btn secondary">Get in Touch</a>
+                    Projects
+                </a>
+                <a href="mailto:${email}?subject=Let's%20Collaborate&body=Hi%20Alberto%2C%0A%0AI%20would%20like%20to%20discuss%20a%20project%20with%20you.%0A%0ABest%20regards%2C%0AYour%20Name" class="btn secondary">
+                    Get in Touch
+                </a>
             </div>
         </div>
         <footer>
