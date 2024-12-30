@@ -13,6 +13,7 @@
         "Cloud Solutions",
         "Team Leadership"
     ];
+    let version = "v1.0.0"
 
     let isVisible = false;
 
@@ -61,7 +62,11 @@
                    class="btn secondary">Get in Touch</a>
             </div>
         </div>
+        <footer>
+            <small>{version}</small>
+        </footer>
     </section>
+
 </main>
 
 <style>
@@ -306,6 +311,15 @@
         user-select: none;
     }
 
+    footer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 5rem 0 0;
+        opacity: .3;
+    }
+
     @media (max-width: 768px) {
 
         h1 {
@@ -386,6 +400,10 @@
             padding: 0 1rem;
             max-width: 250px;
             margin: 1rem auto 0;
+        }
+
+        footer {
+            display: none;
         }
     }
 
