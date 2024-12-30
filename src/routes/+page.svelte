@@ -4,7 +4,6 @@
     let name = "alBz";
     let role = "Senior Fullstack Developer";
     let cv_filename = "albertobarrago_cv_2024.pdf"
-    let mailString = "mailto:albertobarrago@gmail.com?subject=Let's%20Collaborate&body=Hi%20Alberto%2C%0A%0AI%20would%20like%20to%20discuss%20a%20project%20with%20you.%0A%0ABest%20regards%2C%0AYour%20Name"
     let githubRepoString = "https://github.com/AlbertoBarrago?tab=repositories"
     let tagline = "Building digital experiences that matter"
     let skills = [
@@ -58,7 +57,7 @@
             <div class="cta">
                 <a href="{githubRepoString}" target="_blank" class="btn primary">View
                     Projects</a>
-                <a href="{mailString}"
+                <a href="mailto:albertobarrago@gmail.com?subject=Let's%20Collaborate&body=Hi%20Alberto%2C%0A%0AI%20would%20like%20to%20discuss%20a%20project%20with%20you.%0A%0ABest%20regards%2C%0AYour%20Name"
                    class="btn secondary">Get in Touch</a>
             </div>
         </div>
