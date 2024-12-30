@@ -6,18 +6,6 @@ class Oneko {
             spriteSize: options.spriteSize || 32,
             updateInterval: options.updateInterval || 100,
             spriteUrl: options.spriteUrl || 'https://raw.githubusercontent.com/adryd325/oneko.js/main/oneko.gif',
-            nekoSites: options.nekoSites || [
-                "adryd.com",
-                "localhost",
-                "c7.pm",
-                "fade.nya.rest",
-                "fleepy.tv",
-                "maia.crimew.gay",
-                "spookyghost.zone",
-                "noelle.df1.dev",
-                "kibty.town",
-                "www.kibty.town",
-            ]
         };
 
         this.state = {
@@ -173,10 +161,6 @@ class Oneko {
     createNekoSiteUrl(target) {
         try {
             const newLocation = new URL(target.href);
-            if (!this.config.nekoSites.includes(newLocation.host) || newLocation.pathname !== '/') {
-                return null;
-            }
-
             newLocation.searchParams.append('catx', Math.floor(this.state.nekoPosX));
             newLocation.searchParams.append('caty', Math.floor(this.state.nekoPosY));
             newLocation.searchParams.append('catdx', Math.floor(this.state.mousePosX));
