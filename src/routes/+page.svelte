@@ -25,6 +25,9 @@
         link.dispatchEvent(new MouseEvent('click'));
     }
 
+    const mailtoLink = `mailto:${email}`;
+
+
     onMount(() => {
         isVisible = true;
         particlesJS.load('particles-js', './particles-config.json');
@@ -60,11 +63,9 @@
                 <a href="{githubRepoString}" target="_blank" class="btn primary">View
                     Projects
                 </a>
-                <a href="mailto:albertobarrago@gmail.com?subject=Let's%20Collaborate&body=Hi%20Alberto%2C%0A%0AI%20would%20like%20to%20discuss%20a%20project%20with%20you.%0A%0ABest%20regards%2C%0AYour%20Name"
-                   class="btn secondary">Get in Touch
-                </a>
+               <a href={mailtoLink} class="btn secondary">Get in Touch</a>
             </div>
-        </div>
+       </div>
         <footer>
             <small>{version}</small>
         </footer>
