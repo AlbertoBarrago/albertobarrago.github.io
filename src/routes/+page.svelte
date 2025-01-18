@@ -12,7 +12,7 @@
         "Cloud Solutions",
         "Team Leadership"
     ];
-    let version = "v1.1.0"
+    let version = "v1.2.0"
     let email = "albertobarrago@gmail.com";
 
 
