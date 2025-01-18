@@ -52,6 +52,7 @@
             <small>{version}</small>
         </footer>
     </section>
+
 </main>
 
 
