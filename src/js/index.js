@@ -1,13 +1,13 @@
 let name = "alBz";
-let role = "Senior Fullstack Developer";
+let role = "Fullstack DevLover";
 let cv_filename = "albertobarrago_cv_2024.pdf"
 let githubRepoString = "https://github.com/AlbertoBarrago?tab=repositories"
 let tagline = "Building digital experiences that matter"
 let skills = [
+    "Team Leadership",
+    "Cloud Solutions",
     "Frontend Development",
     "Backend Architecture",
-    "Cloud Solutions",
-    "Team Leadership"
 ];
 let version = "v1.2.0"
 let email = "albertobarrago@gmail.com";
