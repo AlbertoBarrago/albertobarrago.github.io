@@ -1,6 +1,6 @@
 let name = "alBz";
 let role = "Fullstack DevLover";
-let cv_filename = "albertobarrago_cv_2024.pdf"
+let cv_filename = "cv_2025_eng_albz.pdf"
 let githubRepoString = "https://github.com/AlbertoBarrago?tab=repositories"
 let tagline = "Building digital experiences that matter"
 let skills = [
@@ -9,7 +9,7 @@ let skills = [
     "Frontend Development",
     "Backend Architecture",
 ];
-let version = "v1.2.0"
+let version = "v1.3.0"
 let email = "albertobarrago@gmail.com";
 let isVisible = true;
 
