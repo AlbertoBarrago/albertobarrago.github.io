@@ -15,7 +15,6 @@ let isVisible = true;
 
 const mailtoLink = `mailto:${email}`;
 
-
 const downloadCv = () => {
     const link = document.createElement('a');
     link.href = cv_filename;
