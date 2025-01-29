@@ -55,7 +55,6 @@
 
 </main>
 
-
 <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
     @import "../styles/main.css";
