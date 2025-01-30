@@ -18,6 +18,8 @@
         script.src = '/oneko.js';
         script.async = true;
         document.body.appendChild(script);
+        console.log('%c🚀 Portfolio loaded!', 'background: #FF1E1E; color: white; padding: 8px; border-radius: 4px; font-weight: bold;');
+        console.log('%c👋 Welcome to my interactive space', 'color: #1E90FF; font-size: 14px; font-weight: bold;');
     });
 </script>
 
