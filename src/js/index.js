@@ -1,7 +1,9 @@
+import pkg from '../../package.json'
+
 let name = "alBz";
 let role = "Fullstack DevLover";
 let cv_filename = "cv_2025_eng_albz.pdf"
-let githubRepoString = "https://github.com/AlbertoBarrago?tab=repositories"
+let githubRepoString = "https://github.com/AlbertoBarrago?tab=repositories&catx=736&caty=799&catdx=1208&catdy=890&type=public"
 let tagline = "Building digital experiences that matter"
 let skills = [
     "Team Leadership",
@@ -9,7 +11,7 @@ let skills = [
     "Frontend Development",
     "Backend Architecture",
 ];
-let version = "v1.3.0"
+let version = pkg.version;
 let email = "albertobarrago@gmail.com";
 let isVisible = true;
 
