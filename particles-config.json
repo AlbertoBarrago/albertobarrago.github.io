@@ -11,13 +11,20 @@
       "value": ["#FF1E1E", "#1E90FF", "#FFD700", "#32CD32", "#9932CC"]
     },
     "shape": {
-      "type": ["circle", "triangle", "polygon"],
+      "type": ["circle", "triangle", "polygon", "character"],
       "stroke": {
         "width": 1,
         "color": "#ffffff"
       },
       "polygon": {
         "nb_sides": 6
+      },
+      "character": {
+        "value": "albz",
+        "font": "Verdana",
+        "style": "",
+        "weight": "bold",
+        "fill": true
       }
     },
     "opacity": {
