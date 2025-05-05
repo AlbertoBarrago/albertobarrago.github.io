@@ -497,7 +497,7 @@ export default class GsapImpl {
                         gsap.set([profileImage, ...contentElements, content], {
                             clearProps: "all"
                         });
-                    
+
                         // Specifically reset download button position properly
                         gsap.set(downloadBtn, {
                             x: 0,
