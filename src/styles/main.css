@@ -136,12 +136,27 @@ h2:hover::after {
 }
 
 .skill-tag {
-    background: rgba(255, 0, 0, 0.1);
+    background: rgb(206, 44, 43);
     padding: 0.5rem 1rem;
     border-radius: 2rem;
     font-size: 0.9rem;
     color: var(--text-color);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    perspective: 600px;
+    margin: 0.3rem;
+    user-select: none;
+    will-change: transform, opacity, background-color;
+    position: relative;
+    display: inline-block;
+}
+
+
+.skill-tag.flipping {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
 }
 
 .cta {
@@ -218,6 +233,10 @@ h2:hover::after {
 
 .profile-image, .hero h1, .hero h2, .hero p {
     user-select: none;
+}
+
+.profile-image:hover {
+    cursor: crosshair;
 }
 
 footer {
