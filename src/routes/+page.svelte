@@ -1,5 +1,6 @@
 <script>
     import {onMount} from 'svelte';
+    import GsapImpl from "../js/gsap_impl.js";
     import {
         isVisible,
         version,
@@ -12,14 +13,31 @@
         downloadCv,
     } from '../js/index.js'
 
+    // Custom impl of Gsap animation and timelines
+    const gsap = new GsapImpl();
+
+    // improve upload of oneko.js
+    let onekoLoaded = false;
+
     onMount(() => {
         particlesJS.load('particles-js', './particles-config.json');
-        const script = document.createElement('script');
-        script.src = '/oneko.js';
-        script.async = true;
-        document.body.appendChild(script);
+
+        if (!onekoLoaded && !document.querySelector('script[src="/oneko.js"]')) {
+            const script = document.createElement('script');
+            script.src = '/oneko.js';
+            script.async = true;
+            document.body.appendChild(script);
+            onekoLoaded = true;
+            console.log('🐱 Oneko script loaded');
+        }
+
         console.log('%c🚀 Portfolio loaded!', 'background: #FF1E1E; color: white; padding: 8px; border-radius: 4px; font-weight: bold;');
         console.log('%c👋 Welcome to my interactive space', 'color: #1E90FF; font-size: 14px; font-weight: bold;');
+
+        // Create and play the animation sequence
+        gsap.animatePortfolioEntrance();
+        // Magic tricky effects on the profile image
+        gsap.handleProfileClick();
     });
 </script>
 
