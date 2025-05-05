@@ -143,7 +143,6 @@ h2:hover::after {
     color: var(--text-color);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
-    cursor: pointer;
     transform-style: preserve-3d;
     perspective: 600px;
     margin: 0.3rem;
@@ -240,13 +239,19 @@ h2:hover::after {
 }
 
 footer {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    right: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 5rem 0 0;
+    text-align: center;
     opacity: .3;
+    z-index: 1;
 }
+
 
 @media (max-width: 768px) {
 
