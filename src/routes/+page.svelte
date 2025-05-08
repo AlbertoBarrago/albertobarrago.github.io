@@ -68,11 +68,11 @@
                 <a href={mailtoLink} class="btn secondary">Get in Touch</a>
             </div>
         </div>
-        <footer>
-            <small>{version}</small>
-        </footer>
-    </section>
 
+    </section>
+    <footer>
+        <small>{version}</small>
+    </footer>
 </main>
 
 <style>

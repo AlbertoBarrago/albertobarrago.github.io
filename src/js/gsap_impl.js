@@ -4,7 +4,15 @@ import {Physics2DPlugin} from "gsap/Physics2DPlugin";
 
 gsap.registerPlugin(Flip, Physics2DPlugin);
 
-const WAIT_BEFORE_NEXT_TICK = 1000
+const WAIT_BEFORE_NEXT_TICK = 1000;
+/**
+ * @description <string> actualRandomNumber
+ * @default -1
+ * @goal This var is used to improve the randomness of the animation.
+ We use it to store the last random number generated.
+ If the random number is the same as the last one, we generate a new one in the size of element size.
+ **/
+let actualRandomNumber = -1;
 
 /**
  * @class GsapImpl
@@ -283,10 +291,8 @@ export default class GsapImpl {
      * @param {HTMLElement} tag - The skill tag element
      */
     bounceEffect(tag) {
-        // Create a timeline for our physics animation
         const tl = gsap.timeline();
 
-        // Initial "throw" upward
         tl.to(tag, {
             y: -40,
             duration: 0.3,
@@ -295,10 +301,10 @@ export default class GsapImpl {
 
         // Apply physics for the bounce
         tl.to(tag, {
-            duration: 1.2,
+            duration: 0.7,
             physics2D: {
                 velocity: 0,
-                angle: 90, // straight down
+                angle: 90,
                 gravity: 800,
                 friction: 0.3,
                 bounce: 0.6
@@ -307,9 +313,8 @@ export default class GsapImpl {
             onUpdate: function () {
                 const currentY = gsap.getProperty(tag, "y");
 
-                // Apply scaling based on height - squash when hitting "ground"
                 if (currentY > -5) {
-                    const squashFactor = Math.min(1.2, 1 + Math.abs(currentY) / 100);
+                    const squashFactor = Math.min(1.2, 1 + Math.abs(Number(currentY)) / 100);
                     gsap.set(tag, {
                         scaleX: squashFactor,
                         scaleY: 1 / squashFactor
@@ -441,20 +446,16 @@ export default class GsapImpl {
     handleProfileClick() {
         const profileImgElement = document.querySelector('.profile-image');
 
-        // Check if already has a listener
         if (profileImgElement.getAttribute('data-has-click-listener') === 'true') {
             return;
         }
 
-        // Mark as having a listener
         profileImgElement.setAttribute('data-has-click-listener', 'true');
 
         profileImgElement.addEventListener('click', () => {
-            // Prevent multiple clicks
             if (profileImgElement.getAttribute('data-animating') === 'true') return;
             profileImgElement.setAttribute('data-animating', 'true');
 
-            // Get elements using the existing gather method
             const elements = this.gatherAnimationElements();
             const {
                 content,
@@ -468,7 +469,6 @@ export default class GsapImpl {
                 footer
             } = elements;
 
-            // All elements except profile image
             const contentElements = [
                 nameHeading,
                 roleHeading,
@@ -479,7 +479,6 @@ export default class GsapImpl {
                 footer
             ];
 
-            // Store the original positions of elements before animation
             const downloadBtnRect = downloadBtn.getBoundingClientRect();
             const originalPositions = {
                 downloadBtn: {
@@ -488,17 +487,13 @@ export default class GsapImpl {
                 }
             };
 
-            // Master timeline
             const masterTl = gsap.timeline({
                 onComplete: () => {
-                    // After completion, wait a bit, then restart entrance animation
                     setTimeout(() => {
-                        // Reset all GSAP properties - explicit reset for download button
                         gsap.set([profileImage, ...contentElements, content], {
                             clearProps: "all"
                         });
 
-                        // Specifically reset download button position properly
                         gsap.set(downloadBtn, {
                             x: 0,
                             y: 0,
@@ -508,24 +503,20 @@ export default class GsapImpl {
                             clearProps: "transform,opacity,scale"
                         });
 
-                        // Apply initial states that the entrance animation expects
                         gsap.set([profileImage, nameHeading, roleHeading, taglineElement,
                             skillsContainer, downloadBtn, ctaContainer, footer], {
                             autoAlpha: 0,
                             y: 20
                         });
 
-                        // Run the entrance animation again
                         this.animatePortfolioEntrance();
                         profileImgElement.setAttribute('data-animating', 'false');
-                    }, 1000);
+                    }, WAIT_BEFORE_NEXT_TICK);
                 }
             });
 
-            // Create a drop and fade effect for all elements
             const dropTl = gsap.timeline();
 
-            // Special handling for the download button
             dropTl.to(downloadBtn, {
                 x: originalPositions.x,
                 y: originalPositions.y,
@@ -535,7 +526,6 @@ export default class GsapImpl {
                 delay: Math.random() * 0.2
             }, "<0.1");
 
-            // Apply random positioning with controlled offsets for other content elements
             [nameHeading, roleHeading, taglineElement, skillsContainer, ctaContainer, footer].forEach(el => {
                 dropTl.to(el, {
                     x: gsap.utils.random(-50, 50),
@@ -548,7 +538,6 @@ export default class GsapImpl {
                 }, "<0.1");
             });
 
-            // Fade out profile image with rotation
             dropTl.to(profileImage, {
                 opacity: 0,
                 scale: 1,
@@ -557,12 +546,36 @@ export default class GsapImpl {
                 ease: "back.in(1.5)"
             }, "<0.3");
 
-            // Add drop effect to master timeline
             masterTl.add(dropTl);
 
-            // Play the master timeline
             masterTl.play();
         });
+    }
+
+    /**
+     * @function animateBodyWithFlash
+     * @description Animate the body with a flashing effect, and reassign value default if the number is different
+     * @param max - The maximum value to generate
+     * @param previousValue - The previous value to compare
+     * @returns string
+     */
+    getDifferentRandomValue(max, previousValue) {
+        let randomValue;
+        do {
+            randomValue = this.getRandomValue(max);
+        } while (randomValue === previousValue);
+
+        return randomValue;
+    }
+
+    /**
+     * Generates a random integer value between 0 (inclusive) and the specified maximum value (exclusive).
+     *
+     * @param {number} max - The maximum value (exclusive) for the random number range.
+     * @return {number} A random integer between 0 (inclusive) and the given max (exclusive).
+     */
+    getRandomValue(max) {
+        return Math.floor(Math.random() * max)
     }
 
     /**
@@ -572,30 +585,28 @@ export default class GsapImpl {
     setupSkillTagInteractions() {
         const skillTags = document.querySelectorAll('.skill-tag');
 
-        // First, remove any existing event listeners to prevent duplicates
         skillTags.forEach((tag) => {
             const newTag = tag.cloneNode(true);
             tag.parentNode.replaceChild(newTag, tag);
         });
 
-        // Now add fresh event listeners
         document.querySelectorAll('.skill-tag').forEach((tag) => {
 
             // Add the click event listener
             tag.addEventListener('click', (e) => {
                 // Prevent event bubbling
                 e.stopPropagation();
+                let effectSize = 3;
 
-                // Check if animation is already running
                 if (tag.getAttribute('data-animating') === 'true') return;
 
-                // Mark as animating
                 tag.setAttribute('data-animating', 'true');
 
-                // Randomly choose one of several effects
-                const effectNumber = Math.floor(Math.random() * 3);
+                //custom solution for not iterating the same number twice
+                const effectNumber = this.getDifferentRandomValue(effectSize, actualRandomNumber);
 
-                // Run the chosen effect
+                actualRandomNumber = effectNumber;
+
                 switch (effectNumber) {
                     case 0:
                         this.flipEffect(tag);
