@@ -1,11 +1,20 @@
-.container {
-    position: fixed;
+html, body {
     width: 100%;
-    height: 100vh;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    flex-direction: column;
 }
 
 #particles-js {
@@ -276,6 +285,23 @@ footer {
         height: 150px;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
+
+    .hero {
+        margin: 0;
+        width: 100%;
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        padding: 2rem 1rem;
+    }
+
+    .content {
+        width: 100%;
+        padding: 1rem;
+        overflow: hidden;
+    }
+
 }
 
 @media (max-width: 428px) {
@@ -337,6 +363,27 @@ footer {
 
     footer {
         display: none;
+    }
+
+    .hero {
+        position: relative;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    html, body {
+        overflow-y: auto;
+    }
+
+}
+
+@media (max-height: 870px) {
+    html, body {
+        overflow: auto;
+    }
+
+    .container {
+        overflow: auto;
     }
 }
 
