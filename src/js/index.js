@@ -22,6 +22,12 @@ const downloadCv = () => {
     link.href = cv_filename;
     link.download = cv_filename;
     link.dispatchEvent(new MouseEvent('click'));
+
+    window.rybbit.event("download_button_event", {
+        timestamp: Date.now(),
+        event_type: "click",
+        event_label: "download_cv_button",
+    });
 }
 
 
