@@ -1,6 +1,4 @@
-# alBz 🌌 webzcard 
-
-<iframe src="https://albertobarrago.github.io/" width="600" height="400"></iframe>
+# 💻 WebCard
 
 Personal card on GitHub pages where it is possible to download my latest résumé.
 
