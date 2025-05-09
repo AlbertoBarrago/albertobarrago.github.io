@@ -1,6 +1,5 @@
-# alBz 🌌 webzcard 
+# 💻 WebCard
 
-![img.png](img.png)
 Personal card on GitHub pages where it is possible to download my latest résumé.
 
 If you like, you can clone repo and modify as you prefer and gift me a ⭐️
