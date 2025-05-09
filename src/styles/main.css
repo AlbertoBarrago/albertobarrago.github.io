@@ -4,6 +4,12 @@ html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+    max-width: 100%;
 }
 
 .container {
@@ -304,14 +310,87 @@ footer {
 
 }
 
+@media (max-height: 870px) {
+    html, body {
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .container {
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+}
+
+@media (max-height: 700px) {
+    .container {
+        padding: 0.5rem;
+    }
+
+    .hero {
+        padding: 1rem;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .profile-image {
+        width: 70px;
+        height: 70px;
+    }
+
+    h1 {
+        font-size: 1.4rem;
+        line-height: 1.1;
+        margin: 0.5rem 0;
+    }
+
+    h2 {
+        font-size: 0.9rem;
+    }
+
+    .tagline {
+        display: none;
+    }
+
+    .skills {
+        gap: 0.25rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .skill-tag {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.7rem;
+    }
+
+    .cta {
+        gap: 0.3rem;
+        margin: 1rem auto;
+        max-width: 220px;
+    }
+
+    .btn {
+        padding: 0.3rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    footer {
+        display: none;
+    }
+}
+
 @media (max-width: 428px) {
+    .container {
+        padding: 1rem;
+    }
+
     .hero {
         margin: 0;
         width: 100%;
-        position: absolute;
-        top: 45%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        padding: 1rem 0.5rem;
     }
 
     .content {
@@ -320,28 +399,44 @@ footer {
         align-items: center;
         justify-content: center;
         width: 100%;
+        padding: 0;
+    }
+
+    .profile-image {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 1rem;
+        object-fit: cover;
     }
 
     h1 {
-        font-size: 2rem;
+        font-size: 1.8rem;
         line-height: 1.2;
     }
 
     h2 {
-        font-size: 1.1rem;
+        font-size: 1rem;
         margin: 0.3rem 0;
     }
 
     .tagline {
-        font-size: 0.9rem;
-        padding: 0.2rem 0.6rem;
-        margin: 0.5rem 0 1rem;
+        font-size: 0.85rem;
+        padding: 0.1rem 0.6rem;
+        margin: 0.5rem 0;
+        background: none;
     }
 
-    .profile-image {
-        width: 120px;
-        height: 120px;
-        margin: 0 auto 1rem;
+    .cta {
+        gap: 0.5rem;
+        padding: 0 0.5rem;
+        max-width: 220px;
+        margin: 1rem auto 0;
+        flex-direction: column;
+    }
+
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
     }
 
     .skills {
@@ -350,40 +445,83 @@ footer {
     }
 
     .skill-tag {
-        padding: 0.3rem 0.8rem;
-        font-size: 0.8rem;
-    }
-
-    .cta {
-        gap: 0.5rem;
-        padding: 0 1rem;
-        max-width: 250px;
-        margin: 1rem auto 0;
+        padding: 0.2rem 0.5rem;
+        font-size: 0.75rem;
     }
 
     footer {
         display: none;
     }
-
-    .hero {
-        position: relative;
-        width: 100%;
-        margin: 0 auto;
-    }
-
-    html, body {
-        overflow-y: auto;
-    }
-
 }
 
-@media (max-height: 870px) {
+@media (max-width: 375px) {
     html, body {
-        overflow: auto;
+        margin: 0;
+        padding: 0;
+        overflow-y: auto;
+        width: 100%;
+        height: 100%;
     }
 
     .container {
-        overflow: auto;
+        padding: 1rem 0.5rem;
+    }
+
+    .hero {
+        margin: 0 auto;
+        padding: 1rem 0.5rem;
+        width: 100%;
+        text-align: center;
+    }
+
+    .profile-image {
+        width: 85px;
+        height: 85px;
+        object-fit: cover;
+        margin: 0 auto 0.5rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+        line-height: 1.2;
+        margin: 0.5rem 0;
+    }
+
+    h2 {
+        font-size: 1rem;
+        margin: 0.4rem 0;
+    }
+
+    .tagline {
+        font-size: 0.8rem;
+        padding: 0.2rem 0.4rem;
+        margin: 0.5rem 0;
+    }
+
+    .skills {
+        gap: 0.3rem;
+        margin-bottom: 1rem;
+    }
+
+    .skill-tag {
+        padding: 0.3rem 0.7rem;
+        font-size: 0.75rem;
+    }
+
+    .cta {
+        flex-direction: column;
+        gap: 0.4rem;
+        max-width: 200px;
+        margin: 1rem auto 0;
+    }
+
+    .btn {
+        padding: 0.5rem 1.2rem; /* Smaller buttons */
+        font-size: 0.85rem;
+    }
+
+    footer {
+        display: none;
     }
 }
 
