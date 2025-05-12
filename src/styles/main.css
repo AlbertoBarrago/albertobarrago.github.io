@@ -317,7 +317,7 @@ footer {
     }
 
     .container {
-        overflow-y: auto;
+        overflow-y: hidden;
         overflow-x: hidden;
     }
 }
