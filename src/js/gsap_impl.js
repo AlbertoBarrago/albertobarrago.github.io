@@ -450,6 +450,7 @@ export default class GsapImpl {
      */
     handleProfileClick() {
         const profileImgElement = document.querySelector('.profile-image');
+        const clickSound = new Audio('fatality.mp3');
 
         if (profileImgElement.getAttribute('data-has-click-listener') === 'true') {
             return;
@@ -461,8 +462,6 @@ export default class GsapImpl {
             const dropTl = gsap.timeline();
             const profileImgElement = document.querySelector('.profile-image');
             const body = document.querySelector('body');
-
-            const clickSound = new Audio('fatality.mp3');
 
             clickSound.play()
                 .then(r => console.log("Success played sound"))
