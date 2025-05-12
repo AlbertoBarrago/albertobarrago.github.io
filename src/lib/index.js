@@ -116,20 +116,20 @@ export default class GsapImpl {
             })
             .to(nameHeading, {
                 autoAlpha: 1,
-                y: 0,
-                duration: 0.5,
-                ease: "back.out(1.2)"
+                y: 1,
+                duration: 1,
+                ease: "back.out(1.2)",
             })
             .to(roleHeading, {
                 autoAlpha: 1,
                 y: 0,
-                duration: 0.5,
+                duration: 0.4,
                 ease: "power1.out"
             }, "-=0.3")
             .to(taglineElement, {
                 autoAlpha: 1,
                 y: 0,
-                duration: 0.5,
+                duration: 0.4,
                 ease: "power1.out"
             }, "-=0.2")
             .to(skillsContainer, {
@@ -139,17 +139,15 @@ export default class GsapImpl {
                 ease: "power1.out"
             }, "-=0.1");
 
-        // Add each skill tag animation individually for more control
         skillTags.forEach((tag, index) => {
             mainTimeline.to(tag, {
                 autoAlpha: 1,
                 scale: 1,
                 y: 0,
-                duration: 0.4,
+                duration: 0.3,
                 ease: "back.out(1.7)",
-                delay: 0.1, // Small delay before starting
+                delay: 0.1,
                 onStart: function () {
-                    // Highlight effect
                     gsap.to(tag, {
                         backgroundColor: "rgba(255, 30, 30, 0.3)",
                         duration: 0.3,
@@ -157,21 +155,20 @@ export default class GsapImpl {
                         repeat: 1
                     });
                 }
-            }, index > 0 ? "-=0.2" : "+=0.1"); // Overlap slightly but ensure sequential appearance
+            }, index > 0 ? "-=0.2" : "+=0.1");
         });
 
-        // Continue with the rest of the animations
         mainTimeline
             .to(downloadBtn, {
                 autoAlpha: 1,
                 y: 0,
                 duration: 0.5,
                 ease: "elastic.out(1, 0.5)"
-            }, "-=0.2")
+            }, "-=0.4")
             .to(ctaContainer, {
                 autoAlpha: 1,
                 y: 0,
-                duration: 0.5,
+                duration: 0.4,
                 ease: "back.out(1.2)"
             }, "-=0.3")
             .to(footer, {
@@ -528,6 +525,23 @@ export default class GsapImpl {
      */
     getRandomValue(max) {
         return Math.floor(Math.random() * max)
+    }
+
+    heartBeating(){
+        const heart = document.querySelector('.heartbeat-background');
+        const heartBeat = gsap.timeline();
+        heartBeat.to(heart, {
+            scale: 1.5,
+            duration: 0.5,
+            yoyo: true,
+            repeat: 3,
+            ease: "power1.in",
+            onComplete: () => {
+                gsap.to(heart, {
+                    scale: 1,
+                })
+            }
+        })
     }
 
     /**
