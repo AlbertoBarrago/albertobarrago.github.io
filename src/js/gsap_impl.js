@@ -36,8 +36,8 @@ export default class GsapImpl {
 
         // Initial state
         gsap.set(document.body, {
-            opacity: 0,
-            background: '#d21d1d',
+            opacity: 1,
+            background: '#3bbf2b',
         });
 
         // Flash effect and fade in
@@ -45,14 +45,19 @@ export default class GsapImpl {
             opacity: 1,
             duration: 0.3,
             background: '#e50d3f',
+            ease: 'power2.inOut',
             delay: 0.1,
         })
             .to(document.body, {
-                duration: 0.8,
+                duration: 0.3,
                 ease: 'power2.inOut',
-                background: '#121212',
-            });
-
+                background: '#2663e7',
+            })
+            .to(document.body, {
+                duration: 0.3,
+                ease: 'power2.inOut',
+                background: '#010201',
+            })
         return bodyTl;
     }
 
@@ -453,102 +458,50 @@ export default class GsapImpl {
         profileImgElement.setAttribute('data-has-click-listener', 'true');
 
         profileImgElement.addEventListener('click', () => {
-            if (profileImgElement.getAttribute('data-animating') === 'true') return;
-            profileImgElement.setAttribute('data-animating', 'true');
-
-            const elements = this.gatherAnimationElements();
-            const {
-                content,
-                profileImage,
-                nameHeading,
-                roleHeading,
-                taglineElement,
-                skillsContainer,
-                downloadBtn,
-                ctaContainer,
-                footer
-            } = elements;
-
-            const contentElements = [
-                nameHeading,
-                roleHeading,
-                taglineElement,
-                skillsContainer,
-                downloadBtn,
-                ctaContainer,
-                footer
-            ];
-
-            const downloadBtnRect = downloadBtn.getBoundingClientRect();
-            const originalPositions = {
-                downloadBtn: {
-                    top: downloadBtnRect.top,
-                    left: downloadBtnRect.left
-                }
-            };
-
-            const masterTl = gsap.timeline({
-                onComplete: () => {
-                    setTimeout(() => {
-                        gsap.set([profileImage, ...contentElements, content], {
-                            clearProps: "all"
-                        });
-
-                        gsap.set(downloadBtn, {
-                            x: 0,
-                            y: 0,
-                            rotation: 0,
-                            opacity: 1,
-                            scale: 1,
-                            clearProps: "transform,opacity,scale"
-                        });
-
-                        gsap.set([profileImage, nameHeading, roleHeading, taglineElement,
-                            skillsContainer, downloadBtn, ctaContainer, footer], {
-                            autoAlpha: 0,
-                            y: 20
-                        });
-
-                        this.animatePortfolioEntrance();
-                        profileImgElement.setAttribute('data-animating', 'false');
-                    }, WAIT_BEFORE_NEXT_TICK);
-                }
-            });
-
             const dropTl = gsap.timeline();
+            const profileImgElement = document.querySelector('.profile-image');
+            const body = document.querySelector('body');
 
-            dropTl.to(downloadBtn, {
-                x: originalPositions.x,
-                y: originalPositions.y,
+            const clickSound = new Audio('fatality.mp3');
+
+            clickSound.play()
+                .then(r => console.log("Success played sound"))
+                .catch(e => console.log("Error playing sound: ", e));
+
+            dropTl.set(body, {
+                opacity: 1,
+                background: '#e50d3f',
+            })
+
+            dropTl.set(profileImgElement, {
                 opacity: 0,
-                duration: 0.7,
-                ease: "back.out(1.2)",
-                delay: Math.random() * 0.2
-            }, "<0.1");
+                scale: 0.8,
+                rotation: 0,
+                duration: 0.3,
+                ease: "back.out(1.5)"
+            })
 
-            [nameHeading, roleHeading, taglineElement, skillsContainer, ctaContainer, footer].forEach(el => {
-                dropTl.to(el, {
-                    x: gsap.utils.random(-50, 50),
-                    y: gsap.utils.random(20, 100),
-                    rotation: gsap.utils.random(-15, 15),
-                    opacity: 0,
-                    duration: 0.7,
-                    ease: "back.out(1.2)",
-                    delay: Math.random() * 0.2
-                }, "<0.1");
-            });
-
-            dropTl.to(profileImage, {
-                opacity: 0,
+            dropTl.to(profileImgElement, {
+                opacity: 1,
                 scale: 1,
                 rotation: 360,
                 duration: 0.6,
                 ease: "back.in(1.5)"
             }, "<0.3");
 
-            masterTl.add(dropTl);
+            dropTl.to(body, {
+                opacity: 1,
+                background: '#010201',
+                duration: 0.3,
+                ease: "power2.inOut"
+            })
 
-            masterTl.play();
+            window.rybbit.event("fatality_click_event", {
+                timestamp: Date.now(),
+                event_type: "click",
+                event_label: "Profile image click",
+            });
+
         });
     }
 
