@@ -527,23 +527,6 @@ export default class GsapImpl {
         return Math.floor(Math.random() * max)
     }
 
-    heartBeating(){
-        const heart = document.querySelector('.heartbeat-background');
-        const heartBeat = gsap.timeline();
-        heartBeat.to(heart, {
-            scale: 1.5,
-            duration: 0.5,
-            yoyo: true,
-            repeat: 3,
-            ease: "power1.in",
-            onComplete: () => {
-                gsap.to(heart, {
-                    scale: 1,
-                })
-            }
-        })
-    }
-
     /**
      * @function setupSkillTagInteractions
      * @description Adds interactive effects to skill tags on click

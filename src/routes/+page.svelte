@@ -36,8 +36,6 @@
 
         // Create and play the animation sequence
         gsap.animatePortfolioEntrance();
-        // Heartbeat animation on the background
-        gsap.heartBeating();
         // Magic tricky effects on the profile image
         gsap.handleProfileClick();
     });
