@@ -162,7 +162,7 @@ export default class GsapImpl {
             .to(downloadBtn, {
                 autoAlpha: 1,
                 y: 0,
-                duration: 0.5,
+                duration: 0.4,
                 ease: "elastic.out(1, 0.5)"
             }, "-=0.4")
             .to(ctaContainer, {
@@ -175,7 +175,7 @@ export default class GsapImpl {
                 autoAlpha: 1,
                 duration: 0.4,
                 ease: "power1.inOut"
-            }, "-=0.1");
+            }, "-=0.2");
 
         return mainTimeline;
     }
@@ -222,7 +222,6 @@ export default class GsapImpl {
 
         // Setup interactive effects for skill tags
         timeline.eventCallback("onComplete", () => {
-            // Add a small delay to ensure DOM is ready
             setTimeout(() => {
                 this.setupSkillTagInteractions();
             }, 100);
