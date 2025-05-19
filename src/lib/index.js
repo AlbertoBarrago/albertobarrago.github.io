@@ -460,7 +460,6 @@ export default class GsapImpl {
             const body = document.querySelector('body');
 
             clickSound.play()
-                .then(r => console.log("Success played sound"))
                 .catch(e => console.log("Error playing sound: ", e));
 
             dropTl.set(body, {
