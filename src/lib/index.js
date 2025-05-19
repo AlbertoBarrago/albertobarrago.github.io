@@ -491,10 +491,9 @@ export default class GsapImpl {
                 ease: "power2.inOut"
             })
 
-            window.rybbit.event("fatality_click_event", {
-                timestamp: Date.now(),
-                event_type: "click",
-                event_label: "Profile image click",
+            window.gtag('event', "fatality_click_event", {
+                event_category: "engagement",
+                event_label: "Profile Fatality Clicked"
             });
 
         });

@@ -23,11 +23,10 @@ const downloadCv = () => {
     link.download = cv_filename;
     link.dispatchEvent(new MouseEvent('click'));
 
-    window.rybbit.event("download_button_event", {
-        timestamp: Date.now(),
-        event_type: "click",
-        event_label: "download_cv_button",
-    });
+  window.gtag("event", "download_button_event", {
+      event_category: "engagement",
+      event_label: "Download CV Button"
+  });
 }
 
 
