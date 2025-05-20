@@ -23,9 +23,10 @@ const downloadCv = () => {
     link.download = cv_filename;
     link.dispatchEvent(new MouseEvent('click'));
 
-  window.gtag("event", "download_button_event", {
+  gtag("event", "download_cv", {
       event_category: "engagement",
-      event_label: "Download CV Button"
+      event_label: "Download CV Button",
+      value: 1
   });
 }
 
