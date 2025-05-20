@@ -434,7 +434,7 @@ export default class GsapImpl {
 
     /**
      * @function handleProfileClick
-     * @description On click all contents in page explode and disappear randomly
+     * @description On click all contents in page explode and disappear randomly and send gTag event
      *
      * @returns {void}
      */
@@ -490,9 +490,10 @@ export default class GsapImpl {
                 ease: "power2.inOut"
             })
 
-            window.gtag('event', "fatality_click_event", {
+            gtag('event', "fatality_event", {
                 event_category: "engagement",
-                event_label: "Profile Fatality Clicked"
+                event_label: "Profile Fatality Clicked",
+                value: 1
             });
 
         });
