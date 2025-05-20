@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://albertobarrago.com/sitemap.xml
+Sitemap: https://albertobarrago.github.io/sitemap.xml
