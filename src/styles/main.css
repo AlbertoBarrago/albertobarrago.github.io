@@ -255,6 +255,18 @@ h2:hover::after {
     cursor: crosshair;
 }
 
+.dev-to {
+    margin-bottom: 20px;
+}
+
+.dev-to-link a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+
+
 footer {
     position: absolute;
     bottom: 50px;
