@@ -178,6 +178,7 @@ h2:hover::after {
     gap: 1rem;
     justify-content: center;
     margin-top: 2rem;
+    opacity: 0;
 }
 
 .btn {
@@ -214,6 +215,7 @@ h2:hover::after {
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(30, 144, 255, 0.2);
     margin: .7rem 0;
+    opacity: 0;
 }
 
 .cta_download:hover {

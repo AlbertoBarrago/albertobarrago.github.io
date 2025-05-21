@@ -82,74 +82,48 @@ export default class GsapImpl {
             footer
         } = elements;
 
-        // Create the main timeline
         const mainTimeline = gsap.timeline();
-
-        // Add body animation first
         mainTimeline.add(this.animateBodyWithFlash());
 
-        // Set initial states for main elements
-        gsap.set(
-            [profileImage, nameHeading, roleHeading, taglineElement, skillsContainer,
-                downloadBtn, ctaContainer, footer],
-            {
-                autoAlpha: 0,
-                y: 20
-            }
-        );
+        const setInitialStates = (targets, {autoAlpha = 0, y = 20, scale = 1} = {}) => {
+            gsap.set(targets, {autoAlpha, y, scale});
+        };
 
-        // Set initial states specifically for skill tags
-        gsap.set(skillTags, {
-            autoAlpha: 0,
-            scale: 0.8,
-            y: 15
-        });
+        setInitialStates([
+            profileImage, nameHeading, roleHeading, taglineElement, skillsContainer,
+            downloadBtn, ctaContainer, footer
+        ]);
+        setInitialStates(skillTags, {scale: 0.8, y: 15});
 
-        // Build the animation sequence
-        mainTimeline
-            .to(content, {autoAlpha: 1, duration: 0.5})
-            .to(profileImage, {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.6,
-                ease: "power2.out"
-            })
-            .to(nameHeading, {
-                autoAlpha: 1,
-                y: 1,
-                duration: 1,
-                ease: "back.out(1.2)",
-            })
-            .to(roleHeading, {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.4,
-                ease: "power1.out"
-            }, "-=0.3")
-            .to(taglineElement, {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.4,
-                ease: "power1.out"
-            }, "-=0.2")
-            .to(skillsContainer, {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.4,
-                ease: "power1.out"
-            }, "-=0.1");
+        const animateElement = (target, {
+            duration = 0.4,
+            ease = "power1.out",
+            y = 0,
+            delay = 0,
+            stagger = 0,
+            scale = 1
+        } = {}, position = "-=0.1") => {
+            mainTimeline.to(target, {autoAlpha: 1, y, duration, ease, delay, scale}, position);
+        };
+
+
+        animateElement(content, {duration: 0.5, y: 0});
+        animateElement(profileImage, {duration: 0.6, ease: "power2.out"});
+        animateElement(nameHeading, {duration: 1, y: 1, ease: "back.out(1.2)"}, "-=0.3");
+        animateElement(roleHeading);
+        animateElement(taglineElement);
+        animateElement(skillsContainer);
 
         skillTags.forEach((tag, index) => {
-            mainTimeline.to(tag, {
-                autoAlpha: 1,
-                scale: 1,
-                y: 0,
+            animateElement(tag, {
                 duration: 0.3,
                 ease: "back.out(1.7)",
                 delay: 0.1,
-                onStart: function () {
+                scale: 1,
+                y: 0,
+                stagger: 0.1,
+                onStart: () => {
                     gsap.to(tag, {
-                        backgroundColor: "rgba(255, 30, 30, 0.3)",
                         duration: 0.3,
                         yoyo: true,
                         repeat: 1
@@ -158,27 +132,13 @@ export default class GsapImpl {
             }, index > 0 ? "-=0.2" : "+=0.1");
         });
 
-        mainTimeline
-            .to(downloadBtn, {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.4,
-                ease: "elastic.out(1, 0.5)"
-            }, "-=0.4")
-            .to(ctaContainer, {
-                autoAlpha: 1,
-                y: 0,
-                duration: 0.4,
-                ease: "back.out(1.2)"
-            }, "-=0.3")
-            .to(footer, {
-                autoAlpha: 1,
-                duration: 0.4,
-                ease: "power1.inOut"
-            }, "-=0.2");
+        animateElement(downloadBtn, {duration: 0.4, ease: "back.out(1.2)"}, "-=0.4");
+        animateElement(ctaContainer, {duration: 0.4, ease: "back.out(1.2)"}, "-=0.4");
+        animateElement(footer, {duration: 0.4, ease: "power1.inOut"}, "-=0.5");
 
         return mainTimeline;
     }
+
 
     /**
      * @function gatherAnimationElements
