@@ -10,6 +10,8 @@
         role,
         githubRepoString,
         mailtoLink,
+        devToLink,
+        rssFeedLink,
         downloadCv,
     } from '../js/index.js'
 
@@ -51,6 +53,12 @@
             <h1>{name}</h1>
             <h2>{role}</h2>
             <p class="tagline">{tagline}</p>
+
+            <div class="dev-to">
+                 <span class="dev-to-link">
+                    <a href="{devToLink}" target="_blank">📒 Read My Articles</a>
+                </span>
+            </div>
 
             <div class="skills">
                 {#each skills as skill}

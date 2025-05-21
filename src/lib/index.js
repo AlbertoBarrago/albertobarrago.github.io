@@ -79,6 +79,7 @@ export default class GsapImpl {
             skillTags,
             downloadBtn,
             ctaContainer,
+            devToContainer,
             footer
         } = elements;
 
@@ -90,7 +91,7 @@ export default class GsapImpl {
         };
 
         setInitialStates([
-            profileImage, nameHeading, roleHeading, taglineElement, skillsContainer,
+            profileImage, nameHeading, roleHeading, taglineElement, skillsContainer, devToContainer,
             downloadBtn, ctaContainer, footer
         ]);
         setInitialStates(skillTags, {scale: 0.8, y: 15});
@@ -113,6 +114,8 @@ export default class GsapImpl {
         animateElement(roleHeading);
         animateElement(taglineElement);
         animateElement(skillsContainer);
+        animateElement(devToContainer, { duration: 0.5, ease: "power2.out" }, "-=0.3");
+
 
         skillTags.forEach((tag, index) => {
             animateElement(tag, {
@@ -156,6 +159,7 @@ export default class GsapImpl {
             skillTags: document.querySelectorAll('.skill-tag'),
             downloadBtn: document.querySelector('.cta_download'),
             ctaContainer: document.querySelector('.cta'),
+            devToContainer: document.querySelector('.dev-to'),
             footer: document.querySelector('footer')
         };
     }
