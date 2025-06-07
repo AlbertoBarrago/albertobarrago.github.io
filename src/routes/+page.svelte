@@ -11,7 +11,6 @@
         githubRepoString,
         mailtoLink,
         devToLink,
-        rssFeedLink,
         downloadCv,
     } from '../js/index.js'
 
