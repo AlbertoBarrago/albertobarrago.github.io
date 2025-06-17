@@ -158,7 +158,7 @@ h2:hover::after {
     position: relative;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     animation: blur 1s ease-in,
-    animateProfileFilter 7s ease-in-out infinite alternate;
+    animateProfileFilter 26s ease-in-out infinite alternate;
 }
 
 .profile-image:hover {
