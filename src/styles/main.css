@@ -1,3 +1,22 @@
+:root {
+    --gradient-color-1: #950952; /* Deep Pink/Magenta */
+    --gradient-color-2: #5e0035; /* Dark Magenta/Purple */
+    --gradient-color-3: #020202; /* Near Black */
+    --gradient-color-4: #023618; /* Very Dark Green */
+    --gradient-color-5: #005C69; /* Dark Cyan/Teal */
+
+    --primary-color: var(--gradient-color-1); /* #950952 */
+    --secondary-color: var(--gradient-color-5); /* #005C69 */
+    --tertiary-color: var(--gradient-color-2); /* #5e0035 */
+
+    --text-color: rgba(255, 255, 255, 0.9);
+    --text-color-muted: rgba(255, 255, 255, 0.7);
+    --text-color-darker: rgba(255, 255, 255, 0.5);
+
+    --dark-accent-color: var(--gradient-color-4); /* #023618 */
+    --deep-background-color: var(--gradient-color-3); /* #020202 */
+}
+
 html, body {
     width: 100%;
     height: 100%;
@@ -21,6 +40,21 @@ html, body {
     justify-content: center;
     overflow: hidden;
     flex-direction: column;
+    background: linear-gradient(120deg, var(--gradient-color-1), var(--gradient-color-2), var(--gradient-color-3), var(--gradient-color-4), var(--gradient-color-5));
+    background-size: 400% 400%;
+    animation: gradientBG 25s ease infinite;
+}
+
+@keyframes gradientBG {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
 }
 
 #particles-js {
@@ -100,18 +134,36 @@ h2:hover::after {
     transform-origin: left;
 }
 
+@keyframes animateProfileFilter {
+    0% {
+        filter: saturate(0.1) contrast(1.1) sepia(0.35) hue-rotate(-275deg);
+    }
+    50% {
+        filter: saturate(1) contrast(1.2) sepia(0.45) hue-rotate(285deg);
+    }
+    100% {
+        filter: saturate(2) contrast(1.3) sepia(0.35) hue-rotate(-275deg);
+    }
+}
+
 .profile-image {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    border: 3px solid rgba(30, 144, 255, 0.2);
+    border: 3px solid rgba(var(--secondary-color), 0.2);
     object-fit: cover;
     margin: 0 auto 1.5rem;
     display: block;
-    box-shadow: 0 8px 32px rgba(30, 144, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(var(--secondary-color), 0.15);
     position: relative;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    animation: blur 1s ease-in;
+    animation: blur 1s ease-in,
+    animateProfileFilter 7s ease-in-out infinite alternate;
+}
+
+.profile-image:hover {
+    cursor: crosshair;
+    filter: saturate(1.5) contrast(1.15) brightness(1) sepia(0.2) hue-rotate(300deg) drop-shadow(0 0 12px var(--primary-color));
 }
 
 .profile-image::after {
@@ -121,7 +173,7 @@ h2:hover::after {
     left: -5px;
     right: -5px;
     bottom: -5px;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(65rad, var(--primary-color), var(--secondary-color));
     border-radius: 50%;
     z-index: -1;
     opacity: 0;
@@ -136,7 +188,7 @@ h2:hover::after {
     position: relative;
     display: inline-block;
     padding: 0.3rem 0.8rem;
-    background: rgba(30, 144, 255, 0.1);
+    background: rgba(var(--gradient-color-3), 0.3);
     border-radius: 4px;
     backdrop-filter: blur(4px);
     line-height: 1.3;
@@ -151,7 +203,7 @@ h2:hover::after {
 }
 
 .skill-tag {
-    background: rgb(206, 44, 43);
+    background: rgb(var(--tertiary-color));
     padding: 0.5rem 1rem;
     border-radius: 2rem;
     font-size: 0.9rem;
@@ -195,17 +247,18 @@ h2:hover::after {
 }
 
 .primary {
-    background: var(--primary-color);
+    background: var(--deep-background-color);
     color: var(--text-color);
 }
 
 .secondary {
-    background: rgba(30, 144, 255, 0.1);
+    background-color: var(--deep-background-color);
+    border: 1px solid var(--secondary-color);
     color: var(--secondary-color);
 }
 
+
 .cta_download {
-    color: var(linear-gradient(45deg, var(--primary-color), var(--secondary-color)));
     font-family: 'JetBrains Mono', monospace;
     font-weight: 500;
     font-size: 1rem;
@@ -213,14 +266,22 @@ h2:hover::after {
     transition: all 0.5s ease-in-out;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(30, 144, 255, 0.2);
     margin: .7rem 0;
     opacity: 0;
+    padding: 0.8rem 1.5rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 15px rgba(var(--primary-color), 0.2);
 }
 
 .cta_download:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 30, 30, 0.3);
+    box-shadow: 0 6px 20px rgba(var(--secondary-color), 0.3);
 }
 
 .cta_download:active {
@@ -264,7 +325,6 @@ h2:hover::after {
     text-decoration: none;
     margin-right: 20px;
 }
-
 
 
 footer {

@@ -1,7 +1,7 @@
 {
 	"name": "albz-webzcards",
 	"private": true,
-	"version": "3.2.0",
+	"version": "3.2.1",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
@@ -9,7 +9,7 @@
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
-		"deploy": "npm run build && touch build/.nojekyll && gh-pages -d build -t true",
+		"deploy": "npm run build && touch build/.nojekyll && gh-pages -d build",
 		"version:patch": "npm version patch && git push && git push --tags",
 		"version:minor": "npm version minor && git push && git push --tags",
 		"version:major": "npm version major && git push && git push --tags"

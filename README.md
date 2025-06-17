@@ -1,5 +1,7 @@
 # 💻 WebCard
 
+[![pages-build-deployment](https://github.com/AlbertoBarrago/albertobarrago.github.io/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/AlbertoBarrago/albertobarrago.github.io/actions/workflows/pages/pages-build-deployment)
+
 Personal card on GitHub pages where it is possible to download my latest résumé.
 
 If you like, you can clone repo and modify as you prefer and gift me a ⭐️

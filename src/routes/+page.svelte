@@ -22,7 +22,7 @@
 
     onMount(() => {
 
-        particlesJS.load('particles-js', './particles-config.json');
+        // particlesJS.load('particles-js', './particles-config.json');
 
         if (!onekoLoaded && !document.querySelector('script[src="/oneko.js"]')) {
             const script = document.createElement('script');
