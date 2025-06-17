@@ -1,0 +1,11 @@
+review:
+  enabled: true
+  model: gpt-4
+  exclude:
+    - "*.md"
+    - "static/**"
+summary:
+  enabled: true
+labels:
+  approve: "Auto-Approved"
+  changes_requested: "AI Review Changes"
