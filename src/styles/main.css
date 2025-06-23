@@ -326,6 +326,9 @@ h2:hover::after {
     margin-right: 20px;
 }
 
+.cursor-pointer:hover {
+    cursor: pointer;
+}
 
 footer {
     position: absolute;
