@@ -41,6 +41,13 @@
         console.log('%c🚀 Portfolio loaded!', 'background: #FF1E1E; color: white; padding: 8px; border-radius: 4px; font-weight: bold;');
         console.log('%c👋 Welcome to my interactive space', 'color: #1E90FF; font-size: 14px; font-weight: bold;');
     });
+
+
+    function handleClick(event, link) {
+        event.preventDefault();
+        if (!link) return;
+        window.open(link, '_blank');
+    }
 </script>
 
 <main class="container">
@@ -55,7 +62,9 @@
 
             <div class="dev-to">
                  <span class="dev-to-link">
-                    <a href="{devToLink}" target="_blank">📒 Read My Articles</a>
+                    <a href="{null}" class="cursor-pointer"
+                       onclick={(event) => handleClick(event, devToLink)}
+                    >📒 Read My Articles</a>
                 </span>
             </div>
 
@@ -70,7 +79,8 @@
             </button>
 
             <div class="cta">
-                <a href="{githubRepoString}" target="_blank" class="btn primary">View
+                <a href={null} onclick={(event) => handleClick(event, githubRepoString)}
+                   class="btn primary cursor-pointer">View
                     Projects
                 </a>
                 <a href={mailtoLink} class="btn secondary">Get in Touch</a>
