@@ -1,6 +1,8 @@
 # 💻 WebCard
 
 [![pages-build-deployment](https://github.com/AlbertoBarrago/albertobarrago.github.io/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/AlbertoBarrago/albertobarrago.github.io/actions/workflows/pages/pages-build-deployment)
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/AlbertoBarrago/albertobarrago.github.io)
+
 
 Personal card on GitHub pages where it is possible to download my latest résumé.
 
