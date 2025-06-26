@@ -74,7 +74,7 @@
                 {/each}
             </div>
 
-            <button class="btn cta_download" onclick={downloadCv}>
+            <button class="btn cta_download" aria-label="Download Curriculum Vitae" onclick={downloadCv}>
                 Download CV
             </button>
 
