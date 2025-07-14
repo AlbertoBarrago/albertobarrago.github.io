@@ -16,7 +16,7 @@ let email = "albertobarrago@gmail.com";
 let isVisible = true;
 let devToLink = "https://dev.to/albz"
 
-const mailtoLink = `mailto:${email}`;
+const mailtoLink = `mailto:${email} `;
 
 const downloadCv = () => {
     const link = document.createElement('a');
