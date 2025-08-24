@@ -213,7 +213,7 @@
     width: 100vw;
     height: 100vh;
     z-index: -1;
-    background-color: #0d1117; /* A dark background color */
+    background-color: #0d1117;
     opacity: 0.2;
   }
 
