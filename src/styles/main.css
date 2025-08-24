@@ -40,30 +40,6 @@ html, body {
     justify-content: center;
     overflow: hidden;
     flex-direction: column;
-    background: linear-gradient(120deg, var(--gradient-color-1), var(--gradient-color-2), var(--gradient-color-3), var(--gradient-color-4), var(--gradient-color-5));
-    background-size: 400% 400%;
-    animation: gradientBG 25s ease infinite;
-}
-
-@keyframes gradientBG {
-    0% {
-        background-position: 0 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0 50%;
-    }
-}
-
-#particles-js {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
 }
 
 .hero {
@@ -134,51 +110,19 @@ h2:hover::after {
     transform-origin: left;
 }
 
-@keyframes animateProfileFilter {
-    0% {
-        filter: saturate(1.1) contrast(1.05) sepia(0.25) hue-rotate(285deg);
-    }
-    50% {
-        filter: saturate(1.4) contrast(1.1) sepia(0.35) hue-rotate(300deg);
-    }
-    100% {
-        filter: saturate(1.1) contrast(1.05) sepia(0.25) hue-rotate(285deg);
-    }
-}
-
 .profile-image {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    border: 3px solid rgba(var(--secondary-color), 0.2);
     object-fit: cover;
     margin: 0 auto 1.5rem;
     display: block;
-    box-shadow: 0 8px 32px rgba(var(--secondary-color), 0.15);
     position: relative;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    animation: blur 1s ease-in,
-    animateProfileFilter 26s ease-in-out infinite alternate;
+    filter: grayscale(100%);
 }
 
-.profile-image:hover {
-    cursor: crosshair;
-    filter: saturate(1.5) contrast(1.15) brightness(1) sepia(0.2) hue-rotate(300deg) drop-shadow(0 0 12px var(--primary-color));
-}
 
-.profile-image::after {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    background: linear-gradient(65rad, var(--primary-color), var(--secondary-color));
-    border-radius: 50%;
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
 
 .tagline {
     font-size: 1.4rem;
