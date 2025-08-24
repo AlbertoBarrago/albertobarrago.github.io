@@ -13,6 +13,7 @@
         devToLink,
         downloadCv,
     } from '../js/index.js'
+    import PongBackground from "$lib/PongBackground.svelte";
 
     // Custom impl of Gsap animation and timelines
     const gsap = new GsapImpl();
@@ -21,8 +22,6 @@
     let onekoLoaded = false;
 
     onMount(() => {
-
-        // particlesJS.load('particles-js', './particles-config.json');
 
         if (!onekoLoaded && !document.querySelector('script[src="/oneko.js"]')) {
             const script = document.createElement('script');
@@ -51,7 +50,7 @@
 </script>
 
 <main class="container">
-    <div id="particles-js"></div>
+    <PongBackground />
     <section class="hero">
         <div class="content" class:visible={isVisible}>
             <img src="https://github.com/albertobarrago.png" alt="alBz (Alberto Barrago)" class="profile-image"/>
@@ -110,7 +109,6 @@
         margin: 0;
         overflow: hidden;
         font-family: 'JetBrains Mono', monospace;
-        background: var(--bg-color);
         color: var(--text-color);
     }
 </style>
