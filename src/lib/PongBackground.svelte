@@ -12,7 +12,6 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // --- Game State ---
     const paddleSpeed = 2;
     const ballSpeed = 2;
     
@@ -55,7 +54,6 @@
         ArrowDown: false
     };
 
-    // --- Drawing Functions ---
     function drawBall() {
       ctx.beginPath();
       ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
@@ -89,7 +87,6 @@
         ctx.fillText(rightScore.toString(), 3 * canvas.width / 4, 50);
     }
 
-    // --- Game Logic ---
     function update() {
       // Move ball
       ball.x += ball.dx;
@@ -114,7 +111,7 @@
         ball.dx *= -1;
       }
       
-      // Reset ball if it goes past a paddle
+      // Reset the ball if it goes past a paddle
       if (ball.x + ball.radius < 0) {
           rightScore++;
           resetBall();
@@ -154,7 +151,6 @@
         ball.dy = (Math.random() > 0.5 ? 1 : -1) * ballSpeed;
     }
 
-    // --- Game Loop ---
     function gameLoop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawCenterLine();
@@ -165,7 +161,6 @@
       animationFrameId = requestAnimationFrame(gameLoop);
     }
 
-    // --- Event Listeners ---
     function handleResize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
