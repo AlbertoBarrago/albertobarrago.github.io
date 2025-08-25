@@ -572,3 +572,26 @@ footer {
         filter: blur(0);
     }
 }
+@media (max-height: 428px) and (orientation: landscape) {
+    .profile-image {
+        width: 45px;
+        height: 45px;
+        margin: 0 auto 0.5rem;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1rem;
+    }
+
+    .skills {
+        margin-bottom: 1rem;
+    }
+
+    .cta {
+        margin-top: 1rem;
+    }
+}

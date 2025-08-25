@@ -194,7 +194,7 @@
     opacity: 0.2;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px), (orientation: landscape) {
     .pong-background {
       display: none;
     }
