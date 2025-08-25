@@ -1,6 +1,6 @@
 <script>
     import {onMount} from 'svelte';
-    import GsapImpl from "$lib";
+    import GsapImpl from "$lib/gSapAnimation.js";
     import {
         isVisible,
         version,
