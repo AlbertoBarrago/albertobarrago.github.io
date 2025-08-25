@@ -1,5 +1,5 @@
 <script>
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
 
   /** @type {HTMLCanvasElement} */
   let canvas;
@@ -14,7 +14,7 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const paddleSpeed = 2;
+    let paddleSpeed = 1.5;
     const ballSpeed = 2;
 
     let ball = {
@@ -115,9 +115,9 @@
       }
 
       let leftPaddleCenter = leftPaddle.y + leftPaddle.height / 2;
-      if (leftPaddleCenter < ball.y) {
+      if (leftPaddleCenter < ball.y - 30) {
         leftPaddle.y += paddleSpeed;
-      } else {
+      } else if (leftPaddleCenter > ball.y + 30) {
         leftPaddle.y -= paddleSpeed;
       }
 
