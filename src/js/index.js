@@ -1,10 +1,10 @@
-import pkg from '../../package.json'
+import pkg from "../../package.json";
 
 let name = "alBz";
-let role = "Software Engineer";
-let cv_filename = "albertobarrago_cv.pdf"
-let githubRepoString = "https://github.com/AlbertoBarrago?tab=repositories&catx=736&caty=799&catdx=1208&catdy=890&type=public"
-let tagline = "Building digital experiences that matter"
+let role = "IT Lover";
+let cv_filename = "albertobarrago_cv.pdf";
+let githubRepoString = "https://github.com/AlbertoBarrago?tab=repositories&catx=736&caty=799&catdx=1208&catdy=890&type=public";
+let tagline = "Building digital experiences that matter";
 let skills = [
     "Cloud Solutions",
     "Full-Stack Development",
@@ -14,34 +14,36 @@ let skills = [
 let version = pkg.version;
 let email = "albertobarrago@gmail.com";
 let isVisible = true;
-let devToLink = "https://dev.to/albz"
+let devToLink = "https://dev.to/albz";
+let albBlogLink = "https://alblog.gigalixirapp.com/articles";
 
 const mailtoLink = `mailto:${email}`;
 
 const downloadCv = () => {
-    const link = document.createElement('a');
-    link.href = cv_filename;
-    link.download = cv_filename;
-    link.dispatchEvent(new MouseEvent('click'));
+  const link = document.createElement("a");
+  link.href = cv_filename;
+  link.download = cv_filename;
+  link.dispatchEvent(new MouseEvent("click"));
 
   gtag("event", "download_cv", {
-      event_category: "engagement",
-      event_label: "Download CV Button",
-      value: 1
+    event_category: "engagement",
+    event_label: "Download CV Button",
+    value: 1
   });
-}
+};
 
 
 export {
-    version,
-    email,
-    isVisible,
-    name,
-    role,
-    githubRepoString,
-    tagline,
-    skills,
-    mailtoLink,
-    devToLink,
-    downloadCv,
-}
+  version,
+  email,
+  isVisible,
+  name,
+  role,
+  githubRepoString,
+  tagline,
+  skills,
+  mailtoLink,
+  devToLink,
+  albBlogLink,
+  downloadCv
+};

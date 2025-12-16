@@ -11,7 +11,7 @@
         githubRepoString,
         mailtoLink,
         devToLink,
-        downloadCv,
+        downloadCv, albBlogLink,
     } from '../js/index.js'
     import PongBackground from "$lib/PongBackground.svelte";
 
@@ -56,14 +56,22 @@
             <img src="https://github.com/albertobarrago.png" alt="alBz (Alberto Barrago)" class="profile-image"/>
 
             <h1>{name}</h1>
-            <h2>{role}</h2>
+            <h2>{role}</h2> <br>
             <p class="tagline">{tagline}</p>
 
-            <div class="dev-to">
-                 <span class="dev-to-link">
+<!--            <div class="dev-to">-->
+<!--                 <span class="dev-to-link">-->
+<!--                    <a href="{null}" class="cursor-pointer"-->
+<!--                       onclick={(event) => handleClick(event, devToLink)}-->
+<!--                    >📒 Read My Articles</a>-->
+<!--                </span>-->
+<!--            </div>-->
+
+            <div class="alb-blog">
+                 <span class="alb-blog-link">
                     <a href="{null}" class="cursor-pointer"
-                       onclick={(event) => handleClick(event, devToLink)}
-                    >📒 Read My Articles</a>
+                       onclick={(event) => handleClick(event, albBlogLink)}
+                    >📝 Read My Blog</a>
                 </span>
             </div>
 

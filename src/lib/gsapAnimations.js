@@ -70,17 +70,18 @@ export default class GsapImpl {
      */
     createEntranceTimeline(elements) {
         const {
-            content,
-            profileImage,
-            nameHeading,
-            roleHeading,
-            taglineElement,
-            skillsContainer,
-            skillTags,
-            downloadBtn,
-            ctaContainer,
-            devToContainer,
-            footer
+          content,
+          profileImage,
+          nameHeading,
+          roleHeading,
+          taglineElement,
+          skillsContainer,
+          skillTags,
+          downloadBtn,
+          ctaContainer,
+          devToContainer,
+          alblogContainer,
+          footer,
         } = elements;
 
         const mainTimeline = gsap.timeline();
@@ -91,7 +92,7 @@ export default class GsapImpl {
         };
 
         setInitialStates([
-            profileImage, nameHeading, roleHeading, taglineElement, skillsContainer, devToContainer,
+            profileImage, nameHeading, roleHeading, taglineElement, skillsContainer, devToContainer, alblogContainer,
             downloadBtn, ctaContainer, footer
         ]);
         setInitialStates(skillTags, {scale: 0.8, y: 15});
@@ -115,7 +116,7 @@ export default class GsapImpl {
         animateElement(taglineElement);
         animateElement(skillsContainer);
         animateElement(devToContainer, { duration: 0.5, ease: "power2.out" }, "-=0.3");
-
+        animateElement(alblogContainer, { duration: 0.5, ease: "power2.out" }, "-=0.3");
 
         skillTags.forEach((tag, index) => {
             animateElement(tag, {
@@ -150,17 +151,18 @@ export default class GsapImpl {
      */
     gatherAnimationElements() {
         return {
-            content: document.querySelector('.content'),
-            profileImage: document.querySelector('.profile-image'),
-            nameHeading: document.querySelector('h1'),
-            roleHeading: document.querySelector('h2'),
-            taglineElement: document.querySelector('.tagline'),
-            skillsContainer: document.querySelector('.skills'),
-            skillTags: document.querySelectorAll('.skill-tag'),
-            downloadBtn: document.querySelector('.cta_download'),
-            ctaContainer: document.querySelector('.cta'),
-            devToContainer: document.querySelector('.dev-to'),
-            footer: document.querySelector('footer')
+          content: document.querySelector(".content"),
+          profileImage: document.querySelector(".profile-image"),
+          nameHeading: document.querySelector("h1"),
+          roleHeading: document.querySelector("h2"),
+          taglineElement: document.querySelector(".tagline"),
+          skillsContainer: document.querySelector(".skills"),
+          skillTags: document.querySelectorAll(".skill-tag"),
+          downloadBtn: document.querySelector(".cta_download"),
+          ctaContainer: document.querySelector(".cta"),
+          devToContainer: document.querySelector(".dev-to"),
+          alblogContainer: document.querySelector(".alb-blog"),
+          footer: document.querySelector("footer"),
         };
     }
 
