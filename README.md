@@ -1,42 +1,78 @@
-# 💻 WebCard
+# WebCard
 
 [![pages-build-deployment](https://github.com/AlbertoBarrago/albertobarrago.github.io/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/AlbertoBarrago/albertobarrago.github.io/actions/workflows/pages/pages-build-deployment)
 ![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/AlbertoBarrago/albertobarrago.github.io)
 
+Personal portfolio website on GitHub Pages featuring a retro Amiga Workbench-inspired interface with CRT effects.
 
-Personal card on GitHub pages where it is possible to download my latest résumé.
+If you like it, feel free to clone the repo and modify it as you prefer!
 
-If you like, you can clone repo and modify as you prefer and gift me a ⭐️
+## Features
 
-### Features
-- `Oneko.js`(Improved)
-- `Particles.js`
-- Responsive Design
-- Pure `CSS`
-- 🆓 Free 
+- **Retro Amiga Workbench UI** - Classic terminal-style design with boot sequence animation
+- **CRT Effects** - Scanlines, flicker, and authentic retro aesthetics
+- **SvelteKit 2 + Svelte 5** - Modern framework with static site generation
+- **Responsive Design** - Works on desktop and mobile
+- **Interactive Sections** - About, Skills, Experience, and Contact pages
+- **Downloadable CV** - Quick access to resume
+
+## Tech Stack
+
+| Category | Technology |
+|----------|------------|
+| Framework | SvelteKit 2 + Svelte 5 |
+| Build Tool | Vite 6 |
+| Adapter | @sveltejs/adapter-static |
+| Deployment | GitHub Pages |
+
+## Getting Started
+
+### Clone
 
 ```bash
-git clone git@github.com:AlbertoBarrago/albertobarrago.github.io.git my-repo
+git clone git@github.com:AlbertoBarrago/albertobarrago.github.io.git my-portfolio
+cd my-portfolio
 ```
 
 ### Install
+
 ```bash
-
-#Go to the root of project
-cd my-repo 
-
-#Install node dependencies
-npm install 
+npm install
+# or
+bun install
 ```
 
-### Run
+### Development
+
 ```bash
 npm run dev
 ```
 
 ### Build
+
 ```bash
 npm run build
 ```
 
+### Preview Production Build
 
+```bash
+npm run preview
+```
+
+### Deploy to GitHub Pages
+
+```bash
+npm run deploy
+```
+
+## Type Checking
+
+```bash
+npm run check        # Run svelte-check
+npm run check:watch  # Watch mode
+```
+
+## License
+
+Free to use and modify.
