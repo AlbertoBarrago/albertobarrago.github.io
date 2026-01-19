@@ -8,11 +8,6 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
-
-
-	const particlesJS: {
-		load: (id: string, path: string) => void;
-	};
 }
 
 export {};

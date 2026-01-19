@@ -6,7 +6,14 @@ const location = "Cagliari, Italy";
 const email = "albertobarrago@gmail.com";
 const cv_filename = "albertobarrago_cv.pdf";
 
-const profile = `JavaScript-first Senior Engineer with 6+ years delivering production systems for millions of users. Specializing in Node.js/React ecosystems, CI/CD automation, and AI-integrated solutions.`;
+const profile = `Senior Frontend Engineer with 6+ years building production systems for
+millions of users at scale. I work across the full stack Angular, React,
+Web Components on the frontend; Node.js, CI/CD pipelines, Docker, and
+cloud infrastructure on the backend. I solve architectural problems, not
+just write code.
+
+I value clean architecture, collaborative teams, and shipping things that
+actually work. Always curious, always building.`;
 
 const skills = {
 	frontend: ["Angular", "React", "Vanilla JS"],
