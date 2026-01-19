@@ -11,9 +11,7 @@ millions of users at scale. I work across the full stack Angular, React,
 Web Components on the frontend; Node.js, CI/CD pipelines, Docker, and
 cloud infrastructure on the backend. I solve architectural problems, not
 just write code.
-
-I value clean architecture, collaborative teams, and shipping things that
-actually work. Always curious, always building.`;
+`;
 
 const skills = {
 	frontend: ["Angular", "React", "Vanilla JS"],
