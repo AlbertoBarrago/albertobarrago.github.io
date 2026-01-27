@@ -14,6 +14,7 @@
 	import { initSpaceInvaders } from '../js/games/spaceInvaders.js';
 	import { initTetris } from '../js/games/tetris.js';
 	import { initPong } from '../js/games/pong.js';
+	import '../styles/page.css';
 
 	let currentSection = 'about';
 	let bootComplete = false;
@@ -431,6 +432,3 @@
 {/if}
 {/if}
 
-<style>
-	@import '../styles/page.css';
-</style>

@@ -1,19 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
-:global(*) {
+* {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 }
 
-:global(html) {
-	height: 100%;
-	overflow: hidden;
-	background: #1a1a2e;
-	font-family: 'VT323', monospace;
-}
-
-:global(body) {
+html, body {
 	height: 100%;
 	overflow: hidden;
 	background: #1a1a2e;
