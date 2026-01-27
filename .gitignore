@@ -25,4 +25,5 @@ vite.config.ts.timestamp-*
 # Idea
 .idea
 
+# Agents
 AGENTS.md
