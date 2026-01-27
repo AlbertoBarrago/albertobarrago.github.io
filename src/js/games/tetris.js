@@ -10,7 +10,7 @@ export function initTetris(canvas, onExit) {
 
 	const GRID_COLS = 10, GRID_ROWS = 20;
 	const PIECES = [
-		{ shape: [[1,1,1,1]], color: '#00bfff' },           // I
+		{ shape: [[1,1,1,1]], color: '#00bfff' },            // I
 		{ shape: [[1,1],[1,1]], color: '#ffbd2e' },          // O
 		{ shape: [[0,1,0],[1,1,1]], color: '#a855f7' },      // T
 		{ shape: [[1,0,0],[1,1,1]], color: '#ff6b6b' },      // L
