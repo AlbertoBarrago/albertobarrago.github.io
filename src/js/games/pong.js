@@ -6,7 +6,7 @@
  */
 export function initPong(canvas, onExit) {
 	const ctx = canvas.getContext('2d');
-	if (!ctx) return () => {};
+	if (!ctx) return () => { };
 
 	const PADDLE_W = 12, PADDLE_H = 80, BALL_SIZE = 10;
 	const PADDLE_SPEED = 5, BALL_BASE_SPEED = 4, AI_SPEED = 3.5;
@@ -104,6 +104,7 @@ export function initPong(canvas, onExit) {
 	}
 
 	function draw() {
+		if (!ctx) return;
 		ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 		if (gameState === 'waiting') {
