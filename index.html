@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Alberto Barrago - Senior Software Engineer</title>
-		<link rel="icon" href="%sveltekit.assets%/favicon.ico" />
+		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 		<!-- SEO Meta Tags -->
@@ -42,9 +42,11 @@
 		}
 		</script>
 
-		%sveltekit.head%
+		<link rel="stylesheet" href="/src/styles/main.css" />
+		<link rel="stylesheet" href="/src/styles/page.css" />
 	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
+	<body>
+		<div id="app"></div>
+		<script type="module" src="/src/js/app.js"></script>
 	</body>
 </html>
