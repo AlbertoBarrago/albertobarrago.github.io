@@ -8,6 +8,38 @@ import {
 	name, role, location, profile, skills,
 	experience, links, version, downloadCv
 } from './index.js';
+
+console.log(
+	`%c
+ ██████╗ ██████╗ ███████╗███╗   ██╗
+██╔═══██╗██╔══██╗██╔════╝████╗  ██║
+██║   ██║██████╔╝█████╗  ██╔██╗ ██║
+██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║
+╚██████╔╝██║     ███████╗██║ ╚████║
+ ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝
+  ████████╗ ██████╗
+  ╚══██╔══╝██╔═══██╗
+     ██║   ██║   ██║
+     ██║   ██║   ██║
+     ██║   ╚██████╔╝
+     ╚═╝    ╚═════╝
+ ██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗
+ ██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝
+ ██║ █╗ ██║██║   ██║██████╔╝█████╔╝
+ ██║███╗██║██║   ██║██╔══██╗██╔═██╗
+ ╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗
+  ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+`,
+	'color: #00ff41; font-family: monospace;'
+);
+console.log(
+	'%c> STATUS: Open to new quests. Accepting side-missions & full-time raids.\n' +
+	'> CLASS: Full-Stack Developer | LEVEL: Senior\n' +
+	'> SKILLS: JS, TS, Python, React, Node, Cloud & more\n' +
+	'> PING ME: linkedin.com/in/albertobarrago\n' +
+	'> $_ Hire me before the next sprint starts.',
+	'color: #ffbd2e; font-size: 13px; font-family: monospace;'
+);
 import { initSpaceInvaders } from './games/spaceInvaders.js';
 import { initTetris } from './games/tetris.js';
 import { initPong } from './games/pong.js';
@@ -151,6 +183,10 @@ function aboutHTML() {
 			<div class="desktop-icon-img"><div class="icon-pong"></div></div>
 			<span class="desktop-icon-label">pong.exe</span>
 		</div>
+		<a class="desktop-icon" href="https://mario-murru-the-game.netlify.app/" target="_blank" rel="noopener noreferrer">
+			<div class="desktop-icon-img"><div class="icon-mario"></div></div>
+			<span class="desktop-icon-label">mario.lnk</span>
+		</a>
 	</div>
 </div>`;
 }

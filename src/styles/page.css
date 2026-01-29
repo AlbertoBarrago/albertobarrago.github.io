@@ -306,8 +306,6 @@ html, body {
 	.job-header { flex-direction: column; align-items: flex-start; }
 	.action-buttons { flex-direction: column; }
 	.amiga-btn { text-align: center; }
-	.desktop-icons { gap: 12px; }
-	.desktop-icon-img { width: 48px; height: 48px; }
 }
 
 /* Desktop icons */
@@ -424,10 +422,42 @@ html, body {
 	background: repeating-linear-gradient(to bottom, #333 0px, #333 3px, transparent 3px, transparent 6px);
 }
 
+.icon-mario {
+	width: 24px;
+	height: 24px;
+	position: relative;
+}
+
+.icon-mario::before {
+	content: '';
+	position: absolute;
+	width: 8px; height: 8px;
+	top: 0; left: 8px;
+	background: #ff3e3e;
+	box-shadow:
+		-8px 0 0 0 #ff3e3e,
+		8px 0 0 0 #ff3e3e,
+		-8px 8px 0 0 #ffbd2e,
+		0px 8px 0 0 #ff3e3e,
+		8px 8px 0 0 #ffbd2e,
+		0px 16px 0 0 #3e7bff,
+		-8px 16px 0 0 #3e7bff,
+		8px 16px 0 0 #3e7bff;
+}
+
+a.desktop-icon {
+	text-decoration: none;
+	color: inherit;
+}
+
 .desktop-icon-label {
 	font-size: 14px;
 	color: #00ff41;
 	text-shadow: 0 0 5px rgba(0, 255, 65, 0.4);
+}
+
+@media (max-width: 600px) {
+	.desktop-icons { display: none; }
 }
 
 /* Fullscreen game overlay */
