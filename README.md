@@ -1,29 +1,29 @@
 # WebCard
 
-[![pages-build-deployment](https://github.com/AlbertoBarrago/albertobarrago.github.io/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/AlbertoBarrago/albertobarrago.github.io/actions/workflows/pages/pages-build-deployment)
-![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/AlbertoBarrago/albertobarrago.github.io)
-
 Personal portfolio website on GitHub Pages featuring a retro Amiga Workbench-inspired interface with CRT effects.
 
 If you like it, feel free to clone the repo and modify it as you prefer!
 
 ## Features
 
-- **Retro Amiga Workbench UI** - Classic terminal-style design with boot sequence animation
-- **CRT Effects** - Scanlines, flicker, and authentic retro aesthetics
-- **SvelteKit 2 + Svelte 5** - Modern framework with static site generation
-- **Responsive Design** - Works on desktop and mobile
-- **Interactive Sections** - About, Skills, Experience, and Contact pages
-- **Downloadable CV** - Quick access to resume
+- **Retro Amiga Workbench UI** — Classic terminal-style design with boot sequence animation
+- **CRT Effects** — Scanlines, flicker, and authentic retro aesthetics
+- **Modem Dial-Up Sound** — Web Audio API synthesis of vintage connection sounds
+- **Embedded Retro Games** — Space Invaders, Tetris, and Pong playable in-browser
+- **Vanilla JS + Vite** — Zero runtime framework, pure ES modules with JSDoc types
+- **Responsive Design** — Works on desktop and mobile
+- **Interactive Sections** — About, Skills, Experience, and Contact
+- **Downloadable CV** — Quick access to resume
 
 ## Tech Stack
 
 | Category | Technology |
 |----------|------------|
-| Framework | SvelteKit 2 + Svelte 5 |
+| Language | Vanilla JavaScript (ES2022+, JSDoc) |
 | Build Tool | Vite 6 |
-| Adapter | @sveltejs/adapter-static |
-| Deployment | GitHub Pages |
+| Deployment | GitHub Pages via gh-pages |
+| Games | Canvas API |
+| Audio | Web Audio API |
 
 ## Getting Started
 
@@ -37,40 +37,56 @@ cd my-portfolio
 ### Install
 
 ```bash
-npm install
-# or
 bun install
 ```
 
 ### Development
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 ### Build
 
 ```bash
-npm run build
+bun run build
 ```
 
 ### Preview Production Build
 
 ```bash
-npm run preview
+bun run preview
 ```
 
 ### Deploy to GitHub Pages
 
 ```bash
-npm run deploy
+bun run deploy
 ```
 
-## Type Checking
+## Project Structure
 
-```bash
-npm run check        # Run svelte-check
-npm run check:watch  # Watch mode
+```
+├── index.html              # Entry point with SEO meta tags
+├── src/
+│   ├── js/
+│   │   ├── app.js          # Main application module
+│   │   ├── index.js        # Portfolio data & constants
+│   │   └── games/
+│   │       ├── spaceInvaders.js
+│   │       ├── tetris.js
+│   │       └── pong.js
+│   └── styles/
+│       ├── main.css        # Global reset
+│       └── page.css        # All component styles & CRT effects
+├── static/
+│   ├── albertobarrago_cv.pdf
+│   ├── favicon.ico
+│   ├── robots.txt
+│   └── sitemap.xml
+├── vite.config.js
+├── jsconfig.json
+└── package.json
 ```
 
 ## License
