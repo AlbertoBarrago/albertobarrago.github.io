@@ -52,7 +52,8 @@ const experience = [
 const links = {
 	github: "https://github.com/AlbertoBarrago",
 	email: `mailto:${email}`,
-	blog: "https://alblog.gigalixirapp.com/articles"
+	blog: "https://alblog.gigalixirapp.com/articles",
+	bsky: "https://bsky.app/profile/albzoser.bsky.social"
 };
 
 const version = pkg.version;
