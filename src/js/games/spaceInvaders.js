@@ -116,6 +116,7 @@ export function initSpaceInvaders(canvas, onExit) {
 	}
 
 	function draw() {
+		if (!ctx) return;
 		ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, canvas.width, canvas.height);
 		if (gameState === 'waiting') {
 			ctx.fillStyle = '#00ff41'; ctx.textAlign = 'center'; ctx.font = '48px VT323, monospace';

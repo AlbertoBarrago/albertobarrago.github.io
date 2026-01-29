@@ -416,7 +416,7 @@ app.addEventListener('click', (e) => {
 	// Section switch
 	const menuBtn = /** @type {HTMLElement | null} */ (target.closest('[data-section]'));
 	if (menuBtn?.dataset.section && bootComplete) {
-		showSection(/** @type {Section} */ (menuBtn.dataset.section));
+		showSection(/** @type {Section} */(menuBtn.dataset.section));
 		return;
 	}
 

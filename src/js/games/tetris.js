@@ -6,17 +6,17 @@
  */
 export function initTetris(canvas, onExit) {
 	const ctx = canvas.getContext('2d');
-	if (!ctx) return () => {};
+	if (!ctx) return () => { };
 
 	const GRID_COLS = 10, GRID_ROWS = 20;
 	const PIECES = [
-		{ shape: [[1,1,1,1]], color: '#00bfff' },            // I
-		{ shape: [[1,1],[1,1]], color: '#ffbd2e' },          // O
-		{ shape: [[0,1,0],[1,1,1]], color: '#a855f7' },      // T
-		{ shape: [[1,0,0],[1,1,1]], color: '#ff6b6b' },      // L
-		{ shape: [[0,0,1],[1,1,1]], color: '#00ff41' },      // J
-		{ shape: [[0,1,1],[1,1,0]], color: '#ff6b6b' },      // S
-		{ shape: [[1,1,0],[0,1,1]], color: '#00ff41' }       // Z
+		{ shape: [[1, 1, 1, 1]], color: '#00bfff' },            // I
+		{ shape: [[1, 1], [1, 1]], color: '#ffbd2e' },          // O
+		{ shape: [[0, 1, 0], [1, 1, 1]], color: '#a855f7' },      // T
+		{ shape: [[1, 0, 0], [1, 1, 1]], color: '#ff6b6b' },      // L
+		{ shape: [[0, 0, 1], [1, 1, 1]], color: '#00ff41' },      // J
+		{ shape: [[0, 1, 1], [1, 1, 0]], color: '#ff6b6b' },      // S
+		{ shape: [[1, 1, 0], [0, 1, 1]], color: '#00ff41' }       // Z
 	];
 
 	let gameState = 'waiting';
@@ -139,7 +139,7 @@ export function initTetris(canvas, onExit) {
 			else if (!collides(rotated, currentPiece.x + 1, currentPiece.y)) { currentPiece.shape = rotated; currentPiece.x++; }
 		}
 		keys[e.key] = true;
-		if (['ArrowLeft','ArrowRight','ArrowDown','ArrowUp',' '].includes(e.key)) e.preventDefault();
+		if (['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', ' '].includes(e.key)) e.preventDefault();
 	}
 
 	/** @param {KeyboardEvent} e */
@@ -159,6 +159,7 @@ export function initTetris(canvas, onExit) {
 	}
 
 	function draw() {
+		if (!ctx) return;
 		ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 		const cellSize = Math.min(Math.floor((canvas.height - 60) / GRID_ROWS), Math.floor((canvas.width - 200) / GRID_COLS));
