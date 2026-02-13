@@ -21,18 +21,23 @@ const skills = {
 	backend: ["Node.js", "Fastify", "FastAPI", "Flask", "Spring Boot"],
 	database: ["MongoDB", "Oracle", "MySQL"],
 	devops: ["Docker", "GitHub/Gitlab Actions", "Azure DevOps"],
-	tools: ["Git", "Neovim", "tmux", "eza", "Wir"],
+	tools: ["Git", "Neovim", "tmux", ""],
 	ai: ["LLM Integration", "Prompt Engineering", "AI Agents"]
 };
 
 const experience = [
 	{
 		role: "Senior Software Engineer",
-		company: "C22",
+		company: "C22 Consulting",
 		period: "2026 - Present",
-		highlight: "Fetching..."
+		highlight: "Loading..."
 	},
-
+	{
+		role: "Senior Software Engineer",
+		company: "Minsait/Indra",
+		period: "2023 - 2025",
+		highlight: "Angular component library for 6+ teams, CI/CD optimization -30% deploy time"
+	},
 	{
 		role: "Senior Software Developer",
 		company: "Softfobia",
