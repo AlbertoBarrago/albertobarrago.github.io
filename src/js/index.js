@@ -28,10 +28,11 @@ const skills = {
 const experience = [
 	{
 		role: "Senior Software Engineer",
-		company: "Minsait/Indra",
-		period: "2023 - 2025",
-		highlight: "Angular component library for 6+ teams, CI/CD optimization -30% deploy time"
+		company: "C22",
+		period: "2026 - Present",
+		highlight: "Fetching..."
 	},
+
 	{
 		role: "Senior Software Developer",
 		company: "Softfobia",
