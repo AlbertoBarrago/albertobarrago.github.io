@@ -6,7 +6,7 @@ const location = "Cagliari, Italy";
 const email = "albertobarrago@gmail.com";
 const cv_filename = "albertobarrago_cv.pdf";
 
-const profile = `Senior Frontend Engineer with strong full-stack foundations and proven
+const profile = `Senior Engineer with strong full-stack foundations and proven
 ability to rapidly adapt across technologies. Deep expertise in React/
 TypeScript with enterprise-scale component library architecture,
 complemented by hands-on experience in Python/FastAPI, Node.js, CI/
