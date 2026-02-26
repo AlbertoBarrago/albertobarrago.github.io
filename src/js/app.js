@@ -229,7 +229,6 @@ function contactHTML() {
 	<div class="contact-info">
 		<p><span class="label">Email:</span> <a href="${links.email}">albertobarrago@gmail.com</a></p>
 		<p><span class="label">GitHub:</span> <a href="${links.github}" target="_blank">github.com/AlbertoBarrago</a></p>
-		<p><span class="label">Blog:</span> <a href="${links.blog}" target="_blank">alblog.gigalixirapp.com</a></p>
 		<p><span class="label">Location:</span> ${location}</p>
 	</div>
 	<div class="action-buttons">
@@ -265,92 +264,172 @@ function playModemSound() {
 	const AudioCtx = globalThis.AudioContext
 		?? /** @type {typeof AudioContext} */ (/** @type {any} */ (globalThis).webkitAudioContext);
 	const ctx = new AudioCtx();
-	const masterGain = ctx.createGain();
-	masterGain.gain.value = 0.15;
-	masterGain.connect(ctx.destination);
+	const master = ctx.createGain();
+	master.gain.value = 0.18;
+	master.connect(ctx.destination);
 
-	const now = ctx.currentTime;
+	const t = ctx.currentTime;
 
-	// DTMF dial tones
+	// Boot sequence fires a line every BOOT_INTERVAL ms. Key sync points:
+	//   line 0  "Initializing modem…"  →  0.00 s  dial tone
+	//   line 2  "ATDT *67 555-0199"    →  0.50 s  DTMF tones
+	//   line 3  "CONNECT 56000"        →  0.75 s  transition → CED
+	//   boot ends (~17 lines × 250 ms) →  4.25 s  sound fades out
+
+	// ── 1. Dial tone: 350 Hz + 440 Hz ─────────────────── 0.00 → 0.40 s
+	for (const freq of [350, 440]) {
+		const osc = ctx.createOscillator();
+		osc.type = 'sine';
+		osc.frequency.value = freq;
+		const g = ctx.createGain();
+		g.gain.value = 0.18;
+		osc.connect(g);
+		g.connect(master);
+		osc.start(t);
+		osc.stop(t + 0.4);
+	}
+
+	// ── 2. DTMF dialing ────────────────────────────────── 0.50 → 1.10 s
+	// Starts at 0.50 s to land on "ATDT *67 555-0199" (line 2 × 250 ms).
 	const dtmfPairs = [
-		[941, 1336], [770, 1209], [852, 1477], [697, 1336],
-		[770, 1336], [852, 1209], [941, 1209],
+		[941, 1336], [697, 1336], [770, 1209], [852, 1477],
+		[941, 1209], [770, 1336],
 	];
 	for (const [i, pair] of dtmfPairs.entries()) {
 		for (const freq of pair) {
 			const osc = ctx.createOscillator();
-			osc.frequency.value = freq;
 			osc.type = 'sine';
+			osc.frequency.value = freq;
 			const g = ctx.createGain();
-			g.gain.value = 0.3;
-			g.connect(masterGain);
+			g.gain.value = 0.28;
 			osc.connect(g);
-			osc.start(now + i * 0.1);
-			osc.stop(now + i * 0.1 + 0.08);
+			g.connect(master);
+			osc.start(t + 0.5 + i * 0.1);
+			osc.stop(t + 0.5 + i * 0.1 + 0.08);
 		}
 	}
 
-	// Answer tone
-	const answer = ctx.createOscillator();
-	answer.frequency.value = 2100;
-	answer.type = 'sine';
-	const answerGain = ctx.createGain();
-	answerGain.gain.value = 0.2;
-	answerGain.connect(masterGain);
-	answer.connect(answerGain);
-	answer.start(now + 1.0);
-	answer.stop(now + 1.6);
-
-	// Carrier negotiation
-	const carrier = ctx.createOscillator();
-	carrier.type = 'sawtooth';
-	carrier.frequency.setValueAtTime(980, now + 1.7);
-	carrier.frequency.linearRampToValueAtTime(2100, now + 2.1);
-	carrier.frequency.linearRampToValueAtTime(1300, now + 2.4);
-	carrier.frequency.linearRampToValueAtTime(1900, now + 2.7);
-	carrier.frequency.linearRampToValueAtTime(1500, now + 3.0);
-	const carrierGain = ctx.createGain();
-	carrierGain.gain.value = 0.12;
-	carrierGain.connect(masterGain);
-	carrier.connect(carrierGain);
-	carrier.start(now + 1.7);
-	carrier.stop(now + 3.0);
-
-	// White noise burst
-	const bufferSize = Math.floor(ctx.sampleRate * 2);
-	const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-	const output = noiseBuffer.getChannelData(0);
-	for (let i = 0; i < bufferSize; i++) {
-		output[i] = Math.random() * 2 - 1;
+	// ── 3. Ringback: 440 Hz + 480 Hz ──────────────────── 1.15 → 1.55 s
+	for (const freq of [440, 480]) {
+		const osc = ctx.createOscillator();
+		osc.type = 'sine';
+		osc.frequency.value = freq;
+		const g = ctx.createGain();
+		g.gain.value = 0.14;
+		osc.connect(g);
+		g.connect(master);
+		osc.start(t + 1.15);
+		osc.stop(t + 1.55);
 	}
-	const noise = ctx.createBufferSource();
-	noise.buffer = noiseBuffer;
-	const filter = ctx.createBiquadFilter();
-	filter.type = 'bandpass';
-	filter.frequency.value = 1800;
-	filter.Q.value = 3;
+
+	// ── 4. CED answer tone: 2100 Hz with phase reversals ─ 1.65 → 2.65 s
+	const cedOsc = ctx.createOscillator();
+	cedOsc.type = 'sine';
+	cedOsc.frequency.value = 2100;
+	const cedGain = ctx.createGain();
+	cedGain.gain.value = 0.22;
+	cedOsc.connect(cedGain);
+	cedGain.connect(master);
+	cedOsc.start(t + 1.65);
+	cedOsc.stop(t + 2.65);
+	for (let k = 0; k < 3; k++) {
+		const pt = 1.65 + k * 0.34;
+		cedGain.gain.setValueAtTime(0.22, t + pt);
+		cedGain.gain.linearRampToValueAtTime(0.01, t + pt + 0.018);
+		cedGain.gain.linearRampToValueAtTime(0.22, t + pt + 0.036);
+	}
+
+	// ── 5. V.8 negotiation chirps ─────────────────────── 2.75 → 3.05 s
+	for (const [i, freq] of [980, 1300, 2100, 1650].entries()) {
+		const osc = ctx.createOscillator();
+		osc.type = 'sine';
+		osc.frequency.value = freq;
+		const g = ctx.createGain();
+		g.gain.value = 0.16;
+		osc.connect(g);
+		g.connect(master);
+		osc.start(t + 2.75 + i * 0.08);
+		osc.stop(t + 2.75 + i * 0.08 + 0.06);
+	}
+
+	// ── 6. V.34 training screech ──────────────────────── 3.10 → 4.10 s
+	// Three sine carriers sweeping in opposing arcs — their beating creates
+	// the iconic warble. Compressed to 1 s but sweeps are denser.
+	const trBase = 3.1;
+	const trDur  = 1.0;
+	const trainSweeps = [
+		{ f1: 2100, f2: 1100, steps: 10 },
+		{ f1: 1650, f2: 2600, steps:  8 },
+		{ f1:  980, f2: 2250, steps: 12 },
+	];
+	for (const [pi, { f1, f2, steps }] of trainSweeps.entries()) {
+		const osc = ctx.createOscillator();
+		osc.type = 'sine';
+		osc.frequency.setValueAtTime(f1, t + trBase);
+		for (let s = 1; s <= steps; s++) {
+			osc.frequency.linearRampToValueAtTime(
+				s % 2 === 0 ? f1 : f2,
+				t + trBase + (s / steps) * trDur
+			);
+		}
+		const g = ctx.createGain();
+		g.gain.value = 0.07;
+		osc.connect(g);
+		g.connect(master);
+		osc.start(t + trBase + pi * 0.03);
+		osc.stop(t + trBase + trDur + pi * 0.03);
+	}
+
+	// Sawtooth sweep for the characteristic harsh modem texture
+	const sawOsc = ctx.createOscillator();
+	sawOsc.type = 'sawtooth';
+	sawOsc.frequency.setValueAtTime(1800, t + trBase);
+	sawOsc.frequency.linearRampToValueAtTime(900,  t + trBase + 0.25);
+	sawOsc.frequency.linearRampToValueAtTime(2500, t + trBase + 0.50);
+	sawOsc.frequency.linearRampToValueAtTime(1100, t + trBase + 0.75);
+	sawOsc.frequency.linearRampToValueAtTime(2100, t + trBase + 1.00);
+	const sawGain = ctx.createGain();
+	sawGain.gain.value = 0.05;
+	sawOsc.connect(sawGain);
+	sawGain.connect(master);
+	sawOsc.start(t + trBase);
+	sawOsc.stop(t + trBase + trDur);
+
+	// Bandpass noise — simulates channel scrambling during training
+	const noiseSize = Math.floor(ctx.sampleRate * (trDur + 0.3));
+	const noiseBuf = ctx.createBuffer(1, noiseSize, ctx.sampleRate);
+	const noiseData = noiseBuf.getChannelData(0);
+	for (let i = 0; i < noiseSize; i++) noiseData[i] = Math.random() * 2 - 1;
+	const noiseSrc = ctx.createBufferSource();
+	noiseSrc.buffer = noiseBuf;
+	const bpf = ctx.createBiquadFilter();
+	bpf.type = 'bandpass';
+	bpf.frequency.value = 1800;
+	bpf.Q.value = 2.5;
 	const noiseGain = ctx.createGain();
-	noiseGain.gain.value = 0.08;
-	noiseGain.connect(masterGain);
-	noise.connect(filter);
-	filter.connect(noiseGain);
-	noise.start(now + 2.2);
-	noise.stop(now + 3.8);
+	noiseGain.gain.value = 0.04;
+	noiseSrc.connect(bpf);
+	bpf.connect(noiseGain);
+	noiseGain.connect(master);
+	noiseSrc.start(t + trBase);
+	noiseSrc.stop(t + trBase + trDur + 0.2);
 
-	// Training sequence
-	const train = ctx.createOscillator();
-	train.frequency.value = 1650;
-	train.type = 'square';
-	const trainGain = ctx.createGain();
-	trainGain.gain.value = 0.08;
-	trainGain.connect(masterGain);
-	train.connect(trainGain);
-	train.start(now + 3.0);
-	train.stop(now + 3.5);
+	// ── 7. Connected: brief 2400 Hz confirmation tone ─── 4.15 → 4.50 s
+	const connAt = trBase + trDur + 0.05;
+	const connOsc = ctx.createOscillator();
+	connOsc.type = 'sine';
+	connOsc.frequency.value = 2400;
+	const connGain = ctx.createGain();
+	connGain.gain.setValueAtTime(0.18, t + connAt);
+	connGain.gain.linearRampToValueAtTime(0, t + connAt + 0.35);
+	connOsc.connect(connGain);
+	connGain.connect(master);
+	connOsc.start(t + connAt);
+	connOsc.stop(t + connAt + 0.35);
 
-	// Fade out
-	masterGain.gain.setValueAtTime(0.15, now + 3.2);
-	masterGain.gain.linearRampToValueAtTime(0, now + 3.8);
+	// Master fade
+	master.gain.setValueAtTime(0.18, t + connAt + 0.1);
+	master.gain.linearRampToValueAtTime(0, t + connAt + 0.5);
 }
 
 // ---------------------------------------------------------------------------
@@ -380,7 +459,7 @@ function startBoot() {
 			bootComplete = true;
 			showSection('about');
 		}
-	}, 200);
+	}, 250);
 }
 
 // ---------------------------------------------------------------------------
