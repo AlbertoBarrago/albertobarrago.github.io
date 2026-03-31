@@ -7,7 +7,7 @@ const email = "albertobarrago@gmail.com";
 const cv_filename = "albertobarrago_cv.pdf";
 
 const profile = `JavaScript-first Senior Engineer with deep expertise in enterprise
-scalability and cloud architecture. Over 6+ years delivering production
+scalability and cloud architecture. A decade of delivering production
 systems for millions of users across frontend, backend, and DevOps—
 specializing in Node.js/React ecosystems, Spring Boot microservices,
 and CI/CD automation. Experienced in building component libraries and
