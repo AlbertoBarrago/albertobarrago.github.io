@@ -6,7 +6,7 @@
 
 import {
 	name, role, location, profile, skills,
-	experience, links, version, downloadCv
+	experience, openSource, links, version, downloadCv
 } from './index.js';
 
 console.log(
@@ -44,7 +44,7 @@ import { initSpaceInvaders } from './games/spaceInvaders.js';
 import { initTetris } from './games/tetris.js';
 import { initPong } from './games/pong.js';
 
-/** @typedef {'about' | 'skills' | 'experience' | 'contact'} Section */
+/** @typedef {'about' | 'skills' | 'experience' | 'projects' | 'contact'} Section */
 
 /** @type {Readonly<Record<string, string>>} */
 const GAME_TITLES = Object.freeze({
@@ -81,7 +81,7 @@ const BOOT_SEQUENCE = Object.freeze([
 ]);
 
 /** @type {readonly Section[]} */
-const SECTIONS = /** @type {const} */ (['about', 'skills', 'experience', 'contact']);
+const SECTIONS = /** @type {const} */ (['about', 'skills', 'experience', 'projects', 'contact']);
 
 const ASCII_ART = `\
      _    __  __ ___ ____    _
@@ -223,6 +223,26 @@ function experienceHTML() {
 </div>`;
 }
 
+function projectsHTML() {
+	const list = openSource
+		.map((p) => `<div class="job-item">
+			<div class="job-header">
+				<span class="job-role">${p.name}</span>
+				<span class="job-period">${p.language} ★ ${p.stars}</span>
+			</div>
+			<div class="job-highlight">${p.description}</div>
+			<div class="action-buttons">
+				<a href="${p.url}" target="_blank" rel="noopener noreferrer" class="amiga-btn">View on GitHub</a>
+			</div>
+		</div>`)
+		.join('');
+
+	return `<div class="section">
+	<h1 class="section-title">&gt; Projects</h1>
+	<div class="experience-list">${list}</div>
+</div>`;
+}
+
 function contactHTML() {
 	return `<div class="section">
 	<h1 class="section-title">&gt; Contact</h1>
@@ -253,6 +273,7 @@ const SECTION_RENDERERS = Object.freeze({
 	about: aboutHTML,
 	skills: skillsHTML,
 	experience: experienceHTML,
+	projects: projectsHTML,
 	contact: contactHTML,
 });
 

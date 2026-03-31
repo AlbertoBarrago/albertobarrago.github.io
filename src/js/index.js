@@ -58,6 +58,24 @@ const experience = [
 	}
 ];
 
+/** @type {{ name: string, description: string, url: string, language: string, stars: number }[]} */
+const openSource = [
+	{
+		name: "Markasso",
+		description: "A fast, minimal, keyboard-first whiteboard engine for the browser. Marker + Picasso. No framework. No runtime. Just canvas.",
+		url: "https://github.com/AlbertoBarrago/Markasso",
+		language: "TypeScript",
+		stars: 3
+	},
+	{
+		name: "RSS-Reader",
+		description: "A lightweight, native macOS RSS Reader app built with Swift. Lives in your menu bar — clean, minimal, no bloat.",
+		url: "https://github.com/AlbertoBarrago/RSS-Reader",
+		language: "Swift",
+		stars: 12
+	}
+];
+
 const links = {
 	github: "https://github.com/AlbertoBarrago",
 	email: `mailto:${email}`,
@@ -81,6 +99,7 @@ export {
 	profile,
 	skills,
 	experience,
+	openSource,
 	links,
 	version,
 	downloadCv
