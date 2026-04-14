@@ -63,8 +63,8 @@ const openSource = [
 	{
 		name: "Markasso",
 		description: "A fast, minimal, keyboard-first whiteboard engine for the browser. Marker + Picasso. No framework. No runtime. Just canvas.",
-		url: "https://github.com/AlbertoBarrago/Markasso",
-		language: "TypeScript",
+		url: "https://markasso.it",
+		language: "Typescript (0 deps)",
 		stars: 3
 	},
 	{
