@@ -72,7 +72,14 @@ const openSource = [
 		description: "A lightweight, native macOS RSS Reader app built with Swift. Lives in your menu bar — clean, minimal, no bloat.",
 		url: "https://github.com/AlbertoBarrago/RSS-Reader",
 		language: "Swift",
-		stars: 12
+		stars: 14
+	},
+	{
+		name: "Timelog",
+		description: "A lightweight time-tracking app for iOS and macOS built with SwiftUI and SwiftData.",
+		url: "https://github.com/AlbertoBarrago/Timelog",
+		language: "Swift",
+		stars: 2
 	}
 ];
 
