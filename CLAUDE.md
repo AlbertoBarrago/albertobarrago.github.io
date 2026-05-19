@@ -4,15 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Retro Amiga Workbench 3.1-inspired portfolio website. Pure vanilla JavaScript (ES2022+) with zero runtime dependencies. Uses Vite 6 as build tool and deploys to GitHub Pages. Package manager is Bun.
+Retro Amiga Workbench 3.1-inspired portfolio website. Pure vanilla JavaScript (ES2022+) with zero runtime dependencies. Uses Vite 6 as build tool and deploys to GitHub Pages. Package manager is npm.
 
 ## Commands
 
 ```bash
-bun run dev        # Start Vite dev server
-bun run build      # Production build (output: build/)
-bun run preview    # Preview production build
-bun run deploy     # Build + deploy to GitHub Pages
+npm run dev        # Start Vite dev server
+npm run build      # Production build (output: build/)
+npm run preview    # Preview production build
+npm run deploy     # Build + deploy to GitHub Pages
 ```
 
 No test suite or linter is configured.
