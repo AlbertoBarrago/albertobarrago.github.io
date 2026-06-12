@@ -46,6 +46,9 @@ import { initPong } from './games/pong.js';
 
 /** @typedef {'about' | 'skills' | 'experience' | 'projects' | 'contact'} Section */
 
+const RADIO_LABEL = 'SomaFM: Secret Agent';
+const RADIO_STREAM_URL = 'https://ice1.somafm.com/secretagent-128-mp3';
+
 /** @type {Readonly<Record<string, string>>} */
 const GAME_TITLES = Object.freeze({
 	space: 'SPACE INVADERS',
@@ -145,6 +148,12 @@ function amigaScreenHTML() {
 				<div class="status-bar">
 					<span>Chip: 2048K</span>
 					<span>Fast: 8192K</span>
+					<div class="radio-player">
+						<button class="radio-btn" type="button" data-action="toggle-radio" aria-label="Play radio">▶</button>
+						<span class="radio-label">${RADIO_LABEL}</span>
+						<span class="radio-eq" aria-hidden="true"><span></span><span></span><span></span></span>
+						<audio class="radio-audio" preload="none" src="${RADIO_STREAM_URL}"></audio>
+					</div>
 					<span class="status-right">v${version}</span>
 				</div>
 				<div class="scanlines"></div>
@@ -454,6 +463,45 @@ function playModemSound() {
 }
 
 // ---------------------------------------------------------------------------
+// Radio player — embedded internet radio (SomaFM)
+// ---------------------------------------------------------------------------
+
+function initRadioPlayer() {
+	const audio = /** @type {HTMLAudioElement | null} */ (document.querySelector('.radio-audio'));
+	const btn = /** @type {HTMLButtonElement | null} */ (document.querySelector('.radio-btn'));
+	const player = /** @type {HTMLElement | null} */ (document.querySelector('.radio-player'));
+	if (!audio || !btn || !player) return;
+
+	audio.addEventListener('error', () => {
+		btn.textContent = '▶';
+		btn.setAttribute('aria-label', 'Play radio');
+		player.classList.remove('playing');
+	});
+}
+
+function toggleRadio() {
+	const audio = /** @type {HTMLAudioElement | null} */ (document.querySelector('.radio-audio'));
+	const btn = /** @type {HTMLButtonElement | null} */ (document.querySelector('.radio-btn'));
+	const player = /** @type {HTMLElement | null} */ (document.querySelector('.radio-player'));
+	if (!audio || !btn || !player) return;
+
+	if (audio.paused) {
+		audio.play().then(() => {
+			btn.textContent = '⏸';
+			btn.setAttribute('aria-label', 'Pause radio');
+			player.classList.add('playing');
+		}).catch(() => {
+			// playback blocked or stream unavailable — stay stopped
+		});
+	} else {
+		audio.pause();
+		btn.textContent = '▶';
+		btn.setAttribute('aria-label', 'Play radio');
+		player.classList.remove('playing');
+	}
+}
+
+// ---------------------------------------------------------------------------
 // Boot sequence
 // ---------------------------------------------------------------------------
 
@@ -463,6 +511,7 @@ function startBoot() {
 
 	app.innerHTML = amigaScreenHTML();
 	playModemSound();
+	initRadioPlayer();
 
 	const bootScreen = /** @type {HTMLDivElement} */ (document.getElementById('boot-screen'));
 	const cursor = /** @type {HTMLSpanElement} */ (bootScreen.querySelector('.cursor'));
@@ -566,6 +615,12 @@ app.addEventListener('click', (e) => {
 	// Download CV
 	if (target.closest('[data-action="download-cv"]')) {
 		downloadCv();
+		return;
+	}
+
+	// Toggle radio
+	if (target.closest('[data-action="toggle-radio"]')) {
+		toggleRadio();
 		return;
 	}
 

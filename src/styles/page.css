@@ -276,6 +276,61 @@ html, body {
 
 .status-right { margin-left: auto; }
 
+.radio-player {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.radio-btn {
+	font-family: 'VT323', monospace;
+	font-size: 14px;
+	line-height: 1;
+	padding: 2px 6px;
+	background: transparent;
+	border: 1px solid #00ff41;
+	color: #00ff41;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.radio-btn:hover {
+	background: #00ff41;
+	color: #000;
+}
+
+.radio-label {
+	color: #00ff41;
+	white-space: nowrap;
+}
+
+.radio-eq {
+	display: flex;
+	align-items: flex-end;
+	gap: 2px;
+	height: 12px;
+}
+
+.radio-eq span {
+	width: 3px;
+	height: 4px;
+	background: #00ff41;
+	opacity: 0.3;
+}
+
+.radio-player.playing .radio-eq span {
+	opacity: 1;
+	animation: eq-bounce 0.9s ease-in-out infinite;
+}
+
+.radio-player.playing .radio-eq span:nth-child(2) { animation-delay: 0.2s; }
+.radio-player.playing .radio-eq span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes eq-bounce {
+	0%, 100% { height: 4px; }
+	50% { height: 12px; }
+}
+
 .scanlines {
 	position: absolute; top: 0; left: 0; right: 0; bottom: 0;
 	background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
@@ -306,6 +361,7 @@ html, body {
 	.job-header { flex-direction: column; align-items: flex-start; }
 	.action-buttons { flex-direction: column; }
 	.amiga-btn { text-align: center; }
+	.radio-label { display: none; }
 }
 
 /* Desktop icons */
