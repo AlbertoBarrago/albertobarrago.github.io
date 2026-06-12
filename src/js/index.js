@@ -21,7 +21,7 @@ const skills = {
 	backend: ["Node.js", "Fastify", "FastAPI", "Flask", "Spring Boot"],
 	database: ["MongoDB", "Oracle", "MySQL"],
 	devops: ["Docker", "GitHub/Gitlab Actions", "Azure DevOps"],
-	tools: ["Git", "Neovim", "tmux", ""],
+	tools: ["Git", "Neovim", "tmux", "Zed"],
 	ai: ["LLM Integration", "Prompt Engineering", "AI Agents"]
 };
 
