@@ -8,8 +8,8 @@ const cv_filename = "albertobarrago_cv.pdf";
 
 const profile = `10 years turning coffee into production code for millions of users —
 Node.js, React, Spring Boot, Kafka, you name it. Currently grinding XP
-in Python/FastAPI and AI agents. Clean code, happy teammates, real
-impact: that's the cheat code.
+in Python/FastAPI, AI agents, and native Swift apps for iOS/macOS.
+Clean code, happy teammates, real impact: that's the cheat code.
 `;
 
 const skills = {
