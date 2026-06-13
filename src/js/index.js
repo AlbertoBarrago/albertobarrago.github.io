@@ -6,14 +6,10 @@ const location = "Cagliari, Italy";
 const email = "albertobarrago@gmail.com";
 const cv_filename = "albertobarrago_cv.pdf";
 
-const profile = `JavaScript-first Senior Engineer with deep expertise in enterprise
-scalability and cloud architecture. A decade of delivering production
-systems for millions of users across frontend, backend, and DevOps—
-specializing in Node.js/React ecosystems, Spring Boot microservices,
-and CI/CD automation. Experienced in building component libraries and
-Kafka-based architectures. Currently developing Python/FastAPI skills
-and exploring AI-integrated solutions. Pragmatic builder who values code
-quality, collaborative shipping, and real measurable impact.
+const profile = `10 years turning coffee into production code for millions of users —
+Node.js, React, Spring Boot, Kafka, you name it. Currently grinding XP
+in Python/FastAPI and AI agents. Clean code, happy teammates, real
+impact: that's the cheat code.
 `;
 
 const skills = {
