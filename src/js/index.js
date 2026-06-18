@@ -16,23 +16,23 @@ const skills = {
 	frontend: ["Angular", "React", "Vanilla JS"],
 	backend: ["Node.js", "Fastify", "FastAPI", "Flask", "Spring Boot"],
 	database: ["MongoDB", "Oracle", "MySQL"],
-	devops: ["Docker", "GitHub/Gitlab Actions", "Azure DevOps"],
+	devops: ["Docker", "GitHub/GitLab CI", "Azure DevOps"],
 	tools: ["Git", "Neovim", "tmux", "Zed"],
 	ai: ["LLM Integration", "Prompt Engineering", "AI Agents"]
 };
 
 const experience = [
 	{
-		role: "Senior Software Engineer",
+		role: "Tech Leader / Senior Software Engineer",
 		company: "C22 Consulting",
 		period: "2026 - Present",
-		highlight: "Loading..."
+		highlight: "Leading React, iOS, and Java architecture across active projects; mentoring developers and evangelizing AI workflows with Claude and MCP"
 	},
 	{
-		role: "Senior Software Engineer",
+		role: "Senior Software Engineer / DevOps",
 		company: "Minsait/Indra",
 		period: "2023 - 2025",
-		highlight: "Angular component library for 6+ teams, CI/CD optimization -30% deploy time"
+		highlight: "Angular component library for 6+ teams, DevOps ownership, CI/CD optimization -30% deploy time"
 	},
 	{
 		role: "Senior Software Developer",

@@ -58,6 +58,32 @@ const GAME_TITLES = Object.freeze({
 	flappy: 'FLAPPY BIRD',
 });
 
+/** @type {Readonly<Record<string, readonly { label: string, key: string }[]>>} */
+const GAME_CONTROLS = Object.freeze({
+	space: [
+		{ label: 'START', key: 'Enter' },
+		{ label: '←', key: 'ArrowLeft' },
+		{ label: 'FIRE', key: ' ' },
+		{ label: '→', key: 'ArrowRight' },
+	],
+	tetris: [
+		{ label: 'START', key: 'Enter' },
+		{ label: '←', key: 'ArrowLeft' },
+		{ label: 'ROT', key: 'ArrowUp' },
+		{ label: '→', key: 'ArrowRight' },
+		{ label: '↓', key: 'ArrowDown' },
+	],
+	pong: [
+		{ label: 'START', key: 'Enter' },
+		{ label: '↑', key: 'ArrowUp' },
+		{ label: '↓', key: 'ArrowDown' },
+	],
+	flappy: [
+		{ label: 'START', key: 'Enter' },
+		{ label: 'FLAP', key: ' ' },
+	],
+});
+
 /** @type {Readonly<Record<string, (canvas: HTMLCanvasElement, onExit: () => void) => (() => void)>>} */
 const GAME_INIT = Object.freeze({
 	space: initSpaceInvaders,
@@ -274,6 +300,10 @@ function contactHTML() {
 }
 
 function gameOverlayHTML(/** @type {string} */ type) {
+	const controls = (GAME_CONTROLS[type] ?? [])
+		.map((control) => `<button class="game-control-btn" type="button" data-control-key="${control.key}">${control.label}</button>`)
+		.join('');
+
 	return `<div class="game-fullscreen" id="game-overlay">
 	<div class="game-scanlines"></div>
 	<div class="game-topbar">
@@ -281,6 +311,7 @@ function gameOverlayHTML(/** @type {string} */ type) {
 		<span class="game-exit" data-action="exit-game">[X] Close</span>
 	</div>
 	<canvas class="game-canvas"></canvas>
+	<div class="game-touch-controls">${controls}</div>
 </div>`;
 }
 
@@ -635,6 +666,22 @@ app.addEventListener('click', (e) => {
 	if (target.closest('[data-action="exit-game"]')) {
 		exitGame();
 	}
+});
+
+app.addEventListener('pointerdown', (e) => {
+	const target = /** @type {HTMLElement} */ (e.target);
+	const btn = /** @type {HTMLElement | null} */ (target.closest('[data-control-key]'));
+	if (!btn?.dataset.controlKey) return;
+	e.preventDefault();
+	window.dispatchEvent(new KeyboardEvent('keydown', { key: btn.dataset.controlKey, bubbles: true }));
+});
+
+app.addEventListener('pointerup', (e) => {
+	const target = /** @type {HTMLElement} */ (e.target);
+	const btn = /** @type {HTMLElement | null} */ (target.closest('[data-control-key]'));
+	if (!btn?.dataset.controlKey) return;
+	e.preventDefault();
+	window.dispatchEvent(new KeyboardEvent('keyup', { key: btn.dataset.controlKey, bubbles: true }));
 });
 
 // ---------------------------------------------------------------------------
