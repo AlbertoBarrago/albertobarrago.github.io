@@ -478,6 +478,43 @@ html, body {
 	background: repeating-linear-gradient(to bottom, #333 0px, #333 3px, transparent 3px, transparent 6px);
 }
 
+/* Flappy Bird icon */
+.icon-flappy {
+	width: 30px;
+	height: 24px;
+	position: relative;
+}
+
+.icon-flappy::before {
+	content: '';
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	top: 4px;
+	left: 6px;
+	background: #ffbd2e;
+	box-shadow:
+		-6px 4px 0 0 #ffe680,
+		14px 2px 0 0 #ff6b6b,
+		18px 2px 0 0 #ff6b6b,
+		8px -4px 0 0 #fff,
+		10px -2px 0 0 #0a0a0a;
+}
+
+.icon-flappy::after {
+	content: '';
+	position: absolute;
+	top: 1px;
+	right: 0;
+	width: 5px;
+	height: 22px;
+	background: #00ff41;
+	box-shadow:
+		-2px 8px 0 0 #00a33a,
+		-24px -1px 0 0 #00ff41,
+		-26px 9px 0 0 #00a33a;
+}
+
 .icon-mario {
 	width: 24px;
 	height: 24px;

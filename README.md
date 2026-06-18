@@ -9,7 +9,7 @@ If you like it, feel free to clone the repo and modify it as you prefer!
 - **Retro Amiga Workbench UI** — Classic terminal-style design with boot sequence animation
 - **CRT Effects** — Scanlines, flicker, and authentic retro aesthetics
 - **Modem Dial-Up Sound** — Web Audio API synthesis of vintage connection sounds
-- **Embedded Retro Games** — Space Invaders, Tetris, and Pong playable in-browser
+- **Embedded Retro Games** — Space Invaders, Tetris, Pong, and Flappy Bird playable in-browser
 - **Vanilla JS + Vite** — Zero runtime framework, pure ES modules with JSDoc types
 - **Responsive Design** — Works on desktop and mobile
 - **Interactive Sections** — About, Skills, Experience, and Contact
@@ -73,6 +73,7 @@ bun run deploy
 │   │   ├── app.js          # Main application module
 │   │   ├── index.js        # Portfolio data & constants
 │   │   └── games/
+│   │       ├── flappyBird.js
 │   │       ├── spaceInvaders.js
 │   │       ├── tetris.js
 │   │       └── pong.js

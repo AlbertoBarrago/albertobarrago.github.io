@@ -43,6 +43,7 @@ console.log(
 import { initSpaceInvaders } from './games/spaceInvaders.js';
 import { initTetris } from './games/tetris.js';
 import { initPong } from './games/pong.js';
+import { initFlappyBird } from './games/flappyBird.js';
 
 /** @typedef {'about' | 'skills' | 'experience' | 'projects' | 'contact'} Section */
 
@@ -54,6 +55,7 @@ const GAME_TITLES = Object.freeze({
 	space: 'SPACE INVADERS',
 	tetris: 'TETRIS',
 	pong: 'PONG',
+	flappy: 'FLAPPY BIRD',
 });
 
 /** @type {Readonly<Record<string, (canvas: HTMLCanvasElement, onExit: () => void) => (() => void)>>} */
@@ -61,6 +63,7 @@ const GAME_INIT = Object.freeze({
 	space: initSpaceInvaders,
 	tetris: initTetris,
 	pong: initPong,
+	flappy: initFlappyBird,
 });
 
 const BOOT_SEQUENCE = Object.freeze([
@@ -191,6 +194,10 @@ function aboutHTML() {
 		<div class="desktop-icon" data-game="pong">
 			<div class="desktop-icon-img"><div class="icon-pong"></div></div>
 			<span class="desktop-icon-label">pong.exe</span>
+		</div>
+		<div class="desktop-icon" data-game="flappy">
+			<div class="desktop-icon-img"><div class="icon-flappy"></div></div>
+			<span class="desktop-icon-label">flappy.exe</span>
 		</div>
 		<a class="desktop-icon" href="https://mario-murru-the-game.netlify.app/" target="_blank" rel="noopener noreferrer">
 			<div class="desktop-icon-img"><div class="icon-mario"></div></div>
