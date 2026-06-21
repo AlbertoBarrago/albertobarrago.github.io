@@ -9,20 +9,22 @@ export function initFlappyBird(canvas, onExit) {
 	if (!ctx) return () => {};
 
 	const BIRD_SIZE = 24;
-	const GRAVITY = 0.42;
-	const FLAP_FORCE = -7.2;
+	const GRAVITY = 0.34;
+	const FLAP_FORCE = -6.6;
 	const PIPE_W = 58;
-	const PIPE_GAP = 150;
-	const PIPE_SPEED = 2.8;
-	const PIPE_INTERVAL = 96;
+	const PIPE_GAP = 168;
+	const PIPE_SPEED = 2.15;
+	const PIPE_INTERVAL = 126;
 	const GROUND_H = 46;
 	const FRAME_MS = 1000 / 60;
+	const MAX_FRAME_MS = 100;
 
 	let gameState = 'waiting';
 	let score = 0;
 	let highScore = parseInt(localStorage.getItem('flappyBirdHigh') || '0', 10);
 	let animFrameId = 0;
 	let lastFrameTime = 0;
+	let frameAccumulator = 0;
 	let frame = 0;
 	let nextPipeFrame = PIPE_INTERVAL;
 	let birdX = 0;
@@ -56,6 +58,7 @@ export function initFlappyBird(canvas, onExit) {
 		gameState = 'playing';
 		score = 0;
 		frame = 0;
+		frameAccumulator = 0;
 		nextPipeFrame = PIPE_INTERVAL;
 		pipes = [];
 		resetBird();
@@ -170,13 +173,12 @@ export function initFlappyBird(canvas, onExit) {
 	window.addEventListener('keydown', keyHandler);
 	canvas.addEventListener('pointerdown', pointerHandler);
 
-	/** @param {number} deltaFrames */
-	function update(deltaFrames) {
+	function updateStep() {
 		if (gameState !== 'playing') return;
 
-		frame += deltaFrames;
-		birdVY += GRAVITY * deltaFrames;
-		birdY += birdVY * deltaFrames;
+		frame++;
+		birdVY += GRAVITY;
+		birdY += birdVY;
 
 		while (frame >= nextPipeFrame) {
 			spawnPipe();
@@ -184,7 +186,7 @@ export function initFlappyBird(canvas, onExit) {
 		}
 
 		for (const pipe of pipes) {
-			pipe.x -= PIPE_SPEED * deltaFrames;
+			pipe.x -= PIPE_SPEED;
 			if (!pipe.passed && pipe.x + PIPE_W < birdX) {
 				pipe.passed = true;
 				score++;
@@ -341,10 +343,15 @@ export function initFlappyBird(canvas, onExit) {
 	/** @param {number} timestamp */
 	function gameLoop(timestamp) {
 		if (lastFrameTime === 0) lastFrameTime = timestamp;
-		const deltaFrames = Math.min((timestamp - lastFrameTime) / FRAME_MS, 3);
+		const elapsed = Math.min(timestamp - lastFrameTime, MAX_FRAME_MS);
 		lastFrameTime = timestamp;
+		frameAccumulator += elapsed;
 
-		update(deltaFrames);
+		while (frameAccumulator >= FRAME_MS) {
+			updateStep();
+			frameAccumulator -= FRAME_MS;
+		}
+
 		draw();
 		animFrameId = requestAnimationFrame(gameLoop);
 	}
