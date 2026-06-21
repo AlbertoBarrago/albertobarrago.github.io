@@ -23,6 +23,8 @@ export function initTetris(canvas, onExit) {
 	let score = 0, level = 1, lines = 0;
 	let highScore = parseInt(localStorage.getItem('tetrisHigh') || '0', 10);
 	let animFrameId = 0;
+	let lastFrameTime = 0;
+	const FRAME_MS = 1000 / 60;
 
 	/** @type {(string|null)[][]} */
 	let grid = [];
@@ -148,9 +150,10 @@ export function initTetris(canvas, onExit) {
 	window.addEventListener('keydown', keyHandler);
 	window.addEventListener('keyup', keyUpHandler);
 
-	function update() {
+	/** @param {number} deltaFrames */
+	function update(deltaFrames) {
 		if (gameState !== 'playing' || !currentPiece) return;
-		dropTimer++;
+		dropTimer += deltaFrames;
 		if (dropTimer >= dropInterval) {
 			dropTimer = 0;
 			if (!collides(currentPiece.shape, currentPiece.x, currentPiece.y + 1)) currentPiece.y++;
@@ -229,8 +232,17 @@ export function initTetris(canvas, onExit) {
 		}
 	}
 
-	function gameLoop() { update(); draw(); animFrameId = requestAnimationFrame(gameLoop); }
-	resetGrid(); gameLoop();
+	/** @param {number} timestamp */
+	function gameLoop(timestamp) {
+		if (lastFrameTime === 0) lastFrameTime = timestamp;
+		const deltaFrames = Math.min((timestamp - lastFrameTime) / FRAME_MS, 3);
+		lastFrameTime = timestamp;
+
+		update(deltaFrames);
+		draw();
+		animFrameId = requestAnimationFrame(gameLoop);
+	}
+	resetGrid(); animFrameId = requestAnimationFrame(gameLoop);
 
 	return function cleanup() {
 		cancelAnimationFrame(animFrameId);

@@ -16,12 +16,15 @@ export function initFlappyBird(canvas, onExit) {
 	const PIPE_SPEED = 2.8;
 	const PIPE_INTERVAL = 96;
 	const GROUND_H = 46;
+	const FRAME_MS = 1000 / 60;
 
 	let gameState = 'waiting';
 	let score = 0;
 	let highScore = parseInt(localStorage.getItem('flappyBirdHigh') || '0', 10);
 	let animFrameId = 0;
+	let lastFrameTime = 0;
 	let frame = 0;
+	let nextPipeFrame = PIPE_INTERVAL;
 	let birdX = 0;
 	let birdY = 0;
 	let birdVY = 0;
@@ -53,6 +56,7 @@ export function initFlappyBird(canvas, onExit) {
 		gameState = 'playing';
 		score = 0;
 		frame = 0;
+		nextPipeFrame = PIPE_INTERVAL;
 		pipes = [];
 		resetBird();
 		spawnPipe();
@@ -166,17 +170,21 @@ export function initFlappyBird(canvas, onExit) {
 	window.addEventListener('keydown', keyHandler);
 	canvas.addEventListener('pointerdown', pointerHandler);
 
-	function update() {
+	/** @param {number} deltaFrames */
+	function update(deltaFrames) {
 		if (gameState !== 'playing') return;
 
-		frame++;
-		birdVY += GRAVITY;
-		birdY += birdVY;
+		frame += deltaFrames;
+		birdVY += GRAVITY * deltaFrames;
+		birdY += birdVY * deltaFrames;
 
-		if (frame % PIPE_INTERVAL === 0) spawnPipe();
+		while (frame >= nextPipeFrame) {
+			spawnPipe();
+			nextPipeFrame += PIPE_INTERVAL;
+		}
 
 		for (const pipe of pipes) {
-			pipe.x -= PIPE_SPEED;
+			pipe.x -= PIPE_SPEED * deltaFrames;
 			if (!pipe.passed && pipe.x + PIPE_W < birdX) {
 				pipe.passed = true;
 				score++;
@@ -330,14 +338,19 @@ export function initFlappyBird(canvas, onExit) {
 		if (gameState === 'gameover') drawGameOver();
 	}
 
-	function gameLoop() {
-		update();
+	/** @param {number} timestamp */
+	function gameLoop(timestamp) {
+		if (lastFrameTime === 0) lastFrameTime = timestamp;
+		const deltaFrames = Math.min((timestamp - lastFrameTime) / FRAME_MS, 3);
+		lastFrameTime = timestamp;
+
+		update(deltaFrames);
 		draw();
 		animFrameId = requestAnimationFrame(gameLoop);
 	}
 
 	resetBird();
-	gameLoop();
+	animFrameId = requestAnimationFrame(gameLoop);
 
 	return function cleanup() {
 		cancelAnimationFrame(animFrameId);
