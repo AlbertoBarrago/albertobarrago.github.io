@@ -13,11 +13,13 @@ export function initSpaceInvaders(canvas, onExit) {
 	const PLAYER_SPEED = 5, BULLET_SPEED = 7, ALIEN_BULLET_SPEED = 4;
 	const ALIEN_FIRE_CHANCE = 0.003;
 	const ROW_COLORS = ['#ff6b6b', '#ff6b6b', '#ffbd2e', '#ffbd2e', '#00ff41'];
+	const FRAME_MS = 1000 / 60;
 
 	let gameState = 'waiting';
 	let score = 0, lives = 3;
 	let highScore = parseInt(localStorage.getItem('spaceInvadersHigh') || '0', 10);
 	let animFrameId = 0;
+	let lastFrameTime = 0;
 
 	function resize() { canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
 	resize();
@@ -66,17 +68,19 @@ export function initSpaceInvaders(canvas, onExit) {
 	window.addEventListener('keydown', keyHandler);
 	window.addEventListener('keyup', keyUpHandler);
 
-	function update() {
+	/** @param {number} deltaFrames */
+	function update(deltaFrames) {
 		if (gameState !== 'playing') return;
-		if (keys['ArrowLeft'] && playerX > 0) playerX -= PLAYER_SPEED;
-		if (keys['ArrowRight'] && playerX < canvas.width - PLAYER_W) playerX += PLAYER_SPEED;
-		if (shootCooldown > 0) shootCooldown--;
+		if (keys['ArrowLeft'] && playerX > 0) playerX -= PLAYER_SPEED * deltaFrames;
+		if (keys['ArrowRight'] && playerX < canvas.width - PLAYER_W) playerX += PLAYER_SPEED * deltaFrames;
+		playerX = Math.max(0, Math.min(canvas.width - PLAYER_W, playerX));
+		if (shootCooldown > 0) shootCooldown = Math.max(0, shootCooldown - deltaFrames);
 		if (keys[' '] && shootCooldown === 0) {
 			playerBullets.push({ x: playerX + PLAYER_W / 2 - BULLET_W / 2, y: playerY() - BULLET_H });
 			shootCooldown = 15;
 		}
 		for (let i = playerBullets.length - 1; i >= 0; i--) {
-			playerBullets[i].y -= BULLET_SPEED;
+			playerBullets[i].y -= BULLET_SPEED * deltaFrames;
 			if (playerBullets[i].y < 0) { playerBullets.splice(i, 1); continue; }
 			for (const alien of aliens) {
 				if (!alien.alive) continue;
@@ -90,7 +94,7 @@ export function initSpaceInvaders(canvas, onExit) {
 			}
 		}
 		if (aliens.every(a => !a.alive)) { gameState = 'won'; return; }
-		alienMoveTimer++;
+		alienMoveTimer += deltaFrames;
 		if (alienMoveTimer >= alienMoveInterval) {
 			alienMoveTimer = 0;
 			let shouldDrop = false;
@@ -103,10 +107,10 @@ export function initSpaceInvaders(canvas, onExit) {
 			for (const a of aliens) { if (a.alive && a.y + ALIEN_H >= playerY()) { gameState = 'gameover'; return; } }
 		}
 		for (const alien of aliens.filter(a => a.alive)) {
-			if (Math.random() < ALIEN_FIRE_CHANCE) alienBullets.push({ x: alien.x + ALIEN_W / 2 - BULLET_W / 2, y: alien.y + ALIEN_H });
+			if (Math.random() < ALIEN_FIRE_CHANCE * deltaFrames) alienBullets.push({ x: alien.x + ALIEN_W / 2 - BULLET_W / 2, y: alien.y + ALIEN_H });
 		}
 		for (let i = alienBullets.length - 1; i >= 0; i--) {
-			alienBullets[i].y += ALIEN_BULLET_SPEED;
+			alienBullets[i].y += ALIEN_BULLET_SPEED * deltaFrames;
 			if (alienBullets[i].y > canvas.height) { alienBullets.splice(i, 1); continue; }
 			if (alienBullets[i].x < playerX + PLAYER_W && alienBullets[i].x + BULLET_W > playerX && alienBullets[i].y < playerY() + PLAYER_H && alienBullets[i].y + BULLET_H > playerY()) {
 				alienBullets.splice(i, 1); lives--;
@@ -166,8 +170,17 @@ export function initSpaceInvaders(canvas, onExit) {
 		}
 	}
 
-	function gameLoop() { update(); draw(); animFrameId = requestAnimationFrame(gameLoop); }
-	resetAliens(); gameLoop();
+	/** @param {number} timestamp */
+	function gameLoop(timestamp) {
+		if (lastFrameTime === 0) lastFrameTime = timestamp;
+		const deltaFrames = Math.min((timestamp - lastFrameTime) / FRAME_MS, 3);
+		lastFrameTime = timestamp;
+
+		update(deltaFrames);
+		draw();
+		animFrameId = requestAnimationFrame(gameLoop);
+	}
+	resetAliens(); animFrameId = requestAnimationFrame(gameLoop);
 
 	return function cleanup() {
 		cancelAnimationFrame(animFrameId);

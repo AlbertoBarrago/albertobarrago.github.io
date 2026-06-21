@@ -11,10 +11,12 @@ export function initPong(canvas, onExit) {
 	const PADDLE_W = 12, PADDLE_H = 80, BALL_SIZE = 10;
 	const PADDLE_SPEED = 5, BALL_BASE_SPEED = 4, AI_SPEED = 3.5;
 	const WIN_SCORE = 7;
+	const FRAME_MS = 1000 / 60;
 
 	let gameState = 'waiting';
 	let playerScore = 0, aiScore = 0;
 	let animFrameId = 0;
+	let lastFrameTime = 0;
 
 	function resize() { canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
 	resize();
@@ -54,27 +56,29 @@ export function initPong(canvas, onExit) {
 	window.addEventListener('keydown', keyHandler);
 	window.addEventListener('keyup', keyUpHandler);
 
-	function update() {
+	/** @param {number} deltaFrames */
+	function update(deltaFrames) {
 		if (gameState !== 'playing') return;
 
 		// Player paddle
-		if (keys['ArrowUp'] && playerY > 0) playerY -= PADDLE_SPEED;
-		if (keys['ArrowDown'] && playerY < canvas.height - PADDLE_H) playerY += PADDLE_SPEED;
+		if (keys['ArrowUp'] && playerY > 0) playerY -= PADDLE_SPEED * deltaFrames;
+		if (keys['ArrowDown'] && playerY < canvas.height - PADDLE_H) playerY += PADDLE_SPEED * deltaFrames;
+		playerY = Math.max(0, Math.min(canvas.height - PADDLE_H, playerY));
 
 		// AI paddle
 		const aiCenter = aiY + PADDLE_H / 2;
 		if (ballDX > 0) {
-			if (aiCenter < ballY - 10) aiY += AI_SPEED;
-			else if (aiCenter > ballY + 10) aiY -= AI_SPEED;
+			if (aiCenter < ballY - 10) aiY += AI_SPEED * deltaFrames;
+			else if (aiCenter > ballY + 10) aiY -= AI_SPEED * deltaFrames;
 		} else {
-			if (aiCenter < canvas.height / 2 - 5) aiY += AI_SPEED * 0.5;
-			else if (aiCenter > canvas.height / 2 + 5) aiY -= AI_SPEED * 0.5;
+			if (aiCenter < canvas.height / 2 - 5) aiY += AI_SPEED * 0.5 * deltaFrames;
+			else if (aiCenter > canvas.height / 2 + 5) aiY -= AI_SPEED * 0.5 * deltaFrames;
 		}
 		aiY = Math.max(0, Math.min(canvas.height - PADDLE_H, aiY));
 
 		// Ball
-		ballX += ballDX;
-		ballY += ballDY;
+		ballX += ballDX * deltaFrames;
+		ballY += ballDY * deltaFrames;
 
 		// Top/bottom bounce
 		if (ballY <= 0) { ballY = 0; ballDY = Math.abs(ballDY); }
@@ -157,8 +161,17 @@ export function initPong(canvas, onExit) {
 		}
 	}
 
-	function gameLoop() { update(); draw(); animFrameId = requestAnimationFrame(gameLoop); }
-	gameLoop();
+	/** @param {number} timestamp */
+	function gameLoop(timestamp) {
+		if (lastFrameTime === 0) lastFrameTime = timestamp;
+		const deltaFrames = Math.min((timestamp - lastFrameTime) / FRAME_MS, 3);
+		lastFrameTime = timestamp;
+
+		update(deltaFrames);
+		draw();
+		animFrameId = requestAnimationFrame(gameLoop);
+	}
+	animFrameId = requestAnimationFrame(gameLoop);
 
 	return function cleanup() {
 		cancelAnimationFrame(animFrameId);
