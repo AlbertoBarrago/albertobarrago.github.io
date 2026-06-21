@@ -11,6 +11,7 @@ html, body {
 	overflow: hidden;
 	background: #1a1a2e;
 	font-family: 'VT323', monospace;
+	overscroll-behavior: none;
 }
 
 /* Start overlay */
@@ -546,11 +547,14 @@ a.desktop-icon {
 	position: fixed;
 	top: 0; left: 0;
 	width: 100vw; height: 100vh;
+	width: 100dvw; height: 100dvh;
 	background: #0a0a0a;
 	z-index: 9999;
 	display: flex;
 	flex-direction: column;
 	font-family: 'VT323', monospace;
+	overflow: hidden;
+	touch-action: none;
 }
 
 .game-scanlines {
@@ -564,7 +568,7 @@ a.desktop-icon {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 10px 20px;
+	padding: max(10px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) 10px max(20px, env(safe-area-inset-left));
 	background: #111;
 	border-bottom: 2px solid #00ff41;
 	z-index: 1;
@@ -585,6 +589,8 @@ a.desktop-icon {
 	padding: 4px 12px;
 	border: 1px solid #ff6b6b;
 	transition: all 0.2s ease;
+	white-space: nowrap;
+	touch-action: manipulation;
 }
 
 .game-exit:hover { background: #ff6b6b; color: #000; }
@@ -594,20 +600,24 @@ a.desktop-icon {
 	width: 100%;
 	min-height: 0;
 	display: block;
+	touch-action: none;
+	user-select: none;
 }
 
 .game-touch-controls {
 	display: none;
 	gap: 8px;
-	padding: 8px;
+	padding: 8px max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
 	background: #111;
 	border-top: 2px solid #00ff41;
 	z-index: 3;
 	touch-action: none;
+	flex-shrink: 0;
 }
 
 .game-control-btn {
 	flex: 1;
+	min-width: 0;
 	min-height: 46px;
 	font-family: 'VT323', monospace;
 	font-size: 19px;
@@ -616,9 +626,14 @@ a.desktop-icon {
 	border: 1px solid #00ff41;
 	cursor: pointer;
 	user-select: none;
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+	touch-action: none;
+	white-space: nowrap;
 }
 
-.game-control-btn:active {
+.game-control-btn:active,
+.game-control-btn.is-pressed {
 	background: #00ff41;
 	color: #000;
 }
@@ -809,7 +824,7 @@ a.desktop-icon {
 	}
 
 	.game-topbar {
-		padding: 8px 10px;
+		padding: max(8px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) 8px max(10px, env(safe-area-inset-left));
 	}
 
 	.game-title {
@@ -829,11 +844,66 @@ a.desktop-icon {
 
 	.game-touch-controls {
 		display: flex;
+		gap: 6px;
+	}
+
+	.game-control-btn {
+		min-height: 52px;
+		padding: 4px 2px;
+		font-size: 18px;
+	}
+}
+
+@media (max-width: 600px) and (orientation: landscape) {
+	.game-topbar {
+		padding-top: 6px;
+		padding-bottom: 6px;
+	}
+
+	.game-touch-controls {
+		padding-top: 6px;
+	}
+
+	.game-control-btn {
+		min-height: 44px;
+	}
+}
+
+@media (max-height: 480px) {
+	.game-topbar {
+		padding-top: 6px;
+		padding-bottom: 6px;
+	}
+
+	.game-title {
+		font-size: 19px;
+		letter-spacing: 1px;
+	}
+
+	.game-exit {
+		font-size: 17px;
+		padding: 5px 9px;
+	}
+
+	.game-touch-controls {
+		display: flex;
+		gap: 6px;
+		padding-top: 6px;
+	}
+
+	.game-control-btn {
+		min-height: 44px;
+		padding: 4px 2px;
+		font-size: 17px;
 	}
 }
 
 @media (max-width: 380px) {
 	.desktop-icons {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.game-control-btn {
+		font-size: 16px;
 	}
 }

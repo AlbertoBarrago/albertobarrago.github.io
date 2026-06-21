@@ -32,7 +32,10 @@ export function initTetris(canvas, onExit) {
 	let currentPiece = null;
 	let dropTimer = 0, dropInterval = 45;
 
-	function resize() { canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
+	function resize() {
+		canvas.width = Math.max(1, canvas.clientWidth);
+		canvas.height = Math.max(1, canvas.clientHeight);
+	}
 	resize();
 	const resizeObs = new ResizeObserver(resize);
 	resizeObs.observe(canvas);
@@ -165,9 +168,16 @@ export function initTetris(canvas, onExit) {
 		if (!ctx) return;
 		ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-		const cellSize = Math.min(Math.floor((canvas.height - 60) / GRID_ROWS), Math.floor((canvas.width - 200) / GRID_COLS));
+		const narrow = canvas.width < 520;
+		const horizontalPadding = narrow ? 20 : 200;
+		const verticalPadding = narrow ? 96 : 60;
+		const cellSize = Math.max(8, Math.min(
+			Math.floor((canvas.height - verticalPadding) / GRID_ROWS),
+			Math.floor((canvas.width - horizontalPadding) / GRID_COLS)
+		));
 		const boardW = cellSize * GRID_COLS, boardH = cellSize * GRID_ROWS;
-		const offX = Math.floor((canvas.width - boardW) / 2), offY = Math.floor((canvas.height - boardH) / 2) + 10;
+		const offX = Math.floor((canvas.width - boardW) / 2);
+		const offY = Math.max(narrow ? 68 : 36, Math.floor((canvas.height - boardH) / 2) + 10);
 
 		if (gameState === 'waiting') {
 			ctx.fillStyle = '#00ff41'; ctx.textAlign = 'center'; ctx.font = '48px VT323, monospace';
@@ -175,8 +185,8 @@ export function initTetris(canvas, onExit) {
 			ctx.font = '24px VT323, monospace'; ctx.fillStyle = '#ffbd2e';
 			ctx.fillText('PRESS ENTER TO START', canvas.width / 2, canvas.height / 2 + 10);
 			ctx.fillStyle = '#888'; ctx.font = '18px VT323, monospace';
-			ctx.fillText('Arrow Keys = Move | Up/Space = Rotate | ESC = Exit', canvas.width / 2, canvas.height / 2 + 50);
-			ctx.fillText('High Score: ' + highScore, canvas.width / 2, canvas.height / 2 + 80);
+			ctx.fillText('Arrows = Move | Up/Space = Rotate', canvas.width / 2, canvas.height / 2 + 50);
+			ctx.fillText('ESC = Exit | High Score: ' + highScore, canvas.width / 2, canvas.height / 2 + 78);
 			ctx.textAlign = 'left'; return;
 		}
 
@@ -211,10 +221,10 @@ export function initTetris(canvas, onExit) {
 		}
 
 		// HUD
-		ctx.fillStyle = '#00ff41'; ctx.font = '22px VT323, monospace';
+		ctx.fillStyle = '#00ff41'; ctx.font = narrow ? '18px VT323, monospace' : '22px VT323, monospace';
 		ctx.textAlign = 'left';
 		ctx.fillText('SCORE: ' + score, 10, 24);
-		ctx.fillText('LEVEL: ' + level, 10, 50);
+		ctx.fillText('LEVEL: ' + level, 10, narrow ? 46 : 50);
 		ctx.textAlign = 'center';
 		ctx.fillText('HIGH: ' + highScore, canvas.width / 2, 24);
 		ctx.textAlign = 'right';

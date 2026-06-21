@@ -20,17 +20,43 @@ export function initSpaceInvaders(canvas, onExit) {
 	let highScore = parseInt(localStorage.getItem('spaceInvadersHigh') || '0', 10);
 	let animFrameId = 0;
 	let lastFrameTime = 0;
+	let playerX = 0;
+	/** @type {{x:number,y:number,row:number,alive:boolean}[]} */
+	let aliens = [];
+	/** @type {{x:number,y:number}[]} */
+	let playerBullets = [];
+	/** @type {{x:number,y:number}[]} */
+	let alienBullets = [];
 
-	function resize() { canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
+	function resize() {
+		const oldW = canvas.width || canvas.clientWidth || 1;
+		const oldH = canvas.height || canvas.clientHeight || 1;
+		canvas.width = Math.max(1, canvas.clientWidth);
+		canvas.height = Math.max(1, canvas.clientHeight);
+		const scaleX = canvas.width / oldW;
+		const scaleY = canvas.height / oldH;
+
+		playerX = Math.max(0, Math.min(canvas.width - PLAYER_W, playerX * scaleX));
+		for (const alien of aliens) {
+			alien.x *= scaleX;
+			alien.y *= scaleY;
+		}
+		for (const bullet of playerBullets) {
+			bullet.x *= scaleX;
+			bullet.y *= scaleY;
+		}
+		for (const bullet of alienBullets) {
+			bullet.x *= scaleX;
+			bullet.y *= scaleY;
+		}
+		if (gameState !== 'playing') playerX = canvas.width / 2 - PLAYER_W / 2;
+	}
 	resize();
 	const resizeObs = new ResizeObserver(resize);
 	resizeObs.observe(canvas);
 
-	let playerX = canvas.width / 2 - PLAYER_W / 2;
 	const playerY = () => canvas.height - 40;
 
-	/** @type {{x:number,y:number,row:number,alive:boolean}[]} */
-	let aliens = [];
 	let alienDirX = 1, alienMoveTimer = 0, alienMoveInterval = 40;
 	const alienStepX = 10, alienStepY = 20;
 
@@ -44,8 +70,6 @@ export function initSpaceInvaders(canvas, onExit) {
 		alienDirX = 1; alienMoveTimer = 0; alienMoveInterval = 40;
 	}
 
-	/** @type {{x:number,y:number}[]} */ let playerBullets = [];
-	/** @type {{x:number,y:number}[]} */ let alienBullets = [];
 	let shootCooldown = 0;
 	const keys = /** @type {Record<string,boolean>} */ ({});
 
@@ -128,8 +152,8 @@ export function initSpaceInvaders(canvas, onExit) {
 			ctx.font = '24px VT323, monospace'; ctx.fillStyle = '#ffbd2e';
 			ctx.fillText('PRESS ENTER TO START', canvas.width / 2, canvas.height / 2 + 10);
 			ctx.fillStyle = '#888'; ctx.font = '18px VT323, monospace';
-			ctx.fillText('Arrow Keys = Move | Space = Shoot | ESC = Exit', canvas.width / 2, canvas.height / 2 + 50);
-			ctx.fillText('High Score: ' + highScore, canvas.width / 2, canvas.height / 2 + 80);
+			ctx.fillText('Arrows = Move | Fire = Shoot', canvas.width / 2, canvas.height / 2 + 50);
+			ctx.fillText('ESC = Exit | High Score: ' + highScore, canvas.width / 2, canvas.height / 2 + 78);
 			ctx.textAlign = 'left'; return;
 		}
 		ctx.fillStyle = '#00bfff'; ctx.beginPath();

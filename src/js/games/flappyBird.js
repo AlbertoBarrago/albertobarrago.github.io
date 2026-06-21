@@ -12,7 +12,7 @@ export function initFlappyBird(canvas, onExit) {
 	const GRAVITY = 0.34;
 	const FLAP_FORCE = -6.6;
 	const PIPE_W = 58;
-	const PIPE_GAP = 168;
+	const BASE_PIPE_GAP = 168;
 	const PIPE_SPEED = 2.15;
 	const PIPE_INTERVAL = 126;
 	const GROUND_H = 46;
@@ -39,9 +39,22 @@ export function initFlappyBird(canvas, onExit) {
 	let pipes = [];
 
 	function resize() {
-		canvas.width = canvas.clientWidth;
-		canvas.height = canvas.clientHeight;
+		const oldW = canvas.width || canvas.clientWidth || 1;
+		const oldH = canvas.height || canvas.clientHeight || 1;
+		canvas.width = Math.max(1, canvas.clientWidth);
+		canvas.height = Math.max(1, canvas.clientHeight);
+		const scaleX = canvas.width / oldW;
+		const scaleY = canvas.height / oldH;
+
+		for (const pipe of pipes) {
+			pipe.x *= scaleX;
+			pipe.gapY = clampPipeGapY(pipe.gapY * scaleY);
+		}
 		if (gameState !== 'playing') resetBird();
+		else {
+			birdX = Math.max(50, Math.min(canvas.width - 30, birdX * scaleX));
+			birdY = Math.max(BIRD_SIZE, Math.min(canvas.height - GROUND_H - BIRD_SIZE, birdY * scaleY));
+		}
 	}
 
 	resize();
@@ -52,6 +65,19 @@ export function initFlappyBird(canvas, onExit) {
 		birdX = Math.max(80, Math.floor(canvas.width * 0.28));
 		birdY = Math.floor(canvas.height * 0.45);
 		birdVY = 0;
+	}
+
+	function pipeGap() {
+		const playableHeight = Math.max(160, canvas.height - GROUND_H);
+		return Math.max(86, Math.min(BASE_PIPE_GAP, playableHeight - 112));
+	}
+
+	/** @param {number} gapY */
+	function clampPipeGapY(gapY) {
+		const gap = pipeGap();
+		const minGapY = 56;
+		const maxGapY = Math.max(minGapY, canvas.height - GROUND_H - gap - 48);
+		return Math.max(minGapY, Math.min(maxGapY, gapY));
 	}
 
 	function resetGame() {
@@ -67,8 +93,8 @@ export function initFlappyBird(canvas, onExit) {
 	}
 
 	function spawnPipe() {
-		const minGapY = 70;
-		const maxGapY = Math.max(minGapY + 20, canvas.height - GROUND_H - PIPE_GAP - 60);
+		const minGapY = 56;
+		const maxGapY = Math.max(minGapY + 12, canvas.height - GROUND_H - pipeGap() - 48);
 		const gapY = minGapY + Math.random() * (maxGapY - minGapY);
 		pipes.push({ x: canvas.width + 20, gapY, passed: false });
 	}
@@ -214,7 +240,7 @@ export function initFlappyBird(canvas, onExit) {
 		for (const pipe of pipes) {
 			const inPipeX = birdRight > pipe.x && birdLeft < pipe.x + PIPE_W;
 			const hitsTop = birdTop < pipe.gapY;
-			const hitsBottom = birdBottom > pipe.gapY + PIPE_GAP;
+			const hitsBottom = birdBottom > pipe.gapY + pipeGap();
 			if (inPipeX && (hitsTop || hitsBottom)) {
 				gameState = 'gameover';
 				playHitSound();
@@ -238,18 +264,19 @@ export function initFlappyBird(canvas, onExit) {
 	}
 
 	function drawPipes() {
+		const gap = pipeGap();
 		for (const pipe of pipes) {
 			ctx.fillStyle = '#00a33a';
 			ctx.fillRect(pipe.x, 0, PIPE_W, pipe.gapY);
-			ctx.fillRect(pipe.x, pipe.gapY + PIPE_GAP, PIPE_W, canvas.height - GROUND_H - pipe.gapY - PIPE_GAP);
+			ctx.fillRect(pipe.x, pipe.gapY + gap, PIPE_W, canvas.height - GROUND_H - pipe.gapY - gap);
 
 			ctx.fillStyle = '#00ff41';
 			ctx.fillRect(pipe.x - 4, pipe.gapY - 14, PIPE_W + 8, 14);
-			ctx.fillRect(pipe.x - 4, pipe.gapY + PIPE_GAP, PIPE_W + 8, 14);
+			ctx.fillRect(pipe.x - 4, pipe.gapY + gap, PIPE_W + 8, 14);
 
 			ctx.fillStyle = 'rgba(0,0,0,0.22)';
 			ctx.fillRect(pipe.x + PIPE_W - 12, 0, 6, pipe.gapY - 14);
-			ctx.fillRect(pipe.x + PIPE_W - 12, pipe.gapY + PIPE_GAP + 14, 6, canvas.height - GROUND_H);
+			ctx.fillRect(pipe.x + PIPE_W - 12, pipe.gapY + gap + 14, 6, canvas.height - GROUND_H);
 		}
 	}
 
@@ -309,8 +336,8 @@ export function initFlappyBird(canvas, onExit) {
 		ctx.fillText('PRESS SPACE OR CLICK TO START', canvas.width / 2, canvas.height / 2);
 		ctx.fillStyle = '#888';
 		ctx.font = '18px VT323, monospace';
-		ctx.fillText('Space/Click = Flap | ESC = Exit', canvas.width / 2, canvas.height / 2 + 40);
-		ctx.fillText('High Score: ' + highScore, canvas.width / 2, canvas.height / 2 + 70);
+		ctx.fillText('Space/Click = Flap', canvas.width / 2, canvas.height / 2 + 40);
+		ctx.fillText('ESC = Exit | High Score: ' + highScore, canvas.width / 2, canvas.height / 2 + 70);
 		ctx.textAlign = 'left';
 	}
 
