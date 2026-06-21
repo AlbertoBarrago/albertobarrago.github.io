@@ -17,16 +17,32 @@ export function initPong(canvas, onExit) {
 	let playerScore = 0, aiScore = 0;
 	let animFrameId = 0;
 	let lastFrameTime = 0;
+	let playerY = 0;
+	let aiY = 0;
+	let ballX = 0, ballY = 0;
+	let ballDX = BALL_BASE_SPEED, ballDY = BALL_BASE_SPEED * 0.5;
 
-	function resize() { canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
+	function resize() {
+		const oldW = canvas.width || canvas.clientWidth || 1;
+		const oldH = canvas.height || canvas.clientHeight || 1;
+		canvas.width = Math.max(1, canvas.clientWidth);
+		canvas.height = Math.max(1, canvas.clientHeight);
+		const scaleX = canvas.width / oldW;
+		const scaleY = canvas.height / oldH;
+		playerY = Math.max(0, Math.min(canvas.height - PADDLE_H, playerY * scaleY));
+		aiY = Math.max(0, Math.min(canvas.height - PADDLE_H, aiY * scaleY));
+		ballX = Math.max(0, Math.min(canvas.width - BALL_SIZE, ballX * scaleX));
+		ballY = Math.max(0, Math.min(canvas.height - BALL_SIZE, ballY * scaleY));
+		if (gameState !== 'playing') {
+			playerY = canvas.height / 2 - PADDLE_H / 2;
+			aiY = canvas.height / 2 - PADDLE_H / 2;
+			ballX = canvas.width / 2;
+			ballY = canvas.height / 2;
+		}
+	}
 	resize();
 	const resizeObs = new ResizeObserver(resize);
 	resizeObs.observe(canvas);
-
-	let playerY = canvas.height / 2 - PADDLE_H / 2;
-	let aiY = canvas.height / 2 - PADDLE_H / 2;
-	let ballX = canvas.width / 2, ballY = canvas.height / 2;
-	let ballDX = BALL_BASE_SPEED, ballDY = BALL_BASE_SPEED * 0.5;
 
 	function resetBall() {
 		ballX = canvas.width / 2;
@@ -55,6 +71,18 @@ export function initPong(canvas, onExit) {
 
 	window.addEventListener('keydown', keyHandler);
 	window.addEventListener('keyup', keyUpHandler);
+
+	/** @param {PointerEvent} e */
+	function pointerMoveHandler(e) {
+		if (gameState !== 'playing') return;
+		const rect = canvas.getBoundingClientRect();
+		const y = e.clientY - rect.top;
+		playerY = Math.max(0, Math.min(canvas.height - PADDLE_H, y - PADDLE_H / 2));
+		e.preventDefault();
+	}
+
+	canvas.addEventListener('pointerdown', pointerMoveHandler);
+	canvas.addEventListener('pointermove', pointerMoveHandler);
 
 	/** @param {number} deltaFrames */
 	function update(deltaFrames) {
@@ -117,7 +145,8 @@ export function initPong(canvas, onExit) {
 			ctx.font = '24px VT323, monospace'; ctx.fillStyle = '#ffbd2e';
 			ctx.fillText('PRESS ENTER TO START', canvas.width / 2, canvas.height / 2 + 10);
 			ctx.fillStyle = '#888'; ctx.font = '18px VT323, monospace';
-			ctx.fillText('Arrow Up/Down = Move | First to ' + WIN_SCORE + ' wins | ESC = Exit', canvas.width / 2, canvas.height / 2 + 50);
+			ctx.fillText('Arrow Up/Down or Drag = Move', canvas.width / 2, canvas.height / 2 + 50);
+			ctx.fillText('First to ' + WIN_SCORE + ' wins | ESC = Exit', canvas.width / 2, canvas.height / 2 + 78);
 			ctx.textAlign = 'left'; return;
 		}
 
@@ -177,6 +206,8 @@ export function initPong(canvas, onExit) {
 		cancelAnimationFrame(animFrameId);
 		window.removeEventListener('keydown', keyHandler);
 		window.removeEventListener('keyup', keyUpHandler);
+		canvas.removeEventListener('pointerdown', pointerMoveHandler);
+		canvas.removeEventListener('pointermove', pointerMoveHandler);
 		resizeObs.disconnect();
 	};
 }

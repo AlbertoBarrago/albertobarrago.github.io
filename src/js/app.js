@@ -132,6 +132,9 @@ let bootComplete = false;
 let currentSection = 'about';
 /** @type {(() => void) | null} */
 let gameCleanup = null;
+/** @type {Map<number, { key: string, button: HTMLElement, repeatDelayId?: number, repeatIntervalId?: number }>} */
+const activeControlPointers = new Map();
+const REPEATING_CONTROL_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowDown']);
 
 // ---------------------------------------------------------------------------
 // DOM
@@ -606,6 +609,7 @@ function launchGame(type) {
 
 	if (init && canvas) {
 		requestAnimationFrame(() => {
+			if (!overlay.isConnected) return;
 			gameCleanup = init(canvas, exitGame);
 		});
 	}
@@ -620,7 +624,72 @@ function cleanupGame() {
 
 function exitGame() {
 	cleanupGame();
+	releaseAllGameControls();
 	document.getElementById('game-overlay')?.remove();
+}
+
+/**
+ * @param {string} key
+ * @param {'keydown' | 'keyup'} type
+ */
+function dispatchGameKey(key, type) {
+	window.dispatchEvent(new KeyboardEvent(type, { key, bubbles: true, cancelable: true }));
+}
+
+/**
+ * @param {{ key: string, repeatDelayId?: number, repeatIntervalId?: number }} active
+ */
+function scheduleControlRepeat(active) {
+	if (!REPEATING_CONTROL_KEYS.has(active.key)) return;
+	active.repeatDelayId = window.setTimeout(() => {
+		active.repeatIntervalId = window.setInterval(() => {
+			dispatchGameKey(active.key, 'keydown');
+		}, 85);
+	}, 220);
+}
+
+/** @param {PointerEvent} e */
+function pressGameControl(e) {
+	const target = /** @type {HTMLElement} */ (e.target);
+	const btn = /** @type {HTMLElement | null} */ (target.closest('[data-control-key]'));
+	if (!btn?.dataset.controlKey) return;
+
+	e.preventDefault();
+	btn.setPointerCapture?.(e.pointerId);
+	const active = /** @type {{ key: string, button: HTMLElement, repeatDelayId?: number, repeatIntervalId?: number }} */ ({
+		key: btn.dataset.controlKey,
+		button: btn,
+	});
+	activeControlPointers.set(e.pointerId, active);
+	btn.classList.add('is-pressed');
+	dispatchGameKey(btn.dataset.controlKey, 'keydown');
+	scheduleControlRepeat(active);
+}
+
+/** @param {PointerEvent} e */
+function releaseGameControl(e) {
+	const active = activeControlPointers.get(e.pointerId);
+	if (!active) return;
+
+	e.preventDefault();
+	if (active.repeatDelayId) window.clearTimeout(active.repeatDelayId);
+	if (active.repeatIntervalId) window.clearInterval(active.repeatIntervalId);
+	active.button.classList.remove('is-pressed');
+	if (active.button.hasPointerCapture?.(e.pointerId)) {
+		active.button.releasePointerCapture(e.pointerId);
+	}
+	activeControlPointers.delete(e.pointerId);
+	dispatchGameKey(active.key, 'keyup');
+}
+
+function releaseAllGameControls() {
+	for (const active of activeControlPointers.values()) {
+		if (active.repeatDelayId) window.clearTimeout(active.repeatDelayId);
+		if (active.repeatIntervalId) window.clearInterval(active.repeatIntervalId);
+		active.button.classList.remove('is-pressed');
+		dispatchGameKey(active.key, 'keyup');
+	}
+	activeControlPointers.clear();
 }
 
 // ---------------------------------------------------------------------------
@@ -668,21 +737,11 @@ app.addEventListener('click', (e) => {
 	}
 });
 
-app.addEventListener('pointerdown', (e) => {
-	const target = /** @type {HTMLElement} */ (e.target);
-	const btn = /** @type {HTMLElement | null} */ (target.closest('[data-control-key]'));
-	if (!btn?.dataset.controlKey) return;
-	e.preventDefault();
-	window.dispatchEvent(new KeyboardEvent('keydown', { key: btn.dataset.controlKey, bubbles: true }));
-});
-
-app.addEventListener('pointerup', (e) => {
-	const target = /** @type {HTMLElement} */ (e.target);
-	const btn = /** @type {HTMLElement | null} */ (target.closest('[data-control-key]'));
-	if (!btn?.dataset.controlKey) return;
-	e.preventDefault();
-	window.dispatchEvent(new KeyboardEvent('keyup', { key: btn.dataset.controlKey, bubbles: true }));
-});
+app.addEventListener('pointerdown', pressGameControl);
+app.addEventListener('pointerup', releaseGameControl);
+app.addEventListener('pointercancel', releaseGameControl);
+app.addEventListener('lostpointercapture', releaseGameControl);
+window.addEventListener('blur', releaseAllGameControls);
 
 // ---------------------------------------------------------------------------
 // Initialize
