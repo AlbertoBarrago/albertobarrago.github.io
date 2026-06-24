@@ -34,7 +34,7 @@ console.log(
 );
 console.log(
 	'%c> STATUS: Open to new quests. Accepting side-missions & full-time raids.\n' +
-	'> CLASS: Full-Stack Developer | LEVEL: Senior\n' +
+	'> CLASS: Software Engineer | LEVEL: Senior\n' +
 	'> SKILLS: JS, TS, Python, React, Node, Cloud & more\n' +
 	'> PING ME: linkedin.com/in/albertobarrago\n' +
 	'> $_ Hire me before the next sprint starts.',
