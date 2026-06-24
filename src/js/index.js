@@ -6,11 +6,7 @@ const location = "Cagliari, Italy";
 const email = "albertobarrago@gmail.com";
 const cv_filename = "albertobarrago_cv.pdf";
 
-const profile = `10 years turning coffee into production code for millions of users —
-Node.js, React, Spring Boot, Kafka, you name it. Currently grinding XP
-in Python/FastAPI, AI agents, and native Swift apps for iOS/macOS.
-Clean code, happy teammates, real impact: that's the cheat code.
-`;
+const profile = `Senior Software Engineer with a product-builder mindset, turning ideas into scalable, production-ready tools that solve real-world problems.`;
 
 const skills = {
 	frontend: ["Angular", "React", "Vanilla JS"],
