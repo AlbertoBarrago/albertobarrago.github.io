@@ -18,7 +18,7 @@
  ╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗
   ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
 `,"color: #00ff41; font-family: monospace;");console.log(`%c> STATUS: Open to new quests. Accepting side-missions & full-time raids.
-> CLASS: Full-Stack Developer | LEVEL: Senior
+> CLASS: Software Engineer | LEVEL: Senior
 > SKILLS: JS, TS, Python, React, Node, Cloud & more
 > PING ME: linkedin.com/in/albertobarrago
 > $_ Hire me before the next sprint starts.`,"color: #ffbd2e; font-size: 13px; font-family: monospace;");const Ge="SomaFM: Secret Agent",He="https://ice1.somafm.com/secretagent-128-mp3",qe=Object.freeze({space:"SPACE INVADERS",tetris:"TETRIS",pong:"PONG",flappy:"FLAPPY BIRD"}),Be=Object.freeze({space:[{label:"START",key:"Enter"},{label:"←",key:"ArrowLeft"},{label:"FIRE",key:" "},{label:"→",key:"ArrowRight"}],tetris:[{label:"START",key:"Enter"},{label:"←",key:"ArrowLeft"},{label:"ROT",key:"ArrowUp"},{label:"→",key:"ArrowRight"},{label:"↓",key:"ArrowDown"}],pong:[{label:"START",key:"Enter"},{label:"↑",key:"ArrowUp"},{label:"↓",key:"ArrowDown"}],flappy:[{label:"START",key:"Enter"},{label:"FLAP",key:" "}]}),Ne=Object.freeze({space:Pe,tetris:Oe,pong:De,flappy:Ve}),de=Object.freeze(["Initializing modem...","ATZ OK","ATDT *67 555-0199","CONNECT 56000","","Amiga Workbench 3.1","Copyright (c) 1985-1994 Commodore-Amiga, Inc.","","Checking memory...","Chip RAM: 2048K","Fast RAM: 8192K","","Loading system...","Welcome, visitor!","","Type HELP for commands or click menu items.",""]),Ye=["about","skills","experience","projects","contact"],$e=`     _    __  __ ___ ____    _
