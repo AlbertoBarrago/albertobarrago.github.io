@@ -50,28 +50,37 @@ const experience = [
 	}
 ];
 
-/** @type {{ name: string, description: string, url: string, language: string, stars: number }[]} */
+/** @type {{ name: string, description: string, url: string, language: string }[]} */
 const openSource = [
 	{
 		name: "Markasso",
 		description: "A fast, minimal, keyboard-first whiteboard engine for the browser. Marker + Picasso. No framework. No runtime. Just canvas.",
 		url: "https://markasso.it",
-		language: "Typescript (0 deps)",
-		stars: 3
+		language: "Typescript (0 deps)"
 	},
 	{
 		name: "RSS-Reader",
 		description: "A lightweight, native macOS RSS Reader app built with Swift. Lives in your menu bar — clean, minimal, no bloat.",
 		url: "https://github.com/AlbertoBarrago/RSS-Reader",
-		language: "Swift",
-		stars: 14
+		language: "Swift"
 	},
 	{
 		name: "Timelog",
 		description: "A lightweight time-tracking app for iOS and macOS built with SwiftUI and SwiftData.",
 		url: "https://github.com/AlbertoBarrago/Timelog",
-		language: "Swift",
-		stars: 2
+		language: "Swift"
+	},
+	{
+		name: "DockDock",
+		description: "A native macOS utility that shows live window previews when you hover over Dock icons.",
+		url: "https://github.com/AlbertoBarrago/DockDock",
+		language: "Swift"
+	},
+	{
+		name: "Sgommello",
+		description: "Break reminder for macOS: a monster breaks your screen until you take a real break.",
+		url: "https://github.com/AlbertoBarrago/Sgommello",
+		language: "Swift"
 	}
 ];
 

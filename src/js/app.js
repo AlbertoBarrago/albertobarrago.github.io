@@ -273,7 +273,7 @@ function projectsHTML() {
 		.map((p) => `<div class="job-item">
 			<div class="job-header">
 				<span class="job-role">${p.name}</span>
-				<span class="job-period">${p.language} ★ ${p.stars}</span>
+				<span class="job-period">${p.language}</span>
 			</div>
 			<div class="job-highlight">${p.description}</div>
 			<div class="action-buttons">
