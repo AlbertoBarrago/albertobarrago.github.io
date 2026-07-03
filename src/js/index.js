@@ -11,6 +11,7 @@ const profile = `Senior Software Engineer with a product-builder mindset, turnin
 const skills = {
 	frontend: ["Angular", "React", "Vanilla JS"],
 	backend: ["Node.js", "Fastify", "FastAPI", "Flask", "Spring Boot"],
+	apple: ["Swift", "SwiftUI", "SwiftData", "AppKit", "iOS/macOS"],
 	database: ["MongoDB", "Oracle", "MySQL"],
 	devops: ["Docker", "GitHub/GitLab CI", "Azure DevOps"],
 	tools: ["Git", "Neovim", "tmux", "Zed"],

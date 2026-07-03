@@ -1,5 +1,5 @@
 /**
- * @file Amiga Workbench Portfolio — Main Application
+ * @file Amiga Workbench — Main Application
  * @description Retro Amiga Workbench 3.1 portfolio with boot sequence,
  * section navigation, and embedded retro games. Pure vanilla JS.
  */
@@ -167,7 +167,7 @@ function amigaScreenHTML() {
 			<div class="crt-screen">
 				<div class="title-bar">
 					<div class="title-bar-left"><span class="window-button close"></span></div>
-					<span class="title-text">Alberto Barrago - Portfolio v${version}</span>
+					<span class="title-text">v${version}</span>
 					<div class="title-bar-right">
 						<span class="window-button depth"></span>
 						<span class="window-button zoom"></span>
@@ -237,16 +237,48 @@ function aboutHTML() {
 }
 
 function skillsHTML() {
-	const grid = Object.entries(skills)
-		.map(([category, items]) => `<div class="skill-category">
-			<h3>${category.at(0)?.toUpperCase()}${category.slice(1)}</h3>
-			<ul>${/** @type {string[]} */ (items).map((s) => `<li>${s}</li>`).join('')}</ul>
-		</div>`)
+	const entries = Object.entries(skills);
+	const categoryPositions = [
+		{ x: 14, y: 30 },
+		{ x: 33, y: 16 },
+		{ x: 57, y: 18 },
+		{ x: 78, y: 33 },
+		{ x: 69, y: 67 },
+		{ x: 43, y: 78 },
+		{ x: 18, y: 64 },
+	];
+	const center = { x: 50, y: 48 };
+	const nodes = entries.flatMap(([category, items], categoryIndex) => {
+		const base = categoryPositions[categoryIndex % categoryPositions.length];
+		return [
+			{ label: category, type: 'category', x: base.x, y: base.y },
+			.../** @type {string[]} */ (items).map((label, itemIndex) => {
+				const angle = (Math.PI * 2 * itemIndex) / items.length;
+				const radius = 8 + (itemIndex % 2) * 5;
+				return {
+					label,
+					type: 'skill',
+					x: Math.min(92, Math.max(8, base.x + Math.cos(angle) * radius)),
+					y: Math.min(86, Math.max(12, base.y + Math.sin(angle) * radius)),
+				};
+			})
+		];
+	});
+	const lines = nodes
+		.filter((node) => node.type === 'category')
+		.map((node, index) => `<line class="skill-network-line line-${index % 4}" x1="${center.x}" y1="${center.y}" x2="${node.x}" y2="${node.y}" />`)
+		.join('');
+	const labels = nodes
+		.map((node, index) => `<span class="skill-node ${node.type} node-${index % 6}" style="left:${node.x}%; top:${node.y}%">${node.label}</span>`)
 		.join('');
 
 	return `<div class="section">
 	<h1 class="section-title">&gt; Skills</h1>
-	<div class="skills-grid">${grid}</div>
+	<div class="skills-network" aria-label="Skill network">
+		<svg class="skill-network-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${lines}</svg>
+		<span class="skill-core">Alberto</span>
+		${labels}
+	</div>
 </div>`;
 }
 
