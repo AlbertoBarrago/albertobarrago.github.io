@@ -1,4 +1,4 @@
-# ALBZ | Interactive Terminal Portfolio
+# Interactive Terminal Portfolio
 
 An interactive, keyboard-first portfolio built as a terminal shell. It presents Alberto Barrago's experience, technical skills, open-source work, and contact details without a frontend framework or runtime dependencies.
 
