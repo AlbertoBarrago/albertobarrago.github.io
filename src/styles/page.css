@@ -121,10 +121,10 @@ button {
 .ascii-logo {
 	display: inline-block;
 	margin-bottom: 1rem;
-	font-size: clamp(0.65rem, 2.2vw, 1rem);
+	font-size: clamp(1.35rem, 4vw, 2.2rem);
 	font-weight: 700;
-	line-height: 1.2;
-	letter-spacing: 0.02em;
+	line-height: 1.05;
+	letter-spacing: 0.08em;
 	white-space: pre;
 	filter: drop-shadow(0 0 14px rgba(94, 234, 212, 0.12));
 }
@@ -634,9 +634,7 @@ button {
 		display: none;
 	}
 
-	.ascii-logo {
-		font-size: 0.58rem;
-	}
+	.ascii-logo { font-size: 1.25rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
