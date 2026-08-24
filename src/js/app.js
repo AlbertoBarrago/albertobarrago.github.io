@@ -89,13 +89,11 @@ function terminalHTML() {
 }
 
 function bannerHTML() {
-	return `<div class="ascii-logo" aria-label="ALBZ">
-<span class="accent">█████╗ ██╗     ██████╗ ███████╗</span>
-<span class="accent">██╔══██╗██║     ██╔══██╗╚══███╔╝</span>
-<span class="accent">███████║██║     ██████╔╝  ███╔╝ </span>
-<span class="accent">██╔══██║██║     ██╔══██╗ ███╔╝  </span>
-<span class="accent">██║  ██║███████╗██████╔╝███████╗</span>
-<span class="accent">╚═╝  ╚═╝╚══════╝╚═════╝ ╚══════╝</span></div>
+	return `<div class="ascii-banner accent" role="img" aria-label="ALBZ">    _    _     ____  _____
+   / \\  | |   | __ )|__  /
+  / _ \\ | |   |  _ \\  / /
+ / ___ \\| |___| |_) |/ /_
+/_/   \\_\\_____|____/____|</div>
 <div class="boot-copy"><span class="muted">Portfolio shell v${version}</span>
 <span>${role} · Product Builder</span>
 
