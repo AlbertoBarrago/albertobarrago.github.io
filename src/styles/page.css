@@ -123,9 +123,11 @@ button {
 	margin-bottom: 1rem;
 	font-size: clamp(0.72rem, 2.2vw, 1.15rem);
 	font-weight: 700;
-	line-height: 1.2;
-	letter-spacing: 0.02em;
+	line-height: 1.05;
+	letter-spacing: 0;
 	white-space: pre;
+	font-variant-ligatures: none;
+	font-feature-settings: "liga" 0, "calt" 0;
 	filter: drop-shadow(0 0 14px rgba(94, 234, 212, 0.12));
 }
 
