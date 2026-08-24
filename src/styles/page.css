@@ -139,7 +139,7 @@ button {
 	position: relative;
 	z-index: 3;
 	flex: none;
-	width: min(100%, 104ch);
+	width: 100%;
 	background: linear-gradient(to bottom, rgba(11, 15, 20, 0.88), var(--background) 35%);
 	border-top: 1px solid rgba(94, 234, 212, 0.12);
 	box-shadow: 0 -16px 30px rgba(11, 15, 20, 0.72);
