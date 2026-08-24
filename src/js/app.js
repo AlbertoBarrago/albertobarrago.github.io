@@ -96,9 +96,13 @@ function bannerHTML() {
 <span class="accent"> / ___ \\| |___| |_) / /_ </span>
 <span class="accent">/_/   \\_\\_____|____/____|</span></div>
 <div class="boot-copy"><span class="muted">Portfolio shell v${version}</span>
-<span>${role} · ${location}</span>
+<span>${role} · Product Builder</span>
 
-I design systems, ship products, and turn ambiguity into reliable software.
+10+ years shipping production software used by millions.
+Technical leadership · Architecture · Web · Mobile · Cloud · AI
+
+I turn ambiguity into reliable systems and useful products.
+<span class="muted">Based in ${location}</span>
 
 Type <button class="inline-command command" data-command="help">help</button> to explore, or use the shortcuts below.</div>`;
 }
