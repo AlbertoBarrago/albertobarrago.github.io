@@ -6,7 +6,7 @@
 
 import {
 	name, role, location, profile, skills, experience,
-	openSource, links, version, downloadCv,
+	experimentalProject, openSource, links, version, downloadCv,
 } from './index.js';
 import { initSpaceInvaders } from './games/spaceInvaders.js';
 import { initTetris } from './games/tetris.js';
@@ -18,12 +18,12 @@ import { initFlappyBird } from './games/flappyBird.js';
 
 const PROMPT = 'alberto@portfolio:~';
 const COMMAND_NAMES = Object.freeze([
-	'help', 'about', 'skills', 'experience', 'projects', 'contact', 'cv',
+	'help', 'about', 'skills', 'experience', 'projects', 'lab', 'contact', 'cv',
 	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear',
 ]);
 const MOBILE_COMMANDS = Object.freeze([
 	['help', 'help'], ['about', 'about'], ['skills', 'skills'],
-	['projects', 'projects'], ['games', 'games'], ['contact', 'contact'],
+	['projects', 'projects'], ['lab', 'lab'], ['games', 'games'], ['contact', 'contact'],
 ]);
 
 /** @type {Readonly<Record<GameName, string>>} */
@@ -112,6 +112,7 @@ function helpHTML() {
 		['skills', 'Technical toolbox by area'],
 		['experience', 'Professional timeline'],
 		['projects', 'Selected open-source work'],
+		['lab', 'Experimental work in progress'],
 		['contact', 'Ways to get in touch'],
 		['cv', 'Download my resume'],
 		['games', 'List embedded retro games'],
@@ -162,6 +163,17 @@ function projectsHTML() {
 </article>`).join('')}</div>`;
 }
 
+function labHTML() {
+	return `<div class="output-title">Workbench Lab</div>
+<p class="prose">Experimental products in active development. Scope and direction may evolve as ideas are validated.</p>
+<article class="project-item lab-project">
+	<div class="lab-project-meta"><span class="project-status">${experimentalProject.status}</span><span class="project-language">${experimentalProject.language}</span></div>
+	<a class="terminal-link project-name" href="${experimentalProject.url}" target="_blank" rel="noopener noreferrer">${experimentalProject.name} ↗</a>
+	<p>${experimentalProject.description}</p>
+	<p class="lab-project-focus"><span class="label">focus</span>${experimentalProject.focus}</p>
+</article>`;
+}
+
 function contactHTML() {
 	return `<div class="output-title">Let's build something useful</div>
 <div class="key-value"><span class="label">email</span><a class="terminal-link" href="${links.email}">albertobarrago@gmail.com</a>
@@ -184,6 +196,7 @@ function treeHTML() {
 ├── <button class="inline-command directory" data-command="skills">skills/</button>
 ├── <button class="inline-command file" data-command="experience">experience.log</button>
 ├── <button class="inline-command directory" data-command="projects">projects/</button>
+├── <button class="inline-command directory" data-command="lab">lab/</button>
 ├── <button class="inline-command file" data-command="contact">contact.vcf</button>
 ├── <button class="inline-command file" data-command="cv">albertobarrago_cv.pdf</button>
 └── <button class="inline-command directory" data-command="games">games/</button></div>`;
@@ -204,7 +217,7 @@ function neofetchHTML() {
 }
 
 function lsHTML() {
-	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
+	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="lab">lab/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
 }
 
 /** @param {string} value */
@@ -255,7 +268,7 @@ function executeCommand(rawCommand) {
 
 	const renderers = /** @type {Record<string, () => string>} */ ({
 		help: helpHTML, skills: skillsHTML, experience: experienceHTML,
-		projects: projectsHTML, contact: contactHTML, games: gamesHTML,
+		projects: projectsHTML, lab: labHTML, contact: contactHTML, games: gamesHTML,
 		ls: lsHTML, tree: treeHTML, neofetch: neofetchHTML,
 	});
 	if (renderers[command]) {

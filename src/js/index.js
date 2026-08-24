@@ -51,14 +51,18 @@ const experience = [
 	}
 ];
 
+/** @type {{ name: string, description: string, url: string, language: string, status: string, focus: string }} */
+const experimentalProject = {
+	name: "Markasso",
+	description: "A fast, minimal, keyboard-first whiteboard engine for the browser. Marker + Picasso. No framework. No runtime. Just canvas.",
+	url: "https://markasso.it",
+	language: "TypeScript (0 deps)",
+	status: "Experimental · Work in progress",
+	focus: "Validating a direct, distraction-free interaction model for visual thinking."
+};
+
 /** @type {{ name: string, description: string, url: string, language: string }[]} */
 const openSource = [
-	{
-		name: "Markasso",
-		description: "A fast, minimal, keyboard-first whiteboard engine for the browser. Marker + Picasso. No framework. No runtime. Just canvas.",
-		url: "https://markasso.it",
-		language: "Typescript (0 deps)"
-	},
 	{
 		name: "RSS-Reader",
 		description: "A lightweight, native macOS RSS Reader app built with Swift. Lives in your menu bar: clean, minimal, no bloat.",
@@ -108,6 +112,7 @@ export {
 	profile,
 	skills,
 	experience,
+	experimentalProject,
 	openSource,
 	links,
 	version,

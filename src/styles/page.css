@@ -404,6 +404,32 @@ button {
 	font-size: 0.78rem;
 }
 
+.lab-project {
+	max-width: 68ch;
+	border-color: rgba(187, 154, 247, 0.45);
+}
+
+.project-status {
+	color: var(--purple);
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.lab-project > .project-name {
+	display: inline-block;
+	margin-top: 0.55rem;
+}
+
+.lab-project .lab-project-focus {
+	display: flex;
+	gap: 1rem;
+	margin-top: 0.75rem;
+	padding-top: 0.65rem;
+	border-top: 1px solid var(--border);
+}
+
 .game-list {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
