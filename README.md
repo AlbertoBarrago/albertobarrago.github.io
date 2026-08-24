@@ -95,7 +95,10 @@ No automated test suite or linter is currently configured. Production builds pro
 ├── static
 │   ├── CNAME
 │   ├── albertobarrago_cv.pdf
+│   ├── apple-touch-icon.png
+│   ├── favicon-32.png
 │   ├── favicon.ico
+│   ├── favicon.svg
 │   ├── robots.txt
 │   └── sitemap.xml
 ├── jsconfig.json
