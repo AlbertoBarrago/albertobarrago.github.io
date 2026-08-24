@@ -1,772 +1,425 @@
 /**
- * @file Amiga Workbench — Main Application
- * @description Retro Amiga Workbench 3.1 portfolio with boot sequence,
- * section navigation, and embedded retro games. Pure vanilla JS.
+ * @file Interactive terminal portfolio
+ * @description Keyboard-first portfolio shell with command history, shortcuts,
+ * accessible output, and embedded retro games.
  */
 
 import {
-	name, role, location, profile, skills,
-	experience, openSource, links, version, downloadCv
+	name, role, location, profile, skills, experience,
+	openSource, links, version, downloadCv,
 } from './index.js';
-
-console.log(
-	`%c
- ██████╗ ██████╗ ███████╗███╗   ██╗
-██╔═══██╗██╔══██╗██╔════╝████╗  ██║
-██║   ██║██████╔╝█████╗  ██╔██╗ ██║
-██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║
-╚██████╔╝██║     ███████╗██║ ╚████║
- ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝
-  ████████╗ ██████╗
-  ╚══██╔══╝██╔═══██╗
-     ██║   ██║   ██║
-     ██║   ██║   ██║
-     ██║   ╚██████╔╝
-     ╚═╝    ╚═════╝
- ██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗
- ██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝
- ██║ █╗ ██║██║   ██║██████╔╝█████╔╝
- ██║███╗██║██║   ██║██╔══██╗██╔═██╗
- ╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗
-  ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
-`,
-	'color: #00ff41; font-family: monospace;'
-);
-console.log(
-	'%c> STATUS: Open to new quests. Accepting side-missions & full-time raids.\n' +
-	'> CLASS: Software Engineer | LEVEL: Senior\n' +
-	'> SKILLS: JS, TS, Python, React, Node, Cloud & more\n' +
-	'> PING ME: linkedin.com/in/albertobarrago\n' +
-	'> $_ Hire me before the next sprint starts.',
-	'color: #ffbd2e; font-size: 13px; font-family: monospace;'
-);
 import { initSpaceInvaders } from './games/spaceInvaders.js';
 import { initTetris } from './games/tetris.js';
 import { initPong } from './games/pong.js';
 import { initFlappyBird } from './games/flappyBird.js';
 
-/** @typedef {'about' | 'skills' | 'experience' | 'projects' | 'contact'} Section */
+/** @typedef {'space' | 'tetris' | 'pong' | 'flappy'} GameName */
+/** @typedef {{ label: string, key: string }} GameControl */
 
-const RADIO_LABEL = 'SomaFM: Secret Agent';
-const RADIO_STREAM_URL = 'https://ice1.somafm.com/secretagent-128-mp3';
+const PROMPT = 'alberto@portfolio:~';
+const COMMAND_NAMES = Object.freeze([
+	'help', 'about', 'skills', 'experience', 'projects', 'contact', 'cv',
+	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear',
+]);
+const MOBILE_COMMANDS = Object.freeze([
+	['help', 'help'], ['about', 'about'], ['skills', 'skills'],
+	['projects', 'projects'], ['games', 'games'], ['contact', 'contact'],
+]);
 
-/** @type {Readonly<Record<string, string>>} */
+/** @type {Readonly<Record<GameName, string>>} */
 const GAME_TITLES = Object.freeze({
-	space: 'SPACE INVADERS',
-	tetris: 'TETRIS',
-	pong: 'PONG',
-	flappy: 'FLAPPY BIRD',
+	space: 'SPACE INVADERS', tetris: 'TETRIS', pong: 'PONG', flappy: 'FLAPPY BIRD',
 });
 
-/** @type {Readonly<Record<string, readonly { label: string, key: string }[]>>} */
+/** @type {Readonly<Record<GameName, readonly GameControl[]>>} */
 const GAME_CONTROLS = Object.freeze({
 	space: [
-		{ label: 'START', key: 'Enter' },
-		{ label: '←', key: 'ArrowLeft' },
-		{ label: 'FIRE', key: ' ' },
-		{ label: '→', key: 'ArrowRight' },
+		{ label: 'START', key: 'Enter' }, { label: '←', key: 'ArrowLeft' },
+		{ label: 'FIRE', key: ' ' }, { label: '→', key: 'ArrowRight' },
 	],
 	tetris: [
-		{ label: 'START', key: 'Enter' },
-		{ label: '←', key: 'ArrowLeft' },
-		{ label: 'ROT', key: 'ArrowUp' },
-		{ label: '→', key: 'ArrowRight' },
+		{ label: 'START', key: 'Enter' }, { label: '←', key: 'ArrowLeft' },
+		{ label: 'ROT', key: 'ArrowUp' }, { label: '→', key: 'ArrowRight' },
 		{ label: '↓', key: 'ArrowDown' },
 	],
 	pong: [
-		{ label: 'START', key: 'Enter' },
-		{ label: '↑', key: 'ArrowUp' },
+		{ label: 'START', key: 'Enter' }, { label: '↑', key: 'ArrowUp' },
 		{ label: '↓', key: 'ArrowDown' },
 	],
-	flappy: [
-		{ label: 'START', key: 'Enter' },
-		{ label: 'FLAP', key: ' ' },
-	],
+	flappy: [{ label: 'START', key: 'Enter' }, { label: 'FLAP', key: ' ' }],
 });
 
-/** @type {Readonly<Record<string, (canvas: HTMLCanvasElement, onExit: () => void) => (() => void)>>} */
+/** @type {Readonly<Record<GameName, (canvas: HTMLCanvasElement, onExit: () => void) => (() => void)>>} */
 const GAME_INIT = Object.freeze({
-	space: initSpaceInvaders,
-	tetris: initTetris,
-	pong: initPong,
-	flappy: initFlappyBird,
+	space: initSpaceInvaders, tetris: initTetris, pong: initPong, flappy: initFlappyBird,
 });
 
-const BOOT_SEQUENCE = Object.freeze([
-	'Initializing modem...',
-	'ATZ OK',
-	'ATDT *67 555-0199',
-	'CONNECT 56000',
-	'',
-	'Amiga Workbench 3.1',
-	'Copyright (c) 1985-1994 Commodore-Amiga, Inc.',
-	'',
-	'Checking memory...',
-	'Chip RAM: 2048K',
-	'Fast RAM: 8192K',
-	'',
-	'Loading system...',
-	'Welcome, visitor!',
-	'',
-	'Type HELP for commands or click menu items.',
-	'',
-]);
-
-/** @type {readonly Section[]} */
-const SECTIONS = /** @type {const} */ (['about', 'skills', 'experience', 'projects', 'contact']);
-
-const ASCII_ART = `\
-     _    __  __ ___ ____    _
-    / \\  |  \\/  |_ _/ ___|  / \\
-   / _ \\ | |\\/| || | |  _  / _ \\
-  / ___ \\| |  | || | |_| |/ ___ \\
- /_/   \\_\\_|  |_|___\\____/_/   \\_\\`;
-
-// ---------------------------------------------------------------------------
-// State
-// ---------------------------------------------------------------------------
-
-let started = false;
-let bootComplete = false;
-/** @type {Section} */
-let currentSection = 'about';
+const REPEATING_CONTROL_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowDown']);
+/** @type {Map<number, { key: string, button: HTMLElement, delayId?: number, intervalId?: number }>} */
+const activeControlPointers = new Map();
+/** @type {string[]} */
+const commandHistory = [];
+let historyIndex = 0;
 /** @type {(() => void) | null} */
 let gameCleanup = null;
-/** @type {Map<number, { key: string, button: HTMLElement, repeatDelayId?: number, repeatIntervalId?: number }>} */
-const activeControlPointers = new Map();
-const REPEATING_CONTROL_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowDown']);
-
-// ---------------------------------------------------------------------------
-// DOM
-// ---------------------------------------------------------------------------
 
 const app = /** @type {HTMLDivElement} */ (document.getElementById('app'));
 
-// ---------------------------------------------------------------------------
-// Templates
-// ---------------------------------------------------------------------------
-
-function startOverlayHTML() {
-	return `<div class="start-overlay" data-action="start-boot">
-	<div class="start-content">
-		<div class="start-ascii"><pre>${ASCII_ART}</pre></div>
-		<p class="start-title">WORKBENCH 3.1</p>
-		<p class="start-prompt blink">[ Click anywhere to connect ]</p>
-	</div>
-</div>`;
-}
-
-function amigaScreenHTML() {
-	const menuButtons = SECTIONS.map(
-		(s) => `<button class="menu-item${s === 'about' ? ' active' : ''}" data-section="${s}">${s.at(0)?.toUpperCase()}${s.slice(1)}</button>`
+function terminalHTML() {
+	const shortcuts = MOBILE_COMMANDS.map(([label, command]) =>
+		`<button class="mobile-command" type="button" data-command="${command}">${label}</button>`
 	).join('');
 
-	return `<div class="amiga-screen">
-	<div class="monitor-frame">
-		<div class="screen-bezel">
-			<div class="crt-screen">
-				<div class="title-bar">
-					<div class="title-bar-left"><span class="window-button close"></span></div>
-					<span class="title-text">v${version}</span>
-					<div class="title-bar-right">
-						<span class="window-button depth"></span>
-						<span class="window-button zoom"></span>
-					</div>
-				</div>
-				<nav class="menu-bar">${menuButtons}</nav>
-				<div class="content-area" id="content-area">
-					<div class="boot-screen" id="boot-screen"><span class="cursor">_</span></div>
-				</div>
-				<div class="status-bar">
-					<span>Chip: 2048K</span>
-					<span>Fast: 8192K</span>
-					<div class="radio-player">
-						<button class="radio-btn" type="button" data-action="toggle-radio" aria-label="Play radio">▶</button>
-						<span class="radio-label">${RADIO_LABEL}</span>
-						<span class="radio-eq" aria-hidden="true"><span></span><span></span><span></span></span>
-						<audio class="radio-audio" preload="none" src="${RADIO_STREAM_URL}"></audio>
-					</div>
-					<span class="status-right">v${version}</span>
-				</div>
-				<div class="scanlines"></div>
-				<div class="crt-flicker"></div>
-			</div>
+	return `<main class="terminal" aria-label="Alberto Barrago portfolio terminal">
+		<div class="terminal-glow" aria-hidden="true"></div>
+		<section class="terminal-output" id="terminal-output" role="log" aria-live="polite" aria-relevant="additions"></section>
+		<div class="terminal-bottom">
+			<form class="terminal-input-line" id="terminal-form" autocomplete="off">
+				<label class="sr-only" for="terminal-input">Terminal command</label>
+				<span class="prompt" aria-hidden="true"><span class="prompt-user">${PROMPT}</span><span class="prompt-symbol">$</span></span>
+				<input id="terminal-input" class="terminal-input" name="command" type="text"
+					autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+					aria-describedby="terminal-hint" autofocus>
+			</form>
+			<p class="sr-only" id="terminal-hint">Type help to list available commands. Use up and down arrows for command history.</p>
+			<nav class="mobile-commands" aria-label="Quick terminal commands">${shortcuts}</nav>
 		</div>
-	</div>
-</div>`;
+	</main>
+	<div class="crt-overlay" aria-hidden="true"></div>`;
 }
 
-// ---------------------------------------------------------------------------
-// Section renderers
-// ---------------------------------------------------------------------------
+function bannerHTML() {
+	return `<div class="ascii-logo" aria-label="ALBZ">
+<span class="accent">    _    _     ____  _____</span>
+<span class="accent">   / \\  | |   | __ )|__  /</span>
+<span class="accent">  / _ \\ | |   |  _ \\ / / </span>
+<span class="accent"> / ___ \\| |___| |_) / /_ </span>
+<span class="accent">/_/   \\_\\_____|____/____|</span></div>
+<div class="boot-copy"><span class="muted">Portfolio shell v${version}</span>
+<span>${role} · ${location}</span>
+
+I design systems, ship products, and turn ambiguity into reliable software.
+
+Type <button class="inline-command command" data-command="help">help</button> to explore, or use the shortcuts below.</div>`;
+}
+
+function helpHTML() {
+	const commands = [
+		['about', 'Short profile and current role'],
+		['skills', 'Technical toolbox by area'],
+		['experience', 'Professional timeline'],
+		['projects', 'Selected open-source work'],
+		['contact', 'Ways to get in touch'],
+		['cv', 'Download my resume'],
+		['games', 'List embedded retro games'],
+		['play &lt;game&gt;', 'Launch space, tetris, pong, or flappy'],
+		['ls / tree', 'Browse the portfolio filesystem'],
+		['neofetch', 'Compact system profile'],
+		['history / date / clear', 'Terminal utilities'],
+	];
+
+	return `<div class="output-title">Available commands</div>
+<div class="command-list">${commands.map(([command, description]) =>
+		`<div><button class="inline-command command" data-command="${command.split(' ')[0]}">${command}</button><span class="muted">${description}</span></div>`
+	).join('')}</div>
+<div class="output-note">Tip: press <span class="key">Tab</span> to autocomplete and <span class="key">↑</span>/<span class="key">↓</span> for history.</div>`;
+}
 
 function aboutHTML() {
-	return `<div class="section">
-	<h1 class="section-title">&gt; ${name}</h1>
-	<p class="role">${role}</p>
-	<p class="location">${location}</p>
-	<div class="divider"></div>
-	<p class="profile">${profile}</p>
-	<div class="action-buttons">
-		<button class="amiga-btn" data-action="download-cv">Download CV</button>
-		<a href="${links.github}" target="_blank" class="amiga-btn">GitHub</a>
-	</div>
-	<div class="desktop-icons">
-		<div class="desktop-icon" data-game="space">
-			<div class="desktop-icon-img"><div class="icon-alien"></div></div>
-			<span class="desktop-icon-label">space.exe</span>
-		</div>
-		<div class="desktop-icon" data-game="tetris">
-			<div class="desktop-icon-img"><div class="icon-tetris"></div></div>
-			<span class="desktop-icon-label">tetris.exe</span>
-		</div>
-		<div class="desktop-icon" data-game="pong">
-			<div class="desktop-icon-img"><div class="icon-pong"></div></div>
-			<span class="desktop-icon-label">pong.exe</span>
-		</div>
-		<div class="desktop-icon" data-game="flappy">
-			<div class="desktop-icon-img"><div class="icon-flappy"></div></div>
-			<span class="desktop-icon-label">flappy.exe</span>
-		</div>
-		<a class="desktop-icon" href="https://mario-murru-the-game.netlify.app/" target="_blank" rel="noopener noreferrer">
-			<div class="desktop-icon-img"><div class="icon-mario"></div></div>
-			<span class="desktop-icon-label">mario.lnk</span>
-		</a>
-	</div>
-</div>`;
+	return `<div class="output-title">${name}</div>
+<div class="key-value"><span class="label">role</span><span>${role}</span>
+<span class="label">location</span><span>${location}</span>
+<span class="label">focus</span><span>Product engineering · architecture · technical leadership</span>
+<span class="label">status</span><span class="green">Building useful things</span></div>
+<p class="prose">${profile}</p>
+<div class="output-links"><button class="inline-command command" data-command="projects">view projects</button><button class="inline-command command" data-command="contact">contact me</button><button class="inline-command command" data-command="cv">download cv</button></div>`;
 }
 
 function skillsHTML() {
-	const entries = Object.entries(skills);
-	const categoryPositions = [
-		{ x: 14, y: 30 },
-		{ x: 33, y: 16 },
-		{ x: 57, y: 18 },
-		{ x: 78, y: 33 },
-		{ x: 69, y: 67 },
-		{ x: 43, y: 78 },
-		{ x: 18, y: 64 },
-	];
-	const center = { x: 50, y: 48 };
-	const nodes = entries.flatMap(([category, items], categoryIndex) => {
-		const base = categoryPositions[categoryIndex % categoryPositions.length];
-		return [
-			{ label: category, type: 'category', x: base.x, y: base.y },
-			.../** @type {string[]} */ (items).map((label, itemIndex) => {
-				const angle = (Math.PI * 2 * itemIndex) / items.length;
-				const radius = 8 + (itemIndex % 2) * 5;
-				return {
-					label,
-					type: 'skill',
-					x: Math.min(92, Math.max(8, base.x + Math.cos(angle) * radius)),
-					y: Math.min(86, Math.max(12, base.y + Math.sin(angle) * radius)),
-				};
-			})
-		];
-	});
-	const lines = nodes
-		.filter((node) => node.type === 'category')
-		.map((node, index) => `<line class="skill-network-line line-${index % 4}" x1="${center.x}" y1="${center.y}" x2="${node.x}" y2="${node.y}" />`)
-		.join('');
-	const labels = nodes
-		.map((node, index) => `<span class="skill-node ${node.type} node-${index % 6}" style="left:${node.x}%; top:${node.y}%">${node.label}</span>`)
-		.join('');
-
-	return `<div class="section">
-	<h1 class="section-title">&gt; Skills</h1>
-	<div class="skills-network" aria-label="Skill network">
-		<svg class="skill-network-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${lines}</svg>
-		<span class="skill-core">Alberto</span>
-		${labels}
-	</div>
-</div>`;
+	return `<div class="output-title">Technical toolbox</div>
+<div class="skills-list">${Object.entries(skills).map(([category, items]) =>
+		`<div class="skill-row"><span class="label">${category}</span><span>${items.join('  ·  ')}</span></div>`
+	).join('')}</div>`;
 }
 
 function experienceHTML() {
-	const list = experience
-		.map((job) => `<div class="job-item">
-			<div class="job-header">
-				<span class="job-role">${job.role}</span>
-				<span class="job-period">${job.period}</span>
-			</div>
-			<div class="job-company">${job.company}</div>
-			<div class="job-highlight">${job.highlight}</div>
-		</div>`)
-		.join('');
-
-	return `<div class="section">
-	<h1 class="section-title">&gt; Experience</h1>
-	<div class="experience-list">${list}</div>
-</div>`;
+	return `<div class="output-title">Experience</div>
+<div class="timeline">${experience.map((job) => `<article class="timeline-item">
+	<span class="timeline-period">${job.period}</span>
+	<div><div><span class="green">${job.role}</span> <span class="muted">@ ${job.company}</span></div>
+	<p>${job.highlight}</p></div>
+</article>`).join('')}</div>`;
 }
 
 function projectsHTML() {
-	const list = openSource
-		.map((p) => `<div class="job-item">
-			<div class="job-header">
-				<span class="job-role">${p.name}</span>
-				<span class="job-period">${p.language}</span>
-			</div>
-			<div class="job-highlight">${p.description}</div>
-			<div class="action-buttons">
-				<a href="${p.url}" target="_blank" rel="noopener noreferrer" class="amiga-btn">View on GitHub</a>
-			</div>
-		</div>`)
-		.join('');
-
-	return `<div class="section">
-	<h1 class="section-title">&gt; Projects</h1>
-	<div class="experience-list">${list}</div>
-</div>`;
+	return `<div class="output-title">Selected projects</div>
+<div class="project-list">${openSource.map((project) => `<article class="project-item">
+	<div><a class="terminal-link project-name" href="${project.url}" target="_blank" rel="noopener noreferrer">${project.name} ↗</a><span class="project-language">${project.language}</span></div>
+	<p>${project.description}</p>
+</article>`).join('')}</div>`;
 }
 
 function contactHTML() {
-	return `<div class="section">
-	<h1 class="section-title">&gt; Contact</h1>
-	<div class="contact-info">
-		<p><span class="label">Email:</span> <a href="${links.email}">albertobarrago@gmail.com</a></p>
-		<p><span class="label">GitHub:</span> <a href="${links.github}" target="_blank">github.com/AlbertoBarrago</a></p>
-		<p><span class="label">Location:</span> ${location}</p>
-	</div>
-	<div class="action-buttons">
-		<button class="amiga-btn" data-action="download-cv">Download CV</button>
-	</div>
-</div>`;
+	return `<div class="output-title">Let's build something useful</div>
+<div class="key-value"><span class="label">email</span><a class="terminal-link" href="${links.email}">albertobarrago@gmail.com</a>
+<span class="label">github</span><a class="terminal-link" href="${links.github}" target="_blank" rel="noopener noreferrer">github.com/AlbertoBarrago ↗</a>
+<span class="label">bluesky</span><a class="terminal-link" href="${links.bsky}" target="_blank" rel="noopener noreferrer">@albzoser.bsky.social ↗</a>
+<span class="label">location</span><span>${location}</span></div>`;
 }
 
-function gameOverlayHTML(/** @type {string} */ type) {
-	const controls = (GAME_CONTROLS[type] ?? [])
-		.map((control) => `<button class="game-control-btn" type="button" data-control-key="${control.key}">${control.label}</button>`)
-		.join('');
-
-	return `<div class="game-fullscreen" id="game-overlay">
-	<div class="game-scanlines"></div>
-	<div class="game-topbar">
-		<span class="game-title">${GAME_TITLES[type] ?? ''}</span>
-		<span class="game-exit" data-action="exit-game">[X] Close</span>
-	</div>
-	<canvas class="game-canvas"></canvas>
-	<div class="game-touch-controls">${controls}</div>
-</div>`;
+function gamesHTML() {
+	return `<div class="output-title">/games</div>
+<div class="game-list">${Object.entries(GAME_TITLES).map(([game, title]) =>
+		`<button class="game-command" data-command="play ${game}"><span>${title}</span><span class="muted">play ${game}</span></button>`
+	).join('')}</div>
+<div class="output-note">Games open fullscreen. Press <span class="key">Esc</span> to return.</div>`;
 }
 
-/** @type {Readonly<Record<Section, () => string>>} */
-const SECTION_RENDERERS = Object.freeze({
-	about: aboutHTML,
-	skills: skillsHTML,
-	experience: experienceHTML,
-	projects: projectsHTML,
-	contact: contactHTML,
-});
-
-// ---------------------------------------------------------------------------
-// Audio — modem dial-up sound synthesis
-// ---------------------------------------------------------------------------
-
-function playModemSound() {
-	const AudioCtx = globalThis.AudioContext
-		?? /** @type {typeof AudioContext} */ (/** @type {any} */ (globalThis).webkitAudioContext);
-	const ctx = new AudioCtx();
-	const master = ctx.createGain();
-	master.gain.value = 0.18;
-	master.connect(ctx.destination);
-
-	const t = ctx.currentTime;
-
-	// Boot sequence fires a line every BOOT_INTERVAL ms. Key sync points:
-	//   line 0  "Initializing modem…"  →  0.00 s  dial tone
-	//   line 2  "ATDT *67 555-0199"    →  0.50 s  DTMF tones
-	//   line 3  "CONNECT 56000"        →  0.75 s  transition → CED
-	//   boot ends (~17 lines × 250 ms) →  4.25 s  sound fades out
-
-	// ── 1. Dial tone: 350 Hz + 440 Hz ─────────────────── 0.00 → 0.40 s
-	for (const freq of [350, 440]) {
-		const osc = ctx.createOscillator();
-		osc.type = 'sine';
-		osc.frequency.value = freq;
-		const g = ctx.createGain();
-		g.gain.value = 0.18;
-		osc.connect(g);
-		g.connect(master);
-		osc.start(t);
-		osc.stop(t + 0.4);
-	}
-
-	// ── 2. DTMF dialing ────────────────────────────────── 0.50 → 1.10 s
-	// Starts at 0.50 s to land on "ATDT *67 555-0199" (line 2 × 250 ms).
-	const dtmfPairs = [
-		[941, 1336], [697, 1336], [770, 1209], [852, 1477],
-		[941, 1209], [770, 1336],
-	];
-	for (const [i, pair] of dtmfPairs.entries()) {
-		for (const freq of pair) {
-			const osc = ctx.createOscillator();
-			osc.type = 'sine';
-			osc.frequency.value = freq;
-			const g = ctx.createGain();
-			g.gain.value = 0.28;
-			osc.connect(g);
-			g.connect(master);
-			osc.start(t + 0.5 + i * 0.1);
-			osc.stop(t + 0.5 + i * 0.1 + 0.08);
-		}
-	}
-
-	// ── 3. Ringback: 440 Hz + 480 Hz ──────────────────── 1.15 → 1.55 s
-	for (const freq of [440, 480]) {
-		const osc = ctx.createOscillator();
-		osc.type = 'sine';
-		osc.frequency.value = freq;
-		const g = ctx.createGain();
-		g.gain.value = 0.14;
-		osc.connect(g);
-		g.connect(master);
-		osc.start(t + 1.15);
-		osc.stop(t + 1.55);
-	}
-
-	// ── 4. CED answer tone: 2100 Hz with phase reversals ─ 1.65 → 2.65 s
-	const cedOsc = ctx.createOscillator();
-	cedOsc.type = 'sine';
-	cedOsc.frequency.value = 2100;
-	const cedGain = ctx.createGain();
-	cedGain.gain.value = 0.22;
-	cedOsc.connect(cedGain);
-	cedGain.connect(master);
-	cedOsc.start(t + 1.65);
-	cedOsc.stop(t + 2.65);
-	for (let k = 0; k < 3; k++) {
-		const pt = 1.65 + k * 0.34;
-		cedGain.gain.setValueAtTime(0.22, t + pt);
-		cedGain.gain.linearRampToValueAtTime(0.01, t + pt + 0.018);
-		cedGain.gain.linearRampToValueAtTime(0.22, t + pt + 0.036);
-	}
-
-	// ── 5. V.8 negotiation chirps ─────────────────────── 2.75 → 3.05 s
-	for (const [i, freq] of [980, 1300, 2100, 1650].entries()) {
-		const osc = ctx.createOscillator();
-		osc.type = 'sine';
-		osc.frequency.value = freq;
-		const g = ctx.createGain();
-		g.gain.value = 0.16;
-		osc.connect(g);
-		g.connect(master);
-		osc.start(t + 2.75 + i * 0.08);
-		osc.stop(t + 2.75 + i * 0.08 + 0.06);
-	}
-
-	// ── 6. V.34 training screech ──────────────────────── 3.10 → 4.10 s
-	// Three sine carriers sweeping in opposing arcs — their beating creates
-	// the iconic warble. Compressed to 1 s but sweeps are denser.
-	const trBase = 3.1;
-	const trDur  = 1.0;
-	const trainSweeps = [
-		{ f1: 2100, f2: 1100, steps: 10 },
-		{ f1: 1650, f2: 2600, steps:  8 },
-		{ f1:  980, f2: 2250, steps: 12 },
-	];
-	for (const [pi, { f1, f2, steps }] of trainSweeps.entries()) {
-		const osc = ctx.createOscillator();
-		osc.type = 'sine';
-		osc.frequency.setValueAtTime(f1, t + trBase);
-		for (let s = 1; s <= steps; s++) {
-			osc.frequency.linearRampToValueAtTime(
-				s % 2 === 0 ? f1 : f2,
-				t + trBase + (s / steps) * trDur
-			);
-		}
-		const g = ctx.createGain();
-		g.gain.value = 0.07;
-		osc.connect(g);
-		g.connect(master);
-		osc.start(t + trBase + pi * 0.03);
-		osc.stop(t + trBase + trDur + pi * 0.03);
-	}
-
-	// Sawtooth sweep for the characteristic harsh modem texture
-	const sawOsc = ctx.createOscillator();
-	sawOsc.type = 'sawtooth';
-	sawOsc.frequency.setValueAtTime(1800, t + trBase);
-	sawOsc.frequency.linearRampToValueAtTime(900,  t + trBase + 0.25);
-	sawOsc.frequency.linearRampToValueAtTime(2500, t + trBase + 0.50);
-	sawOsc.frequency.linearRampToValueAtTime(1100, t + trBase + 0.75);
-	sawOsc.frequency.linearRampToValueAtTime(2100, t + trBase + 1.00);
-	const sawGain = ctx.createGain();
-	sawGain.gain.value = 0.05;
-	sawOsc.connect(sawGain);
-	sawGain.connect(master);
-	sawOsc.start(t + trBase);
-	sawOsc.stop(t + trBase + trDur);
-
-	// Bandpass noise — simulates channel scrambling during training
-	const noiseSize = Math.floor(ctx.sampleRate * (trDur + 0.3));
-	const noiseBuf = ctx.createBuffer(1, noiseSize, ctx.sampleRate);
-	const noiseData = noiseBuf.getChannelData(0);
-	for (let i = 0; i < noiseSize; i++) noiseData[i] = Math.random() * 2 - 1;
-	const noiseSrc = ctx.createBufferSource();
-	noiseSrc.buffer = noiseBuf;
-	const bpf = ctx.createBiquadFilter();
-	bpf.type = 'bandpass';
-	bpf.frequency.value = 1800;
-	bpf.Q.value = 2.5;
-	const noiseGain = ctx.createGain();
-	noiseGain.gain.value = 0.04;
-	noiseSrc.connect(bpf);
-	bpf.connect(noiseGain);
-	noiseGain.connect(master);
-	noiseSrc.start(t + trBase);
-	noiseSrc.stop(t + trBase + trDur + 0.2);
-
-	// ── 7. Connected: brief 2400 Hz confirmation tone ─── 4.15 → 4.50 s
-	const connAt = trBase + trDur + 0.05;
-	const connOsc = ctx.createOscillator();
-	connOsc.type = 'sine';
-	connOsc.frequency.value = 2400;
-	const connGain = ctx.createGain();
-	connGain.gain.setValueAtTime(0.18, t + connAt);
-	connGain.gain.linearRampToValueAtTime(0, t + connAt + 0.35);
-	connOsc.connect(connGain);
-	connGain.connect(master);
-	connOsc.start(t + connAt);
-	connOsc.stop(t + connAt + 0.35);
-
-	// Master fade
-	master.gain.setValueAtTime(0.18, t + connAt + 0.1);
-	master.gain.linearRampToValueAtTime(0, t + connAt + 0.5);
+function treeHTML() {
+	return `<div class="tree"><span class="blue">~</span>
+├── <button class="inline-command file" data-command="about">about.txt</button>
+├── <button class="inline-command directory" data-command="skills">skills/</button>
+├── <button class="inline-command file" data-command="experience">experience.log</button>
+├── <button class="inline-command directory" data-command="projects">projects/</button>
+├── <button class="inline-command file" data-command="contact">contact.vcf</button>
+├── <button class="inline-command file" data-command="cv">albertobarrago_cv.pdf</button>
+└── <button class="inline-command directory" data-command="games">games/</button></div>`;
 }
 
-// ---------------------------------------------------------------------------
-// Radio player — embedded internet radio (SomaFM)
-// ---------------------------------------------------------------------------
+function neofetchHTML() {
+	return `<div class="neofetch"><div class="neofetch-mark" aria-hidden="true">╭─────╮
+│ A B │
+│ L Z │
+╰─────╯</div><div><span class="accent">${name}</span>
+<span class="muted">─${'─'.repeat(name.length - 1)}</span>
+<span><span class="label">Role:</span> ${role}</span>
+<span><span class="label">Base:</span> ${location}</span>
+<span><span class="label">Stack:</span> JavaScript, Swift, Java, Python</span>
+<span><span class="label">Shell:</span> albz-sh ${version}</span>
+<span><span class="label">Runtime:</span> Vanilla JS, zero dependencies</span>
+<span class="palette"><i></i><i></i><i></i><i></i><i></i><i></i></span></div></div>`;
+}
 
-function initRadioPlayer() {
-	const audio = /** @type {HTMLAudioElement | null} */ (document.querySelector('.radio-audio'));
-	const btn = /** @type {HTMLButtonElement | null} */ (document.querySelector('.radio-btn'));
-	const player = /** @type {HTMLElement | null} */ (document.querySelector('.radio-player'));
-	if (!audio || !btn || !player) return;
+function lsHTML() {
+	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
+}
 
-	audio.addEventListener('error', () => {
-		btn.textContent = '▶';
-		btn.setAttribute('aria-label', 'Play radio');
-		player.classList.remove('playing');
+/** @param {string} value */
+function commandEcho(value) {
+	const block = document.createElement('div');
+	block.className = 'output-block command-echo';
+	const prompt = document.createElement('span');
+	prompt.className = 'prompt';
+	prompt.innerHTML = `<span class="prompt-user">${PROMPT}</span><span class="prompt-symbol">$</span>`;
+	const command = document.createElement('span');
+	command.textContent = value;
+	block.append(prompt, command);
+	output.appendChild(block);
+}
+
+/** @param {string} html @param {string} [className] */
+function appendOutput(html, className = '') {
+	const block = document.createElement('div');
+	block.className = `output-block ${className}`.trim();
+	block.innerHTML = html;
+	output.appendChild(block);
+	requestAnimationFrame(() => { output.scrollTop = output.scrollHeight; });
+}
+
+/** @param {string} rawCommand */
+function executeCommand(rawCommand) {
+	const value = rawCommand.trim();
+	if (!value) return;
+
+	commandEcho(value);
+	if (commandHistory.at(-1) !== value) commandHistory.push(value);
+	historyIndex = commandHistory.length;
+	const [rawName, ...args] = value.split(/\s+/);
+	const command = rawName.toLowerCase();
+	const argument = args.join(' ').toLowerCase();
+
+	if (command === 'clear') {
+		output.replaceChildren();
+		return;
+	}
+
+	if (['about', 'whoami', 'cat'].includes(command)) {
+		if (command !== 'cat' || !argument || argument === 'about.txt') appendOutput(aboutHTML());
+		else if (argument === 'contact.vcf') appendOutput(contactHTML());
+		else appendOutput(`<span class="red">cat: ${escapeHTML(argument)}: No such file</span>`);
+		return;
+	}
+
+	const renderers = /** @type {Record<string, () => string>} */ ({
+		help: helpHTML, skills: skillsHTML, experience: experienceHTML,
+		projects: projectsHTML, contact: contactHTML, games: gamesHTML,
+		ls: lsHTML, tree: treeHTML, neofetch: neofetchHTML,
 	});
-}
-
-function toggleRadio() {
-	const audio = /** @type {HTMLAudioElement | null} */ (document.querySelector('.radio-audio'));
-	const btn = /** @type {HTMLButtonElement | null} */ (document.querySelector('.radio-btn'));
-	const player = /** @type {HTMLElement | null} */ (document.querySelector('.radio-player'));
-	if (!audio || !btn || !player) return;
-
-	if (audio.paused) {
-		audio.play().then(() => {
-			btn.textContent = '⏸';
-			btn.setAttribute('aria-label', 'Pause radio');
-			player.classList.add('playing');
-		}).catch(() => {
-			// playback blocked or stream unavailable — stay stopped
-		});
-	} else {
-		audio.pause();
-		btn.textContent = '▶';
-		btn.setAttribute('aria-label', 'Play radio');
-		player.classList.remove('playing');
+	if (renderers[command]) {
+		appendOutput(renderers[command]());
+		return;
 	}
-}
 
-// ---------------------------------------------------------------------------
-// Boot sequence
-// ---------------------------------------------------------------------------
-
-function startBoot() {
-	if (started) return;
-	started = true;
-
-	app.innerHTML = amigaScreenHTML();
-	playModemSound();
-	initRadioPlayer();
-
-	const bootScreen = /** @type {HTMLDivElement} */ (document.getElementById('boot-screen'));
-	const cursor = /** @type {HTMLSpanElement} */ (bootScreen.querySelector('.cursor'));
-
-	let i = 0;
-	const interval = setInterval(() => {
-		if (i < BOOT_SEQUENCE.length) {
-			const line = document.createElement('div');
-			line.className = 'boot-line';
-			line.textContent = BOOT_SEQUENCE[i];
-			bootScreen.insertBefore(line, cursor);
-			i++;
+	if (command === 'cv') {
+		downloadCv();
+		appendOutput('<span class="green">Downloading albertobarrago_cv.pdf…</span>');
+		return;
+	}
+	if (command === 'history') {
+		appendOutput(commandHistory.map((entry, index) => `<div><span class="muted">${String(index + 1).padStart(3, ' ')}</span>  ${escapeHTML(entry)}</div>`).join(''));
+		return;
+	}
+	if (command === 'date') {
+		appendOutput(new Intl.DateTimeFormat(undefined, { dateStyle: 'full', timeStyle: 'long' }).format(new Date()));
+		return;
+	}
+	if (command === 'play') {
+		if (isGameName(argument)) {
+			appendOutput(`<span class="green">Launching ${GAME_TITLES[argument]}…</span>`);
+			launchGame(argument);
 		} else {
-			clearInterval(interval);
-			bootComplete = true;
-			showSection('about');
+			appendOutput(`<span class="red">Unknown game${argument ? `: ${escapeHTML(argument)}` : ''}.</span> Try <button class="inline-command command" data-command="games">games</button>.`);
 		}
-	}, 250);
-}
-
-// ---------------------------------------------------------------------------
-// Section navigation
-// ---------------------------------------------------------------------------
-
-/** @param {Section} section */
-function showSection(section) {
-	currentSection = section;
-
-	const contentArea = /** @type {HTMLDivElement} */ (document.getElementById('content-area'));
-	const render = SECTION_RENDERERS[section];
-	if (render) contentArea.innerHTML = render();
-
-	for (const btn of document.querySelectorAll('.menu-item')) {
-		const el = /** @type {HTMLElement} */ (btn);
-		el.classList.toggle('active', el.dataset.section === section);
+		return;
 	}
+	if (command === 'sudo' && argument === 'hire alberto') {
+		appendOutput('<span class="green">Permission granted. Opening contact details…</span>');
+		appendOutput(contactHTML());
+		return;
+	}
+	appendOutput(`<span class="red">command not found: ${escapeHTML(command)}</span><br>Type <button class="inline-command command" data-command="help">help</button> to see available commands.`);
 }
 
-// ---------------------------------------------------------------------------
-// Game management
-// ---------------------------------------------------------------------------
+/** @param {string} value */
+function escapeHTML(value) {
+	return value.replace(/[&<>"']/g, (character) => ({
+		'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;',
+	})[character] ?? character);
+}
 
-/** @param {string} type */
+/** @param {string} value @returns {value is GameName} */
+function isGameName(value) {
+	return Object.hasOwn(GAME_INIT, value);
+}
+
+/** @param {GameName} type */
+function gameOverlayHTML(type) {
+	const controls = GAME_CONTROLS[type].map((control) =>
+		`<button class="game-control-button" type="button" data-control-key="${control.key}">${control.label}</button>`
+	).join('');
+	return `<div class="game-fullscreen" id="game-overlay">
+		<div class="game-scanlines" aria-hidden="true"></div>
+		<div class="game-topbar"><span class="game-title">${GAME_TITLES[type]}</span><button class="game-exit" type="button" data-action="exit-game">ESC · CLOSE</button></div>
+		<canvas class="game-canvas" aria-label="${GAME_TITLES[type]} game"></canvas>
+		<div class="game-touch-controls">${controls}</div>
+	</div>`;
+}
+
+/** @param {GameName} type */
 function launchGame(type) {
-	cleanupGame();
-
+	exitGame();
+	input.blur();
 	const wrapper = document.createElement('div');
 	wrapper.innerHTML = gameOverlayHTML(type);
 	const overlay = /** @type {HTMLDivElement} */ (wrapper.firstElementChild);
 	app.appendChild(overlay);
-
 	const canvas = /** @type {HTMLCanvasElement} */ (overlay.querySelector('.game-canvas'));
-	const init = GAME_INIT[type];
-
-	if (init && canvas) {
-		requestAnimationFrame(() => {
-			if (!overlay.isConnected) return;
-			gameCleanup = init(canvas, exitGame);
-		});
-	}
-}
-
-function cleanupGame() {
-	if (gameCleanup) {
-		gameCleanup();
-		gameCleanup = null;
-	}
+	requestAnimationFrame(() => {
+		if (overlay.isConnected) gameCleanup = GAME_INIT[type](canvas, exitGame);
+	});
 }
 
 function exitGame() {
-	cleanupGame();
+	gameCleanup?.();
+	gameCleanup = null;
 	releaseAllGameControls();
 	document.getElementById('game-overlay')?.remove();
+	input?.focus({ preventScroll: true });
 }
 
-/**
- * @param {string} key
- * @param {'keydown' | 'keyup'} type
- */
+/** @param {string} key @param {'keydown' | 'keyup'} type */
 function dispatchGameKey(key, type) {
 	window.dispatchEvent(new KeyboardEvent(type, { key, bubbles: true, cancelable: true }));
 }
 
-/**
- * @param {{ key: string, repeatDelayId?: number, repeatIntervalId?: number }} active
- */
-function scheduleControlRepeat(active) {
-	if (!REPEATING_CONTROL_KEYS.has(active.key)) return;
-	active.repeatDelayId = window.setTimeout(() => {
-		active.repeatIntervalId = window.setInterval(() => {
-			dispatchGameKey(active.key, 'keydown');
-		}, 85);
-	}, 220);
-}
-
-/** @param {PointerEvent} e */
-function pressGameControl(e) {
-	const target = /** @type {HTMLElement} */ (e.target);
-	const btn = /** @type {HTMLElement | null} */ (target.closest('[data-control-key]'));
-	if (!btn?.dataset.controlKey) return;
-
-	e.preventDefault();
-	btn.setPointerCapture?.(e.pointerId);
-	const active = /** @type {{ key: string, button: HTMLElement, repeatDelayId?: number, repeatIntervalId?: number }} */ ({
-		key: btn.dataset.controlKey,
-		button: btn,
-	});
-	activeControlPointers.set(e.pointerId, active);
-	btn.classList.add('is-pressed');
-	dispatchGameKey(btn.dataset.controlKey, 'keydown');
-	scheduleControlRepeat(active);
-}
-
-/** @param {PointerEvent} e */
-function releaseGameControl(e) {
-	const active = activeControlPointers.get(e.pointerId);
-	if (!active) return;
-
-	e.preventDefault();
-	if (active.repeatDelayId) window.clearTimeout(active.repeatDelayId);
-	if (active.repeatIntervalId) window.clearInterval(active.repeatIntervalId);
-	active.button.classList.remove('is-pressed');
-	if (active.button.hasPointerCapture?.(e.pointerId)) {
-		active.button.releasePointerCapture(e.pointerId);
+/** @param {PointerEvent} event */
+function pressGameControl(event) {
+	const target = /** @type {HTMLElement} */ (event.target);
+	const button = /** @type {HTMLElement | null} */ (target.closest('[data-control-key]'));
+	const key = button?.dataset.controlKey;
+	if (!button || !key) return;
+	event.preventDefault();
+	button.setPointerCapture?.(event.pointerId);
+	const active = /** @type {{ key: string, button: HTMLElement, delayId?: number, intervalId?: number }} */ ({ key, button });
+	activeControlPointers.set(event.pointerId, active);
+	button.classList.add('is-pressed');
+	dispatchGameKey(key, 'keydown');
+	if (REPEATING_CONTROL_KEYS.has(key)) {
+		active.delayId = window.setTimeout(() => {
+			active.intervalId = window.setInterval(() => dispatchGameKey(key, 'keydown'), 85);
+		}, 220);
 	}
-	activeControlPointers.delete(e.pointerId);
+}
+
+/** @param {PointerEvent} event */
+function releaseGameControl(event) {
+	const active = activeControlPointers.get(event.pointerId);
+	if (!active) return;
+	event.preventDefault();
+	if (active.delayId) window.clearTimeout(active.delayId);
+	if (active.intervalId) window.clearInterval(active.intervalId);
+	active.button.classList.remove('is-pressed');
+	activeControlPointers.delete(event.pointerId);
 	dispatchGameKey(active.key, 'keyup');
 }
 
 function releaseAllGameControls() {
 	for (const active of activeControlPointers.values()) {
-		if (active.repeatDelayId) window.clearTimeout(active.repeatDelayId);
-		if (active.repeatIntervalId) window.clearInterval(active.repeatIntervalId);
+		if (active.delayId) window.clearTimeout(active.delayId);
+		if (active.intervalId) window.clearInterval(active.intervalId);
 		active.button.classList.remove('is-pressed');
 		dispatchGameKey(active.key, 'keyup');
 	}
 	activeControlPointers.clear();
 }
 
-// ---------------------------------------------------------------------------
-// Event delegation
-// ---------------------------------------------------------------------------
+app.innerHTML = terminalHTML();
+const output = /** @type {HTMLElement} */ (document.getElementById('terminal-output'));
+const form = /** @type {HTMLFormElement} */ (document.getElementById('terminal-form'));
+const input = /** @type {HTMLInputElement} */ (document.getElementById('terminal-input'));
+appendOutput(bannerHTML(), 'welcome-block');
 
-app.addEventListener('click', (e) => {
-	const target = /** @type {HTMLElement} */ (e.target);
+form.addEventListener('submit', (event) => {
+	event.preventDefault();
+	const value = input.value;
+	input.value = '';
+	executeCommand(value);
+});
 
-	// Boot
-	if (target.closest('[data-action="start-boot"]')) {
-		startBoot();
+input.addEventListener('keydown', (event) => {
+	if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+		event.preventDefault();
+		const direction = event.key === 'ArrowUp' ? -1 : 1;
+		historyIndex = Math.max(0, Math.min(commandHistory.length, historyIndex + direction));
+		input.value = commandHistory[historyIndex] ?? '';
+		requestAnimationFrame(() => input.setSelectionRange(input.value.length, input.value.length));
 		return;
 	}
-
-	// Section switch
-	const menuBtn = /** @type {HTMLElement | null} */ (target.closest('[data-section]'));
-	if (menuBtn?.dataset.section && bootComplete) {
-		showSection(/** @type {Section} */(menuBtn.dataset.section));
-		return;
+	if (event.key === 'Tab') {
+		event.preventDefault();
+		const prefix = input.value.trim().toLowerCase();
+		const matches = COMMAND_NAMES.filter((command) => command.startsWith(prefix));
+		if (matches.length === 1) input.value = matches[0];
+		else if (matches.length > 1) appendOutput(matches.map((match) => `<span class="command">${match}</span>`).join('  '));
 	}
+});
 
-	// Launch game
-	const gameIcon = /** @type {HTMLElement | null} */ (target.closest('[data-game]'));
-	if (gameIcon?.dataset.game) {
-		launchGame(gameIcon.dataset.game);
-		return;
-	}
-
-	// Download CV
-	if (target.closest('[data-action="download-cv"]')) {
-		downloadCv();
-		return;
-	}
-
-	// Toggle radio
-	if (target.closest('[data-action="toggle-radio"]')) {
-		toggleRadio();
-		return;
-	}
-
-	// Exit game
-	if (target.closest('[data-action="exit-game"]')) {
-		exitGame();
-	}
+app.addEventListener('click', (event) => {
+	const target = /** @type {HTMLElement} */ (event.target);
+	const commandTarget = /** @type {HTMLElement | null} */ (target.closest('[data-command]'));
+	if (commandTarget?.dataset.command) executeCommand(commandTarget.dataset.command);
+	if (target.closest('[data-action="exit-game"]')) exitGame();
+	if (!target.closest('a') && !document.getElementById('game-overlay')) input.focus({ preventScroll: true });
 });
 
 app.addEventListener('pointerdown', pressGameControl);
@@ -774,9 +427,6 @@ app.addEventListener('pointerup', releaseGameControl);
 app.addEventListener('pointercancel', releaseGameControl);
 app.addEventListener('lostpointercapture', releaseGameControl);
 window.addEventListener('blur', releaseAllGameControls);
-
-// ---------------------------------------------------------------------------
-// Initialize
-// ---------------------------------------------------------------------------
-
-app.innerHTML = startOverlayHTML();
+document.addEventListener('keydown', (event) => {
+	if (event.key === 'Escape' && document.getElementById('game-overlay')) exitGame();
+});

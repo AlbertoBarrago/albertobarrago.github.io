@@ -1,4 +1,4 @@
-/* Base reset - kept minimal as Amiga styles are in component */
+/* Minimal global reset. Component styles live in page.css. */
 *, *::before, *::after {
 	box-sizing: border-box;
 }
