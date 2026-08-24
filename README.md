@@ -1,4 +1,4 @@
-# ALBZ — Interactive Terminal Portfolio
+# ALBZ | Interactive Terminal Portfolio
 
 An interactive, keyboard-first portfolio built as a terminal shell. It presents Alberto Barrago's experience, technical skills, open-source work, and contact details without a frontend framework or runtime dependencies.
 
@@ -119,7 +119,7 @@ You may copy and adapt the software for personal and other permitted noncommerci
 
 Before publishing a derivative portfolio, replace Alberto Barrago's name, biography, employment history, contact details, résumé, project descriptions, metadata, domain configuration, and other personal branding. The license does not grant a right to impersonate the original author.
 
-Commercial use—including resale, paid client work, or selling templates derived from this project—requires a separate written license.
+Commercial use, including resale, paid client work, or selling templates derived from this project, requires a separate written license.
 
 ## License
 

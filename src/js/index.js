@@ -61,7 +61,7 @@ const openSource = [
 	},
 	{
 		name: "RSS-Reader",
-		description: "A lightweight, native macOS RSS Reader app built with Swift. Lives in your menu bar — clean, minimal, no bloat.",
+		description: "A lightweight, native macOS RSS Reader app built with Swift. Lives in your menu bar: clean, minimal, no bloat.",
 		url: "https://github.com/AlbertoBarrago/RSS-Reader",
 		language: "Swift"
 	},
