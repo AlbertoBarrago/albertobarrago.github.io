@@ -90,10 +90,10 @@ function terminalHTML() {
 
 function bannerHTML() {
 	return `<div class="ascii-logo" aria-label="ALBZ">
-<span class="accent">   /\\   | |   |  _ \\  |__  /</span>
-<span class="accent">  /  \\  | |   | |_) |   / / </span>
-<span class="accent"> / /\\ \\ | |___|  _ &lt;   / /_ </span>
-<span class="accent">/_/  \\_\\|_____||____/  /____|</span></div>
+<span class="accent">   /\\ | | |  _ \\ |__  /</span>
+<span class="accent">  /  \\| | | |_) |  / / </span>
+<span class="accent"> / /\\ \\ |___|  _ &lt;  / /_ </span>
+<span class="accent">/_/  \\_\\_____|____/ /____|</span></div>
 <div class="boot-copy"><span class="muted">Portfolio shell v${version}</span>
 <span>${role} · Product Builder</span>
 
