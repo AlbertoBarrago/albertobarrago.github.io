@@ -422,6 +422,15 @@ button {
 	margin-top: 0.55rem;
 }
 
+.brew-install {
+	margin-top: 0.5rem !important;
+}
+
+.brew-install code {
+	color: var(--green);
+	font-size: 0.82rem;
+}
+
 .lab-project .lab-project-focus {
 	display: flex;
 	gap: 1rem;

@@ -6,7 +6,7 @@
 
 import {
 	name, role, location, profile, skills, experience,
-	experimentalProject, openSource, links, version, downloadCv,
+	experimentalProject, openSource, brewFormulas, links, version, downloadCv,
 } from './index.js';
 import { initSpaceInvaders } from './games/spaceInvaders.js';
 import { initTetris } from './games/tetris.js';
@@ -18,12 +18,12 @@ import { initFlappyBird } from './games/flappyBird.js';
 
 const PROMPT = 'alberto@portfolio:~';
 const COMMAND_NAMES = Object.freeze([
-	'help', 'about', 'skills', 'experience', 'projects', 'lab', 'contact', 'cv',
+	'help', 'about', 'skills', 'experience', 'projects', 'brew', 'lab', 'contact', 'cv',
 	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear',
 ]);
 const MOBILE_COMMANDS = Object.freeze([
 	['help', 'help'], ['about', 'about'], ['skills', 'skills'],
-	['projects', 'projects'], ['lab', 'lab'], ['games', 'games'], ['contact', 'contact'],
+	['projects', 'projects'], ['brew', 'brew'], ['lab', 'lab'], ['games', 'games'], ['contact', 'contact'],
 ]);
 
 /** @type {Readonly<Record<GameName, string>>} */
@@ -112,6 +112,7 @@ function helpHTML() {
 		['skills', 'Technical toolbox by area'],
 		['experience', 'Professional timeline'],
 		['projects', 'Selected open-source work'],
+		['brew', 'Homebrew formulae I maintain'],
 		['lab', 'Experimental work in progress'],
 		['contact', 'Ways to get in touch'],
 		['cv', 'Download my resume'],
@@ -163,6 +164,16 @@ function projectsHTML() {
 </article>`).join('')}</div>`;
 }
 
+function brewHTML() {
+	return `<div class="output-title">Homebrew formulae</div>
+<p class="prose">Command-line tools I've packaged and maintain via Homebrew taps.</p>
+<div class="project-list">${brewFormulas.map((formula) => `<article class="project-item">
+	<div><a class="terminal-link project-name" href="${formula.url}" target="_blank" rel="noopener noreferrer">${formula.name} ↗</a><span class="project-language">${formula.tap}</span></div>
+	<p>${formula.description}</p>
+	<p class="brew-install"><code>${formula.install}</code></p>
+</article>`).join('')}</div>`;
+}
+
 function labHTML() {
 	return `<div class="output-title">Workbench Lab</div>
 <p class="prose">Experimental products in active development. Scope and direction may evolve as ideas are validated.</p>
@@ -196,6 +207,7 @@ function treeHTML() {
 ├── <button class="inline-command directory" data-command="skills">skills/</button>
 ├── <button class="inline-command file" data-command="experience">experience.log</button>
 ├── <button class="inline-command directory" data-command="projects">projects/</button>
+├── <button class="inline-command directory" data-command="brew">brew/</button>
 ├── <button class="inline-command directory" data-command="lab">lab/</button>
 ├── <button class="inline-command file" data-command="contact">contact.vcf</button>
 ├── <button class="inline-command file" data-command="cv">albertobarrago_cv.pdf</button>
@@ -217,7 +229,7 @@ function neofetchHTML() {
 }
 
 function lsHTML() {
-	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="lab">lab/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
+	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="brew">brew/</button><button class="inline-command directory" data-command="lab">lab/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
 }
 
 /** @param {string} value */
@@ -268,7 +280,7 @@ function executeCommand(rawCommand) {
 
 	const renderers = /** @type {Record<string, () => string>} */ ({
 		help: helpHTML, skills: skillsHTML, experience: experienceHTML,
-		projects: projectsHTML, lab: labHTML, contact: contactHTML, games: gamesHTML,
+		projects: projectsHTML, brew: brewHTML, lab: labHTML, contact: contactHTML, games: gamesHTML,
 		ls: lsHTML, tree: treeHTML, neofetch: neofetchHTML,
 	});
 	if (renderers[command]) {

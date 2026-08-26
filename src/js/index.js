@@ -89,6 +89,38 @@ const openSource = [
 	}
 ];
 
+/** @type {{ name: string, description: string, install: string, url: string, tap: string }[]} */
+const brewFormulas = [
+	{
+		name: "wir",
+		description: "What Is Running - Port and Process Inspector.",
+		install: "brew install AlbertoBarrago/tap/wir",
+		url: "https://github.com/AlbertoBarrago/wir",
+		tap: "AlbertoBarrago/tap"
+	},
+	{
+		name: "java-manager",
+		description: "Switch between JDKs registered with macOS. Primary shell command: jm.",
+		install: "brew install AlbertoBarrago/tap/java-manager",
+		url: "https://github.com/AlbertoBarrago/java-manager",
+		tap: "AlbertoBarrago/tap"
+	},
+	{
+		name: "changeblast",
+		description: "Local-first CLI that estimates the blast radius of a code change. Primary shell command: blast.",
+		install: "brew install AlbertoBarrago/tap/changeblast",
+		url: "https://github.com/AlbertoBarrago/changeblast",
+		tap: "AlbertoBarrago/tap"
+	},
+	{
+		name: "clean-memory",
+		description: "Collection of commands to clean up and update system resources and software.",
+		install: "brew install AlbertoBarrago/clean-memory/clean-memory",
+		url: "https://github.com/AlbertoBarrago/cleanMemory",
+		tap: "AlbertoBarrago/clean-memory"
+	}
+];
+
 const links = {
 	github: "https://github.com/AlbertoBarrago",
 	email: `mailto:${email}`,
@@ -114,6 +146,7 @@ export {
 	experience,
 	experimentalProject,
 	openSource,
+	brewFormulas,
 	links,
 	version,
 	downloadCv
