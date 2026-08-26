@@ -21,7 +21,7 @@
 <div class="boot-copy"><span class="muted">Portfolio shell v${Ae}</span>
 <span>${we} · Product Builder</span>
 
-15+ years — from INPS distribution systems to products for global brands.
+15+ years: from INPS distribution systems to products for global brands.
 Technical leadership · Architecture · Web · Mobile · Cloud · AI
 
 I turn ambiguity into reliable systems and useful products.
