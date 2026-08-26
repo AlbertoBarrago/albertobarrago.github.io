@@ -97,7 +97,7 @@ function bannerHTML() {
 <div class="boot-copy"><span class="muted">Portfolio shell v${version}</span>
 <span>${role} · Product Builder</span>
 
-10+ years shipping production software used by millions.
+15+ years — from INPS distribution systems to products for global brands.
 Technical leadership · Architecture · Web · Mobile · Cloud · AI
 
 I turn ambiguity into reliable systems and useful products.
