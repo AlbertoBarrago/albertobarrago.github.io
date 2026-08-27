@@ -111,13 +111,6 @@ const brewFormulas = [
 		install: "brew install AlbertoBarrago/tap/impactline",
 		url: "https://github.com/AlbertoBarrago/impactline",
 		tap: "AlbertoBarrago/tap"
-	},
-	{
-		name: "clean-memory",
-		description: "Collection of commands to clean up and update system resources and software.",
-		install: "brew install AlbertoBarrago/clean-memory/clean-memory",
-		url: "https://github.com/AlbertoBarrago/cleanMemory",
-		tap: "AlbertoBarrago/clean-memory"
 	}
 ];
 
