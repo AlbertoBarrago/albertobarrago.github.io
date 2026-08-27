@@ -55,6 +55,18 @@ const GAME_INIT = Object.freeze({
 	space: initSpaceInvaders, tetris: initTetris, pong: initPong, flappy: initFlappyBird,
 });
 
+const SECRET_ART = Object.freeze([
+	"        /\\_/\\",
+	"       ( o.o )",
+	"        > ^ <",
+	"       /|   |\\",
+	"      (_|   |_)",
+	"         W W",
+	"",
+	"      I LOVE CAT",
+]);
+const GLITCH_CHARS = '#%@*+=-<>/\\|';
+
 const REPEATING_CONTROL_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowDown']);
 /** @type {Map<number, { key: string, button: HTMLElement, delayId?: number, intervalId?: number }>} */
 const activeControlPointers = new Map();
@@ -233,6 +245,33 @@ function lsHTML() {
 	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="brew">brew/</button><button class="inline-command directory" data-command="lab">lab/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
 }
 
+/** @param {number} intensity @returns {string} */
+function glitchFrame(intensity) {
+	return SECRET_ART.map((line) => line.split('').map((character) =>
+		character === ' ' || Math.random() >= intensity
+			? character
+			: GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)]
+	).join('')).join('\n');
+}
+
+function launchCatEasterEgg() {
+	const block = document.createElement('div');
+	block.className = 'output-block ascii-banner accent';
+	output.appendChild(block);
+
+	const totalFrames = 6;
+	let frame = 0;
+	const intervalId = window.setInterval(() => {
+		frame += 1;
+		block.textContent = frame >= totalFrames ? SECRET_ART.join('\n') : glitchFrame(Math.max(0, 0.6 - frame * 0.12));
+		requestAnimationFrame(() => { output.scrollTop = output.scrollHeight; });
+		if (frame >= totalFrames) {
+			window.clearInterval(intervalId);
+			appendOutput('<span class="green">Purring in binary.</span>');
+		}
+	}, 90);
+}
+
 /** @param {string} value */
 function commandEcho(value) {
 	const block = document.createElement('div');
@@ -309,6 +348,10 @@ function executeCommand(rawCommand) {
 		} else {
 			appendOutput(`<span class="red">Unknown game${argument ? `: ${escapeHTML(argument)}` : ''}.</span> Try <button class="inline-command command" data-command="games">games</button>.`);
 		}
+		return;
+	}
+	if (command === '1337') {
+		launchCatEasterEgg();
 		return;
 	}
 	if (command === 'sudo' && argument === 'hire alberto') {
