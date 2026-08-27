@@ -106,10 +106,10 @@ const brewFormulas = [
 		tap: "AlbertoBarrago/tap"
 	},
 	{
-		name: "changeblast",
-		description: "Local-first CLI that estimates the blast radius of a code change. Primary shell command: blast.",
-		install: "brew install AlbertoBarrago/tap/changeblast",
-		url: "https://github.com/AlbertoBarrago/changeblast",
+		name: "impactline",
+		description: "Local-first CLI that estimates the blast radius of a code change. Primary shell command: impactline.",
+		install: "brew install AlbertoBarrago/tap/impactline",
+		url: "https://github.com/AlbertoBarrago/impactline",
 		tap: "AlbertoBarrago/tap"
 	},
 	{
