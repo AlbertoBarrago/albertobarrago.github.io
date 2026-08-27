@@ -99,10 +99,10 @@ const brewFormulas = [
 		tap: "AlbertoBarrago/tap"
 	},
 	{
-		name: "java-manager",
+		name: "jm",
 		description: "Switch between JDKs registered with macOS. Primary shell command: jm.",
-		install: "brew install AlbertoBarrago/tap/java-manager",
-		url: "https://github.com/AlbertoBarrago/java-manager",
+		install: "brew install AlbertoBarrago/tap/jm",
+		url: "https://github.com/AlbertoBarrago/jm",
 		tap: "AlbertoBarrago/tap"
 	},
 	{
