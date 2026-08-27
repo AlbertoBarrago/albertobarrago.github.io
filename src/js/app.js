@@ -12,6 +12,7 @@ import { initSpaceInvaders } from './games/spaceInvaders.js';
 import { initTetris } from './games/tetris.js';
 import { initPong } from './games/pong.js';
 import { initFlappyBird } from './games/flappyBird.js';
+import { printConsoleBanner } from './console-banner.js';
 
 /** @typedef {'space' | 'tetris' | 'pong' | 'flappy'} GameName */
 /** @typedef {{ label: string, key: string }} GameControl */
@@ -416,6 +417,7 @@ const output = /** @type {HTMLElement} */ (document.getElementById('terminal-out
 const form = /** @type {HTMLFormElement} */ (document.getElementById('terminal-form'));
 const input = /** @type {HTMLInputElement} */ (document.getElementById('terminal-input'));
 appendOutput(bannerHTML(), 'welcome-block');
+printConsoleBanner();
 
 form.addEventListener('submit', (event) => {
 	event.preventDefault();
