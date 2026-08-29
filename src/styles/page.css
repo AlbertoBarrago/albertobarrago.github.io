@@ -333,6 +333,33 @@ button {
 	color: var(--bright);
 }
 
+.prose pre {
+	background: var(--background-deep);
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	padding: 0.75rem 1rem;
+	margin: 1rem 0;
+	overflow-x: auto;
+}
+
+.prose :not(pre) > code {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 3px;
+	padding: 0.1em 0.4em;
+	color: var(--cyan);
+	font-size: 0.9em;
+}
+
+.prose pre code {
+	background: none;
+	border: 0;
+	padding: 0;
+	color: inherit;
+	font-size: 0.9em;
+	white-space: pre;
+}
+
 .output-links {
 	display: flex;
 	flex-wrap: wrap;
