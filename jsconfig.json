@@ -12,5 +12,5 @@
 		"moduleResolution": "bundler",
 		"target": "es2022"
 	},
-	"include": ["src/**/*.js"]
+	"include": ["src/**/*.js", "src/vite-env.d.ts"]
 }

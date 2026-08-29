@@ -13,13 +13,15 @@ import { initTetris } from './games/tetris.js';
 import { initPong } from './games/pong.js';
 import { initFlappyBird } from './games/flappyBird.js';
 import { printConsoleBanner } from './console-banner.js';
+import { escapeHTML } from './utils.js';
+import { articles, getArticleHTML } from './articles.js';
 
 /** @typedef {'space' | 'tetris' | 'pong' | 'flappy'} GameName */
 /** @typedef {{ label: string, key: string }} GameControl */
 
 const PROMPT = 'alberto@portfolio:~';
 const COMMAND_NAMES = Object.freeze([
-	'help', 'about', 'skills', 'experience', 'projects', 'brew', 'lab', 'contact', 'cv',
+	'help', 'about', 'skills', 'experience', 'projects', 'brew', 'lab', 'articles', 'contact', 'cv',
 	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear',
 ]);
 const MOBILE_COMMANDS = Object.freeze([
@@ -127,6 +129,7 @@ function helpHTML() {
 		['projects', 'Selected open-source work'],
 		['brew', 'Homebrew formulae I maintain'],
 		['lab', 'Experimental work in progress'],
+		['articles', 'Technical articles and notes'],
 		['contact', 'Ways to get in touch'],
 		['cv', 'Download my resume'],
 		['games', 'List embedded retro games'],
@@ -198,6 +201,18 @@ function labHTML() {
 </article>`;
 }
 
+function articlesHTML() {
+	if (articles.length === 0) {
+		return `<div class="output-title">Articles</div>
+<p class="prose muted">No articles yet.</p>`;
+	}
+	return `<div class="output-title">Articles</div>
+<div class="project-list">${articles.map((article) => `<article class="project-item">
+	<div><button class="terminal-link project-name inline-command" data-command="cat ${article.slug}.md">${article.title} ↗</button><span class="project-language">${article.date}</span></div>
+	<p class="muted">${article.tags.join('  ·  ')}</p>
+</article>`).join('')}</div>`;
+}
+
 function contactHTML() {
 	return `<div class="output-title">Let's build something useful</div>
 <div class="key-value"><span class="label">email</span><a class="terminal-link" href="${links.email}">albertobarrago@gmail.com</a>
@@ -222,6 +237,7 @@ function treeHTML() {
 ├── <button class="inline-command directory" data-command="projects">projects/</button>
 ├── <button class="inline-command directory" data-command="brew">brew/</button>
 ├── <button class="inline-command directory" data-command="lab">lab/</button>
+├── <button class="inline-command directory" data-command="articles">articles/</button>
 ├── <button class="inline-command file" data-command="contact">contact.vcf</button>
 ├── <button class="inline-command file" data-command="cv">albertobarrago_cv.pdf</button>
 └── <button class="inline-command directory" data-command="games">games/</button></div>`;
@@ -242,7 +258,7 @@ function neofetchHTML() {
 }
 
 function lsHTML() {
-	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="brew">brew/</button><button class="inline-command directory" data-command="lab">lab/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
+	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="brew">brew/</button><button class="inline-command directory" data-command="lab">lab/</button><button class="inline-command directory" data-command="articles">articles/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
 }
 
 /** @param {number} intensity @returns {string} */
@@ -314,13 +330,16 @@ function executeCommand(rawCommand) {
 	if (['about', 'whoami', 'cat'].includes(command)) {
 		if (command !== 'cat' || !argument || argument === 'about.txt') appendOutput(aboutHTML());
 		else if (argument === 'contact.vcf') appendOutput(contactHTML());
+		else if (argument.endsWith('.md') && getArticleHTML(argument.slice(0, -3))) {
+			appendOutput(`<div class="prose">${getArticleHTML(argument.slice(0, -3))}</div>`);
+		}
 		else appendOutput(`<span class="red">cat: ${escapeHTML(argument)}: No such file</span>`);
 		return;
 	}
 
 	const renderers = /** @type {Record<string, () => string>} */ ({
 		help: helpHTML, skills: skillsHTML, experience: experienceHTML,
-		projects: projectsHTML, brew: brewHTML, lab: labHTML, contact: contactHTML, games: gamesHTML,
+		projects: projectsHTML, brew: brewHTML, lab: labHTML, articles: articlesHTML, contact: contactHTML, games: gamesHTML,
 		ls: lsHTML, tree: treeHTML, neofetch: neofetchHTML,
 	});
 	if (renderers[command]) {
@@ -360,13 +379,6 @@ function executeCommand(rawCommand) {
 		return;
 	}
 	appendOutput(`<span class="red">command not found: ${escapeHTML(command)}</span><br>Type <button class="inline-command command" data-command="help">help</button> to see available commands.`);
-}
-
-/** @param {string} value */
-function escapeHTML(value) {
-	return value.replace(/[&<>"']/g, (character) => ({
-		'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;',
-	})[character] ?? character);
 }
 
 /** @param {string} value @returns {value is GameName} */
