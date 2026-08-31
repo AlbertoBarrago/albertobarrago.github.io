@@ -1,6 +1,6 @@
-# robots.txt for albertobarrago.com
+# robots.txt for albz.it
 User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://albertobarrago.github.io/sitemap.xml
+Sitemap: https://albz.it/sitemap.xml
