@@ -51,15 +51,25 @@ const experience = [
 	}
 ];
 
-/** @type {{ name: string, description: string, url: string, language: string, status: string, focus: string }} */
-const experimentalProject = {
-	name: "Markasso",
-	description: "A fast, minimal, keyboard-first whiteboard engine for the browser. Marker + Picasso. No framework. No runtime. Just canvas.",
-	url: "https://markasso.it",
-	language: "TypeScript (0 deps)",
-	status: "Experimental · Work in progress",
-	focus: "Validating a direct, distraction-free interaction model for visual thinking."
-};
+/** @type {{ name: string, description: string, url: string, language: string, status: string, focus: string }[]} */
+const experimentalProjects = [
+	{
+		name: "Markasso",
+		description: "A fast, minimal, keyboard-first whiteboard engine for the browser. Marker + Picasso. No framework. No runtime. Just canvas.",
+		url: "https://markasso.it",
+		language: "TypeScript (0 deps)",
+		status: "Experimental · Work in progress",
+		focus: "Validating a direct, distraction-free interaction model for visual thinking."
+	},
+	{
+		name: "Iron Doctrine",
+		description: "A real-time strategy game with a deterministic ECS engine, running React + Pixi.js on the client, with lockstep online 1v1 multiplayer.",
+		url: "https://iron-doctrine-omega.vercel.app/",
+		language: "TypeScript (pnpm monorepo)",
+		status: "Experimental · Work in progress",
+		focus: "Deterministic simulation shared across local and networked play, driven by command replay."
+	}
+];
 
 /** @type {{ name: string, description: string, url: string, language: string }[]} */
 const openSource = [
@@ -137,7 +147,7 @@ export {
 	profile,
 	skills,
 	experience,
-	experimentalProject,
+	experimentalProjects,
 	openSource,
 	brewFormulas,
 	links,

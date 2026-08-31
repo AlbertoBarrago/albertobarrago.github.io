@@ -6,7 +6,7 @@
 
 import {
 	name, role, location, profile, skills, experience,
-	experimentalProject, openSource, brewFormulas, links, version, downloadCv,
+	experimentalProjects, openSource, brewFormulas, links, version, downloadCv,
 } from './index.js';
 import { initSpaceInvaders } from './games/spaceInvaders.js';
 import { initTetris } from './games/tetris.js';
@@ -195,14 +195,20 @@ function brewHTML() {
 }
 
 function labHTML() {
+	const items = experimentalProjects
+		.map(
+			(project) => `<article class="project-item lab-project">
+	<div class="lab-project-meta"><span class="project-status">${project.status}</span><span class="project-language">${project.language}</span></div>
+	<a class="terminal-link project-name" href="${project.url}" target="_blank" rel="noopener noreferrer">${project.name} ↗</a>
+	<p>${project.description}</p>
+	<p class="lab-project-focus"><span class="label">focus</span>${project.focus}</p>
+</article>`
+		)
+		.join('');
+
 	return `<div class="output-title">Workbench Lab</div>
 <p class="prose">Experimental products in active development. Scope and direction may evolve as ideas are validated.</p>
-<article class="project-item lab-project">
-	<div class="lab-project-meta"><span class="project-status">${experimentalProject.status}</span><span class="project-language">${experimentalProject.language}</span></div>
-	<a class="terminal-link project-name" href="${experimentalProject.url}" target="_blank" rel="noopener noreferrer">${experimentalProject.name} ↗</a>
-	<p>${experimentalProject.description}</p>
-	<p class="lab-project-focus"><span class="label">focus</span>${experimentalProject.focus}</p>
-</article>`;
+${items}`;
 }
 
 function articlesHTML() {
