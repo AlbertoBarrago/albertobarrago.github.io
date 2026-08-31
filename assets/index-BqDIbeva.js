@@ -362,9 +362,9 @@ Type <button class="inline-command command" data-command="help">help</button> to
 	<p class="lab-project-focus"><span class="label">focus</span>${se.focus}</p>
 </article>`}function vt(){return ee.length===0?`<div class="output-title">Articles</div>
 <p class="prose muted">No articles yet.</p>`:`<div class="output-title">Articles</div>
-<div class="project-list">${ee.map(e=>`<article class="project-item">
-	<div><button class="terminal-link project-name inline-command" data-command="cat ${e.slug}.md">${e.title} ↗</button><span class="project-language">${e.date}</span></div>
-	<p class="muted">${e.tags.join("  ·  ")}</p>
+<div class="project-list">${[...ee].sort((n,t)=>n.date.localeCompare(t.date)).map(n=>`<article class="project-item">
+	<div><button class="terminal-link project-name inline-command" data-command="cat ${n.slug}.md">${n.title} ↗</button><span class="project-language">${n.date}</span></div>
+	<p class="muted">${n.tags.join("  ·  ")}</p>
 </article>`).join("")}</div>`}const Et=200;function It(e){const n=e.replace(/<[^>]*>/g," ").replace(/\s+/g," ").trim(),t=n?n.split(" ").length:0;return{words:t,chars:n.length,minutes:Math.max(1,Math.round(t/Et))}}function Lt(e){const n=ee.findIndex(h=>h.slug===e),t=ee[n],a=It(de(e)??""),o=ee[n-1],l=ee[n+1],s=[o?`<button class="reader-nav-link" type="button" data-action="read-article" data-slug="${o.slug}">← ${o.title}</button>`:"<span></span>",l?`<button class="reader-nav-link reader-nav-next" type="button" data-action="read-article" data-slug="${l.slug}">${l.title} →</button>`:"<span></span>"].join("");return`<div class="article-reader" id="article-reader">
 		<div class="article-reader-topbar">
 			<button class="reader-back" type="button" data-action="close-reader">back</button>
