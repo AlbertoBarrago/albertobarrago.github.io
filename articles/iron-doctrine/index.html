@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Iron Doctrine — building deterministic online multiplayer with a shared ECS engine | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="Iron Doctrine is a real-time strategy game I'm building in a pnpm monorepo, with a deterministic ECS engine at its core and, as of this week, a working…" />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/articles/iron-doctrine/" />
+	<meta property="og:title" content="Iron Doctrine — building deterministic online multiplayer with a shared ECS engine | Alberto Barrago" />
+	<meta property="og:description" content="Iron Doctrine is a real-time strategy game I'm building in a pnpm monorepo, with a deterministic ECS engine at its core and, as of this week, a working…" />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Iron Doctrine — building deterministic online multiplayer with a shared ECS engine | Alberto Barrago" />
+	<meta name="twitter:description" content="Iron Doctrine is a real-time strategy game I'm building in a pnpm monorepo, with a deterministic ECS engine at its core and, as of this week, a working…" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/articles/iron-doctrine/" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-BglYpsZY.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DHxsVwSi.css">
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"Article","headline":"Iron Doctrine — building deterministic online multiplayer with a shared ECS engine","datePublished":"2026-08-31","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/articles/iron-doctrine/","mainEntityOfPage":"https://albz.it/articles/iron-doctrine/"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article><h1>Iron Doctrine — building deterministic online multiplayer with a shared ECS engine</h1><p>2026-08-31</p><p><strong>Iron Doctrine</strong> is a real-time strategy game I&#39;m building in a pnpm monorepo, with a deterministic ECS engine at its core and, as of this week, a working 1v1 online mode.</p>
+<h2>The Architecture</h2>
+<p>The repo is split into <code>packages/</code> and <code>apps/</code>:</p>
+<ul>
+<li><strong>packages/shared</strong> — the network protocol (<code>ClientMessage</code>/<code>ServerMessage</code>), shared types and constants (<code>SIM_HZ</code>, <code>DEFAULT_INPUT_DELAY</code>), and the <code>LockstepCoordinator</code></li>
+<li><strong>packages/engine</strong> — a deterministic ECS simulation engine (entities/commands/systems), exposing <code>Simulation.step()</code>/<code>enqueue()</code>, with zero dependency on rendering or networking</li>
+<li><strong>apps/client</strong> — React + Pixi.js, running entirely in the browser</li>
+<li><strong>apps/server</strong> — a Node/<code>ws</code> WebSocket host that relays commands without simulating anything itself</li>
+</ul>
+<h2>Local Play: the Game Loop</h2>
+<p><code>GameRenderer</code> (a large class handling rendering, input, and audio) owns a <code>SimBridge</code>, which in turn owns a Web Worker running the <code>Simulation</code>. The worker advances on a free-running clock (<code>setTimeout</code>), applies commands as soon as they arrive, and produces one snapshot per tick that the main thread interpolates and draws.</p>
+<h2>Going Online</h2>
+<p>This week&#39;s addition: real 1v1 matches over the network, built around lockstep determinism.</p>
+<ol>
+<li><strong>apps/server</strong> runs a single in-memory <code>MatchRelay</code> per process. It doesn&#39;t simulate anything, it just assigns each incoming command to a future tick and rebroadcasts the same confirmed command set to both clients every <code>SIM_DT_MS</code>. Determinism comes from both clients running the same engine against the same command stream.</li>
+<li><strong>NetworkClient</strong> talks to the server over WebSocket, translates confirmed ticks, and feeds them into a second bridge type, <code>NetworkedSimBridge</code>, implementing the same <code>SimBridgeLike</code> interface as the local one, but with two differences: local commands go to the server (<code>sendCommand</code>) instead of straight to the worker, and the worker only advances one tick when a network confirmation (<code>networkTick</code>) arrives, instead of running freely.</li>
+<li><strong>The &quot;you&#39;re always player 0&quot; problem</strong>: most of the UI/HUD assumed the local user was player 0. Solved with <code>playerPerspective.ts</code>, a pure module that swaps <code>owner</code>/<code>player</code>/<code>winner</code> labels (0↔1) only at the network boundary, so each client keeps internally believing it&#39;s player 0.</li>
+<li><code>GameRenderer</code> now accepts the bridge via its constructor (local or networked) instead of always instantiating one itself. That single injection point made the rest of the online mode possible without rewriting the class&#39;s ~1700 lines.</li>
+</ol>
+<h2>Why This Design</h2>
+<p>Keeping the simulation deterministic and network-agnostic in <code>packages/engine</code> means the same code powers skirmish, campaign, and online play. The server never needs to understand game state, it&#39;s just an authoritative clock for command ordering. The tradeoff is that both clients must produce bit-identical results from the same inputs, which is why command replay (not state sync) is the whole networking model.</p>
+<h2>What&#39;s Next</h2>
+<p>1v1 is working; next up is handling reconnects and validating the lockstep model holds under real network jitter, not just on localhost.</p>
+</article></noscript></div>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-NVRFS5LVBB"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-NVRFS5LVBB');
+	</script>
+</body>
+
+</html>
