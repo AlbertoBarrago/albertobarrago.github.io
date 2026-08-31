@@ -347,8 +347,8 @@ function openArticleReader(slug) {
 	app.appendChild(overlay);
 	overlay.scrollTop = 0;
 	buildArticleTOC(overlay);
-	if (window.location.hash !== `#article/${slug}`) {
-		window.history.pushState(null, '', `#article/${slug}`);
+	if (window.location.pathname !== `/articles/${slug}/`) {
+		window.history.pushState(null, '', `/articles/${slug}/`);
 	}
 }
 
@@ -356,15 +356,15 @@ function closeArticleReader() {
 	tocObserver?.disconnect();
 	tocObserver = null;
 	document.getElementById('article-reader')?.remove();
-	if (window.location.hash.startsWith('#article/')) {
-		window.history.pushState(null, '', window.location.pathname + window.location.search);
+	if (window.location.pathname.startsWith('/articles/')) {
+		window.history.pushState(null, '', '/');
 	}
 	input?.focus({ preventScroll: true });
 }
 
 /** @param {string} slug @returns {string} */
 function articleURL(slug) {
-	return `${window.location.origin}${window.location.pathname}#article/${slug}`;
+	return `${window.location.origin}/articles/${slug}/`;
 }
 
 /** @param {HTMLElement} button */
@@ -664,11 +664,17 @@ const input = /** @type {HTMLInputElement} */ (document.getElementById('terminal
 appendOutput(bannerHTML(), 'welcome-block');
 printConsoleBanner();
 
-const bootHashSlug = window.location.hash.match(/^#article\/(.+)$/)?.[1];
-if (bootHashSlug && getArticleHTML(bootHashSlug)) openArticleReader(bootHashSlug);
+/** @returns {string | undefined} */
+function articleSlugFromLocation() {
+	return window.location.pathname.match(/^\/articles\/([^/]+)\/?$/)?.[1]
+		?? window.location.hash.match(/^#article\/(.+)$/)?.[1];
+}
+
+const bootSlug = articleSlugFromLocation();
+if (bootSlug && getArticleHTML(bootSlug)) openArticleReader(bootSlug);
 
 window.addEventListener('popstate', () => {
-	const slug = window.location.hash.match(/^#article\/(.+)$/)?.[1];
+	const slug = articleSlugFromLocation();
 	if (slug && getArticleHTML(slug)) openArticleReader(slug);
 	else document.getElementById('article-reader')?.remove();
 });

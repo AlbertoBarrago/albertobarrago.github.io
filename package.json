@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
-		"build": "vite build",
+		"build": "vite build && node scripts/prerender-articles.mjs",
 		"preview": "vite preview",
 		"deploy": "npm run build && touch build/.nojekyll && gh-pages -d build",
 		"version:patch": "npm version patch && git push && git push --tags",
