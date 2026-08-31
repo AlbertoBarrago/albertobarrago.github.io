@@ -5,14 +5,14 @@
 /_/   \\_\\_____|____/ /____|`,"color: #9ece6a; font-family: monospace; font-weight: bold; line-height: 1.2;"),console.log("%cPortfolio shell v%s %c· running on curiosity","color: #5eead4; font-family: monospace;",Me,"color: #667485; font-family: monospace;"),console.log(`%c> reading the source instead of clicking around? my kind of visitor.
 > say hi: %s
 > code: %s`,"color: #b8c4d4; font-family: monospace;",$e,ge.github),console.log("%csteal the theme (dark CRT terminal palette):","color: #e0af68; font-family: monospace;"),console.log(Object.entries(ut).map(([n,t])=>`${n}: ${t};`).join(`
-`))}function fe(e){return e.replace(/[&<>"']/g,n=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[n]??n)}const gt={title:"Iron Doctrine — building deterministic online multiplayer with a shared ECS engine",date:"2026-08-31",tags:["typescript","game-dev","multiplayer","ecs","pnpm"]},yt=`<p><strong>Iron Doctrine</strong> is a real-time strategy game I&#39;m building in a pnpm monorepo, with a deterministic ECS engine at its core and, as of this week, a working 1v1 online mode.</p>
+`))}function fe(e){return e.replace(/[&<>"']/g,n=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[n]??n)}const gt={title:"Iron Doctrine: building deterministic online multiplayer with a shared ECS engine",date:"2026-08-31",tags:["typescript","game-dev","multiplayer","ecs","pnpm"]},yt=`<p><strong>Iron Doctrine</strong> is a real-time strategy game I&#39;m building in a pnpm monorepo, with a deterministic ECS engine at its core and, as of this week, a working 1v1 online mode.</p>
 <h2>The Architecture</h2>
 <p>The repo is split into <code>packages/</code> and <code>apps/</code>:</p>
 <ul>
-<li><strong>packages/shared</strong> — the network protocol (<code>ClientMessage</code>/<code>ServerMessage</code>), shared types and constants (<code>SIM_HZ</code>, <code>DEFAULT_INPUT_DELAY</code>), and the <code>LockstepCoordinator</code></li>
-<li><strong>packages/engine</strong> — a deterministic ECS simulation engine (entities/commands/systems), exposing <code>Simulation.step()</code>/<code>enqueue()</code>, with zero dependency on rendering or networking</li>
-<li><strong>apps/client</strong> — React + Pixi.js, running entirely in the browser</li>
-<li><strong>apps/server</strong> — a Node/<code>ws</code> WebSocket host that relays commands without simulating anything itself</li>
+<li><strong>packages/shared</strong>: the network protocol (<code>ClientMessage</code>/<code>ServerMessage</code>), shared types and constants (<code>SIM_HZ</code>, <code>DEFAULT_INPUT_DELAY</code>), and the <code>LockstepCoordinator</code></li>
+<li><strong>packages/engine</strong>: a deterministic ECS simulation engine (entities/commands/systems), exposing <code>Simulation.step()</code>/<code>enqueue()</code>, with zero dependency on rendering or networking</li>
+<li><strong>apps/client</strong>: React + Pixi.js, running entirely in the browser</li>
+<li><strong>apps/server</strong>: a Node/<code>ws</code> WebSocket host that relays commands without simulating anything itself</li>
 </ul>
 <h2>Local Play: the Game Loop</h2>
 <p><code>GameRenderer</code> (a large class handling rendering, input, and audio) owns a <code>SimBridge</code>, which in turn owns a Web Worker running the <code>Simulation</code>. The worker advances on a free-running clock (<code>setTimeout</code>), applies commands as soon as they arrive, and produces one snapshot per tick that the main thread interpolates and draws.</p>
@@ -28,16 +28,16 @@
 <p>Keeping the simulation deterministic and network-agnostic in <code>packages/engine</code> means the same code powers skirmish, campaign, and online play. The server never needs to understand game state, it&#39;s just an authoritative clock for command ordering. The tradeoff is that both clients must produce bit-identical results from the same inputs, which is why command replay (not state sync) is the whole networking model.</p>
 <h2>What&#39;s Next</h2>
 <p>1v1 is working; next up is handling reconnects and validating the lockstep model holds under real network jitter, not just on localhost.</p>
-`,bt=Object.freeze(Object.defineProperty({__proto__:null,html:yt,meta:gt},Symbol.toStringTag,{value:"Module"})),wt={title:"Otelma — building a local LLM runtime from scratch",date:"2026-08-31",tags:["go","llm","llama-cpp","apple-silicon","ai"]},St=`<p><strong>Otelma</strong> is a local LLM inference runtime I&#39;m building in Go.</p>
+`,bt=Object.freeze(Object.defineProperty({__proto__:null,html:yt,meta:gt},Symbol.toStringTag,{value:"Module"})),wt={title:"Otelma: building a local LLM runtime from scratch",date:"2026-08-31",tags:["go","llm","llama-cpp","apple-silicon","ai"]},St=`<p><strong>Otelma</strong> is a local LLM inference runtime I&#39;m building in Go.</p>
 <p>The idea is deliberately smaller than Ollama: understand what actually sits between a GGUF file and a local application using an LLM, while treating unified memory as a real, finite resource rather than something the OS will eventually deal with.</p>
 <p>It currently runs on Apple Silicon, uses <code>llama.cpp</code> as its first inference backend, and exposes both its own local API and a minimal OpenAI-compatible interface.</p>
 <h2>The Architecture</h2>
 <p>Otelma is split into four main layers:</p>
 <ul>
-<li><strong>CLI</strong> — <code>pull</code>, <code>list</code>, <code>ps</code>, <code>run</code>, <code>chat</code>, <code>serve</code>, <code>config</code>, <code>version</code></li>
-<li><strong>local runtime API</strong> — model lifecycle, scheduling, memory accounting, and HTTP endpoints</li>
-<li><strong>inference backend</strong> — an abstraction over the actual inference engine; <code>llama.cpp</code> today, MLX planned</li>
-<li><strong>model storage</strong> — local GGUF metadata, checksums, sizes, and Hugging Face downloads</li>
+<li><strong>CLI</strong>: <code>pull</code>, <code>list</code>, <code>ps</code>, <code>run</code>, <code>chat</code>, <code>serve</code>, <code>config</code>, <code>version</code></li>
+<li><strong>local runtime API</strong>: model lifecycle, scheduling, memory accounting, and HTTP endpoints</li>
+<li><strong>inference backend</strong>: an abstraction over the actual inference engine; <code>llama.cpp</code> today, MLX planned</li>
+<li><strong>model storage</strong>: local GGUF metadata, checksums, sizes, and Hugging Face downloads</li>
 </ul>
 <p>Even local CLI commands go through the HTTP API.</p>
 <p>Running:</p>
@@ -103,7 +103,7 @@
 <p>The current scheduler deliberately serializes requests and is still based on a single mutex.</p>
 <p>That&#39;s enough to make the lifecycle deterministic, but it&#39;s also the obvious next architectural constraint to remove.</p>
 <p>After that: better scheduling, model removal, streaming responses, and an MLX backend.</p>
-<p>The project is still small enough that every abstraction has a reason to exist — which is exactly where I want it for now.</p>
+<p>The project is still small enough that every abstraction has a reason to exist, which is exactly where I want it for now.</p>
 `,xt=Object.freeze(Object.defineProperty({__proto__:null,html:St,meta:wt},Symbol.toStringTag,{value:"Module"})),kt={title:"I Built a CLI to Answer One Question: What Will This Change Break?",date:"2026-08-27",tags:["programming","devops","go","opensource"]},Tt=`<p>We&#39;ve all been there.</p>
 <p>You open a repository, change a file that looks completely harmless, run the tests, and open a pull request.</p>
 <p>Then someone comments:</p>
@@ -326,7 +326,7 @@ serval doctor
 <p>Project: <a href="https://albz.it/serval/">albz.it/serval</a></p>
 <p>Source: <a href="https://github.com/AlbertoBarrago/serval">github.com/AlbertoBarrago/serval</a></p>
 <p>If you work on large repositories, monorepos, legacy systems, or CI-heavy projects, I&#39;d be particularly interested in hearing what signals you use before touching an unfamiliar part of the codebase.</p>
-`,vt=Object.freeze(Object.defineProperty({__proto__:null,html:Tt,meta:kt},Symbol.toStringTag,{value:"Module"})),At={title:"wir — What Is Running, a Port and Process Inspector Written in C",date:"2025-12-30",tags:["c","systems-programming","cli","opensource"]},It=`<p>I recently released <strong>wir</strong> (What Is Running), a command-line tool written in C to inspect what&#39;s running on specific ports and get detailed process information. A project born from a practical need that turned into an opportunity to explore system programming in C.</p>
+`,vt=Object.freeze(Object.defineProperty({__proto__:null,html:Tt,meta:kt},Symbol.toStringTag,{value:"Module"})),At={title:"wir: What Is Running, a Port and Process Inspector Written in C",date:"2025-12-30",tags:["c","systems-programming","cli","opensource"]},It=`<p>I recently released <strong>wir</strong> (What Is Running), a command-line tool written in C to inspect what&#39;s running on specific ports and get detailed process information. A project born from a practical need that turned into an opportunity to explore system programming in C.</p>
 <h2>The Problem</h2>
 <p>How many times have you had a port occupied without knowing which process is using it? Or needed to trace a process hierarchy to understand who spawned what? We usually resort to combinations of <code>lsof</code>, <code>netstat</code>, and <code>ps</code>, but why not have everything in a single command?</p>
 <h2>The Solution</h2>

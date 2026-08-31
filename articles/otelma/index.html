@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>Otelma — building a local LLM runtime from scratch | Alberto Barrago</title>
+	<title>Otelma: building a local LLM runtime from scratch | Alberto Barrago</title>
 	<link rel="icon" href="/favicon.ico" sizes="any" />
 	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
@@ -20,13 +20,13 @@
 	<!-- Open Graph -->
 	<meta property="og:type" content="article" />
 	<meta property="og:url" content="https://albz.it/articles/otelma/" />
-	<meta property="og:title" content="Otelma — building a local LLM runtime from scratch | Alberto Barrago" />
+	<meta property="og:title" content="Otelma: building a local LLM runtime from scratch | Alberto Barrago" />
 	<meta property="og:description" content="Otelma is a local LLM inference runtime I'm building in Go. The idea is deliberately smaller than Ollama: understand what actually sits between a GGUF…" />
 	<meta property="og:image" content="https://github.com/albertobarrago.png" />
 
 	<!-- Twitter -->
 	<meta name="twitter:card" content="summary" />
-	<meta name="twitter:title" content="Otelma — building a local LLM runtime from scratch | Alberto Barrago" />
+	<meta name="twitter:title" content="Otelma: building a local LLM runtime from scratch | Alberto Barrago" />
 	<meta name="twitter:description" content="Otelma is a local LLM inference runtime I'm building in Go. The idea is deliberately smaller than Ollama: understand what actually sits between a GGUF…" />
 
 	<!-- Canonical URL -->
@@ -48,24 +48,24 @@
 		}
 		</script>
 
-  <script type="module" crossorigin src="/assets/index-BClM9Kml.js"></script>
+  <script type="module" crossorigin src="/assets/index-BR_caBN4.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-DHxsVwSi.css">
 	<script type="application/ld+json">
-		{"@context":"https://schema.org","@type":"Article","headline":"Otelma — building a local LLM runtime from scratch","datePublished":"2026-08-31","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/articles/otelma/","mainEntityOfPage":"https://albz.it/articles/otelma/"}
+		{"@context":"https://schema.org","@type":"Article","headline":"Otelma: building a local LLM runtime from scratch","datePublished":"2026-08-31","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/articles/otelma/","mainEntityOfPage":"https://albz.it/articles/otelma/"}
 	</script>
 </head>
 
 <body>
-	<div id="app"><noscript><article><h1>Otelma — building a local LLM runtime from scratch</h1><p>2026-08-31</p><p><strong>Otelma</strong> is a local LLM inference runtime I&#39;m building in Go.</p>
+	<div id="app"><noscript><article><h1>Otelma: building a local LLM runtime from scratch</h1><p>2026-08-31</p><p><strong>Otelma</strong> is a local LLM inference runtime I&#39;m building in Go.</p>
 <p>The idea is deliberately smaller than Ollama: understand what actually sits between a GGUF file and a local application using an LLM, while treating unified memory as a real, finite resource rather than something the OS will eventually deal with.</p>
 <p>It currently runs on Apple Silicon, uses <code>llama.cpp</code> as its first inference backend, and exposes both its own local API and a minimal OpenAI-compatible interface.</p>
 <h2>The Architecture</h2>
 <p>Otelma is split into four main layers:</p>
 <ul>
-<li><strong>CLI</strong> — <code>pull</code>, <code>list</code>, <code>ps</code>, <code>run</code>, <code>chat</code>, <code>serve</code>, <code>config</code>, <code>version</code></li>
-<li><strong>local runtime API</strong> — model lifecycle, scheduling, memory accounting, and HTTP endpoints</li>
-<li><strong>inference backend</strong> — an abstraction over the actual inference engine; <code>llama.cpp</code> today, MLX planned</li>
-<li><strong>model storage</strong> — local GGUF metadata, checksums, sizes, and Hugging Face downloads</li>
+<li><strong>CLI</strong>: <code>pull</code>, <code>list</code>, <code>ps</code>, <code>run</code>, <code>chat</code>, <code>serve</code>, <code>config</code>, <code>version</code></li>
+<li><strong>local runtime API</strong>: model lifecycle, scheduling, memory accounting, and HTTP endpoints</li>
+<li><strong>inference backend</strong>: an abstraction over the actual inference engine; <code>llama.cpp</code> today, MLX planned</li>
+<li><strong>model storage</strong>: local GGUF metadata, checksums, sizes, and Hugging Face downloads</li>
 </ul>
 <p>Even local CLI commands go through the HTTP API.</p>
 <p>Running:</p>
@@ -131,7 +131,7 @@
 <p>The current scheduler deliberately serializes requests and is still based on a single mutex.</p>
 <p>That&#39;s enough to make the lifecycle deterministic, but it&#39;s also the obvious next architectural constraint to remove.</p>
 <p>After that: better scheduling, model removal, streaming responses, and an MLX backend.</p>
-<p>The project is still small enough that every abstraction has a reason to exist — which is exactly where I want it for now.</p>
+<p>The project is still small enough that every abstraction has a reason to exist, which is exactly where I want it for now.</p>
 </article></noscript></div>
 
 	<!-- Google tag (gtag.js) -->

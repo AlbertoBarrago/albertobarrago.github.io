@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>Iron Doctrine — building deterministic online multiplayer with a shared ECS engine | Alberto Barrago</title>
+	<title>Iron Doctrine: building deterministic online multiplayer with a shared ECS engine | Alberto Barrago</title>
 	<link rel="icon" href="/favicon.ico" sizes="any" />
 	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
@@ -20,13 +20,13 @@
 	<!-- Open Graph -->
 	<meta property="og:type" content="article" />
 	<meta property="og:url" content="https://albz.it/articles/iron-doctrine/" />
-	<meta property="og:title" content="Iron Doctrine — building deterministic online multiplayer with a shared ECS engine | Alberto Barrago" />
+	<meta property="og:title" content="Iron Doctrine: building deterministic online multiplayer with a shared ECS engine | Alberto Barrago" />
 	<meta property="og:description" content="Iron Doctrine is a real-time strategy game I'm building in a pnpm monorepo, with a deterministic ECS engine at its core and, as of this week, a working…" />
 	<meta property="og:image" content="https://github.com/albertobarrago.png" />
 
 	<!-- Twitter -->
 	<meta name="twitter:card" content="summary" />
-	<meta name="twitter:title" content="Iron Doctrine — building deterministic online multiplayer with a shared ECS engine | Alberto Barrago" />
+	<meta name="twitter:title" content="Iron Doctrine: building deterministic online multiplayer with a shared ECS engine | Alberto Barrago" />
 	<meta name="twitter:description" content="Iron Doctrine is a real-time strategy game I'm building in a pnpm monorepo, with a deterministic ECS engine at its core and, as of this week, a working…" />
 
 	<!-- Canonical URL -->
@@ -48,22 +48,22 @@
 		}
 		</script>
 
-  <script type="module" crossorigin src="/assets/index-BClM9Kml.js"></script>
+  <script type="module" crossorigin src="/assets/index-BR_caBN4.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-DHxsVwSi.css">
 	<script type="application/ld+json">
-		{"@context":"https://schema.org","@type":"Article","headline":"Iron Doctrine — building deterministic online multiplayer with a shared ECS engine","datePublished":"2026-08-31","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/articles/iron-doctrine/","mainEntityOfPage":"https://albz.it/articles/iron-doctrine/"}
+		{"@context":"https://schema.org","@type":"Article","headline":"Iron Doctrine: building deterministic online multiplayer with a shared ECS engine","datePublished":"2026-08-31","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/articles/iron-doctrine/","mainEntityOfPage":"https://albz.it/articles/iron-doctrine/"}
 	</script>
 </head>
 
 <body>
-	<div id="app"><noscript><article><h1>Iron Doctrine — building deterministic online multiplayer with a shared ECS engine</h1><p>2026-08-31</p><p><strong>Iron Doctrine</strong> is a real-time strategy game I&#39;m building in a pnpm monorepo, with a deterministic ECS engine at its core and, as of this week, a working 1v1 online mode.</p>
+	<div id="app"><noscript><article><h1>Iron Doctrine: building deterministic online multiplayer with a shared ECS engine</h1><p>2026-08-31</p><p><strong>Iron Doctrine</strong> is a real-time strategy game I&#39;m building in a pnpm monorepo, with a deterministic ECS engine at its core and, as of this week, a working 1v1 online mode.</p>
 <h2>The Architecture</h2>
 <p>The repo is split into <code>packages/</code> and <code>apps/</code>:</p>
 <ul>
-<li><strong>packages/shared</strong> — the network protocol (<code>ClientMessage</code>/<code>ServerMessage</code>), shared types and constants (<code>SIM_HZ</code>, <code>DEFAULT_INPUT_DELAY</code>), and the <code>LockstepCoordinator</code></li>
-<li><strong>packages/engine</strong> — a deterministic ECS simulation engine (entities/commands/systems), exposing <code>Simulation.step()</code>/<code>enqueue()</code>, with zero dependency on rendering or networking</li>
-<li><strong>apps/client</strong> — React + Pixi.js, running entirely in the browser</li>
-<li><strong>apps/server</strong> — a Node/<code>ws</code> WebSocket host that relays commands without simulating anything itself</li>
+<li><strong>packages/shared</strong>: the network protocol (<code>ClientMessage</code>/<code>ServerMessage</code>), shared types and constants (<code>SIM_HZ</code>, <code>DEFAULT_INPUT_DELAY</code>), and the <code>LockstepCoordinator</code></li>
+<li><strong>packages/engine</strong>: a deterministic ECS simulation engine (entities/commands/systems), exposing <code>Simulation.step()</code>/<code>enqueue()</code>, with zero dependency on rendering or networking</li>
+<li><strong>apps/client</strong>: React + Pixi.js, running entirely in the browser</li>
+<li><strong>apps/server</strong>: a Node/<code>ws</code> WebSocket host that relays commands without simulating anything itself</li>
 </ul>
 <h2>Local Play: the Game Loop</h2>
 <p><code>GameRenderer</code> (a large class handling rendering, input, and audio) owns a <code>SimBridge</code>, which in turn owns a Web Worker running the <code>Simulation</code>. The worker advances on a free-running clock (<code>setTimeout</code>), applies commands as soon as they arrive, and produces one snapshot per tick that the main thread interpolates and draws.</p>
