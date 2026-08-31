@@ -213,6 +213,103 @@ function articlesHTML() {
 </article>`).join('')}</div>`;
 }
 
+/** @param {string} slug @returns {string} */
+function articleReaderHTML(slug) {
+	const index = articles.findIndex((article) => article.slug === slug);
+	const meta = articles[index];
+	const previous = articles[index - 1];
+	const next = articles[index + 1];
+	const nav = [
+		previous
+			? `<button class="reader-nav-link" type="button" data-action="read-article" data-slug="${previous.slug}">← ${previous.title}</button>`
+			: '<span></span>',
+		next
+			? `<button class="reader-nav-link reader-nav-next" type="button" data-action="read-article" data-slug="${next.slug}">${next.title} →</button>`
+			: '<span></span>',
+	].join('');
+	return `<div class="article-reader" id="article-reader">
+		<div class="article-reader-topbar">
+			<button class="reader-back" type="button" data-action="close-reader">back</button>
+			<div class="reader-actions">
+				<button class="reader-action" type="button" data-action="share-article" data-slug="${slug}">share</button>
+				<button class="reader-action" type="button" data-action="copy-article-link" data-slug="${slug}">copy link</button>
+				<span class="reader-hint muted">ESC · CLOSE</span>
+			</div>
+		</div>
+		<div class="article-reader-body">
+			<article class="prose">
+				<h1>${meta.title}</h1>
+				<p class="reader-meta muted">${meta.date}${meta.tags.length ? ` · ${meta.tags.join(' · ')}` : ''}</p>
+				${getArticleHTML(slug)}
+			</article>
+			<nav class="reader-nav">${nav}</nav>
+		</div>
+	</div>`;
+}
+
+/** @param {string} slug */
+function openArticleReader(slug) {
+	document.getElementById('article-reader')?.remove();
+	input.blur();
+	const wrapper = document.createElement('div');
+	wrapper.innerHTML = articleReaderHTML(slug);
+	const overlay = /** @type {HTMLDivElement} */ (wrapper.firstElementChild);
+	app.appendChild(overlay);
+	overlay.scrollTop = 0;
+	if (window.location.hash !== `#article/${slug}`) {
+		window.history.pushState(null, '', `#article/${slug}`);
+	}
+}
+
+function closeArticleReader() {
+	document.getElementById('article-reader')?.remove();
+	if (window.location.hash.startsWith('#article/')) {
+		window.history.pushState(null, '', window.location.pathname + window.location.search);
+	}
+	input?.focus({ preventScroll: true });
+}
+
+/** @param {string} slug @returns {string} */
+function articleURL(slug) {
+	return `${window.location.origin}${window.location.pathname}#article/${slug}`;
+}
+
+/** @param {HTMLElement} button */
+function flashActionLabel(button) {
+	const original = button.textContent;
+	button.textContent = 'copied ✓';
+	button.disabled = true;
+	window.setTimeout(() => {
+		button.textContent = original;
+		button.disabled = false;
+	}, 1500);
+}
+
+/** @param {string} slug @param {HTMLElement} button */
+async function copyArticleLink(slug, button) {
+	try {
+		await navigator.clipboard.writeText(articleURL(slug));
+		flashActionLabel(button);
+	} catch {
+		window.prompt('Copy this link:', articleURL(slug));
+	}
+}
+
+/** @param {string} slug @param {HTMLElement} button */
+async function shareArticle(slug, button) {
+	const article = articles.find((entry) => entry.slug === slug);
+	const url = articleURL(slug);
+	if (navigator.share) {
+		try {
+			await navigator.share({ title: article?.title ?? slug, url });
+		} catch {
+			/* user cancelled the native share sheet */
+		}
+		return;
+	}
+	await copyArticleLink(slug, button);
+}
+
 function contactHTML() {
 	return `<div class="output-title">Let's build something useful</div>
 <div class="key-value"><span class="label">email</span><a class="terminal-link" href="${links.email}">albertobarrago@gmail.com</a>
@@ -331,7 +428,7 @@ function executeCommand(rawCommand) {
 		if (command !== 'cat' || !argument || argument === 'about.txt') appendOutput(aboutHTML());
 		else if (argument === 'contact.vcf') appendOutput(contactHTML());
 		else if (argument.endsWith('.md') && getArticleHTML(argument.slice(0, -3))) {
-			appendOutput(`<div class="prose">${getArticleHTML(argument.slice(0, -3))}</div>`);
+			openArticleReader(argument.slice(0, -3));
 		}
 		else appendOutput(`<span class="red">cat: ${escapeHTML(argument)}: No such file</span>`);
 		return;
@@ -474,6 +571,15 @@ const input = /** @type {HTMLInputElement} */ (document.getElementById('terminal
 appendOutput(bannerHTML(), 'welcome-block');
 printConsoleBanner();
 
+const bootHashSlug = window.location.hash.match(/^#article\/(.+)$/)?.[1];
+if (bootHashSlug && getArticleHTML(bootHashSlug)) openArticleReader(bootHashSlug);
+
+window.addEventListener('popstate', () => {
+	const slug = window.location.hash.match(/^#article\/(.+)$/)?.[1];
+	if (slug && getArticleHTML(slug)) openArticleReader(slug);
+	else document.getElementById('article-reader')?.remove();
+});
+
 form.addEventListener('submit', (event) => {
 	event.preventDefault();
 	const value = input.value;
@@ -501,10 +607,31 @@ input.addEventListener('keydown', (event) => {
 
 app.addEventListener('click', (event) => {
 	const target = /** @type {HTMLElement} */ (event.target);
+	const readArticleTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="read-article"]'));
+	if (readArticleTarget?.dataset.slug) {
+		openArticleReader(readArticleTarget.dataset.slug);
+		return;
+	}
+	if (target.closest('[data-action="close-reader"]')) {
+		closeArticleReader();
+		return;
+	}
+	const shareTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="share-article"]'));
+	if (shareTarget?.dataset.slug) {
+		shareArticle(shareTarget.dataset.slug, shareTarget);
+		return;
+	}
+	const copyTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="copy-article-link"]'));
+	if (copyTarget?.dataset.slug) {
+		copyArticleLink(copyTarget.dataset.slug, copyTarget);
+		return;
+	}
 	const commandTarget = /** @type {HTMLElement | null} */ (target.closest('[data-command]'));
 	if (commandTarget?.dataset.command) executeCommand(commandTarget.dataset.command);
 	if (target.closest('[data-action="exit-game"]')) exitGame();
-	if (!target.closest('a') && !document.getElementById('game-overlay')) input.focus({ preventScroll: true });
+	if (!target.closest('a') && !document.getElementById('game-overlay') && !document.getElementById('article-reader')) {
+		input.focus({ preventScroll: true });
+	}
 });
 
 app.addEventListener('pointerdown', pressGameControl);
@@ -514,4 +641,5 @@ app.addEventListener('lostpointercapture', releaseGameControl);
 window.addEventListener('blur', releaseAllGameControls);
 document.addEventListener('keydown', (event) => {
 	if (event.key === 'Escape' && document.getElementById('game-overlay')) exitGame();
+	if (event.key === 'Escape' && document.getElementById('article-reader')) closeArticleReader();
 });
