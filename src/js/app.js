@@ -217,10 +217,20 @@ function articlesHTML() {
 </article>`).join('')}</div>`;
 }
 
+const WORDS_PER_MINUTE = 200;
+
+/** @param {string} html @returns {{ words: number, chars: number, minutes: number }} */
+function articleStats(html) {
+	const text = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+	const words = text ? text.split(' ').length : 0;
+	return { words, chars: text.length, minutes: Math.max(1, Math.round(words / WORDS_PER_MINUTE)) };
+}
+
 /** @param {string} slug @returns {string} */
 function articleReaderHTML(slug) {
 	const index = articles.findIndex((article) => article.slug === slug);
 	const meta = articles[index];
+	const stats = articleStats(getArticleHTML(slug) ?? '');
 	const previous = articles[index - 1];
 	const next = articles[index + 1];
 	const nav = [
@@ -247,6 +257,7 @@ function articleReaderHTML(slug) {
 				<article class="prose">
 					<h1>${meta.title}</h1>
 					<p class="reader-meta muted">${meta.date}${meta.tags.length ? ` · ${meta.tags.join(' · ')}` : ''}</p>
+					<p class="reader-stats muted">${stats.words.toLocaleString()} words · ${stats.chars.toLocaleString()} chars · ~${stats.minutes} min read</p>
 					${getArticleHTML(slug)}
 				</article>
 				<nav class="reader-nav">${nav}</nav>
