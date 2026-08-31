@@ -231,20 +231,65 @@ function articleReaderHTML(slug) {
 		<div class="article-reader-topbar">
 			<button class="reader-back" type="button" data-action="close-reader">back</button>
 			<div class="reader-actions">
+				<button class="reader-action reader-toc-toggle" type="button" data-action="toggle-toc" id="reader-toc-toggle" hidden>chapters</button>
 				<button class="reader-action" type="button" data-action="share-article" data-slug="${slug}">share</button>
 				<button class="reader-action" type="button" data-action="copy-article-link" data-slug="${slug}">copy link</button>
 				<span class="reader-hint muted">ESC · CLOSE</span>
 			</div>
 		</div>
 		<div class="article-reader-body">
-			<article class="prose">
-				<h1>${meta.title}</h1>
-				<p class="reader-meta muted">${meta.date}${meta.tags.length ? ` · ${meta.tags.join(' · ')}` : ''}</p>
-				${getArticleHTML(slug)}
-			</article>
-			<nav class="reader-nav">${nav}</nav>
+			<aside class="reader-toc" id="reader-toc" hidden></aside>
+			<div class="article-reader-main">
+				<article class="prose">
+					<h1>${meta.title}</h1>
+					<p class="reader-meta muted">${meta.date}${meta.tags.length ? ` · ${meta.tags.join(' · ')}` : ''}</p>
+					${getArticleHTML(slug)}
+				</article>
+				<nav class="reader-nav">${nav}</nav>
+			</div>
 		</div>
 	</div>`;
+}
+
+/** @typedef {{ id: string, text: string, level: 2 | 3 }} TocEntry */
+
+/** @param {string} text @returns {string} */
+function slugifyHeading(text) {
+	return text
+		.toLowerCase()
+		.replace(/[^a-z0-9\s-]/g, '')
+		.trim()
+		.replace(/\s+/g, '-');
+}
+
+/** @param {HTMLElement} overlay */
+function buildArticleTOC(overlay) {
+	const toc = /** @type {HTMLElement} */ (overlay.querySelector('#reader-toc'));
+	const headings = /** @type {NodeListOf<HTMLHeadingElement>} */ (
+		overlay.querySelectorAll('.prose h2, .prose h3')
+	);
+	if (headings.length === 0) return;
+
+	const used = new Set();
+	const entries = Array.from(headings).map((heading) => {
+		let id = slugifyHeading(heading.textContent ?? '');
+		while (used.has(id) || !id) id = `${id || 'section'}-${used.size + 1}`;
+		used.add(id);
+		heading.id = id;
+		return /** @type {TocEntry} */ ({
+			id, text: heading.textContent ?? '', level: heading.tagName === 'H2' ? 2 : 3,
+		});
+	});
+
+	toc.innerHTML = `<span class="reader-toc-title">chapters</span><ol class="reader-toc-list">${
+		entries.map((entry) =>
+			`<li class="reader-toc-item level-${entry.level}"><button class="reader-toc-link" type="button" data-action="goto-heading" data-target="${entry.id}">${entry.text}</button></li>`
+		).join('')
+	}</ol>`;
+	toc.hidden = false;
+	overlay.classList.add('has-toc');
+	const toggle = /** @type {HTMLButtonElement | null} */ (overlay.querySelector('#reader-toc-toggle'));
+	if (toggle) toggle.hidden = false;
 }
 
 /** @param {string} slug */
@@ -256,6 +301,7 @@ function openArticleReader(slug) {
 	const overlay = /** @type {HTMLDivElement} */ (wrapper.firstElementChild);
 	app.appendChild(overlay);
 	overlay.scrollTop = 0;
+	buildArticleTOC(overlay);
 	if (window.location.hash !== `#article/${slug}`) {
 		window.history.pushState(null, '', `#article/${slug}`);
 	}
@@ -607,6 +653,10 @@ input.addEventListener('keydown', (event) => {
 
 app.addEventListener('click', (event) => {
 	const target = /** @type {HTMLElement} */ (event.target);
+	const openToc = document.querySelector('#reader-toc.is-open');
+	if (openToc && !target.closest('#reader-toc') && !target.closest('[data-action="toggle-toc"]')) {
+		openToc.classList.remove('is-open');
+	}
 	const readArticleTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="read-article"]'));
 	if (readArticleTarget?.dataset.slug) {
 		openArticleReader(readArticleTarget.dataset.slug);
@@ -624,6 +674,17 @@ app.addEventListener('click', (event) => {
 	const copyTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="copy-article-link"]'));
 	if (copyTarget?.dataset.slug) {
 		copyArticleLink(copyTarget.dataset.slug, copyTarget);
+		return;
+	}
+	if (target.closest('[data-action="toggle-toc"]')) {
+		document.getElementById('reader-toc')?.classList.toggle('is-open');
+		return;
+	}
+	const headingTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="goto-heading"]'));
+	if (headingTarget?.dataset.target) {
+		const reader = document.getElementById('article-reader');
+		document.getElementById(headingTarget.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		reader?.querySelector('#reader-toc')?.classList.remove('is-open');
 		return;
 	}
 	const commandTarget = /** @type {HTMLElement | null} */ (target.closest('[data-command]'));

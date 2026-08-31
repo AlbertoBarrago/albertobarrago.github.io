@@ -248,7 +248,8 @@ button {
 .game-control-button:focus-visible,
 .reader-back:focus-visible,
 .reader-nav-link:focus-visible,
-.reader-action:focus-visible {
+.reader-action:focus-visible,
+.reader-toc-link:focus-visible {
 	outline: 1px solid var(--cyan);
 	outline-offset: 3px;
 }
@@ -649,14 +650,88 @@ button {
 	min-height: 0;
 	overflow-y: auto;
 	display: flex;
+	justify-content: center;
+	gap: clamp(1.5rem, 4vw, 3.5rem);
+	padding: clamp(2rem, 6vw, 4.5rem) clamp(1rem, 4vw, 2rem);
+}
+
+.article-reader-main {
+	display: flex;
 	flex-direction: column;
 	align-items: center;
-	padding: clamp(2rem, 6vw, 4.5rem) clamp(1rem, 4vw, 2rem);
+	min-width: 0;
+	flex: 1;
+	max-width: 78ch;
 }
 
 .article-reader-body .prose {
 	width: 100%;
 	margin-top: 0;
+}
+
+.reader-toc {
+	flex: none;
+	width: 15rem;
+	align-self: flex-start;
+	position: sticky;
+	top: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	padding-top: 0.2rem;
+}
+
+.reader-toc-title {
+	color: var(--purple);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	font-size: 0.75em;
+	text-shadow: 0 0 8px rgba(187, 154, 247, 0.35);
+}
+
+.reader-toc-list {
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	border-left: 1px solid var(--border);
+}
+
+.reader-toc-item.level-3 {
+	padding-left: 1rem;
+}
+
+.reader-toc-link {
+	display: block;
+	width: 100%;
+	background: transparent;
+	border: 0;
+	border-left: 2px solid transparent;
+	margin-left: -1px;
+	padding: 0.1rem 0 0.1rem 0.9rem;
+	color: var(--foreground);
+	text-align: left;
+	cursor: pointer;
+	font-size: 0.88em;
+	line-height: 1.35;
+	transition: color 120ms ease, border-color 120ms ease, text-shadow 120ms ease;
+}
+
+.reader-toc-item.level-3 .reader-toc-link {
+	font-size: 0.82em;
+	color: var(--foreground);
+	opacity: 0.85;
+}
+
+.reader-toc-link:hover,
+.reader-toc-link:focus-visible {
+	color: var(--cyan);
+	border-left-color: var(--cyan);
+	text-shadow: 0 0 8px rgba(94, 234, 212, 0.45);
+}
+
+.reader-toc-toggle {
+	display: none;
 }
 
 .reader-meta {
@@ -773,6 +848,34 @@ button {
 @media (pointer: coarse), (max-width: 760px) {
 	.game-touch-controls {
 		display: flex;
+	}
+}
+
+@media (max-width: 900px) {
+	.article-reader-body {
+		gap: 0;
+	}
+
+	.article-reader.has-toc .reader-toc-toggle {
+		display: inline-block;
+	}
+
+	.reader-toc {
+		position: fixed;
+		z-index: 4;
+		inset: 0 auto 0 0;
+		width: min(80vw, 20rem);
+		background: var(--background-deep);
+		border-right: 1px solid rgba(94, 234, 212, 0.25);
+		box-shadow: 0 0 30px rgba(11, 15, 20, 0.8);
+		padding: 4.5rem 1.25rem 1.5rem;
+		transform: translateX(-100%);
+		transition: transform 180ms ease;
+		overflow-y: auto;
+	}
+
+	.reader-toc.is-open {
+		transform: translateX(0);
 	}
 }
 
