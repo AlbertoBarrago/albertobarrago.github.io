@@ -124,7 +124,7 @@ const brewFormulas = [
 	},
 	{
 		name: "otelma",
-		description: "A local LLM inference runtime, built from scratch in Go for Apple Silicon on top of llama.cpp. Smaller and more didactic than Ollama, with a fixed unified memory budget as an explicit constraint. v0.1.",
+		description: "A local LLM inference runtime, built from scratch in Go for Apple Silicon on top of llama.cpp. Smaller and more didactic than Ollama, with a configurable unified memory budget as an explicit constraint. v0.2.",
 		install: "brew install AlbertoBarrago/tap/otelma",
 		url: "https://github.com/AlbertoBarrago/otelma",
 		tap: "AlbertoBarrago/tap"
