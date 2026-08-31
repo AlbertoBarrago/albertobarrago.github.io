@@ -210,8 +210,9 @@ function articlesHTML() {
 		return `<div class="output-title">Articles</div>
 <p class="prose muted">No articles yet.</p>`;
 	}
+	const ascending = [...articles].sort((a, b) => a.date.localeCompare(b.date));
 	return `<div class="output-title">Articles</div>
-<div class="project-list">${articles.map((article) => `<article class="project-item">
+<div class="project-list">${ascending.map((article) => `<article class="project-item">
 	<div><button class="terminal-link project-name inline-command" data-command="cat ${article.slug}.md">${article.title} ↗</button><span class="project-language">${article.date}</span></div>
 	<p class="muted">${article.tags.join('  ·  ')}</p>
 </article>`).join('')}</div>`;
