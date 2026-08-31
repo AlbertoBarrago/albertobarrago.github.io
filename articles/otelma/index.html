@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Otelma — building a local LLM runtime from scratch | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="Otelma is a local LLM inference runtime I'm building in Go. The idea is deliberately smaller than Ollama: understand what actually sits between a GGUF…" />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/articles/otelma/" />
+	<meta property="og:title" content="Otelma — building a local LLM runtime from scratch | Alberto Barrago" />
+	<meta property="og:description" content="Otelma is a local LLM inference runtime I'm building in Go. The idea is deliberately smaller than Ollama: understand what actually sits between a GGUF…" />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Otelma — building a local LLM runtime from scratch | Alberto Barrago" />
+	<meta name="twitter:description" content="Otelma is a local LLM inference runtime I'm building in Go. The idea is deliberately smaller than Ollama: understand what actually sits between a GGUF…" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/articles/otelma/" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-BClM9Kml.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DHxsVwSi.css">
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"Article","headline":"Otelma — building a local LLM runtime from scratch","datePublished":"2026-08-31","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/articles/otelma/","mainEntityOfPage":"https://albz.it/articles/otelma/"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article><h1>Otelma — building a local LLM runtime from scratch</h1><p>2026-08-31</p><p><strong>Otelma</strong> is a local LLM inference runtime I&#39;m building in Go.</p>
+<p>The idea is deliberately smaller than Ollama: understand what actually sits between a GGUF file and a local application using an LLM, while treating unified memory as a real, finite resource rather than something the OS will eventually deal with.</p>
+<p>It currently runs on Apple Silicon, uses <code>llama.cpp</code> as its first inference backend, and exposes both its own local API and a minimal OpenAI-compatible interface.</p>
+<h2>The Architecture</h2>
+<p>Otelma is split into four main layers:</p>
+<ul>
+<li><strong>CLI</strong> — <code>pull</code>, <code>list</code>, <code>ps</code>, <code>run</code>, <code>chat</code>, <code>serve</code>, <code>config</code>, <code>version</code></li>
+<li><strong>local runtime API</strong> — model lifecycle, scheduling, memory accounting, and HTTP endpoints</li>
+<li><strong>inference backend</strong> — an abstraction over the actual inference engine; <code>llama.cpp</code> today, MLX planned</li>
+<li><strong>model storage</strong> — local GGUF metadata, checksums, sizes, and Hugging Face downloads</li>
+</ul>
+<p>Even local CLI commands go through the HTTP API.</p>
+<p>Running:</p>
+<p><code>otelma run qwen2.5-0.5b &quot;What is the capital of Italy?&quot;</code></p>
+<p>doesn&#39;t bypass the runtime and invoke <code>llama.cpp</code> directly. The CLI talks to the same API an external application would use.</p>
+<p>If the server isn&#39;t running yet, Otelma starts it automatically in the background.</p>
+<h2>Model Lifecycle as a State Machine</h2>
+<p>One thing I didn&#39;t want was model management hidden behind a collection of booleans and process checks.</p>
+<p>Each model instead moves through an explicit state machine:</p>
+<p><code>NOT_PRESENT → DOWNLOADED → LOADING → READY → BUSY → UNLOADING</code></p>
+<p>The model manager owns those transitions.</p>
+<p>That gives the runtime one place to answer questions such as:</p>
+<ul>
+<li>is this model actually available locally?</li>
+<li>is it already loaded?</li>
+<li>can another request use it?</li>
+<li>is it currently generating?</li>
+<li>can it be unloaded safely?</li>
+</ul>
+<p>The registry is persisted to disk, so downloaded models survive runtime restarts without having to rediscover everything from scratch.</p>
+<h2>Unified Memory Is Part of the Architecture</h2>
+<p>Apple Silicon makes local inference convenient because CPU and GPU share unified memory.</p>
+<p>It also means pretending memory is unlimited is a bad abstraction.</p>
+<p>On a machine with 24GB of unified memory, loading multiple large models at once can very quickly become the operating system&#39;s problem.</p>
+<p>Otelma therefore has an explicit memory <code>Budget</code>.</p>
+<p>Before loading a model, the manager reserves its expected memory usage. If the reservation would exceed the configured ceiling, the load is rejected before the inference process starts.</p>
+<p>The important distinction is that memory pressure becomes a runtime decision:</p>
+<p><code>canLoad(model) → yes/no</code></p>
+<p>rather than an eventual OOM.</p>
+<p>That constraint influenced the architecture much more than I initially expected.</p>
+<h2>llama.cpp Is a Backend, Not the Runtime</h2>
+<p>Otelma doesn&#39;t implement tensor operations or transformer inference itself.</p>
+<p>For real inference, the current backend launches <code>llama-server</code> from <code>llama.cpp</code>.</p>
+<p>But the rest of Otelma doesn&#39;t know that.</p>
+<p>The runtime talks through a backend interface responsible for loading, unloading, and generating with a model. <code>llama.cpp</code> is simply the first implementation.</p>
+<p>This separation should make it possible to add an MLX backend later without changing model management, scheduling, storage, or the public API.</p>
+<p>That distinction was one of the main reasons for building the project: an inference engine and an inference runtime solve different problems.</p>
+<h2>OpenAI-Compatible by Default</h2>
+<p>Otelma also exposes a minimal subset of the OpenAI API:</p>
+<p><code>POST /v1/chat/completions</code></p>
+<p>and:</p>
+<p><code>GET /v1/models</code></p>
+<p>The goal isn&#39;t to reproduce the entire OpenAI API.</p>
+<p>It&#39;s to make the runtime immediately usable by software that already supports a custom OpenAI endpoint.</p>
+<p>The application shouldn&#39;t need to know whether the model behind that endpoint is running in the cloud, through <code>llama.cpp</code>, or eventually through MLX.</p>
+<h2>Pull, Run, Chat</h2>
+<p>The current workflow is intentionally small:</p>
+<p><code>otelma list</code></p>
+<p><code>otelma pull qwen2.5-0.5b</code></p>
+<p><code>otelma run qwen2.5-0.5b &quot;What is the capital of Italy?&quot;</code></p>
+<p>or for an interactive session:</p>
+<p><code>otelma chat qwen2.5-0.5b</code></p>
+<p>Models can also be pulled directly from Hugging Face, while the built-in catalog provides a simpler name-based path for known models.</p>
+<p>At this point the complete pipeline works end-to-end:</p>
+<p><code>pull → load → inference → unload</code></p>
+<p>with persistent model metadata, multi-turn context, background server startup, and real inference.</p>
+<h2>Why Build This?</h2>
+<p>There are already excellent tools for running LLMs locally.</p>
+<p>That&#39;s precisely why Otelma is intentionally small.</p>
+<p>I didn&#39;t want another UI around an existing runtime. I wanted to understand the runtime itself: model lifecycle, process management, memory reservations, scheduling, storage, API compatibility, and where the actual inference engine should begin and end.</p>
+<p>Building the smaller version makes those boundaries visible.</p>
+<h2>What&#39;s Next</h2>
+<p>The current scheduler deliberately serializes requests and is still based on a single mutex.</p>
+<p>That&#39;s enough to make the lifecycle deterministic, but it&#39;s also the obvious next architectural constraint to remove.</p>
+<p>After that: better scheduling, model removal, streaming responses, and an MLX backend.</p>
+<p>The project is still small enough that every abstraction has a reason to exist — which is exactly where I want it for now.</p>
+</article></noscript></div>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-NVRFS5LVBB"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-NVRFS5LVBB');
+	</script>
+</body>
+
+</html>
