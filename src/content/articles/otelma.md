@@ -1,5 +1,5 @@
 ---
-title: Otelma — building a local LLM runtime from scratch
+title: Otelma: building a local LLM runtime from scratch
 date: 2026-08-31
 tags: go, llm, llama-cpp, apple-silicon, ai
 ---
@@ -14,10 +14,10 @@ It currently runs on Apple Silicon, uses `llama.cpp` as its first inference back
 
 Otelma is split into four main layers:
 
-* **CLI** — `pull`, `list`, `ps`, `run`, `chat`, `serve`, `config`, `version`
-* **local runtime API** — model lifecycle, scheduling, memory accounting, and HTTP endpoints
-* **inference backend** — an abstraction over the actual inference engine; `llama.cpp` today, MLX planned
-* **model storage** — local GGUF metadata, checksums, sizes, and Hugging Face downloads
+* **CLI**: `pull`, `list`, `ps`, `run`, `chat`, `serve`, `config`, `version`
+* **local runtime API**: model lifecycle, scheduling, memory accounting, and HTTP endpoints
+* **inference backend**: an abstraction over the actual inference engine; `llama.cpp` today, MLX planned
+* **model storage**: local GGUF metadata, checksums, sizes, and Hugging Face downloads
 
 Even local CLI commands go through the HTTP API.
 
@@ -139,4 +139,4 @@ That's enough to make the lifecycle deterministic, but it's also the obvious nex
 
 After that: better scheduling, model removal, streaming responses, and an MLX backend.
 
-The project is still small enough that every abstraction has a reason to exist — which is exactly where I want it for now.
+The project is still small enough that every abstraction has a reason to exist, which is exactly where I want it for now.

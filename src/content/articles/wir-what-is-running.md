@@ -1,5 +1,5 @@
 ---
-title: wir — What Is Running, a Port and Process Inspector Written in C
+title: wir: What Is Running, a Port and Process Inspector Written in C
 date: 2025-12-30
 tags: c, systems-programming, cli, opensource
 ---

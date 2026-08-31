@@ -1,7 +1,7 @@
 /**
  * @file Loads markdown articles committed under src/content/articles. Each
  * file is pre-rendered to HTML at build/dev time by the Vite plugin in
- * vite.config.js (Node-side, using `marked`) — no markdown parser ships to
+ * vite.config.js (Node-side, using `marked`), no markdown parser ships to
  * the browser.
  */
 

@@ -1,5 +1,5 @@
 ---
-title: Iron Doctrine — building deterministic online multiplayer with a shared ECS engine
+title: Iron Doctrine: building deterministic online multiplayer with a shared ECS engine
 date: 2026-08-31
 tags: typescript, game-dev, multiplayer, ecs, pnpm
 ---
@@ -10,10 +10,10 @@ tags: typescript, game-dev, multiplayer, ecs, pnpm
 
 The repo is split into `packages/` and `apps/`:
 
-- **packages/shared** — the network protocol (`ClientMessage`/`ServerMessage`), shared types and constants (`SIM_HZ`, `DEFAULT_INPUT_DELAY`), and the `LockstepCoordinator`
-- **packages/engine** — a deterministic ECS simulation engine (entities/commands/systems), exposing `Simulation.step()`/`enqueue()`, with zero dependency on rendering or networking
-- **apps/client** — React + Pixi.js, running entirely in the browser
-- **apps/server** — a Node/`ws` WebSocket host that relays commands without simulating anything itself
+- **packages/shared**: the network protocol (`ClientMessage`/`ServerMessage`), shared types and constants (`SIM_HZ`, `DEFAULT_INPUT_DELAY`), and the `LockstepCoordinator`
+- **packages/engine**: a deterministic ECS simulation engine (entities/commands/systems), exposing `Simulation.step()`/`enqueue()`, with zero dependency on rendering or networking
+- **apps/client**: React + Pixi.js, running entirely in the browser
+- **apps/server**: a Node/`ws` WebSocket host that relays commands without simulating anything itself
 
 ## Local Play: the Game Loop
 
