@@ -26,7 +26,7 @@ const COMMAND_NAMES = Object.freeze([
 ]);
 const MOBILE_COMMANDS = Object.freeze([
 	['help', 'help'], ['about', 'about'], ['skills', 'skills'],
-	['projects', 'projects'], ['brew', 'brew'], ['lab', 'lab'], ['games', 'games'], ['contact', 'contact'],
+	['projects', 'projects'], ['brew', 'brew'], ['lab', 'lab'], ['articles', 'articles'], ['games', 'games'], ['contact', 'contact'],
 ]);
 
 /** @type {Readonly<Record<GameName, string>>} */
@@ -117,6 +117,8 @@ Technical leadership · Architecture · Web · Mobile · Cloud · AI
 
 I turn ambiguity into reliable systems and useful products.
 <span class="muted">Based in ${location}</span>
+${articles.length ? `
+<span class="muted">Latest write-up:</span> <button class="inline-command command" data-command="cat ${articles[0].slug}.md">${articles[0].title} →</button>` : ''}
 
 Type <button class="inline-command command" data-command="help">help</button> to explore, or use the shortcuts below.</div>`;
 }
