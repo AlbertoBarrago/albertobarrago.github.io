@@ -730,6 +730,17 @@ button {
 	text-shadow: 0 0 8px rgba(94, 234, 212, 0.45);
 }
 
+.reader-toc-link.is-active {
+	color: var(--bright);
+	border-left-color: var(--cyan);
+	text-shadow: 0 0 10px rgba(94, 234, 212, 0.6);
+}
+
+.reader-toc-item.level-3 .reader-toc-link.is-active {
+	color: var(--cyan);
+	opacity: 1;
+}
+
 .reader-toc-toggle {
 	display: none;
 }

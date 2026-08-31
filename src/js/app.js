@@ -77,6 +77,8 @@ const commandHistory = [];
 let historyIndex = 0;
 /** @type {(() => void) | null} */
 let gameCleanup = null;
+/** @type {IntersectionObserver | null} */
+let tocObserver = null;
 
 const app = /** @type {HTMLDivElement} */ (document.getElementById('app'));
 
@@ -292,6 +294,36 @@ function buildArticleTOC(overlay) {
 	overlay.classList.add('has-toc');
 	const toggle = /** @type {HTMLButtonElement | null} */ (overlay.querySelector('#reader-toc-toggle'));
 	if (toggle) toggle.hidden = false;
+	observeArticleHeadings(overlay, Array.from(headings));
+}
+
+/** @param {HTMLElement} overlay @param {HTMLHeadingElement[]} headings */
+function observeArticleHeadings(overlay, headings) {
+	tocObserver?.disconnect();
+	const container = /** @type {HTMLElement} */ (overlay.querySelector('.article-reader-body'));
+	const links = /** @type {NodeListOf<HTMLElement>} */ (overlay.querySelectorAll('.reader-toc-link'));
+	/** @type {Set<string>} */
+	const visible = new Set();
+
+	/** @param {string} id */
+	const setActive = (id) => {
+		links.forEach((link) => link.classList.toggle('is-active', link.dataset.target === id));
+	};
+
+	tocObserver = new IntersectionObserver((observerEntries) => {
+		for (const entry of observerEntries) {
+			if (entry.isIntersecting) visible.add(entry.target.id);
+			else visible.delete(entry.target.id);
+		}
+		const active = headings.find((heading) => visible.has(heading.id));
+		if (active) setActive(active.id);
+		else if (container.scrollTop + container.clientHeight >= container.scrollHeight - 4) {
+			setActive(headings[headings.length - 1].id);
+		}
+	}, { root: container, rootMargin: '0px 0px -72% 0px', threshold: 0 });
+
+	headings.forEach((heading) => /** @type {IntersectionObserver} */ (tocObserver).observe(heading));
+	setActive(headings[0].id);
 }
 
 /** @param {string} slug */
@@ -310,6 +342,8 @@ function openArticleReader(slug) {
 }
 
 function closeArticleReader() {
+	tocObserver?.disconnect();
+	tocObserver = null;
 	document.getElementById('article-reader')?.remove();
 	if (window.location.hash.startsWith('#article/')) {
 		window.history.pushState(null, '', window.location.pathname + window.location.search);
