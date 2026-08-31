@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>wir — What Is Running, a Port and Process Inspector Written in C | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="I recently released wir (What Is Running), a command-line tool written in C to inspect what's running on specific ports and get detailed process…" />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/articles/wir-what-is-running/" />
+	<meta property="og:title" content="wir — What Is Running, a Port and Process Inspector Written in C | Alberto Barrago" />
+	<meta property="og:description" content="I recently released wir (What Is Running), a command-line tool written in C to inspect what's running on specific ports and get detailed process…" />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="wir — What Is Running, a Port and Process Inspector Written in C | Alberto Barrago" />
+	<meta name="twitter:description" content="I recently released wir (What Is Running), a command-line tool written in C to inspect what's running on specific ports and get detailed process…" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/articles/wir-what-is-running/" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-BzS5ysgr.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DHxsVwSi.css">
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"Article","headline":"wir — What Is Running, a Port and Process Inspector Written in C","datePublished":"2025-12-30","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/articles/wir-what-is-running/","mainEntityOfPage":"https://albz.it/articles/wir-what-is-running/"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article><h1>wir — What Is Running, a Port and Process Inspector Written in C</h1><p>2025-12-30</p><p>I recently released <strong>wir</strong> (What Is Running), a command-line tool written in C to inspect what&#39;s running on specific ports and get detailed process information. A project born from a practical need that turned into an opportunity to explore system programming in C.</p>
+<h2>The Problem</h2>
+<p>How many times have you had a port occupied without knowing which process is using it? Or needed to trace a process hierarchy to understand who spawned what? We usually resort to combinations of <code>lsof</code>, <code>netstat</code>, and <code>ps</code>, but why not have everything in a single command?</p>
+<h2>The Solution</h2>
+<p><code>wir</code> is a cross-platform tool (macOS and Linux) that allows you to:</p>
+<ul>
+<li>Discover which process is using a specific port</li>
+<li>Get detailed information about a PID</li>
+<li>Visualize the complete ancestry tree of a process</li>
+<li>List all running processes</li>
+<li>View a process&#39;s environment variables</li>
+<li>Output in normal, short, JSON, or tree format</li>
+<li>Receive security warnings for potentially risky configurations</li>
+</ul>
+<h2>Practical Examples</h2>
+<pre><code class="language-bash"># Who&#39;s using port 8080?
+wir --port 8080
+
+# Info about a specific process
+wir --pid 1234
+
+# Show the process ancestry tree
+wir --pid 1234 --tree
+
+# JSON output for scripting
+wir --port 3000 --json
+
+# List all processes (short format)
+wir --all --short
+
+# Security warnings only
+wir --port 8080 --warnings
+</code></pre>
+<h2>The Architecture</h2>
+<p>The project is structured in a modular way:</p>
+<ul>
+<li><strong>Platform abstraction layer</strong>: handles differences between Linux (<code>/proc</code> parsing) and macOS (<code>libproc</code> and <code>sysctl</code>)</li>
+<li><strong>Output formatting</strong>: supports multiple display modes without duplicating logic</li>
+<li><strong>Consistent error handling</strong>: every allocation is checked, every resource is freed</li>
+<li><strong>Strict memory management</strong>: no leaks, no undefined behavior</li>
+</ul>
+<h2>What I Learned</h2>
+<p>Writing <code>wir</code> was an excellent opportunity to practice fundamental concepts:</p>
+<ol>
+<li><strong>System programming</strong>: interfacing with <code>/proc</code>, system calls, process management</li>
+<li><strong>Cross-platform development</strong>: conditional compilation and different APIs for each OS</li>
+<li><strong>Memory safety in C</strong>: manual memory management without a garbage collector</li>
+<li><strong>Build systems</strong>: Makefile with automatic platform detection</li>
+<li><strong>API design</strong>: clean and composable interface</li>
+</ol>
+<h2>I Don&#39;t Memorize Commands</h2>
+<p>As my approach goes: I&#39;m not interested in memorizing the exact <code>lsof</code> or <code>netstat</code> commands. I prefer understanding the underlying architecture and building tools that solve the problem more elegantly. <code>wir</code> isn&#39;t just a wrapper, it&#39;s an abstraction that hides the complexity of OS differences.</p>
+<h2>The Future</h2>
+<p>The project is open to extensions:</p>
+<ul>
+<li>UDP port support</li>
+<li>Advanced process filtering</li>
+<li>Support for other OSes (BSD, etc.)</li>
+<li>Performance optimizations</li>
+<li>Additional output formats</li>
+</ul>
+<h2>Try It Out</h2>
+<p><a href="https://github.com/AlbertoBarrago/wir">wir</a></p>
+<p>It&#39;s a learning project, so feel free to experiment and extend it. Building system tools in C is a great way to understand what&#39;s really happening under the hood.</p>
+<pre><code class="language-bash"># Build and install
+brew tap AlbertoBarrago/tap
+brew install wir
+
+# Start using it
+wir --port 3000
+</code></pre>
+</article></noscript></div>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-NVRFS5LVBB"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-NVRFS5LVBB');
+	</script>
+</body>
+
+</html>
