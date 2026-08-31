@@ -1,3 +1,5 @@
+import { GRID_COLS, GRID_ROWS, PIECES, createGrid, collides as gridCollides, rotateCW, clearLines as clearGridLines, scoreForClear, levelForLines } from './tetris-logic.js';
+
 /**
  * Tetris game
  * @param {HTMLCanvasElement} canvas
@@ -7,17 +9,6 @@
 export function initTetris(canvas, onExit) {
 	const ctx = canvas.getContext('2d');
 	if (!ctx) return () => { };
-
-	const GRID_COLS = 10, GRID_ROWS = 20;
-	const PIECES = [
-		{ shape: [[1, 1, 1, 1]], color: '#00bfff' },            // I
-		{ shape: [[1, 1], [1, 1]], color: '#ffbd2e' },          // O
-		{ shape: [[0, 1, 0], [1, 1, 1]], color: '#a855f7' },      // T
-		{ shape: [[1, 0, 0], [1, 1, 1]], color: '#ff6b6b' },      // L
-		{ shape: [[0, 0, 1], [1, 1, 1]], color: '#00ff41' },      // J
-		{ shape: [[0, 1, 1], [1, 1, 0]], color: '#ff6b6b' },      // S
-		{ shape: [[1, 1, 0], [0, 1, 1]], color: '#00ff41' }       // Z
-	];
 
 	let gameState = 'waiting';
 	let score = 0, level = 1, lines = 0;
@@ -41,10 +32,12 @@ export function initTetris(canvas, onExit) {
 	resizeObs.observe(canvas);
 
 	function resetGrid() {
-		grid = [];
-		for (let r = 0; r < GRID_ROWS; r++) {
-			grid.push(new Array(GRID_COLS).fill(null));
-		}
+		grid = createGrid();
+	}
+
+	/** @param {number[][]} shape @param {number} px @param {number} py */
+	function collides(shape, px, py) {
+		return gridCollides(grid, shape, px, py);
 	}
 
 	function spawnPiece() {
@@ -61,19 +54,6 @@ export function initTetris(canvas, onExit) {
 		}
 	}
 
-	/** @param {number[][]} shape @param {number} px @param {number} py */
-	function collides(shape, px, py) {
-		for (let r = 0; r < shape.length; r++) {
-			for (let c = 0; c < shape[r].length; c++) {
-				if (!shape[r][c]) continue;
-				const nx = px + c, ny = py + r;
-				if (nx < 0 || nx >= GRID_COLS || ny >= GRID_ROWS) return true;
-				if (ny >= 0 && grid[ny][nx]) return true;
-			}
-		}
-		return false;
-	}
-
 	function lockPiece() {
 		if (!currentPiece) return;
 		for (let r = 0; r < currentPiece.shape.length; r++) {
@@ -88,36 +68,13 @@ export function initTetris(canvas, onExit) {
 	}
 
 	function clearLines() {
-		let cleared = 0;
-		for (let r = GRID_ROWS - 1; r >= 0; r--) {
-			if (grid[r].every(c => c !== null)) {
-				grid.splice(r, 1);
-				grid.unshift(new Array(GRID_COLS).fill(null));
-				cleared++; r++;
-			}
-		}
+		const cleared = clearGridLines(grid);
 		if (cleared > 0) {
-			const pts = [0, 100, 300, 500, 800];
-			score += (pts[cleared] || 800) * level;
+			score += scoreForClear(cleared, level);
 			lines += cleared;
-			level = Math.floor(lines / 10) + 1;
-			dropInterval = Math.max(5, 45 - (level - 1) * 4);
+			({ level, dropInterval } = levelForLines(lines));
 			if (score > highScore) { highScore = score; localStorage.setItem('tetrisHigh', String(highScore)); }
 		}
-	}
-
-	/** @param {number[][]} shape */
-	function rotateCW(shape) {
-		const rows = shape.length, cols = shape[0].length;
-		/** @type {number[][]} */
-		const rotated = [];
-		for (let c = 0; c < cols; c++) {
-			rotated.push([]);
-			for (let r = rows - 1; r >= 0; r--) {
-				rotated[c].push(shape[r][c]);
-			}
-		}
-		return rotated;
 	}
 
 	const keys = /** @type {Record<string,boolean>} */ ({});
