@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>I Built a CLI to Answer One Question: What Will This Change Break? | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="We've all been there. You open a repository, change a file that looks completely harmless, run the tests, and open a pull request. Then someone comments:…" />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/articles/serval-cli/" />
+	<meta property="og:title" content="I Built a CLI to Answer One Question: What Will This Change Break? | Alberto Barrago" />
+	<meta property="og:description" content="We've all been there. You open a repository, change a file that looks completely harmless, run the tests, and open a pull request. Then someone comments:…" />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="I Built a CLI to Answer One Question: What Will This Change Break? | Alberto Barrago" />
+	<meta name="twitter:description" content="We've all been there. You open a repository, change a file that looks completely harmless, run the tests, and open a pull request. Then someone comments:…" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/articles/serval-cli/" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-BKeFcg-x.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DHxsVwSi.css">
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"Article","headline":"I Built a CLI to Answer One Question: What Will This Change Break?","datePublished":"2026-08-27","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/articles/serval-cli/","mainEntityOfPage":"https://albz.it/articles/serval-cli/"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article><h1>I Built a CLI to Answer One Question: What Will This Change Break?</h1><p>2026-08-27</p><p>We&#39;ve all been there.</p>
+<p>You open a repository, change a file that looks completely harmless, run the tests, and open a pull request.</p>
+<p>Then someone comments:</p>
+<blockquote>
+<p>&quot;Careful. That module is also used by the billing pipeline.&quot;</p>
+</blockquote>
+<p>Or worse, nobody notices.</p>
+<p>The change gets merged.</p>
+<p>And something breaks.</p>
+<p>The problem isn&#39;t necessarily bad code. In large or unfamiliar codebases, understanding the blast radius of a change is surprisingly difficult.</p>
+<p>So I started building Serval.</p>
+<p>Serval is a local-first CLI that tries to answer one simple question:</p>
+<p><em>If I change this file, what am I likely to affect?</em></p>
+<h2>The problem</h2>
+<p>When I want to understand the impact of a change, I usually end up doing some combination of:</p>
+<pre><code>rg &quot;someModule&quot;
+git log
+git blame
+</code></pre>
+<p>Then I inspect imports, search CI configuration, check which files usually change together, and rely on whatever knowledge I have about the repository.</p>
+<p>That works.</p>
+<p>But it is mostly manual.</p>
+<p>And on a repository you don&#39;t know well, a large part of the process becomes guesswork.</p>
+<p>I wanted something closer to:</p>
+<pre><code>serval inspect src/auth/token.ts
+</code></pre>
+<p>and get:</p>
+<pre><code>Target
+  src/auth/token.ts
+
+Direct impact
+  src/auth/middleware.ts
+
+Indirect impact
+  src/api/client.ts
+
+CI
+  integration-auth.yml
+
+Git history
+  7 significant changes
+  3 frequently co-changed modules
+
+Risk
+  HIGH: 82/100
+
+  +28  14 downstream modules
+  +20  critical path
+  +14  high historical churn
+  +12  frequently co-changed modules
+  +8   CI workflow affected
+</code></pre>
+<p>Not a prediction.</p>
+<p>Not:</p>
+<blockquote>
+<p>&quot;AI thinks this change might be dangerous.&quot;</p>
+</blockquote>
+<p>Evidence.</p>
+<h2>Four signals instead of one</h2>
+<p>Looking only at imports isn&#39;t enough.</p>
+<p>A dependency graph can tell me:</p>
+<pre><code>A -&gt; B -&gt; C
+</code></pre>
+<p>If I change C, I know that B and potentially A are affected.</p>
+<p>Useful.</p>
+<p>But repositories contain more information than their dependency graph.</p>
+<h3>1. Dependency graph</h3>
+<p>Serval scans the repository and builds a graph from language-native dependencies.</p>
+<p>It currently understands repositories containing:</p>
+<ul>
+<li>JavaScript / TypeScript</li>
+<li>Go</li>
+<li>Python</li>
+<li>Java</li>
+<li>C</li>
+</ul>
+<p>For a target file, Serval walks the graph in the opposite direction and calculates its dependents.</p>
+<p>That gives us the structural blast radius.</p>
+<p>But structure is only the first signal.</p>
+<h3>2. Git history</h3>
+<p>Git contains something surprisingly close to the memory of a codebase.</p>
+<p>If two files repeatedly change together, that&#39;s information.</p>
+<p>If a module has been modified constantly during the last few months, that&#39;s information too.</p>
+<p>So Serval looks at things like:</p>
+<ul>
+<li>historical churn</li>
+<li>co-change frequency</li>
+</ul>
+<p>Imagine two files with identical dependency graphs.</p>
+<p>One hasn&#39;t changed in two years.</p>
+<p>The other changed nine times during the last 90 days and frequently changes together with 15 other modules.</p>
+<p>Those files probably shouldn&#39;t receive the same risk score.</p>
+<h3>3. CI configuration</h3>
+<p>Then there is another graph hiding inside most repositories: CI/CD.</p>
+<p>A change can trigger integration tests, builds, deployments or validation pipelines depending on path filters.</p>
+<p>Serval currently understands configuration from:</p>
+<ul>
+<li>GitHub Actions</li>
+<li>GitLab CI</li>
+<li>Azure Pipelines</li>
+<li>Jenkins</li>
+</ul>
+<p>This gives another useful piece of evidence: which automation does this change actually touch?</p>
+<h3>4. Critical paths</h3>
+<p>Some parts of a system simply deserve more attention.</p>
+<p>Authentication is not the same as changing a README.</p>
+<p>Payment logic is not the same as changing a CSS utility.</p>
+<p>Serval therefore allows repository-specific critical-path rules through <code>.serval.yml</code>.</p>
+<p>Again, this isn&#39;t trying to prove that something will break.</p>
+<p>It is accumulating evidence that says: you should probably look at this change more carefully.</p>
+<h2>Why the score is deterministic</h2>
+<p>This became one of the most important design decisions in the project.</p>
+<p>It would have been extremely easy to send the repository context to an LLM and ask:</p>
+<blockquote>
+<p>&quot;How risky is this change from 0 to 100?&quot;</p>
+</blockquote>
+<p>I deliberately didn&#39;t do that.</p>
+<p>The core score produced by Serval is deterministic.</p>
+<p>The same repository state and configuration produce the same result.</p>
+<p>More importantly, every point can be explained.</p>
+<p>Something like:</p>
+<pre><code>Risk
+  MEDIUM: 38/100
+
+  +4   2 downstream modules
+  +14  high historical churn
+  +12  91 frequently co-changed modules
+  +8   2 CI workflows affected
+</code></pre>
+<p>There is no hidden reasoning behind 38.</p>
+<p>You can audit it.</p>
+<p>You can disagree with it.</p>
+<p>You can change the configuration.</p>
+<p>But you can understand where it came from.</p>
+<p>For engineering tooling, I think that property matters.</p>
+<h2>So... no AI?</h2>
+<p>Not exactly.</p>
+<p>Serval does support AI explanations.</p>
+<p>For example:</p>
+<pre><code>serval inspect src/auth/token.ts --explain
+</code></pre>
+<p>The interesting part is the boundary.</p>
+<p>The AI cannot change the score.</p>
+<p>It only receives the deterministic analysis and explains it in natural language.</p>
+<p>And because Serval is local-first, the default provider can be a local Ollama instance.</p>
+<p>Other providers can be used through locally installed CLIs such as Claude, Codex or Gemini.</p>
+<p>I like this architecture much more than putting an LLM at the center of the system:</p>
+<pre><code>repository
+    ↓
+deterministic analysis
+    ↓
+risk model
+    ↓
+result
+    ↓
+optional AI explanation
+</code></pre>
+<p>The model explains evidence. It doesn&#39;t invent the evidence.</p>
+<h2>Local-first was intentional</h2>
+<p>Serval doesn&#39;t require:</p>
+<ul>
+<li>an account</li>
+<li>a SaaS backend</li>
+<li>uploading your repository</li>
+<li>an API key for its core functionality</li>
+</ul>
+<p>The analysis happens locally.</p>
+<p>That matters for developer tooling because the repository already contains everything needed for most of the analysis:</p>
+<ul>
+<li>source code</li>
+<li>Git history</li>
+<li>CI configuration</li>
+<li>repository configuration</li>
+</ul>
+<p>Why send all of that somewhere else if we can calculate the answer locally?</p>
+<h2>It can also become a CI gate</h2>
+<p>The same analysis can run against your current diff:</p>
+<pre><code>serval diff
+</code></pre>
+<p>or produce machine-readable output:</p>
+<pre><code>serval diff --json
+</code></pre>
+<p>And this makes another use case possible:</p>
+<pre><code>serval diff --fail-on high
+</code></pre>
+<p>If one of the changed files reaches HIGH risk, Serval exits with a non-zero status.</p>
+<p>That means the tool can move from &quot;interesting information for the developer&quot; to &quot;a deterministic signal inside the delivery pipeline.&quot;</p>
+<p>I&#39;m particularly interested in exploring this direction. Not as another quality gate that randomly blocks developers, but as a way to make the expected impact of a change visible before merge.</p>
+<h2>Installing it</h2>
+<p>Serval is written in Go and distributed through Homebrew.</p>
+<pre><code>brew install AlbertoBarrago/tap/serval
+</code></pre>
+<p>Then, inside a Git repository:</p>
+<pre><code>serval inspect path/to/file
+</code></pre>
+<p>or simply:</p>
+<pre><code>serval path/to/file
+</code></pre>
+<p>There are also commands for inspecting the graph and history directly:</p>
+<pre><code>serval graph path/to/file
+serval history path/to/file
+serval doctor
+</code></pre>
+<p>And because I have a soft spot for old-school CLI tooling:</p>
+<pre><code>man serval
+</code></pre>
+<p>exists too.</p>
+<h2>What I&#39;m trying to explore</h2>
+<p>Serval is still young.</p>
+<p>I&#39;m less interested in pretending that a 0-100 score can magically predict whether software will break and more interested in a different question:</p>
+<p><em>How much useful information about change risk is already sitting inside our repositories?</em></p>
+<p>Dependency graphs tell us what is connected.</p>
+<p>Git tells us what historically moves together.</p>
+<p>CI tells us what operational machinery is affected.</p>
+<p>Repository rules tell us which areas deserve additional attention.</p>
+<p>None of these signals is particularly revolutionary on its own.</p>
+<p>Combining them into a small, local, explainable tool is the experiment.</p>
+<p>And perhaps that&#39;s also where AI fits best in this kind of developer tooling: not replacing deterministic analysis, but sitting on top of it when natural-language reasoning is useful.</p>
+<p>Serval is open source and MIT licensed.</p>
+<p>Project: <a href="https://albz.it/serval/">albz.it/serval</a></p>
+<p>Source: <a href="https://github.com/AlbertoBarrago/serval">github.com/AlbertoBarrago/serval</a></p>
+<p>If you work on large repositories, monorepos, legacy systems, or CI-heavy projects, I&#39;d be particularly interested in hearing what signals you use before touching an unfamiliar part of the codebase.</p>
+</article></noscript></div>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-NVRFS5LVBB"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-NVRFS5LVBB');
+	</script>
+</body>
+
+</html>
