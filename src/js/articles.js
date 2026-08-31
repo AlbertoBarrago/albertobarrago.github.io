@@ -8,6 +8,15 @@
 /** @typedef {{ slug: string, title: string, date: string, tags: string[] }} ArticleMeta */
 /** @typedef {{ meta: { title?: string, date?: string, tags?: string[] }, html: string }} RenderedArticle */
 
+/**
+ * Sorts articles by date, ascending (oldest first).
+ * @param {ArticleMeta[]} list
+ * @returns {ArticleMeta[]}
+ */
+function sortArticlesByDateAscending(list) {
+	return [...list].sort((a, b) => a.date.localeCompare(b.date));
+}
+
 const modules = /** @type {Record<string, RenderedArticle>} */ (
 	import.meta.glob('/src/content/articles/*.md', { eager: true })
 );
@@ -16,8 +25,8 @@ const modules = /** @type {Record<string, RenderedArticle>} */ (
 const htmlBySlug = new Map();
 
 /** @type {ArticleMeta[]} */
-const articles = Object.entries(modules)
-	.map(([path, mod]) => {
+const articles = sortArticlesByDateAscending(
+	Object.entries(modules).map(([path, mod]) => {
 		const slug = /** @type {string} */ (path.split('/').pop()).replace(/\.md$/, '');
 		htmlBySlug.set(slug, mod.html);
 		return {
@@ -27,11 +36,11 @@ const articles = Object.entries(modules)
 			tags: mod.meta.tags ?? [],
 		};
 	})
-	.sort((a, b) => b.date.localeCompare(a.date));
+);
 
 /** @param {string} slug @returns {string | null} */
 function getArticleHTML(slug) {
 	return htmlBySlug.has(slug) ? /** @type {string} */ (htmlBySlug.get(slug)) : null;
 }
 
-export { articles, getArticleHTML };
+export { articles, getArticleHTML, sortArticlesByDateAscending };
