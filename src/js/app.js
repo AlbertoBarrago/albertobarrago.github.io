@@ -79,6 +79,8 @@ let historyIndex = 0;
 let gameCleanup = null;
 /** @type {IntersectionObserver | null} */
 let tocObserver = null;
+/** @type {{ container: HTMLElement, handler: () => void } | null} */
+let tocScrollFallback = null;
 
 const app = /** @type {HTMLDivElement} */ (document.getElementById('app'));
 
@@ -211,6 +213,14 @@ function labHTML() {
 ${items}`;
 }
 
+/** @param {string} isoDate @returns {string} */
+function formatDateIT(isoDate) {
+	if (!isoDate) return isoDate;
+	const parsed = new Date(`${isoDate}T00:00:00`);
+	if (Number.isNaN(parsed.getTime())) return isoDate;
+	return new Intl.DateTimeFormat('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(parsed);
+}
+
 function articlesHTML() {
 	if (articles.length === 0) {
 		return `<div class="output-title">Articles</div>
@@ -219,7 +229,7 @@ function articlesHTML() {
 	const ascending = [...articles].sort((a, b) => a.date.localeCompare(b.date));
 	return `<div class="output-title">Articles</div>
 <div class="project-list">${ascending.map((article) => `<article class="project-item">
-	<div><button class="terminal-link project-name inline-command" data-command="cat ${article.slug}.md">${article.title} ↗</button><span class="project-language">${article.date}</span></div>
+	<div><button class="terminal-link project-name inline-command" data-command="cat ${article.slug}.md">${article.title} ↗</button><span class="project-language">${formatDateIT(article.date)}</span></div>
 	<p class="muted">${article.tags.join('  ·  ')}</p>
 </article>`).join('')}</div>`;
 }
@@ -263,7 +273,7 @@ function articleReaderHTML(slug) {
 			<div class="article-reader-main">
 				<article class="prose">
 					<h1>${meta.title}</h1>
-					<p class="reader-meta muted">${meta.date}${meta.tags.length ? ` · ${meta.tags.join(' · ')}` : ''}</p>
+					<p class="reader-meta muted">${formatDateIT(meta.date)}${meta.tags.length ? ` · ${meta.tags.join(' · ')}` : ''}</p>
 					<p class="reader-stats muted">${stats.words.toLocaleString()} words · ${stats.chars.toLocaleString()} chars · ~${stats.minutes} min read</p>
 					${getArticleHTML(slug)}
 				</article>
@@ -318,6 +328,8 @@ function buildArticleTOC(overlay) {
 /** @param {HTMLElement} overlay @param {HTMLHeadingElement[]} headings */
 function observeArticleHeadings(overlay, headings) {
 	tocObserver?.disconnect();
+	tocScrollFallback?.container.removeEventListener('scroll', tocScrollFallback.handler);
+	tocScrollFallback = null;
 	const container = /** @type {HTMLElement} */ (overlay.querySelector('.article-reader-body'));
 	const links = /** @type {NodeListOf<HTMLElement>} */ (overlay.querySelectorAll('.reader-toc-link'));
 	/** @type {Set<string>} */
@@ -328,6 +340,9 @@ function observeArticleHeadings(overlay, headings) {
 		links.forEach((link) => link.classList.toggle('is-active', link.dataset.target === id));
 	};
 
+	/** @returns {boolean} true when the container is scrolled to (or near) the bottom */
+	const isAtBottom = () => container.scrollTop + container.clientHeight >= container.scrollHeight - 4;
+
 	tocObserver = new IntersectionObserver((observerEntries) => {
 		for (const entry of observerEntries) {
 			if (entry.isIntersecting) visible.add(entry.target.id);
@@ -335,13 +350,21 @@ function observeArticleHeadings(overlay, headings) {
 		}
 		const active = headings.find((heading) => visible.has(heading.id));
 		if (active) setActive(active.id);
-		else if (container.scrollTop + container.clientHeight >= container.scrollHeight - 4) {
+		else if (isAtBottom()) {
 			setActive(headings[headings.length - 1].id);
 		}
 	}, { root: container, rootMargin: '0px 0px -72% 0px', threshold: 0 });
 
 	headings.forEach((heading) => /** @type {IntersectionObserver} */ (tocObserver).observe(heading));
 	setActive(headings[0].id);
+
+	// On short screens / short trailing sections the last heading's trigger zone
+	// (shrunk by rootMargin) can sit above the scrollable bottom, so it never
+	// crosses the IntersectionObserver threshold. A plain scroll listener
+	// guarantees the last chapter still activates once the user hits bottom.
+	const scrollHandler = () => { if (isAtBottom()) setActive(headings[headings.length - 1].id); };
+	container.addEventListener('scroll', scrollHandler, { passive: true });
+	tocScrollFallback = { container, handler: scrollHandler };
 }
 
 /** @param {string} slug */
@@ -362,6 +385,8 @@ function openArticleReader(slug) {
 function closeArticleReader() {
 	tocObserver?.disconnect();
 	tocObserver = null;
+	tocScrollFallback?.container.removeEventListener('scroll', tocScrollFallback.handler);
+	tocScrollFallback = null;
 	document.getElementById('article-reader')?.remove();
 	if (window.location.pathname.startsWith('/articles/')) {
 		window.history.pushState(null, '', '/');
@@ -554,7 +579,7 @@ function executeCommand(rawCommand) {
 		return;
 	}
 	if (command === 'date') {
-		appendOutput(new Intl.DateTimeFormat(undefined, { dateStyle: 'full', timeStyle: 'long' }).format(new Date()));
+		appendOutput(new Intl.DateTimeFormat('it-IT', { dateStyle: 'full', timeStyle: 'long' }).format(new Date()));
 		return;
 	}
 	if (command === 'play') {
