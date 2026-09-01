@@ -212,14 +212,14 @@ const utils = [
 		category: "Free tools & perks",
 		items: [
 			{
+				name: "Markasso",
+				description: "My own fast, minimal, keyboard-first whiteboard engine. Marker + Picasso. No framework. No runtime. Just canvas.",
+				url: "https://markasso.it"
+			},
+			{
 				name: "GitHub Student Pack",
 				description: "Free developer tools and credits for students.",
 				url: "https://education.github.com/pack"
-			},
-			{
-				name: "Excalidraw",
-				description: "Free, hand-drawn style whiteboard for diagrams.",
-				url: "https://excalidraw.com/"
 			},
 			{
 				name: "Coolors",
