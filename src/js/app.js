@@ -6,7 +6,7 @@
 
 import {
 	name, role, location, profile, skills, experience,
-	experimentalProjects, openSource, brewFormulas, links, version, downloadCv,
+	experimentalProjects, openSource, brewFormulas, utils, links, version, downloadCv,
 } from './index.js';
 import { initSpaceInvaders } from './games/spaceInvaders.js';
 import { initTetris } from './games/tetris.js';
@@ -21,12 +21,12 @@ import { articles, getArticleHTML } from './articles.js';
 
 const PROMPT = 'alberto@portfolio:~';
 const COMMAND_NAMES = Object.freeze([
-	'help', 'about', 'skills', 'experience', 'projects', 'brew', 'lab', 'articles', 'contact', 'cv',
+	'help', 'about', 'skills', 'experience', 'projects', 'brew', 'lab', 'articles', 'utils', 'contact', 'cv',
 	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear',
 ]);
 const MOBILE_COMMANDS = Object.freeze([
 	['help', 'help'], ['about', 'about'], ['skills', 'skills'],
-	['projects', 'projects'], ['brew', 'brew'], ['lab', 'lab'], ['articles', 'articles'], ['games', 'games'], ['contact', 'contact'],
+	['projects', 'projects'], ['brew', 'brew'], ['lab', 'lab'], ['articles', 'articles'], ['utils', 'utils'], ['games', 'games'], ['contact', 'contact'],
 ]);
 
 /** @type {Readonly<Record<GameName, string>>} */
@@ -136,6 +136,7 @@ function helpHTML() {
 		['brew', 'Homebrew formulae I maintain'],
 		['lab', 'Experimental work in progress'],
 		['articles', 'Technical articles and notes'],
+		['utils', 'Useful free resources and links'],
 		['contact', 'Ways to get in touch'],
 		['cv', 'Download my resume'],
 		['games', 'List embedded retro games'],
@@ -435,6 +436,18 @@ async function shareArticle(slug, button) {
 	await copyArticleLink(slug, button);
 }
 
+function utilsHTML() {
+	return `<div class="output-title">/utils</div>
+<p class="prose">Useful free resources: books, courses, docs, and tools I keep coming back to.</p>
+${utils.map((group) => `<div class="utils-group">
+	<div class="utils-category">${group.category}</div>
+	<div class="project-list">${group.items.map((item) => `<article class="project-item">
+		<div><a class="terminal-link project-name" href="${item.url}" target="_blank" rel="noopener noreferrer">${item.name} ↗</a></div>
+		<p>${item.description}</p>
+	</article>`).join('')}</div>
+</div>`).join('')}</div>`;
+}
+
 function contactHTML() {
 	return `<div class="output-title">Let's build something useful</div>
 <div class="key-value"><span class="label">email</span><a class="terminal-link" href="${links.email}">albertobarrago@gmail.com</a>
@@ -460,6 +473,7 @@ function treeHTML() {
 ├── <button class="inline-command directory" data-command="brew">brew/</button>
 ├── <button class="inline-command directory" data-command="lab">lab/</button>
 ├── <button class="inline-command directory" data-command="articles">articles/</button>
+├── <button class="inline-command directory" data-command="utils">utils/</button>
 ├── <button class="inline-command file" data-command="contact">contact.vcf</button>
 ├── <button class="inline-command file" data-command="cv">albertobarrago_cv.pdf</button>
 └── <button class="inline-command directory" data-command="games">games/</button></div>`;
@@ -480,7 +494,7 @@ function neofetchHTML() {
 }
 
 function lsHTML() {
-	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="brew">brew/</button><button class="inline-command directory" data-command="lab">lab/</button><button class="inline-command directory" data-command="articles">articles/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
+	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="brew">brew/</button><button class="inline-command directory" data-command="lab">lab/</button><button class="inline-command directory" data-command="articles">articles/</button><button class="inline-command directory" data-command="utils">utils/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
 }
 
 /** @param {number} intensity @returns {string} */
@@ -561,7 +575,7 @@ function executeCommand(rawCommand) {
 
 	const renderers = /** @type {Record<string, () => string>} */ ({
 		help: helpHTML, skills: skillsHTML, experience: experienceHTML,
-		projects: projectsHTML, brew: brewHTML, lab: labHTML, articles: articlesHTML, contact: contactHTML, games: gamesHTML,
+		projects: projectsHTML, brew: brewHTML, lab: labHTML, articles: articlesHTML, utils: utilsHTML, contact: contactHTML, games: gamesHTML,
 		ls: lsHTML, tree: treeHTML, neofetch: neofetchHTML,
 	});
 	if (renderers[command]) {

@@ -411,6 +411,19 @@ button {
 	gap: 0.75rem;
 }
 
+.utils-group {
+	margin-top: 1rem;
+}
+
+.utils-category {
+	color: var(--purple);
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	margin-bottom: 0.5rem;
+}
+
 .project-item {
 	padding: 0.85rem 1rem;
 	background: rgba(17, 24, 32, 0.6);

@@ -131,6 +131,110 @@ const brewFormulas = [
 	}
 ];
 
+/** @type {{ category: string, items: { name: string, description: string, url: string }[] }[]} */
+const utils = [
+	{
+		category: "Free programming books",
+		items: [
+			{
+				name: "Free Programming Books (IT)",
+				description: "Curated list of free programming books in Italian.",
+				url: "https://github.com/EbookFoundation/free-programming-books/blob/main/books/free-programming-books-it.md"
+			},
+			{
+				name: "Free Programming Books (EN)",
+				description: "The full English-language list of free programming books.",
+				url: "https://github.com/EbookFoundation/free-programming-books"
+			},
+			{
+				name: "The Odin Project",
+				description: "Free, open-source full-stack curriculum (HTML/CSS, JS, Node, Rails).",
+				url: "https://www.theodinproject.com/"
+			},
+			{
+				name: "freeCodeCamp",
+				description: "Free certifications and interactive courses for web development.",
+				url: "https://www.freecodecamp.org/"
+			}
+		]
+	},
+	{
+		category: "Free courses & practice",
+		items: [
+			{
+				name: "Exercism",
+				description: "Free coding exercises and mentoring across 70+ languages.",
+				url: "https://exercism.org/"
+			},
+			{
+				name: "Roadmap.sh",
+				description: "Step-by-step roadmaps and guides for developer roles.",
+				url: "https://roadmap.sh/"
+			},
+			{
+				name: "Khan Academy",
+				description: "Free courses in math, science, and computer programming.",
+				url: "https://www.khanacademy.org/"
+			},
+			{
+				name: "MIT OpenCourseWare",
+				description: "Free lecture notes, exams, and videos from MIT courses.",
+				url: "https://ocw.mit.edu/"
+			}
+		]
+	},
+	{
+		category: "Docs & references",
+		items: [
+			{
+				name: "MDN Web Docs",
+				description: "The definitive reference for web platform technologies.",
+				url: "https://developer.mozilla.org/"
+			},
+			{
+				name: "DevDocs",
+				description: "Fast, offline-capable API documentation browser.",
+				url: "https://devdocs.io/"
+			},
+			{
+				name: "Explain Shell",
+				description: "Paste a shell command to see what each part does.",
+				url: "https://explainshell.com/"
+			},
+			{
+				name: "Regex101",
+				description: "Online regex tester and debugger with live explanation.",
+				url: "https://regex101.com/"
+			}
+		]
+	},
+	{
+		category: "Free tools & perks",
+		items: [
+			{
+				name: "GitHub Student Pack",
+				description: "Free developer tools and credits for students.",
+				url: "https://education.github.com/pack"
+			},
+			{
+				name: "Excalidraw",
+				description: "Free, hand-drawn style whiteboard for diagrams.",
+				url: "https://excalidraw.com/"
+			},
+			{
+				name: "Coolors",
+				description: "Free color palette generator and contrast checker.",
+				url: "https://coolors.co/"
+			},
+			{
+				name: "TinyPNG",
+				description: "Compress PNG/WebP images for the web, free tier.",
+				url: "https://tinypng.com/"
+			}
+		]
+	}
+];
+
 const links = {
 	github: "https://github.com/AlbertoBarrago",
 	email: `mailto:${email}`,
@@ -157,6 +261,7 @@ export {
 	experimentalProjects,
 	openSource,
 	brewFormulas,
+	utils,
 	links,
 	version,
 	downloadCv
