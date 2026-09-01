@@ -22,3 +22,6 @@ vite.config.ts.timestamp-*
 
 # Agents
 AGENTS.md
+
+# pnpm (project uses npm)
+pnpm-lock.yaml
