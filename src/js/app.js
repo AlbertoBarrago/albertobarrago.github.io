@@ -67,6 +67,13 @@ const SECRET_ART = Object.freeze([
 	"",
 	"      I LOVE CAT",
 ]);
+const ALBZ_ART = Object.freeze([
+	"    _    _     ____   _____",
+	"   / \\  | |   | __ ) |__  /",
+	"  / _ \\ | |   |  _ \\   / /",
+	" / ___ \\| |___| |_) | / /_",
+	"/_/   \\_\\_____|____/ /____|",
+]);
 const GLITCH_CHARS = '#%@*+=-<>/\\|';
 
 const REPEATING_CONTROL_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowDown']);
@@ -108,11 +115,7 @@ function terminalHTML() {
 }
 
 function bannerHTML() {
-	return `<div class="ascii-banner accent" role="img" aria-label="ALBZ">    _    _     ____   _____
-   / \\  | |   | __ ) |__  /
-  / _ \\ | |   |  _ \\   / /
- / ___ \\| |___| |_) | / /_
-/_/   \\_\\_____|____/ /____|</div>
+	return `<div class="ascii-banner accent" role="img" aria-label="ALBZ">${ALBZ_ART.join('\n')}</div>
 <div class="boot-copy"><span class="muted">Portfolio shell v${version}</span>
 <span>${role} · Product Builder</span>
 
@@ -497,13 +500,39 @@ function lsHTML() {
 	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="brew">brew/</button><button class="inline-command directory" data-command="lab">lab/</button><button class="inline-command directory" data-command="articles">articles/</button><button class="inline-command directory" data-command="utils">utils/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
 }
 
-/** @param {number} intensity @returns {string} */
-function glitchFrame(intensity) {
-	return SECRET_ART.map((line) => line.split('').map((character) =>
+/** @param {readonly string[]} art @param {number} intensity @returns {string} */
+function glitchArt(art, intensity) {
+	return art.map((line) => line.split('').map((character) =>
 		character === ' ' || Math.random() >= intensity
 			? character
 			: GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)]
 	).join('')).join('\n');
+}
+
+/** @param {number} intensity @returns {string} */
+function glitchFrame(intensity) {
+	return glitchArt(SECRET_ART, intensity);
+}
+
+/**
+ * Boot-time glitch reveal for the ALBZ banner. Purely additive: it settles on
+ * the exact same static art, so the final look is unchanged.
+ */
+function animateBannerGlitch() {
+	const banner = output.querySelector('.ascii-banner');
+	if (!banner) return;
+	const finalText = ALBZ_ART.join('\n');
+	const totalFrames = 9;
+	let frame = 0;
+	const intervalId = window.setInterval(() => {
+		frame += 1;
+		if (frame >= totalFrames) {
+			window.clearInterval(intervalId);
+			banner.textContent = finalText;
+			return;
+		}
+		banner.textContent = glitchArt(ALBZ_ART, Math.max(0, 0.55 - frame * 0.06));
+	}, 70);
 }
 
 function launchCatEasterEgg() {
@@ -708,6 +737,7 @@ const output = /** @type {HTMLElement} */ (document.getElementById('terminal-out
 const form = /** @type {HTMLFormElement} */ (document.getElementById('terminal-form'));
 const input = /** @type {HTMLInputElement} */ (document.getElementById('terminal-input'));
 appendOutput(bannerHTML(), 'welcome-block');
+animateBannerGlitch();
 printConsoleBanner();
 
 /** @returns {string | undefined} */
