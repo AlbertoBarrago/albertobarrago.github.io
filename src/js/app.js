@@ -82,6 +82,7 @@ const activeControlPointers = new Map();
 /** @type {string[]} */
 const commandHistory = [];
 let historyIndex = 0;
+let lastTabPrefix = null;
 /** @type {(() => void) | null} */
 let gameCleanup = null;
 /** @type {IntersectionObserver | null} */
@@ -568,8 +569,12 @@ function commandEcho(value) {
 
 /** @param {string} html @param {string} [className] */
 function appendOutput(html, className = '') {
+	const blockClassName = `output-block ${className}`.trim();
+	for (const existing of Array.from(output.children)) {
+		if (existing.className === blockClassName && existing.innerHTML === html) existing.remove();
+	}
 	const block = document.createElement('div');
-	block.className = `output-block ${className}`.trim();
+	block.className = blockClassName;
 	block.innerHTML = html;
 	output.appendChild(block);
 	requestAnimationFrame(() => { output.scrollTop = output.scrollHeight; });
@@ -762,6 +767,10 @@ form.addEventListener('submit', (event) => {
 	executeCommand(value);
 });
 
+input.addEventListener('input', () => {
+	lastTabPrefix = null;
+});
+
 input.addEventListener('keydown', (event) => {
 	if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
 		event.preventDefault();
@@ -774,9 +783,37 @@ input.addEventListener('keydown', (event) => {
 	if (event.key === 'Tab') {
 		event.preventDefault();
 		const prefix = input.value.trim().toLowerCase();
+		if (!prefix) {
+			appendOutput('<span class="muted">Type \'help\' to see the list of available commands.</span>');
+			lastTabPrefix = null;
+			return;
+		}
 		const matches = COMMAND_NAMES.filter((command) => command.startsWith(prefix));
-		if (matches.length === 1) input.value = matches[0];
-		else if (matches.length > 1) appendOutput(matches.map((match) => `<span class="command">${match}</span>`).join('  '));
+		if (matches.length === 0) {
+			lastTabPrefix = null;
+			return;
+		}
+		if (matches.length === 1) {
+			input.value = matches[0];
+			lastTabPrefix = null;
+			return;
+		}
+		const commonPrefix = matches.reduce((common, match) => {
+			let end = 0;
+			while (end < common.length && end < match.length && common[end] === match[end]) end += 1;
+			return common.slice(0, end);
+		});
+		if (commonPrefix.length > prefix.length) {
+			input.value = commonPrefix;
+			lastTabPrefix = null;
+			return;
+		}
+		if (lastTabPrefix === prefix) {
+			appendOutput(matches.map((match) => `<span class="command">${match}</span>`).join('  '));
+			lastTabPrefix = null;
+		} else {
+			lastTabPrefix = prefix;
+		}
 	}
 });
 
