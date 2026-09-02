@@ -577,7 +577,7 @@ function appendOutput(html, className = '') {
 	block.className = blockClassName;
 	block.innerHTML = html;
 	output.appendChild(block);
-	requestAnimationFrame(() => { output.scrollTop = output.scrollHeight; });
+	requestAnimationFrame(() => { block.scrollIntoView({ block: 'start' }); });
 }
 
 /** @param {string} rawCommand */
