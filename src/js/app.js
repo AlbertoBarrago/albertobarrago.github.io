@@ -594,6 +594,7 @@ function executeCommand(rawCommand) {
 
 	if (command === 'clear') {
 		output.replaceChildren();
+		appendOutput(bannerHTML(), 'welcome-block');
 		return;
 	}
 
