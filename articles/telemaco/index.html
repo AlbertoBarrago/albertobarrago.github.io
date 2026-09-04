@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Telemaco: a headless browser engine in Rust, without the Chromium | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="Telemaco is a headless browser engine I've been building in Rust. It runs real JavaScript through V8, keeps a real DOM tree, owns its own layout and paint…" />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/articles/telemaco/" />
+	<meta property="og:title" content="Telemaco: a headless browser engine in Rust, without the Chromium | Alberto Barrago" />
+	<meta property="og:description" content="Telemaco is a headless browser engine I've been building in Rust. It runs real JavaScript through V8, keeps a real DOM tree, owns its own layout and paint…" />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Telemaco: a headless browser engine in Rust, without the Chromium | Alberto Barrago" />
+	<meta name="twitter:description" content="Telemaco is a headless browser engine I've been building in Rust. It runs real JavaScript through V8, keeps a real DOM tree, owns its own layout and paint…" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/articles/telemaco/" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-DEztVdQ4.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BhnbMJ0N.css">
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"Article","headline":"Telemaco: a headless browser engine in Rust, without the Chromium","datePublished":"2026-09-04","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/articles/telemaco/","mainEntityOfPage":"https://albz.it/articles/telemaco/"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article><h1>Telemaco: a headless browser engine in Rust, without the Chromium</h1><p>2026-09-04</p><p><strong>Telemaco</strong> is a headless browser engine I&#39;ve been building in Rust. It runs real JavaScript through V8, keeps a real DOM tree, owns its own layout and paint pipeline, and speaks the Chrome DevTools Protocol, so Puppeteer and Playwright connect to it out of the box. No Chromium, no WebView, no 300 MB download. A 70 MB binary that starts instantly and loads a page in ~85 ms.</p>
+<p>This is the story of how it came to be, why it exists, and the choices that shaped it.</p>
+<h2>The problem: Chromium as a tax</h2>
+<p>For years, &quot;headless browser&quot; has meant one thing: headless Chrome. It works, but it carries a cost you only notice when you scale it.</p>
+<ul>
+<li><strong>The download.</strong> Every CI runner, every fresh container, every teammate&#39;s laptop pulls a ~300 MB Chromium. Playwright and Puppeteer make this painless, which is exactly why nobody questions it.</li>
+<li><strong>The memory.</strong> A single headless Chrome instance idles at 200+ MB. Spin up a few for parallel scraping and you&#39;re budgeting RAM like it&#39;s 2010.</li>
+<li><strong>The startup.</strong> Two seconds to launch before you&#39;ve even loaded a page.</li>
+<li><strong>The fingerprint.</strong> Headless Chrome is trivially detectable. If you&#39;re scraping anything that cares, you&#39;re already fighting an anti-bot arms race.</li>
+</ul>
+<p>None of this is inherent to the job. A browser engine is a parser, a DOM, a layout engine, a paint pipeline, and a JS runtime. Chromium is one very heavy way to assemble those pieces. I wanted a lighter one.</p>
+<h2>The need that started it</h2>
+<p>Two concrete needs drove the project.</p>
+<p>First, <strong>efficient web search and extraction</strong>. I work with colleagues who spend their days pulling structured data out of the web, like Salesforce records, MDN docs, product pages. The tooling for that is either a raw HTTP client (which can&#39;t run JavaScript) or a full browser (which is overkill). There was no middle ground: something that runs real JS and a real DOM, but is small enough to treat as a utility, not an infrastructure project.</p>
+<p>Second, <strong>end-to-end tests without Chromium</strong>. If you&#39;ve ever run a Playwright suite in CI, you know the drill: download the browser, hope the sandbox flags are right, watch the memory climb. I wanted the same CDP automation surface, the same <code>page.goto</code>, the same <code>page.evaluate</code>, but backed by something that doesn&#39;t need a browser install at all. A single binary that <em>is</em> the browser.</p>
+<h2>Standing on the shoulders of many projects</h2>
+<p>I didn&#39;t want to reinvent a browser from scratch, and I didn&#39;t have to. The Rust ecosystem has quietly assembled most of the pieces, and Telemaco is deliberately built on top of them.</p>
+<ul>
+<li><strong>Servo&#39;s components</strong>: <code>html5ever</code> for HTML parsing, <code>selectors</code> for CSS matching, <code>cssparser</code>, <code>servo_arc</code>. The DOM and CSS machinery that Mozilla&#39;s research browser spent years hardening.</li>
+<li><strong><code>taffy</code></strong> for the layout engine, a pure-Rust flexbox/grid layout library.</li>
+<li><strong><code>tiny-skia</code></strong> for rasterization and <strong><code>ab_glyph</code></strong> for glyph rendering, the paint pipeline, also pure Rust.</li>
+<li><strong>V8 through <code>deno_core</code></strong> for JavaScript. Real V8, the same engine Chrome uses, so JS semantics are exactly what you expect.</li>
+<li><strong><code>chromiumoxide</code></strong> and the Chrome DevTools Protocol for the automation surface.</li>
+</ul>
+<p>The project started as a fork of <strong>Obscura</strong> (Apache-2.0), a headless browser engine by h4ckf0r0day. That&#39;s the honest origin: I didn&#39;t start from a blank page, I started from a solid foundation and took it in a different direction. The crate names changed, the CLI surface changed, the project identity changed, and the codebase was adapted and extended for a practical, scraping- and agent-oriented focus. The attribution is in the repo&#39;s <code>NOTICE</code> file; this is a derivative work, and it says so.</p>
+<h2>The architecture</h2>
+<p>Telemaco is a workspace of nine crates, one layer per crate, with cross-crate calls going through the layer above rather than sideways:</p>
+<table>
+<thead>
+<tr>
+<th>Crate</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>telemaco-cli</code></td>
+<td>CLI: <code>fetch</code>, <code>serve</code> (CDP server), <code>scrape</code>, <code>mcp</code></td>
+</tr>
+<tr>
+<td><code>telemaco-cdp</code></td>
+<td>Chrome DevTools Protocol server (WebSocket)</td>
+</tr>
+<tr>
+<td><code>telemaco-js</code></td>
+<td>V8/<code>deno_core</code> runtime; DOM shim + JS/Rust bridge</td>
+</tr>
+<tr>
+<td><code>telemaco-dom</code></td>
+<td>DOM tree</td>
+</tr>
+<tr>
+<td><code>telemaco-net</code></td>
+<td>HTTP client, stealth client, cookie jar, robots cache, tracker blocklist</td>
+</tr>
+<tr>
+<td><code>telemaco-browser</code></td>
+<td>The <code>Page</code> type, navigation, JS evaluation</td>
+</tr>
+<tr>
+<td><code>telemaco-render</code></td>
+<td>Selector cascade, retained layout, paint, screenshots, PDF</td>
+</tr>
+<tr>
+<td><code>telemaco-mcp</code></td>
+<td>Stateful MCP automation tools</td>
+</tr>
+<tr>
+<td><code>telemaco</code></td>
+<td>Embeddable Rust library API</td>
+</tr>
+</tbody></table>
+<p>A few invariants shaped the whole design:</p>
+<ul>
+<li><strong>One V8 isolate per process.</strong> V8 is <code>!Send</code>, so all async runs on a <code>tokio</code> <code>LocalSet</code>, and every JS op goes through a single global lock. It serializes JS execution, which is fine for a browser engine; the DOM is single-threaded anyway.</li>
+<li><strong>One bad page must never hang a worker.</strong> There&#39;s a V8 termination watchdog per page and a process-level hard deadline. A page that spins in an infinite loop gets killed, not the worker.</li>
+<li><strong>SSRF by default.</strong> Loopback, RFC1918, and link-local fetches are blocked unless you explicitly pass <code>--allow-private-network</code>. A scraping tool that can reach your internal network is a liability; this closes it by default.</li>
+</ul>
+<h2>What it looks like</h2>
+<p>Fetch a page and run real JavaScript:</p>
+<pre><code class="language-bash">$ telemaco fetch https://news.ycombinator.com --eval &quot;document.title&quot;
+Hacker News
+</code></pre>
+<p>Drive it like headless Chrome, from Puppeteer:</p>
+<pre><code class="language-js">import puppeteer from &#39;puppeteer-core&#39;;
+
+const browser = await puppeteer.connect({
+  browserWSEndpoint: &#39;ws://127.0.0.1:9222/devtools/browser&#39;,
+});
+const page = await browser.newPage();
+await page.goto(&#39;https://news.ycombinator.com&#39;);
+
+const stories = await page.evaluate(() =&gt;
+  Array.from(document.querySelectorAll(&#39;.titleline &gt; a&#39;))
+    .map(a =&gt; ({ title: a.textContent, url: a.href }))
+);
+</code></pre>
+<p>Scrape many URLs in parallel:</p>
+<pre><code class="language-bash">$ telemaco scrape url1 url2 url3 --concurrency 25 --format json
+</code></pre>
+<p>And for AI agents, there&#39;s an MCP server that exposes the same browser to Claude Desktop, Cursor, or any MCP client:</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;telemaco&quot;: { &quot;command&quot;: &quot;telemaco&quot;, &quot;args&quot;: [&quot;mcp&quot;] }
+  }
+}
+</code></pre>
+<h2>The numbers</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Telemaco</th>
+<th>Headless Chrome</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Memory</td>
+<td>30 MB</td>
+<td>200+ MB</td>
+</tr>
+<tr>
+<td>Binary size</td>
+<td>70 MB</td>
+<td>300+ MB</td>
+</tr>
+<tr>
+<td>Page load</td>
+<td>85 ms</td>
+<td>~500 ms</td>
+</tr>
+<tr>
+<td>Startup</td>
+<td>Instant</td>
+<td>~2 s</td>
+</tr>
+<tr>
+<td>Anti-detect</td>
+<td>Built-in</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Puppeteer / Playwright</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody></table>
+<p>Roughly 12x faster page loads and 6x less memory on framework pages, with the same CDP automation surface.</p>
+<h2>Why &quot;Telemaco&quot;</h2>
+<p>The name is the son of Odysseus, the one who sets out to find news of his father. A searcher, by definition. It felt right for a tool whose whole job is to go out and bring back what&#39;s on the web.</p>
+<h2>Not a product, a direction</h2>
+<p>Telemaco isn&#39;t trying to sell anything. It&#39;s a different vision of what a browser engine can be: small enough to be a utility, fast enough to be a tool, and honest about where it comes from. It&#39;s built on the work of a lot of respected projects and people, like Servo, taffy, tiny-skia, deno_core, Obscura, and it&#39;s open source under Apache-2.0, so anyone can take it and point it at their own problem.</p>
+<p>If you&#39;ve ever wished your scraping or your e2e tests didn&#39;t require a browser install, that&#39;s the itch it scratches. Clone it, build it, drive it.</p>
+<ul>
+<li>Landing page: <a href="https://albz.it/telemaco/">albz.it/telemaco</a></li>
+<li>Source: <a href="https://github.com/AlbertoBarrago/telemaco">github.com/AlbertoBarrago/telemaco</a></li>
+</ul>
+</article></noscript></div>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-NVRFS5LVBB"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-NVRFS5LVBB');
+	</script>
+</body>
+
+</html>
