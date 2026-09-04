@@ -126,7 +126,7 @@ Technical leadership · Architecture · Web · Mobile · Cloud · AI
 I turn ambiguity into reliable systems and useful products.
 <span class="muted">Based in ${location}</span>
 ${articles.length ? `
-<span class="muted">Latest write-up:</span> <button class="inline-command command" data-command="cat ${articles[0].slug}.md">${articles[0].title} →</button>` : ''}
+<span class="muted">Latest write-up:</span> <button class="inline-command command" data-command="cat ${articles[articles.length - 1].slug}.md">${articles[articles.length - 1].title} →</button>` : ''}
 
 Type <button class="inline-command command" data-command="help">help</button> to explore, or use the shortcuts below.</div>`;
 }
