@@ -395,6 +395,17 @@ button {
 	font-style: italic;
 }
 
+.skills-whisper {
+	margin: 0 0 1.25rem;
+	padding: 0.6rem 1rem;
+	border: 1px solid var(--purple);
+	border-radius: 4px;
+	color: var(--purple);
+	font-weight: 700;
+	letter-spacing: 0.03em;
+	text-align: center;
+}
+
 .skill-row {
 	display: grid;
 	grid-template-columns: 13ch minmax(0, 1fr);

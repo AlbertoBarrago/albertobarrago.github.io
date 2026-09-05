@@ -171,6 +171,7 @@ function aboutHTML() {
 function skillsHTML() {
 	return `<div class="output-title">Technical toolbox</div>
 <blockquote class="skills-quote">Started with a single tool, today I find myself conducting an entire orchestra.</blockquote>
+<p class="skills-whisper">I'm an AI whisperer.</p>
 <div class="skills-list">${Object.entries(skills).map(([category, items]) =>
 		`<div class="skill-row"><span class="label">${category}</span><span>${items.join('  ·  ')}</span></div>`
 	).join('')}</div>`;
