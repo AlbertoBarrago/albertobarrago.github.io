@@ -115,6 +115,49 @@ function renderSitemap(articles) {
 	return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`;
 }
 
+/** @param {string} value @returns {string} */
+function escapeXML(value) {
+	return value
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&apos;');
+}
+
+/** @param {string} isoDate @returns {string} */
+function toRFC822(isoDate) {
+	const date = new Date(`${isoDate}T00:00:00Z`);
+	return date.toUTCString();
+}
+
+/** @param {{ slug: string, title: string, date: string, html: string }[]} articles @returns {string} */
+function renderRSS(articles) {
+	const items = articles.map((article) => {
+		const url = `${SITE_URL}/articles/${article.slug}/`;
+		const description = excerpt(article.html);
+		return `  <item>
+    <title>${escapeXML(article.title)}</title>
+    <link>${url}</link>
+    <guid isPermaLink="true">${url}</guid>
+    <pubDate>${toRFC822(article.date)}</pubDate>
+    <description>${escapeXML(description)}</description>
+  </item>`;
+	});
+	return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Alberto Barrago | Articles</title>
+    <link>${SITE_URL}/</link>
+    <description>Technical articles and notes by Alberto Barrago.</description>
+    <language>en</language>
+    <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml" />
+${items.join('\n')}
+  </channel>
+</rss>
+`;
+}
+
 function main() {
 	const articles = loadArticles();
 	if (articles.length === 0) return;
@@ -128,6 +171,7 @@ function main() {
 	}
 
 	writeFileSync(join(BUILD_DIR, 'sitemap.xml'), renderSitemap(articles));
+	writeFileSync(join(BUILD_DIR, 'feed.xml'), renderRSS(articles));
 
 	console.log(`Prerendered ${articles.length} article page(s).`);
 }
