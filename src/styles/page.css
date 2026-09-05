@@ -385,6 +385,16 @@ button {
 	gap: 0.45rem;
 }
 
+.skills-quote {
+	margin: 0 0 1.25rem;
+	padding: 0.75rem 1rem;
+	border-left: 3px solid var(--purple);
+	background: rgba(17, 24, 32, 0.6);
+	border-radius: 4px;
+	color: var(--muted);
+	font-style: italic;
+}
+
 .skill-row {
 	display: grid;
 	grid-template-columns: 13ch minmax(0, 1fr);
