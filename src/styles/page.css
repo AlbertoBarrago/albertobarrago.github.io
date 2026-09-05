@@ -300,6 +300,10 @@ button {
 	text-transform: uppercase;
 }
 
+.output-title-spaced {
+	margin-top: 1.5rem;
+}
+
 .output-title::before {
 	content: "// ";
 	color: var(--muted);

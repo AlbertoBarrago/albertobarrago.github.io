@@ -190,7 +190,7 @@ function projectsHTML() {
 	<div><a class="terminal-link project-name" href="${project.url}" target="_blank" rel="noopener noreferrer">${project.name} ↗</a><span class="project-language">${project.language}</span></div>
 	<p>${project.description}</p>
 </article>`).join('')}</div>
-<div class="output-title">Homebrew formulae</div>
+<div class="output-title output-title-spaced">Homebrew formulae</div>
 <p class="prose">Command-line tools I've packaged and maintain via Homebrew taps.</p>
 <div class="project-list">${brewFormulas.map((formula) => `<article class="project-item">
 	<div><a class="terminal-link project-name" href="${formula.url}" target="_blank" rel="noopener noreferrer">${formula.name} ↗</a><span class="project-language">${formula.tap}</span></div>
