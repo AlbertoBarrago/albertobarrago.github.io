@@ -74,6 +74,12 @@ const experimentalProjects = [
 /** @type {{ name: string, description: string, url: string, language: string }[]} */
 const openSource = [
 	{
+		name: "Telemaco",
+		description: "A headless browser engine in Rust: real JavaScript, real DOM, native layout and paint, speaking the Chrome DevTools Protocol. No Chromium required.",
+		url: "https://github.com/AlbertoBarrago/telemaco",
+		language: "Rust"
+	},
+	{
 		name: "RSS-Reader",
 		description: "A lightweight, native macOS RSS Reader app built with Swift. Lives in your menu bar: clean, minimal, no bloat.",
 		url: "https://github.com/AlbertoBarrago/RSS-Reader",
