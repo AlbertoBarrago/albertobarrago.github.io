@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Alberto Barrago | Articles</title>
+    <link>https://albz.it/</link>
+    <description>Technical articles and notes by Alberto Barrago.</description>
+    <language>en</language>
+    <atom:link href="https://albz.it/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>Telemaco: a headless browser engine in Rust, without the Chromium</title>
+    <link>https://albz.it/articles/telemaco/</link>
+    <guid isPermaLink="true">https://albz.it/articles/telemaco/</guid>
+    <pubDate>Fri, 04 Sep 2026 00:00:00 GMT</pubDate>
+    <description>Telemaco is a headless browser engine I&apos;ve been building in Rust. It runs real JavaScript through V8, keeps a real DOM tree, owns its own layout and paint…</description>
+  </item>
+  <item>
+    <title>Iron Doctrine: building deterministic online multiplayer with a shared ECS engine</title>
+    <link>https://albz.it/articles/iron-doctrine/</link>
+    <guid isPermaLink="true">https://albz.it/articles/iron-doctrine/</guid>
+    <pubDate>Mon, 31 Aug 2026 00:00:00 GMT</pubDate>
+    <description>Iron Doctrine is a real-time strategy game I&apos;m building in a pnpm monorepo, with a deterministic ECS engine at its core and, as of this week, a working…</description>
+  </item>
+  <item>
+    <title>Otelma: building a local LLM runtime from scratch</title>
+    <link>https://albz.it/articles/otelma/</link>
+    <guid isPermaLink="true">https://albz.it/articles/otelma/</guid>
+    <pubDate>Mon, 31 Aug 2026 00:00:00 GMT</pubDate>
+    <description>Otelma is a local LLM inference runtime I&apos;m building in Go. The idea is deliberately smaller than Ollama: understand what actually sits between a GGUF…</description>
+  </item>
+  <item>
+    <title>I Built a CLI to Answer One Question: What Will This Change Break?</title>
+    <link>https://albz.it/articles/serval-cli/</link>
+    <guid isPermaLink="true">https://albz.it/articles/serval-cli/</guid>
+    <pubDate>Thu, 27 Aug 2026 00:00:00 GMT</pubDate>
+    <description>We&apos;ve all been there. You open a repository, change a file that looks completely harmless, run the tests, and open a pull request. Then someone comments:…</description>
+  </item>
+  <item>
+    <title>wir: What Is Running, a Port and Process Inspector Written in C</title>
+    <link>https://albz.it/articles/wir-what-is-running/</link>
+    <guid isPermaLink="true">https://albz.it/articles/wir-what-is-running/</guid>
+    <pubDate>Tue, 30 Dec 2025 00:00:00 GMT</pubDate>
+    <description>I recently released wir (What Is Running), a command-line tool written in C to inspect what&apos;s running on specific ports and get detailed process…</description>
+  </item>
+  </channel>
+</rss>
