@@ -136,8 +136,8 @@ function helpHTML() {
 		['about', 'Short profile and current role'],
 		['skills', 'Technical toolbox by area'],
 		['experience', 'Professional timeline'],
-		['projects', 'Selected open-source work'],
-		['brew', 'Homebrew formulae I maintain'],
+		['projects', 'Selected open-source work and Homebrew formulae'],
+		['brew', 'Alias for projects'],
 		['lab', 'Experimental work in progress'],
 		['articles', 'Technical articles and notes'],
 		['rss', 'Subscribe to the articles feed'],
@@ -189,11 +189,8 @@ function projectsHTML() {
 <div class="project-list">${openSource.map((project) => `<article class="project-item">
 	<div><a class="terminal-link project-name" href="${project.url}" target="_blank" rel="noopener noreferrer">${project.name} ↗</a><span class="project-language">${project.language}</span></div>
 	<p>${project.description}</p>
-</article>`).join('')}</div>`;
-}
-
-function brewHTML() {
-	return `<div class="output-title">Homebrew formulae</div>
+</article>`).join('')}</div>
+<div class="output-title">Homebrew formulae</div>
 <p class="prose">Command-line tools I've packaged and maintain via Homebrew taps.</p>
 <div class="project-list">${brewFormulas.map((formula) => `<article class="project-item">
 	<div><a class="terminal-link project-name" href="${formula.url}" target="_blank" rel="noopener noreferrer">${formula.name} ↗</a><span class="project-language">${formula.tap}</span></div>
@@ -611,7 +608,7 @@ function executeCommand(rawCommand) {
 
 	const renderers = /** @type {Record<string, () => string>} */ ({
 		help: helpHTML, skills: skillsHTML, experience: experienceHTML,
-		projects: projectsHTML, brew: brewHTML, lab: labHTML, articles: articlesHTML, utils: utilsHTML, contact: contactHTML, games: gamesHTML,
+		projects: projectsHTML, brew: projectsHTML, lab: labHTML, articles: articlesHTML, utils: utilsHTML, contact: contactHTML, games: gamesHTML,
 		ls: lsHTML, tree: treeHTML, neofetch: neofetchHTML,
 	});
 	if (renderers[command]) {
