@@ -600,7 +600,7 @@ Type <button class="inline-command command" data-command="help">help</button> to
 	<div><a class="terminal-link project-name" href="${e.url}" target="_blank" rel="noopener noreferrer">${e.name} ↗</a><span class="project-language">${e.language}</span></div>
 	<p>${e.description}</p>
 </article>`).join("")}</div>
-<div class="output-title">Homebrew formulae</div>
+<div class="output-title output-title-spaced">Homebrew formulae</div>
 <p class="prose">Command-line tools I've packaged and maintain via Homebrew taps.</p>
 <div class="project-list">${lt.map(e=>`<article class="project-item">
 	<div><a class="terminal-link project-name" href="${e.url}" target="_blank" rel="noopener noreferrer">${e.name} ↗</a><span class="project-language">${e.tap}</span></div>
