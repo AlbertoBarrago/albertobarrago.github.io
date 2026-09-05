@@ -590,6 +590,7 @@ Type <button class="inline-command command" data-command="help">help</button> to
 <span class="label">status</span><span class="green">Building useful things</span></div>
 <p class="prose">${nt}</p>
 <div class="output-links"><button class="inline-command command" data-command="projects">view projects</button><button class="inline-command command" data-command="contact">contact me</button><button class="inline-command command" data-command="cv">download cv</button></div>`}function zt(){return`<div class="output-title">Technical toolbox</div>
+<blockquote class="skills-quote">Started with a single tool, today I find myself conducting an entire orchestra.</blockquote>
 <div class="skills-list">${Object.entries(ot).map(([e,n])=>`<div class="skill-row"><span class="label">${e}</span><span>${n.join("  ·  ")}</span></div>`).join("")}</div>`}function Yt(){return`<div class="output-title">Experience</div>
 <div class="timeline">${it.map(e=>`<article class="timeline-item">
 	<span class="timeline-period">${e.period}</span>
