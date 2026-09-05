@@ -22,7 +22,7 @@ import { articles, getArticleHTML } from './articles.js';
 const PROMPT = 'alberto@portfolio:~';
 const COMMAND_NAMES = Object.freeze([
 	'help', 'about', 'skills', 'experience', 'projects', 'brew', 'lab', 'articles', 'utils', 'contact', 'cv',
-	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear',
+	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear', 'rss',
 ]);
 const MOBILE_COMMANDS = Object.freeze([
 	['help', 'help'], ['about', 'about'], ['skills', 'skills'],
@@ -140,6 +140,7 @@ function helpHTML() {
 		['brew', 'Homebrew formulae I maintain'],
 		['lab', 'Experimental work in progress'],
 		['articles', 'Technical articles and notes'],
+		['rss', 'Subscribe to the articles feed'],
 		['utils', 'Useful free resources and links'],
 		['contact', 'Ways to get in touch'],
 		['cv', 'Download my resume'],
@@ -629,6 +630,12 @@ function executeCommand(rawCommand) {
 	}
 	if (command === 'date') {
 		appendOutput(new Intl.DateTimeFormat('it-IT', { dateStyle: 'full', timeStyle: 'long' }).format(new Date()));
+		return;
+	}
+	if (command === 'rss') {
+		appendOutput(`<div class="output-title">RSS feed</div>
+<p class="prose">Subscribe to my articles feed in any RSS reader:</p>
+<div class="key-value"><span class="label">url</span><a class="terminal-link" href="/feed.xml" target="_blank" rel="noopener">https://albz.it/feed.xml</a></div>`);
 		return;
 	}
 	if (command === 'play') {
