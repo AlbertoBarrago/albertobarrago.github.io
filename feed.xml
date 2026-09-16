@@ -7,6 +7,13 @@
     <language>en</language>
     <atom:link href="https://albz.it/feed.xml" rel="self" type="application/rss+xml" />
   <item>
+    <title>GitLab Alert: the GitLab work that involves you, in your menu bar</title>
+    <link>https://albz.it/articles/gitlab-alert/</link>
+    <guid isPermaLink="true">https://albz.it/articles/gitlab-alert/</guid>
+    <pubDate>Wed, 16 Sep 2026 00:00:00 GMT</pubDate>
+    <description>GitLab Alert is a macOS menu bar app that keeps the GitLab work needing your attention out of a browser tab and in the corner of your screen: merge…</description>
+  </item>
+  <item>
     <title>Telemaco: a headless browser engine in Rust, without the Chromium</title>
     <link>https://albz.it/articles/telemaco/</link>
     <guid isPermaLink="true">https://albz.it/articles/telemaco/</guid>
