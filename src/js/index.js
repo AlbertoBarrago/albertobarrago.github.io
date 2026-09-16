@@ -80,6 +80,12 @@ const openSource = [
 		language: "Rust"
 	},
 	{
+		name: "GitLab Alert",
+		description: "A native macOS menu bar companion for GitLab: merge requests, issues, failed pipelines and background notifications. Built with SwiftPM, no Xcode project.",
+		url: "https://github.com/AlbertoBarrago/gitlab-alert",
+		language: "Swift"
+	},
+	{
 		name: "RSS-Reader",
 		description: "A lightweight, native macOS RSS Reader app built with Swift. Lives in your menu bar: clean, minimal, no bloat.",
 		url: "https://github.com/AlbertoBarrago/RSS-Reader",
