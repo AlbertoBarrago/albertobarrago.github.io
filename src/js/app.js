@@ -21,12 +21,12 @@ import { articles, getArticleHTML } from './articles.js';
 
 const PROMPT = 'alberto@portfolio:~';
 const COMMAND_NAMES = Object.freeze([
-	'help', 'about', 'skills', 'experience', 'projects', 'brew', 'lab', 'articles', 'utils', 'contact', 'cv',
+	'help', 'about', 'skills', 'experience', 'projects', 'lab', 'articles', 'utils', 'contact', 'cv',
 	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear', 'rss',
 ]);
 const MOBILE_COMMANDS = Object.freeze([
 	['help', 'help'], ['about', 'about'], ['skills', 'skills'],
-	['projects', 'projects'], ['brew', 'brew'], ['lab', 'lab'], ['articles', 'articles'], ['utils', 'utils'], ['games', 'games'], ['contact', 'contact'],
+	['projects', 'projects'], ['lab', 'lab'], ['articles', 'articles'], ['utils', 'utils'], ['games', 'games'], ['contact', 'contact'],
 ]);
 
 /** @type {Readonly<Record<GameName, string>>} */
@@ -137,7 +137,6 @@ function helpHTML() {
 		['skills', 'Technical toolbox by area'],
 		['experience', 'Professional timeline'],
 		['projects', 'Selected open-source work and Homebrew formulae'],
-		['brew', 'Alias for projects'],
 		['lab', 'Experimental work in progress'],
 		['articles', 'Technical articles and notes'],
 		['rss', 'Subscribe to the articles feed'],
@@ -474,7 +473,6 @@ function treeHTML() {
 ├── <button class="inline-command directory" data-command="skills">skills/</button>
 ├── <button class="inline-command file" data-command="experience">experience.log</button>
 ├── <button class="inline-command directory" data-command="projects">projects/</button>
-├── <button class="inline-command directory" data-command="brew">brew/</button>
 ├── <button class="inline-command directory" data-command="lab">lab/</button>
 ├── <button class="inline-command directory" data-command="articles">articles/</button>
 ├── <button class="inline-command directory" data-command="utils">utils/</button>
@@ -498,7 +496,7 @@ function neofetchHTML() {
 }
 
 function lsHTML() {
-	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="brew">brew/</button><button class="inline-command directory" data-command="lab">lab/</button><button class="inline-command directory" data-command="articles">articles/</button><button class="inline-command directory" data-command="utils">utils/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
+	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="lab">lab/</button><button class="inline-command directory" data-command="articles">articles/</button><button class="inline-command directory" data-command="utils">utils/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
 }
 
 /** @param {readonly string[]} art @param {number} intensity @returns {string} */
@@ -610,7 +608,7 @@ function executeCommand(rawCommand) {
 
 	const renderers = /** @type {Record<string, () => string>} */ ({
 		help: helpHTML, skills: skillsHTML, experience: experienceHTML,
-		projects: projectsHTML, brew: projectsHTML, lab: labHTML, articles: articlesHTML, utils: utilsHTML, contact: contactHTML, games: gamesHTML,
+		projects: projectsHTML, lab: labHTML, articles: articlesHTML, utils: utilsHTML, contact: contactHTML, games: gamesHTML,
 		ls: lsHTML, tree: treeHTML, neofetch: neofetchHTML,
 	});
 	if (renderers[command]) {
