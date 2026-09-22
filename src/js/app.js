@@ -547,7 +547,8 @@ function detectTerminal() {
  * @returns {string}
  */
 function neofetchHTML() {
-	const host = 'alberto@albz.it';
+	// Ultima Online handle: character, shard. Not an address, on purpose.
+	const host = 'Zoser@Sosaria';
 	/** @type {[string, string][]} */
 	const fields = [
 		['OS', `albz-sh ${version}`],
@@ -556,6 +557,8 @@ function neofetchHTML() {
 		['Uptime', formatUptime(Date.now() - BOOT_TIME)],
 		['Packages', '0 (runtime)'],
 		['Shell', 'albz-sh'],
+		['Guild', 'AdE'],
+		['Alignment', 'Player Killer'],
 		['Resolution', `${window.screen.width}x${window.screen.height}`],
 		['Terminal', detectTerminal()],
 		['Commands', String(COMMAND_NAMES.length)],
