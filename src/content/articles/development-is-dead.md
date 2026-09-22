@@ -4,7 +4,7 @@ date: 2026-09-22
 tags: opinion, ai, career, italy, craft
 ---
 
-I started in 2015, freelance. Eleven years. Long enough to have opinions, short enough that whoever started in 1995 gets to laugh at mine.
+I started in 2011, freelance until 2014, and I never left. Fifteen years. Long enough to have opinions, short enough that whoever started in 1995 gets to laugh at mine.
 
 I remember Dreamweaver, back when nobody was embarrassed about it yet. I remember Eclipse eating a laptop alive just to open a project. I remember Sublime Text landing like someone had finally understood that a text editor is a text editor. I remember the pattern libraries we all copied from and nobody credited. I remember CodePen, which [Chris Coyier co-founded in 2012 with Alex Vazquez and Tim Sabat](https://en.wikipedia.org/wiki/CodePen), and [CSS-Tricks](https://chriscoyier.net/bio/), which he ran from 2007 until DigitalOcean bought it in 2022. And I remember him on stage, around 2016, walking through his own workflow and the tools he actually used, beer in hand, the whole thing closer to a guy explaining something to you in a bar than to a keynote performed at you. That was normal then. The web lost it and never got it back.
 
