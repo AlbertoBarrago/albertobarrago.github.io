@@ -23,6 +23,10 @@ const articlesRenderPlugin = {
 
 export default defineConfig({
 	publicDir: 'static',
+	// Exposed to the client as the `Build` field of the neofetch command.
+	define: {
+		__BUILD_DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)),
+	},
 	plugins: [articlesRenderPlugin],
 	build: {
 		outDir: 'build',

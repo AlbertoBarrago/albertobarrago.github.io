@@ -20,6 +20,8 @@ import { articles, getArticleHTML } from './articles.js';
 /** @typedef {{ label: string, key: string }} GameControl */
 
 const PROMPT = 'alberto@portfolio:~';
+/** Page load timestamp, used as the shell's uptime origin. */
+const BOOT_TIME = Date.now();
 const COMMAND_NAMES = Object.freeze([
 	'help', 'about', 'skills', 'experience', 'projects', 'lab', 'articles', 'utils', 'contact', 'cv',
 	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear', 'rss',
@@ -481,17 +483,92 @@ function treeHTML() {
 └── <button class="inline-command directory" data-command="games">games/</button></div>`;
 }
 
+/**
+ * ALBZ monogram in block art. Uses only full/empty cells so it renders
+ * identically in any monospace font: the previous box-drawing version broke
+ * because `╭─╮│` and letters have different advance widths in the site font.
+ */
+const NEOFETCH_MARK = [
+	' █████  ██     ',
+	'██   ██ ██     ',
+	'███████ ██     ',
+	'██   ██ ██     ',
+	'██   ██ ███████',
+	'               ',
+	'██████  ███████',
+	'██   ██     ██ ',
+	'██████     ██  ',
+	'██   ██   ██   ',
+	'██████  ███████',
+].join('\n');
+
+/**
+ * Formats a duration the way neofetch does: largest two units, plural-aware.
+ * @param {number} milliseconds
+ * @returns {string}
+ */
+function formatUptime(milliseconds) {
+	const totalSeconds = Math.floor(milliseconds / 1000);
+	const units = [
+		['day', Math.floor(totalSeconds / 86400)],
+		['hour', Math.floor(totalSeconds / 3600) % 24],
+		['min', Math.floor(totalSeconds / 60) % 60],
+		['sec', totalSeconds % 60],
+	].filter(([, value]) => value > 0);
+	const shown = (units.length ? units : [['sec', 0]]).slice(0, 2);
+	return shown.map(([unit, value]) => `${value} ${unit}${value === 1 ? '' : 's'}`).join(', ');
+}
+
+/**
+ * Best-effort browser name and major version from the user agent, used as the
+ * "Terminal" field. Unknown agents degrade to the generic label rather than
+ * guessing.
+ * @returns {string}
+ */
+function detectTerminal() {
+	const agent = navigator.userAgent;
+	const patterns = [
+		[/Firefox\/(\d+)/, 'Firefox'],
+		[/Edg\/(\d+)/, 'Edge'],
+		[/OPR\/(\d+)/, 'Opera'],
+		[/Chrome\/(\d+)/, 'Chrome'],
+		[/Version\/(\d+).*Safari/, 'Safari'],
+	];
+	for (const [pattern, label] of patterns) {
+		const match = agent.match(pattern);
+		if (match) return `${label} ${match[1]}`;
+	}
+	return 'Web browser';
+}
+
+/**
+ * Renders the system profile. Every field is live state of this shell, not a
+ * copy of the bio: `about` and `skills` already cover role, location and stack.
+ * @returns {string}
+ */
 function neofetchHTML() {
-	return `<div class="neofetch"><div class="neofetch-mark" aria-hidden="true">╭─────╮
-│ A B │
-│ L Z │
-╰─────╯</div><div><span class="accent">${name}</span>
-<span class="muted">─${'─'.repeat(name.length - 1)}</span>
-<span><span class="label">Role:</span> ${role}</span>
-<span><span class="label">Base:</span> ${location}</span>
-<span><span class="label">Stack:</span> JavaScript, Swift, Java, Python</span>
-<span><span class="label">Shell:</span> albz-sh ${version}</span>
-<span><span class="label">Runtime:</span> Vanilla JS, zero dependencies</span>
+	const host = 'alberto@albz.it';
+	/** @type {[string, string][]} */
+	const fields = [
+		['OS', `albz-sh ${version}`],
+		['Host', 'GitHub Pages'],
+		['Kernel', 'Vanilla JS (ES2022)'],
+		['Uptime', formatUptime(Date.now() - BOOT_TIME)],
+		['Packages', '0 (runtime)'],
+		['Shell', 'albz-sh'],
+		['Resolution', `${window.screen.width}x${window.screen.height}`],
+		['Terminal', detectTerminal()],
+		['Commands', String(COMMAND_NAMES.length)],
+		['Articles', String(articles.length)],
+		['Games', String(Object.keys(GAME_INIT).length)],
+		['Build', __BUILD_DATE__],
+	];
+
+	return `<div class="neofetch"><div class="neofetch-mark" aria-hidden="true">${NEOFETCH_MARK}</div><div><span class="accent">${host}</span>
+<span class="muted">${'─'.repeat(host.length)}</span>
+${fields.map(([label, value]) =>
+		`<span><span class="label">${label}:</span> ${escapeHTML(value)}</span>`
+	).join('\n')}
 <span class="palette"><i></i><i></i><i></i><i></i><i></i><i></i></span></div></div>`;
 }
 

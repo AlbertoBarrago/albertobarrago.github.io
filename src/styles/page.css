@@ -547,11 +547,12 @@ button {
 }
 
 .neofetch-mark {
+	flex-shrink: 0;
 	padding-top: 0.35rem;
 	color: var(--cyan);
-	font-size: 1.3rem;
-	font-weight: 700;
-	line-height: 1.25;
+	/* Block art: line-height 1 keeps the filled cells touching vertically. */
+	font-size: 0.72rem;
+	line-height: 1;
 	text-shadow: 0 0 16px rgba(94, 234, 212, 0.25);
 }
 
@@ -988,12 +989,15 @@ button {
 		grid-template-columns: 1fr;
 	}
 
+	/* The 12-field list has no room beside the mark at this width. */
 	.neofetch {
-		gap: 1rem;
+		flex-direction: column;
+		gap: 0.75rem;
 	}
 
 	.neofetch-mark {
-		font-size: 1rem;
+		padding-top: 0;
+		font-size: 0.6rem;
 	}
 }
 
