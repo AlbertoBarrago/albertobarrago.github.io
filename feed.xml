@@ -7,6 +7,13 @@
     <language>en</language>
     <atom:link href="https://albz.it/feed.xml" rel="self" type="application/rss+xml" />
   <item>
+    <title>My first (and last?) forty years</title>
+    <link>https://albz.it/articles/my-first-and-last-forty-years/</link>
+    <guid isPermaLink="true">https://albz.it/articles/my-first-and-last-forty-years/</guid>
+    <pubDate>Tue, 29 Sep 2026 00:00:00 GMT</pubDate>
+    <description>Tomorrow I turn forty. Having reached this point in my life, after loving code enough to lose eyesight, relationships, and sanity over it… I find myself…</description>
+  </item>
+  <item>
     <title>Development Is Dead</title>
     <link>https://albz.it/articles/development-is-dead/</link>
     <guid isPermaLink="true">https://albz.it/articles/development-is-dead/</guid>
