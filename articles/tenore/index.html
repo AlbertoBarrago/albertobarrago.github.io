@@ -12,7 +12,7 @@
 	<meta name="theme-color" content="#0b0f14" />
 
 	<!-- SEO Meta Tags -->
-	<meta name="description" content="Today I released Tenore , a CLI that takes a shared configuration for AI coding agents and compiles it into their native files. The problem is ordinary…" />
+	<meta name="description" content="I built Tenore , a CLI that takes a shared configuration for AI coding agents and compiles it into their native files. The problem is ordinary…" />
 	<meta name="keywords"
 		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
 	<meta name="author" content="Alberto Barrago" />
@@ -21,13 +21,13 @@
 	<meta property="og:type" content="article" />
 	<meta property="og:url" content="https://albz.it/articles/tenore/" />
 	<meta property="og:title" content="Tenore: Stop Maintaining the Same Agent Configuration Three Times | Alberto Barrago" />
-	<meta property="og:description" content="Today I released Tenore , a CLI that takes a shared configuration for AI coding agents and compiles it into their native files. The problem is ordinary…" />
+	<meta property="og:description" content="I built Tenore , a CLI that takes a shared configuration for AI coding agents and compiles it into their native files. The problem is ordinary…" />
 	<meta property="og:image" content="https://github.com/albertobarrago.png" />
 
 	<!-- Twitter -->
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:title" content="Tenore: Stop Maintaining the Same Agent Configuration Three Times | Alberto Barrago" />
-	<meta name="twitter:description" content="Today I released Tenore , a CLI that takes a shared configuration for AI coding agents and compiles it into their native files. The problem is ordinary…" />
+	<meta name="twitter:description" content="I built Tenore , a CLI that takes a shared configuration for AI coding agents and compiles it into their native files. The problem is ordinary…" />
 
 	<!-- Canonical URL -->
 	<link rel="canonical" href="https://albz.it/articles/tenore/" />
@@ -51,7 +51,7 @@
 		}
 		</script>
 
-  <script type="module" crossorigin src="/assets/index-CWl_35ob.js"></script>
+  <script type="module" crossorigin src="/assets/index-CCm_TJzw.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-Dgn5TOTS.css">
 	<script type="application/ld+json">
 		{"@context":"https://schema.org","@type":"Article","headline":"Tenore: Stop Maintaining the Same Agent Configuration Three Times","datePublished":"2026-10-01","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/articles/tenore/","mainEntityOfPage":"https://albz.it/articles/tenore/"}
@@ -59,7 +59,7 @@
 </head>
 
 <body>
-	<div id="app"><noscript><article><h1>Tenore: Stop Maintaining the Same Agent Configuration Three Times</h1><p>2026-10-01</p><p>Today I released <strong>Tenore</strong>, a CLI that takes a shared configuration for AI coding agents and compiles it into their native files.</p>
+	<div id="app"><noscript><article><h1>Tenore: Stop Maintaining the Same Agent Configuration Three Times</h1><p>2026-10-01</p><p>I built <strong>Tenore</strong>, a CLI that takes a shared configuration for AI coding agents and compiles it into their native files.</p>
 <p>The problem is ordinary maintenance. Claude Code, Codex CLI and Antigravity have their own places for instructions, permissions and MCP servers. Once you use more than one, the same project rules start appearing in several files.</p>
 <p>Change the test command, add a server, tighten a permission: every copy needs attention. Eventually, one gets missed. Switching agents then means checking whether the configuration still says what you intended.</p>
 <p>Tenore gives that configuration a source of truth: a directory called <code>.agents/</code>.</p>
@@ -76,11 +76,14 @@
 <p>Tenore parses those sources, merges their scopes, and passes the result to each target adapter. The adapters produce native configuration, such as <code>CLAUDE.md</code> or <code>.codex/config.toml</code>.</p>
 <p>That makes the generated files reviewable build output. The shared rules have an explicit home, and each translation has a place in the implementation.</p>
 <h2>A small example</h2>
-<p>The npm package is called <code>tenore-cli</code>; the executable is <code>tenore</code>. It requires Node.js 20 or later.</p>
+<p>The npm package is called <code>tenore-cli</code>; the executable is <code>tenore</code>. It requires Node.js 20.12 or later.</p>
 <pre><code class="language-sh">pnpm add -g tenore-cli
 tenore init
 </code></pre>
-<p>After editing <code>.agents/AGENTS.md</code>, a minimal <code>.agents/policy.md</code> might look like this:</p>
+<p>In a terminal, <code>tenore init</code> now opens a setup wizard. It detects existing agent configuration and lets you choose what to import and which agents to generate files for. It also offers to update <code>.gitignore</code> and register MCP servers for shared memory and web access.</p>
+<p>The wizard previews the sync before asking for confirmation. Nothing is written until you confirm. At the end, it prints the equivalent commands so the setup can be repeated in a script.</p>
+<p>For an unattended setup, <code>tenore init --yes</code> accepts the wizard&#39;s defaults, even without a terminal. Other flags, or a non-interactive shell without <code>--yes</code>, use the plain command flow. For example, <code>tenore init --targets claude,codex</code> sets the agents to generate files for.</p>
+<p>The generated sources remain editable. After updating <code>.agents/AGENTS.md</code>, a minimal <code>.agents/policy.md</code> might look like this:</p>
 <pre><code class="language-yaml">---
 targets: [claude, codex]
 permissions:
@@ -92,7 +95,7 @@ permissions:
 ---
 </code></pre>
 <p>Those are command patterns: <code>pnpm test*</code> also matches commands with that prefix, so the pattern should reflect what you actually want to permit.</p>
-<p>Before writing anything, inspect the generated changes:</p>
+<p>When changing the sources after setup, inspect the generated changes before applying them:</p>
 <pre><code class="language-sh">tenore diff
 tenore sync
 </code></pre>
@@ -106,9 +109,20 @@ tenore sync
 <h2>Shared rules, local context</h2>
 <p>Configuration has three scopes: global, repository and local. They merge in that order.</p>
 <p>Global sources live in <code>~/.agents/</code>, repository sources in <code>.agents/</code>, and machine-specific sources in <code>.agents/local/</code>. Initialization adds the local scope to Git&#39;s ignore rules. Global configuration is included explicitly with <code>--global</code>.</p>
+<p><code>tenore init --global</code> brings the same wizard to your personal configuration. It can import existing global agent settings into <code>~/.agents/</code> and shows the full diff before writing changes.</p>
 <p>The merge rules distinguish between kinds of data. Instructions and memory are combined in scope order. Lists are deduplicated. Scalar settings generally take the value from the narrowest scope.</p>
 <p>Permissions need stricter handling: deny takes precedence over ask, which takes precedence over allow. A repository-level allow cannot undo a global deny. Rules discarded during that merge produce warnings.</p>
 <p>This lets a project add context while preserving restrictions established in a broader scope.</p>
+<h2>Shared memory and web access</h2>
+<p>The memory files can now be read and updated through Tenore&#39;s own MCP server. Register it once in <code>.agents/policy.md</code>:</p>
+<pre><code class="language-yaml">mcp:
+  tenore-memory:
+    command: npx
+    args: [&quot;-y&quot;, &quot;tenore-cli&quot;, &quot;mcp&quot;]
+</code></pre>
+<p>After <code>tenore sync</code>, each selected agent gets the server configuration. It exposes tools to list, read, search and write memory topics, keeping persistent notes in the same shared directory. Writes are confined to the memory directories. When an agent creates a new topic, run <code>tenore sync</code> again to include it in the generated files.</p>
+<p>Web access can follow a similar approach. Tenore supports declaring a web MCP server once and translating its configuration for each agent. The documented example uses <a href="https://github.com/AlbertoBarrago/telemaco">Telemaco</a>, but another web or browser MCP server can be used.</p>
+<p>One distinction matters here: <code>network: none</code> disables the agents&#39; native web access, while MCP servers remain separate. Access through those servers is governed by explicit MCP permission rules. That makes it possible to use a shared web server with confirmation required for its tools.</p>
 <h2>Generated files still need protection</h2>
 <p>People edit files directly. Tools do too. A generator needs to account for that before writing over an existing setup.</p>
 <p>Tenore records hashes of generated artifacts in <code>.agents/.lock</code>. If a generated file changes after a sync, the next sync detects drift and skips it. Existing files that Tenore does not own are treated as conflicts until imported.</p>
@@ -116,6 +130,7 @@ tenore sync
 <pre><code class="language-sh">tenore check
 </code></pre>
 <p>It exits unsuccessfully on invalid sources, drift, conflicts or pending generated changes. That gives configuration consistency a check alongside the rest of the repository&#39;s validation.</p>
+<p>If you stop targeting an agent, Tenore reports its old generated files as orphans and keeps them by default. <code>tenore sync --prune</code> removes those files only if they have not been modified.</p>
 <h2>Where portability gets difficult</h2>
 <p>The current adapters cover Claude Code, Codex CLI and Antigravity, but their permission models differ. A common source format cannot make those differences disappear.</p>
 <p>Tenore&#39;s documented policy is to emit a more restrictive mapping with a warning when an exact translation is unavailable. Some capabilities need explicit handling: Codex filesystem mappings require opt-in permission profiles, while Antigravity permissions are configured at user scope.</p>
