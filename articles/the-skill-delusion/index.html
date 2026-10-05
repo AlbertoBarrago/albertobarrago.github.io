@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>The Skill Delusion: Why the Blank Slate Beats Packaged AI Prompts | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="A comforting illusion has taken over AI tooling during the last eighteen months: the belief that large language models need &quot;skills.&quot; You see them…" />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/articles/the-skill-delusion/" />
+	<meta property="og:title" content="The Skill Delusion: Why the Blank Slate Beats Packaged AI Prompts | Alberto Barrago" />
+	<meta property="og:description" content="A comforting illusion has taken over AI tooling during the last eighteen months: the belief that large language models need &quot;skills.&quot; You see them…" />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="The Skill Delusion: Why the Blank Slate Beats Packaged AI Prompts | Alberto Barrago" />
+	<meta name="twitter:description" content="A comforting illusion has taken over AI tooling during the last eighteen months: the belief that large language models need &quot;skills.&quot; You see them…" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/articles/the-skill-delusion/" />
+
+	<!-- RSS feed -->
+	<link rel="alternate" type="application/rss+xml" title="Alberto Barrago | Articles" href="/feed.xml" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-BG5vqJcS.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-whxqmysd.css">
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"Article","headline":"The Skill Delusion: Why the Blank Slate Beats Packaged AI Prompts","datePublished":"2026-10-05","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/articles/the-skill-delusion/","mainEntityOfPage":"https://albz.it/articles/the-skill-delusion/"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article><h1>The Skill Delusion: Why the Blank Slate Beats Packaged AI Prompts</h1><p>2026-10-05 · human-written, AI-reviewed</p><p>A comforting illusion has taken over AI tooling during the last eighteen months: the belief that large language models need &quot;skills.&quot;</p>
+<p>You see them everywhere. Skills, personas, agent packages, specialized prompt directories. They are sold as secret sauces or shared in GitHub repositories with thousands of stars: &quot;the ultimate senior React architect,&quot; &quot;the cloud migration persona,&quot; &quot;the production Go refactoring toolkit.&quot; People download folders of markdown files, drop them into their agent config, and convince themselves they just upgraded their model with twenty years of domain expertise.</p>
+<p>It is snake oil. In fact, it is worse than snake oil. In the best case, packaged skills are dead weight sitting in your context window. In the worst case, they actively degrade reasoning, pollute the attention mechanism, and ruin your output.</p>
+<p>Skills do nothing. The blank canvas beats them every single time.</p>
+<h2>The semantic telephone game</h2>
+<p>When you inject a third-party skill into your agent loop, you are not giving the model more knowledge. You are surrendering semantic fidelity. You are letting an anonymous stranger decide how the model should interpret your intent.</p>
+<p>Consider what happens when you ask a frontier model to do something concrete:</p>
+<blockquote>
+<p>&quot;Make this state machine deterministic and remove all implicit mutations.&quot;</p>
+</blockquote>
+<p>With a clean context, the model allocates its full attention budget to your codebase and your exact constraint. Every token of reasoning goes toward analyzing your data structures, your state transitions, and your invariants.</p>
+<p>Now imagine running that same instruction through a typical &quot;expert architecture skill.&quot; Before the model even touches your code, fifteen hundred tokens of canned dogma get shoved into the context: generic defensive programming rules, mandatory boilerplate conventions, advice on keeping functions under twenty lines, abstract enterprise patterns, and three separate instructions on how to structure explanations.</p>
+<p>Now the model is no longer solving your problem. It is playing a telephone game.</p>
+<p>Instead of writing deterministic code, it is busy balancing your prompt against someone else&#39;s pet peeves. It introduces unnecessary wrapper classes because the skill told it to be modular. It splits clean logic across four files because the skill prescribed separation of concerns. It hallucinates edge cases that do not exist in your domain because the skill told it to be cautious.</p>
+<p>You did not get a better result. You got someone else&#39;s opinions getting in the way of your machine.</p>
+<h2>The harness versus the skill</h2>
+<p>The people selling and collecting skills are confusing two completely different things: the harness and the prompt.</p>
+<p>An agent harness is real. It is the execution loop:</p>
+<ul>
+<li>It gives the model access to the filesystem.</li>
+<li>It provides a shell where commands can execute.</li>
+<li>It runs the compiler, the test suite, and the linter.</li>
+<li>It captures stderr and returns the exit code.</li>
+</ul>
+<p>The harness does not tell the model what to think. It provides a feedback loop against reality. When a model writes broken code inside a good harness, the compiler complains, the tests fail, and the model reads the trace to correct itself. That is objective. That is verified.</p>
+<p>A skill does none of that. A skill is just static text. It is someone writing &quot;remember to write robust error handling&quot; in a markdown file. It gives the model zero new capabilities, zero feedback mechanisms, and zero validation.</p>
+<p>A frontier model inside a lean harness is an engineer with a working terminal. A model loaded with twenty skills is that same engineer forced to work while someone recites a generic textbook into their ear.</p>
+<h2>What the benchmarks actually tell us</h2>
+<p>This is not just personal preference. Every serious data point from 2025 and 2026 points in the same direction.</p>
+<p>Look at the SWE-bench leaderboards and the tools that actually ship working code: Claude Code, Aider, and SWE-agent. None of them rely on libraries of prepackaged domain personas. They do not have a &quot;Rust persona&quot; or a &quot;Django skill.&quot; They run simple, tight loops around basic primitives: read file, edit file, run bash command, inspect diff.</p>
+<p>The most telling proof came from Princeton and Stanford with mini-swe-agent. They built a fully capable coding agent in roughly one hundred lines of Python. No complex agent frameworks, no persona routing, no skill modules. Just a basic loop giving the model direct access to bash commands. That hundred-line script hit over seventy percent on SWE-bench Verified, rivaling massive modular frameworks.</p>
+<p>Recent evaluations on SWE-bench Pro and Verified show that swapping out the harness architecture can swing performance by more than twenty-two percentage points on the exact same model. Meanwhile, swapping between top-tier frontier models on the same harness often moves the needle by less than one percent. The harness is the differentiator. Prepackaged skills do not move the needle at all.</p>
+<p>In their research paper on building effective agents, Anthropic arrived at the exact same conclusion: keep agent architectures simple. The moment you introduce complex persona routing, multi-agent debates, and rigid prompt abstractions, failure rates skyrocket.</p>
+<p>Then there is Rich Sutton&#39;s <em>The Bitter Lesson</em>: the biggest lesson from AI history is that general methods leveraging compute consistently beat human-engineered heuristics. Handcrafted knowledge always loses. Packaged skills are nothing more than handcrafted heuristics pretending to be software.</p>
+<h2>Context rot and attention economy</h2>
+<p>Every token in your system prompt carries a cost. Not just financial cost, but cognitive cost.</p>
+<p>In July 2025, Chroma Research published their study on Context Rot, evaluating eighteen frontier models across increasing context lengths. The findings were stark: every single model experiences performance degradation and hits sharp accuracy cliffs long before reaching its advertised context window. Attention gets diluted as the prompt grows.</p>
+<p>In early 2026, LOCA-bench confirmed the same reality for autonomous agents: piling up instructions, state history, and redundant guidelines causes catastrophic task drift.</p>
+<p>When you fill the prompt with hundreds of lines of canned instructions, two things happen:</p>
+<ol>
+<li><strong>Instruction drift:</strong> The model has to compromise between conflicting negative constraints. If your skill says &quot;always use functional patterns&quot; and your codebase uses an object-oriented state machine, the model wastes reasoning tokens resolving an artificial contradiction.</li>
+<li><strong>Loss of nuance:</strong> When your context is clean, subtle constraints in your user prompt hit the model with maximum weight. When your context is drowned in boilerplate, those subtle constraints get averaged out.</li>
+</ol>
+<p>A blank slate gives you instantaneous time-to-first-token, reliable prompt caching, and zero context pollution. The model responds to what you say, not to what someone else said six months ago.</p>
+<h2>Stop buying other people&#39;s words</h2>
+<p>The urge to collect skills comes from a misunderstanding of what programming with AI actually is.</p>
+<p>If you know what you are building, you do not need someone else&#39;s prompt. You need your own domain knowledge: your invariants, your schemas, your test suites, and your constraints. You write the specification, you run the harness, you review the diff.</p>
+<p>And if you do not know what you are building, no prepackaged &quot;Senior Architect&quot; skill is going to know it for you. It will only give you confident, generic mediocrity at three times the token cost.</p>
+<p>Ditch the skill packs. Keep the harness lean, keep the terminal open, and start from a blank canvas.</p>
+<h2>Sources</h2>
+<ul>
+<li><a href="https://research.trychroma.com/context-rot">Chroma Research, Context Rot: How Increasing Input Tokens Impacts LLM Performance (July 2025)</a></li>
+<li><a href="https://arxiv.org/abs/2602.04948">LOCA-bench: Benchmarking Language Agents Under Controllable and Extreme Context Growth (February 2026)</a></li>
+<li><a href="https://github.com/SWE-agent/mini-swe-agent">Princeton NLP and Stanford, mini-swe-agent: A radically simple coding agent in 100 lines of Python</a></li>
+<li><a href="https://www.anthropic.com/research/building-effective-agents">Anthropic, Building Effective Agents (December 2024)</a></li>
+<li><a href="https://www.swebench.com/">SWE-bench, Software Engineering Benchmark for Language Models</a></li>
+<li><a href="http://www.incompleteideas.net/IncIdeas/BitterLesson.html">Rich Sutton, The Bitter Lesson (2019)</a></li>
+<li><a href="https://aider.chat/">Aider, AI pair programming in your terminal</a></li>
+</ul>
+</article></noscript></div>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-NVRFS5LVBB"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-NVRFS5LVBB');
+	</script>
+</body>
+
+</html>

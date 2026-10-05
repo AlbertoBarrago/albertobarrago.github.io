@@ -7,6 +7,13 @@
     <language>en</language>
     <atom:link href="https://albz.it/feed.xml" rel="self" type="application/rss+xml" />
   <item>
+    <title>The Skill Delusion: Why the Blank Slate Beats Packaged AI Prompts</title>
+    <link>https://albz.it/articles/the-skill-delusion/</link>
+    <guid isPermaLink="true">https://albz.it/articles/the-skill-delusion/</guid>
+    <pubDate>Mon, 05 Oct 2026 00:00:00 GMT</pubDate>
+    <description>A comforting illusion has taken over AI tooling during the last eighteen months: the belief that large language models need &quot;skills.&quot; You see them…</description>
+  </item>
+  <item>
     <title>Tenore: Stop Maintaining the Same Agent Configuration Three Times</title>
     <link>https://albz.it/articles/tenore/</link>
     <guid isPermaLink="true">https://albz.it/articles/tenore/</guid>
