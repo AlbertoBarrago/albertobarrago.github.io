@@ -793,6 +793,12 @@ button {
 	margin: 0.35rem 0 0.6rem;
 }
 
+.reader-label {
+	color: var(--yellow);
+	font-size: 0.88em;
+	opacity: 0.9;
+}
+
 .reader-stats {
 	margin: 0 0 1.5rem;
 	padding-bottom: 1.1rem;

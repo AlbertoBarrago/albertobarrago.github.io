@@ -2,6 +2,7 @@
 title: wir: What Is Running, a Port and Process Inspector Written in C
 date: 2025-12-30
 tags: c, systems-programming, cli, opensource
+label: human-written, AI-reviewed
 ---
 
 I recently released **wir** (What Is Running), a command-line tool written in C to inspect what's running on specific ports and get detailed process information. A project born from a practical need that turned into an opportunity to explore system programming in C.

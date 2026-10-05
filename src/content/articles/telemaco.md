@@ -2,6 +2,7 @@
 title: Telemaco: a headless browser engine in Rust, without the Chromium
 date: 2026-09-04
 tags: rust, browser, scraping, ai-agents, cdp, sideprojects
+label: human-written, AI-reviewed
 ---
 
 **Telemaco** is a headless browser engine I've been building in Rust. It runs real JavaScript through V8, keeps a real DOM tree, owns its own layout and paint pipeline, and speaks the Chrome DevTools Protocol, so Puppeteer and Playwright connect to it out of the box. No Chromium, no WebView, no 300 MB download. A 70 MB binary that starts instantly and loads a page in ~85 ms.

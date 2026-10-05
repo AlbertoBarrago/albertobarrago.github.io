@@ -5,8 +5,8 @@
  * the browser.
  */
 
-/** @typedef {{ slug: string, title: string, date: string, tags: string[] }} ArticleMeta */
-/** @typedef {{ meta: { title?: string, date?: string, tags?: string[] }, html: string }} RenderedArticle */
+/** @typedef {{ slug: string, title: string, date: string, tags: string[], label?: string }} ArticleMeta */
+/** @typedef {{ meta: { title?: string, date?: string, tags?: string[], label?: string }, html: string }} RenderedArticle */
 
 /**
  * Sorts articles by date, ascending (oldest first).
@@ -34,6 +34,7 @@ const articles = sortArticlesByDateAscending(
 			title: mod.meta.title ?? slug,
 			date: mod.meta.date ?? '',
 			tags: mod.meta.tags ?? [],
+			label: mod.meta.label ?? '',
 		};
 	})
 );

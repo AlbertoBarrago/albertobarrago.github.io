@@ -2,6 +2,7 @@
 title: Iron Doctrine: building deterministic online multiplayer with a shared ECS engine
 date: 2026-08-31
 tags: typescript, game-dev, multiplayer, ecs, pnpm
+label: human-written, AI-reviewed
 ---
 
 **Iron Doctrine** is a real-time strategy game I'm building in a pnpm monorepo, with a deterministic ECS engine at its core and, as of this week, a working 1v1 online mode.

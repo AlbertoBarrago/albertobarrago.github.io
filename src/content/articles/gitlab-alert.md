@@ -2,6 +2,7 @@
 title: GitLab Alert: the GitLab work that involves you, in your menu bar
 date: 2026-09-16
 tags: swift, macos, gitlab, menubar, opensource
+label: human-written, AI-reviewed
 ---
 
 **GitLab Alert** is a macOS menu bar app that keeps the GitLab work needing your attention out of a browser tab and in the corner of your screen: merge requests waiting on your review, merge requests you authored, issues assigned to you, and the pipeline state of the projects you watch. No Dock icon, no window to manage, no tab to forget.

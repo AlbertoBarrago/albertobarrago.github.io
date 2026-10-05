@@ -2,6 +2,7 @@
 title: My first (and last?) forty years
 date: 2026-09-29
 tags: opinion, life, freedom, career, italy
+label: human-written, AI-reviewed
 ---
 
 Tomorrow I turn forty.

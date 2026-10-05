@@ -2,6 +2,7 @@
 title: Otelma: building a local LLM runtime from scratch
 date: 2026-08-31
 tags: go, llm, llama-cpp, apple-silicon, ai
+label: human-written, AI-reviewed
 ---
 
 **Otelma** is a local LLM inference runtime I'm building in Go.

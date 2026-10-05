@@ -2,6 +2,7 @@
 title: Tenore: Stop Maintaining the Same Agent Configuration Three Times
 date: 2026-10-01
 tags: programming, ai-agents, developer-tools, typescript, opensource
+label: human-written, AI-reviewed
 ---
 
 I built **Tenore**, a CLI that takes a shared configuration for AI coding agents and compiles it into their native files.

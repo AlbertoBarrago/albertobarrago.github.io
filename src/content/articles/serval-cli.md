@@ -2,6 +2,7 @@
 title: I Built a CLI to Answer One Question: What Will This Change Break?
 date: 2026-08-27
 tags: programming, devops, go, opensource
+label: human-written, AI-reviewed
 ---
 
 We've all been there.

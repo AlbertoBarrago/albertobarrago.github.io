@@ -279,7 +279,7 @@ function articleReaderHTML(slug) {
 			<div class="article-reader-main">
 				<article class="prose">
 					<h1>${meta.title}</h1>
-					<p class="reader-meta muted">${formatDateIT(meta.date)}${meta.tags.length ? ` · ${meta.tags.join(' · ')}` : ''}</p>
+					<p class="reader-meta muted">${formatDateIT(meta.date)}${meta.tags.length ? ` · ${meta.tags.join(' · ')}` : ''}${meta.label ? ` · <span class="reader-label">${meta.label}</span>` : ''}</p>
 					<p class="reader-stats muted">${stats.words.toLocaleString()} words · ${stats.chars.toLocaleString()} chars · ~${stats.minutes} min read</p>
 					${getArticleHTML(slug)}
 				</article>

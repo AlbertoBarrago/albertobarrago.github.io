@@ -2,6 +2,7 @@
 title: Development Is Dead
 date: 2026-09-22
 tags: opinion, ai, career, italy, craft
+label: human-written, AI-reviewed
 ---
 
 I started in 2011, freelance until 2014, and I never left. Fifteen years. Long enough to have opinions, short enough that whoever started in 1995 gets to laugh at mine.

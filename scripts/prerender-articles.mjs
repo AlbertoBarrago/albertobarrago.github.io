@@ -53,13 +53,14 @@ function loadArticles() {
 				slug,
 				title: /** @type {string} */ (meta.title ?? slug),
 				date: /** @type {string} */ (meta.date ?? ''),
+				label: /** @type {string} */ (meta.label ?? ''),
 				html,
 			};
 		})
 		.sort((a, b) => b.date.localeCompare(a.date));
 }
 
-/** @param {string} shell @param {{ slug: string, title: string, date: string, html: string }} article @returns {string} */
+/** @param {string} shell @param {{ slug: string, title: string, date: string, label?: string, html: string }} article @returns {string} */
 function renderArticlePage(shell, article) {
 	const url = `${SITE_URL}/articles/${article.slug}/`;
 	const title = `${article.title} | Alberto Barrago`;
@@ -98,7 +99,7 @@ function renderArticlePage(shell, article) {
 	</script>\n</head>`;
 	page = page.replace('</head>', articleSchema);
 
-	const fallback = `<noscript><article><h1>${escapeAttr(article.title)}</h1><p>${escapeAttr(article.date)}</p>${article.html}</article></noscript>`;
+	const fallback = `<noscript><article><h1>${escapeAttr(article.title)}</h1><p>${escapeAttr(article.date)}${article.label ? ` · ${escapeAttr(article.label)}` : ''}</p>${article.html}</article></noscript>`;
 	page = page.replace('<div id="app"></div>', `<div id="app">${fallback}</div>`);
 
 	return page;
