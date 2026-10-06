@@ -51,28 +51,14 @@ const experience = [
 	}
 ];
 
-/** @type {{ name: string, description: string, url: string, language: string, status: string, focus: string }[]} */
-const experimentalProjects = [
+/** @type {{ name: string, description: string, url: string, language: string }[]} */
+const openSource = [
 	{
 		name: "Markasso",
 		description: "A fast, minimal, keyboard-first whiteboard engine for the browser. Marker + Picasso. No framework. No runtime. Just canvas.",
 		url: "https://markasso.it",
-		language: "TypeScript (0 deps)",
-		status: "Experimental · Work in progress",
-		focus: "Validating a direct, distraction-free interaction model for visual thinking."
+		language: "TypeScript (0 deps)"
 	},
-	{
-		name: "Iron Doctrine",
-		description: "A real-time strategy game with a deterministic ECS engine, running React + Pixi.js on the client, with lockstep online 1v1 multiplayer.",
-		url: "https://iron-doctrine-omega.vercel.app/",
-		language: "TypeScript (pnpm monorepo)",
-		status: "Experimental · Work in progress",
-		focus: "Deterministic simulation shared across local and networked play, driven by command replay."
-	}
-];
-
-/** @type {{ name: string, description: string, url: string, language: string }[]} */
-const openSource = [
 	{
 		name: "Telemaco",
 		description: "A headless browser engine in Rust: real JavaScript, real DOM, native layout and paint, speaking the Chrome DevTools Protocol. No Chromium required.",
@@ -270,7 +256,6 @@ export {
 	profile,
 	skills,
 	experience,
-	experimentalProjects,
 	openSource,
 	brewFormulas,
 	utils,

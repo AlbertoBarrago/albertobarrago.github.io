@@ -6,7 +6,7 @@
 
 import {
 	name, role, location, profile, skills, experience,
-	experimentalProjects, openSource, brewFormulas, utils, links, version, downloadCv,
+	openSource, brewFormulas, utils, links, version, downloadCv,
 } from './index.js';
 import { initSpaceInvaders } from './games/spaceInvaders.js';
 import { initTetris } from './games/tetris.js';
@@ -23,12 +23,12 @@ const PROMPT = 'alberto@portfolio:~';
 /** Page load timestamp, used as the shell's uptime origin. */
 const BOOT_TIME = Date.now();
 const COMMAND_NAMES = Object.freeze([
-	'help', 'about', 'skills', 'experience', 'projects', 'lab', 'articles', 'utils', 'contact', 'cv',
+	'help', 'about', 'skills', 'experience', 'projects', 'articles', 'utils', 'contact', 'cv',
 	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear', 'rss',
 ]);
 const MOBILE_COMMANDS = Object.freeze([
 	['help', 'help'], ['about', 'about'], ['skills', 'skills'],
-	['projects', 'projects'], ['lab', 'lab'], ['articles', 'articles'], ['utils', 'utils'], ['games', 'games'], ['contact', 'contact'],
+	['projects', 'projects'], ['articles', 'articles'], ['utils', 'utils'], ['games', 'games'], ['contact', 'contact'],
 ]);
 
 /** @type {Readonly<Record<GameName, string>>} */
@@ -139,7 +139,6 @@ function helpHTML() {
 		['skills', 'Technical toolbox by area'],
 		['experience', 'Professional timeline'],
 		['projects', 'Selected open-source work and Homebrew formulae'],
-		['lab', 'Experimental work in progress'],
 		['articles', 'Technical articles and notes'],
 		['rss', 'Subscribe to the articles feed'],
 		['utils', 'Useful free resources and links'],
@@ -200,23 +199,6 @@ function projectsHTML() {
 	<p>${formula.description}</p>
 	<p class="brew-install"><code>${formula.install}</code></p>
 </article>`).join('')}</div>`;
-}
-
-function labHTML() {
-	const items = experimentalProjects
-		.map(
-			(project) => `<article class="project-item lab-project">
-	<div class="lab-project-meta"><span class="project-status">${project.status}</span><span class="project-language">${project.language}</span></div>
-	<a class="terminal-link project-name" href="${project.url}" target="_blank" rel="noopener noreferrer">${project.name} ↗</a>
-	<p>${project.description}</p>
-	<p class="lab-project-focus"><span class="label">focus</span>${project.focus}</p>
-</article>`
-		)
-		.join('');
-
-	return `<div class="output-title">Workbench Lab</div>
-<p class="prose">Experimental products in active development. Scope and direction may evolve as ideas are validated.</p>
-${items}`;
 }
 
 /** @param {string} isoDate @returns {string} */
@@ -466,6 +448,7 @@ function gamesHTML() {
 <div class="game-list">${Object.entries(GAME_TITLES).map(([game, title]) =>
 		`<button class="game-command" data-command="play ${game}"><span>${title}</span><span class="muted">play ${game}</span></button>`
 	).join('')}</div>
+<article class="project-item"><a class="terminal-link project-name" href="https://iron-doctrine-omega.vercel.app/" target="_blank" rel="noopener noreferrer">Iron Doctrine ↗</a><p>A real-time strategy game with a deterministic ECS engine and lockstep online 1v1 multiplayer.</p></article>
 <div class="output-note">Games open fullscreen. Press <span class="key">Esc</span> to return.</div>`;
 }
 
@@ -475,7 +458,6 @@ function treeHTML() {
 ├── <button class="inline-command directory" data-command="skills">skills/</button>
 ├── <button class="inline-command file" data-command="experience">experience.log</button>
 ├── <button class="inline-command directory" data-command="projects">projects/</button>
-├── <button class="inline-command directory" data-command="lab">lab/</button>
 ├── <button class="inline-command directory" data-command="articles">articles/</button>
 ├── <button class="inline-command directory" data-command="utils">utils/</button>
 ├── <button class="inline-command file" data-command="contact">contact.vcf</button>
@@ -576,7 +558,7 @@ ${fields.map(([label, value]) =>
 }
 
 function lsHTML() {
-	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="lab">lab/</button><button class="inline-command directory" data-command="articles">articles/</button><button class="inline-command directory" data-command="utils">utils/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
+	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="articles">articles/</button><button class="inline-command directory" data-command="utils">utils/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
 }
 
 /** @param {readonly string[]} art @param {number} intensity @returns {string} */
@@ -688,7 +670,7 @@ function executeCommand(rawCommand) {
 
 	const renderers = /** @type {Record<string, () => string>} */ ({
 		help: helpHTML, skills: skillsHTML, experience: experienceHTML,
-		projects: projectsHTML, lab: labHTML, articles: articlesHTML, utils: utilsHTML, contact: contactHTML, games: gamesHTML,
+		projects: projectsHTML, articles: articlesHTML, utils: utilsHTML, contact: contactHTML, games: gamesHTML,
 		ls: lsHTML, tree: treeHTML, neofetch: neofetchHTML,
 	});
 	if (renderers[command]) {
