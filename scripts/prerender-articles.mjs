@@ -109,6 +109,9 @@ function renderArticlePage(shell, article) {
 function renderSitemap(articles) {
 	const urls = [
 		`  <url>\n    <loc>${SITE_URL}/</loc>\n    <changefreq>monthly</changefreq>\n    <priority>1.0</priority>\n  </url>`,
+		// Iris's pages are static files under static/iris/, outside the app.
+		`  <url>\n    <loc>${SITE_URL}/iris/</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
+		`  <url>\n    <loc>${SITE_URL}/iris/privacy/</loc>\n    <changefreq>yearly</changefreq>\n    <priority>0.3</priority>\n  </url>`,
 		...articles.map((article) =>
 			`  <url>\n    <loc>${SITE_URL}/articles/${article.slug}/</loc>\n    <lastmod>${article.date}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>`
 		),
