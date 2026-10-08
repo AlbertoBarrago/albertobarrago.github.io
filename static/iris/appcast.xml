@@ -3,6 +3,22 @@
     <channel>
         <title>Iris</title>
         <item>
+            <title>1.0.7</title>
+            <pubDate>Thu, 08 Oct 2026 14:37:17 +0200</pubDate>
+            <sparkle:version>1.0.7</sparkle:version>
+            <sparkle:shortVersionString>1.0.7</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <enclosure url="https://albz.it/iris/Iris-1.0.7.dmg" length="45025322" type="application/octet-stream" sparkle:edSignature="krRgW7zgzIAi1AEzJ/vA3ntTPjQ2CmwbMFUsji9+v82pvwdYK0SM9PnuZU6nX6QOhK98W3+eoPeeuh1jNA/KDA=="/>
+            <sparkle:deltas>
+                <enclosure url="https://albz.it/iris/Iris1.0.7-1.0.6.delta" sparkle:deltaFrom="1.0.6" length="2214722" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="sS64wnXFS1bviKJP+phmqACpPRbvBaTMzbH0E6sx45ZQ6WDb1dEiaQ8NK7EhMKdNAB2g6CYPJx9Ovr2BrdqfDg=="/>
+                <enclosure url="https://albz.it/iris/Iris1.0.7-1.0.5.delta" sparkle:deltaFrom="1.0.5" length="2563526" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="wjmmZiJMROXr/tbD8awwJOLriBoR4r3nRqgPH6tREVH4Y43KTIHxEw2qrrYFom2uvNQe5aOfVSVqQsvnR91JAw=="/>
+                <enclosure url="https://albz.it/iris/Iris1.0.7-1.0.4.delta" sparkle:deltaFrom="1.0.4" length="2935874" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="yOEPgBBifwfrRBBndU36vGy9Mqhh46vAB3IKYCknBKLssMEnpRNT2Fepq13ATjVFUm6UtLrVZpSNYiYFNBpSBQ=="/>
+                <enclosure url="https://albz.it/iris/Iris1.0.7-1.0.3.delta" sparkle:deltaFrom="1.0.3" length="3459578" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="ZipXeFjbQAHTfqKJhZUokLFtRwz6JrAlU15+9eDXaBQodn0jJeOg5nQSTRbPNuSr2J1cfrkC9qP+rxRx0CerBg=="/>
+                <enclosure url="https://albz.it/iris/Iris1.0.7-1.0.2.delta" sparkle:deltaFrom="1.0.2" length="3501758" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="l6s4wh50Auf8RgCtQr6MddXtGDloAo67S7nnELF8je7X4G7IUJ5+Hf5QYDEPg3kQgaoXfimA3QB+Tk81xGkjDg=="/>
+            </sparkle:deltas>
+        </item>
+        <item>
             <title>1.0.6</title>
             <pubDate>Thu, 08 Oct 2026 14:29:06 +0200</pubDate>
             <sparkle:version>1.0.6</sparkle:version>
@@ -32,21 +48,6 @@
                 <enclosure url="https://albz.it/iris/Iris1.0.5-1.0.2.delta" sparkle:deltaFrom="1.0.2" length="3343930" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="aZvB0WgAfqS8+GPlqwk6UuWdfwk6S3f3AeYE6KP6E5D1RvjsigA5okfpFXJsXq5VrycnBX1+Bi81aXBOeE2fBw=="/>
                 <enclosure url="https://albz.it/iris/Iris1.0.5-1.0.1.delta" sparkle:deltaFrom="1.0.1" length="3417862" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="ARfYgFlVdg22Xz3mPkGSv3Hgn8pRe8KT3i5VXwgxVIc213o47cNI+2d/NBa0PLugX96SG5Bmk3ELt6ETax32AA=="/>
                 <enclosure url="https://albz.it/iris/Iris1.0.5-1.0.0.delta" sparkle:deltaFrom="1.0.0" length="3558174" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="VPjfS6QDAPWDnAOjCLntgfP/7IA3qY20U4y0qzLI1WbUZmAiOVgdMS52TUSdvxOYYvTmcjcpMK1sqXVYk4YbDA=="/>
-            </sparkle:deltas>
-        </item>
-        <item>
-            <title>1.0.4</title>
-            <pubDate>Thu, 08 Oct 2026 12:51:22 +0200</pubDate>
-            <sparkle:version>1.0.4</sparkle:version>
-            <sparkle:shortVersionString>1.0.4</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <enclosure url="https://albz.it/iris/Iris-1.0.4.dmg" length="45027882" type="application/octet-stream" sparkle:edSignature="q/Nlm7yMuYmA8YsPRAlmKSjaq1fAxZpwAaxX7MsFLnc4HnGJ2Fny3INj8NPJ/FIDJTwPGWJjJ/vNyv+b6GHyCw=="/>
-            <sparkle:deltas>
-                <enclosure url="https://albz.it/iris/Iris1.0.4-1.0.3.delta" sparkle:deltaFrom="1.0.3" length="3402190" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="IdUtex2pgblGrRgBSPENW8vlZuAO4UpJZpJkcgMIRWGf5bU5KMV7meJjDcx1TM0FwNBnTv3AOk/vMfbahPwuAA=="/>
-                <enclosure url="https://albz.it/iris/Iris1.0.4-1.0.2.delta" sparkle:deltaFrom="1.0.2" length="3384306" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="jHpAoGPDb8PID+L94R7j5YtRrVI9ozNek1UQ93/MIqPOxQU9qThIIlh36cjpUSvR9n6k7vdPr+EjstKjAIBdBg=="/>
-                <enclosure url="https://albz.it/iris/Iris1.0.4-1.0.1.delta" sparkle:deltaFrom="1.0.1" length="3512066" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="rN2H602XYqlm4UV2oa36UuheZ2wsufL0NZVU1gQu9zzmEnzUJVGJwJ8iGaLkJYHJ1Ey2+jW99BzK2GCHoxecBg=="/>
-                <enclosure url="https://albz.it/iris/Iris1.0.4-1.0.0.delta" sparkle:deltaFrom="1.0.0" length="3476050" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="ceB/cLQvabtDGSfQYnAJ/JEK58YZEGxUTu3tDS1Oqjne/5KwUkLTnKQ34hxAxIiNg6QEBXln2gosiOy2iC3bCw=="/>
             </sparkle:deltas>
         </item>
     </channel>
