@@ -28,7 +28,7 @@
         <p class="tag">Mail and calendar for macOS and Linux. Your mail stays on your computer.</p>
         <span class="pill">Test build for macOS</span>
         <p class="download">
-          <a class="button" href="Iris-1.0.0.dmg">Download Iris 1.0.0</a>
+          <a class="button" href="Iris-1.0.1.dmg">Download Iris 1.0.1</a>
           <span>For Apple silicon Macs with macOS 26 or later. 45 MB.</span>
         </p>
       </div>
@@ -68,7 +68,11 @@
     </div>
 
     <h2>Installing the test build</h2>
-    <p class="note">Open the DMG and drag Iris onto Applications. The test build is not signed with an Apple Developer ID yet, so macOS stops it the first time: open it once, then choose <strong>Open Anyway</strong> beside Iris in <strong>System Settings &gt; Privacy &amp; Security</strong>. From then on Iris opens like any other app and keeps itself up to date.</p>
+    <p class="note">The quickest way: paste this into Terminal. It fetches the newest build, puts Iris in Applications and opens it.</p>
+    <pre class="command"><code>curl -fsSL https://albz.it/iris/install.sh | sh</code></pre>
+    <p class="note">Or download the DMG above and drag Iris onto Applications. The test build is not signed with an Apple Developer ID yet, so macOS stops a copy downloaded in a browser. Choose <strong>Open Anyway</strong> beside Iris in <strong>System Settings &gt; Privacy &amp; Security</strong>, or clear the mark in Terminal:</p>
+    <pre class="command"><code>xattr -cr /Applications/Iris.app</code></pre>
+    <p class="note">From then on Iris opens like any other app and keeps itself up to date.</p>
 
     <h2>Status</h2>
     <p class="note">Iris is a personal project by <a href="/">Alberto Barrago</a>, in active development, with test builds for macOS. It is a modified version of <a href="https://github.com/c9dev/penguin-mail">Penguin Mail</a>, a GTK mail client for Linux, and is free software under the GNU General Public License, version 3 or later.</p>
