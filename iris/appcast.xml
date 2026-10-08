@@ -3,6 +3,22 @@
     <channel>
         <title>Iris</title>
         <item>
+            <title>1.0.10</title>
+            <pubDate>Thu, 08 Oct 2026 17:14:40 +0200</pubDate>
+            <sparkle:version>1.0.10</sparkle:version>
+            <sparkle:shortVersionString>1.0.10</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <enclosure url="https://albz.it/iris/Iris-1.0.10.dmg" length="44988031" type="application/octet-stream" sparkle:edSignature="agOWxpDeHbBH+xJ8axq7o356p7/4ixUihsyuEteoVAsMZSxQrZ0pdjVHIRf3L8FyEYH7rCyvfT88Egc/ccJkDA=="/>
+            <sparkle:deltas>
+                <enclosure url="https://albz.it/iris/Iris1.0.10-1.0.9.delta" sparkle:deltaFrom="1.0.9" length="3724446" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="5FwET9klkFbWylRaTGhGDyw3GZHKwNrBO9g2EwluMvum1UDeEttUbsKxdQvo1roq4kQl5wIf823hk4Scxf2mCg=="/>
+                <enclosure url="https://albz.it/iris/Iris1.0.10-1.0.8.delta" sparkle:deltaFrom="1.0.8" length="3802854" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="0IdeDMCtFH9du0gYgFljenWeIm9xlGsk4j7qciGhxOBDLBDdJJ4eG0pcNQW4FyivtlLu/TdYzvEaD2KtKsOJBg=="/>
+                <enclosure url="https://albz.it/iris/Iris1.0.10-1.0.7.delta" sparkle:deltaFrom="1.0.7" length="3715994" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="kaXDtK4fTQ20zFaDZykFyo+Y1d9VJ7dxDWV1H5JkuFnlM+PNaIj/9vz1xhcHeYiLkibnif9W/ivyRP31m0tyAg=="/>
+                <enclosure url="https://albz.it/iris/Iris1.0.10-1.0.6.delta" sparkle:deltaFrom="1.0.6" length="3732914" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="qXAUqSyeneaPC05joa9OX+oQVKO8DY5f3a5ypL4+gUOS21KLpf2pXkV8fcxhBXTFPM1dDmqd3BkF4mBgGpV/DQ=="/>
+                <enclosure url="https://albz.it/iris/Iris1.0.10-1.0.5.delta" sparkle:deltaFrom="1.0.5" length="3926550" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="CeJJxwLtUYpOsVMUQRCDp4rmVuIS3/3SB6o2OkE4OHYZrUkDCgPC/alnglNrpyfFEth6nkkreb6Js9Z9Gc7VDw=="/>
+            </sparkle:deltas>
+        </item>
+        <item>
             <title>1.0.9</title>
             <pubDate>Thu, 08 Oct 2026 16:31:21 +0200</pubDate>
             <sparkle:version>1.0.9</sparkle:version>
@@ -32,22 +48,6 @@
                 <enclosure url="https://albz.it/iris/Iris1.0.8-1.0.5.delta" sparkle:deltaFrom="1.0.5" length="2477154" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="63cMC5jvuwq952iM3W14wptM8He7L4wb7c3HsloiDgYz3lheX4cCUvXaW1OgOq7kh5meZcKhRFABVF6Bezu6Ag=="/>
                 <enclosure url="https://albz.it/iris/Iris1.0.8-1.0.4.delta" sparkle:deltaFrom="1.0.4" length="2927590" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="poD8QJHBAwy9tknpWnDVFBJMR1q1iMMWUIoM8hgu5xywj3IHElDGGLxYm6TRGSEVKgj5834ckze0xDg4XtQ5DA=="/>
                 <enclosure url="https://albz.it/iris/Iris1.0.8-1.0.3.delta" sparkle:deltaFrom="1.0.3" length="3369990" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="tfJv6T6+ZpJu/4C6wkbFgSdYRmDWlvPbxAGlW98iah1gm0FsmBUSQU0y1p9z8kkPb+xUXcGQham0ZGK+mIFZCA=="/>
-            </sparkle:deltas>
-        </item>
-        <item>
-            <title>1.0.7</title>
-            <pubDate>Thu, 08 Oct 2026 14:37:17 +0200</pubDate>
-            <sparkle:version>1.0.7</sparkle:version>
-            <sparkle:shortVersionString>1.0.7</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <enclosure url="https://albz.it/iris/Iris-1.0.7.dmg" length="45025322" type="application/octet-stream" sparkle:edSignature="krRgW7zgzIAi1AEzJ/vA3ntTPjQ2CmwbMFUsji9+v82pvwdYK0SM9PnuZU6nX6QOhK98W3+eoPeeuh1jNA/KDA=="/>
-            <sparkle:deltas>
-                <enclosure url="https://albz.it/iris/Iris1.0.7-1.0.6.delta" sparkle:deltaFrom="1.0.6" length="2214722" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="sS64wnXFS1bviKJP+phmqACpPRbvBaTMzbH0E6sx45ZQ6WDb1dEiaQ8NK7EhMKdNAB2g6CYPJx9Ovr2BrdqfDg=="/>
-                <enclosure url="https://albz.it/iris/Iris1.0.7-1.0.5.delta" sparkle:deltaFrom="1.0.5" length="2563526" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="wjmmZiJMROXr/tbD8awwJOLriBoR4r3nRqgPH6tREVH4Y43KTIHxEw2qrrYFom2uvNQe5aOfVSVqQsvnR91JAw=="/>
-                <enclosure url="https://albz.it/iris/Iris1.0.7-1.0.4.delta" sparkle:deltaFrom="1.0.4" length="2935874" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="yOEPgBBifwfrRBBndU36vGy9Mqhh46vAB3IKYCknBKLssMEnpRNT2Fepq13ATjVFUm6UtLrVZpSNYiYFNBpSBQ=="/>
-                <enclosure url="https://albz.it/iris/Iris1.0.7-1.0.3.delta" sparkle:deltaFrom="1.0.3" length="3459578" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="ZipXeFjbQAHTfqKJhZUokLFtRwz6JrAlU15+9eDXaBQodn0jJeOg5nQSTRbPNuSr2J1cfrkC9qP+rxRx0CerBg=="/>
-                <enclosure url="https://albz.it/iris/Iris1.0.7-1.0.2.delta" sparkle:deltaFrom="1.0.2" length="3501758" type="application/octet-stream" sparkle:deltaFromSparkleExecutableSize="976336" sparkle:deltaFromSparkleLocales="de,he,ar,el,ja,fa,uk" sparkle:edSignature="l6s4wh50Auf8RgCtQr6MddXtGDloAo67S7nnELF8je7X4G7IUJ5+Hf5QYDEPg3kQgaoXfimA3QB+Tk81xGkjDg=="/>
             </sparkle:deltas>
         </item>
     </channel>
