@@ -33,7 +33,7 @@ It began with a small experiment—take an interesting Linux app and see whether
 
 ## Join the waiting list
 
-Want to try Iris when there's a build ready for you? [Send me a note](mailto:albertobarrago@gmail.com?subject=Iris%20waiting%20list) and I'll add you to the waiting list.
+Want to try Iris when there's a build ready for you? [Beam me onto the list](mailto:albertobarrago@gmail.com?subject=Iris%20waitlist%3A%20beam%20me%20in&body=Hi%20Alberto%2C%0D%0A%0D%0APlease%20add%20me%20to%20the%20Iris%20waiting%20list.%20I%27m%20ready%20to%20let%20a%20new%20client%20migrate%20into%20my%20inbox.%0D%0A%0D%0AName%3A%0D%0AmacOS%20version%3A%0D%0A%0D%0AThanks%21) and I'll add you to the waiting list.
 
 - Iris: [albz.it/iris](https://albz.it/iris/)
 - Original project: [Penguin Mail on GitHub](https://github.com/c9dev/penguin-mail)
