@@ -138,3 +138,15 @@ footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: s
 }
 .download .button:hover { filter: brightness(0.95); }
 .download span { color: rgba(251, 247, 240, 0.78); font-size: 14px; }
+
+/* A Terminal command to copy. */
+.command {
+  margin: 0 0 18px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(139, 108, 240, 0.12);
+  border: 1px solid rgba(139, 108, 240, 0.28);
+  overflow-x: auto;
+  font: 14px/1.5 ui-monospace, "SF Mono", Menlo, monospace;
+}
+.command code { background: none; padding: 0; border: 0; font: inherit; }

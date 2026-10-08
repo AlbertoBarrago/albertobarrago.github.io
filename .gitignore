@@ -29,3 +29,4 @@ pnpm-lock.yaml
 # Iris DMGs are published by npm run deploy from this folder but kept out
 # of the source history; the builds live in the iris repo's target/dmg.
 static/iris/*.dmg
+static/iris/*.delta
