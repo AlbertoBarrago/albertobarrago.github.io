@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Iris: bringing an open-source Rust mail client to macOS | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="I found Penguin Mail on Hacker News. It was an open-source mail and calendar app, written in Rust, with a clear focus on keeping your mail on your own…" />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/articles/iris/" />
+	<meta property="og:title" content="Iris: bringing an open-source Rust mail client to macOS | Alberto Barrago" />
+	<meta property="og:description" content="I found Penguin Mail on Hacker News. It was an open-source mail and calendar app, written in Rust, with a clear focus on keeping your mail on your own…" />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Iris: bringing an open-source Rust mail client to macOS | Alberto Barrago" />
+	<meta name="twitter:description" content="I found Penguin Mail on Hacker News. It was an open-source mail and calendar app, written in Rust, with a clear focus on keeping your mail on your own…" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/articles/iris/" />
+
+	<!-- RSS feed -->
+	<link rel="alternate" type="application/rss+xml" title="Alberto Barrago | Articles" href="/feed.xml" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-Z5ugIWkI.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CKPtc6ID.css">
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"Article","headline":"Iris: bringing an open-source Rust mail client to macOS","datePublished":"2026-10-08","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/articles/iris/","mainEntityOfPage":"https://albz.it/articles/iris/"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article><h1>Iris: bringing an open-source Rust mail client to macOS</h1><p>2026-10-08 · human-written, AI-reviewed</p><p>I found <strong>Penguin Mail</strong> on Hacker News. It was an open-source mail and calendar app, written in Rust, with a clear focus on keeping your mail on your own computer. I use a Mac, so my first thought was simple: could I bring it to macOS?</p>
+<p>That question became <strong>Iris</strong>.</p>
+<h2>Starting with Penguin Mail</h2>
+<p>Penguin Mail is a GTK and libadwaita app built for Linux. It supports Gmail, Microsoft accounts and IMAP, along with calendars, contacts, OpenPGP and S/MIME. The project was already doing a lot of the hard work that makes an email client useful: syncing accounts, handling messages, and keeping local data in step with remote services.</p>
+<p>The fact that it was written in Rust and open source made it possible to build on that work. I didn&#39;t want to start another mail client from a blank repository. I wanted to see how far I could take a project I liked onto the platform I use every day.</p>
+<h2>From a Linux app to Iris</h2>
+<p>Porting a desktop app is more than getting it to compile on another operating system. Penguin Mail&#39;s interface and desktop integration were designed around GTK and Linux. Iris needed to become something I could use on macOS, including the parts users rely on outside the main window: account sign-in, local storage, notifications and updates.</p>
+<p>I kept Penguin Mail&#39;s foundations and adapted the app into a separate project. Iris is based on <a href="https://github.com/c9dev/penguin-mail">Penguin Mail</a>, created by its original author and contributors.</p>
+<p>The project has grown beyond the first port. Iris now brings mail and calendar together, supports Gmail, Microsoft accounts and IMAP, and includes features such as an optional assistant, message signing and encryption. The assistant is off until you choose a model. Mail and calendar data stay on your computer, and Iris has no server of its own.</p>
+<h2>Why keep building it?</h2>
+<p>The original appeal was practical: Penguin Mail had a lot of capability, it was open source, and I wanted that kind of app on my Mac. Once the port worked, there was plenty left to shape into something that felt at home in my own workflow.</p>
+<p>Iris is still a personal project in active development. The macOS builds are test builds, and there is more work ahead. The source repository is private for now, and I plan to use Iris myself. If you&#39;re interested in the project, write to me.</p>
+<p>It began with a small experiment—take an interesting Linux app and see whether it could become useful on macOS—and turned into a project of its own.</p>
+<h2>Join the waiting list</h2>
+<p>Want to try Iris when there&#39;s a build ready for you? <a href="mailto:albertobarrago@gmail.com?subject=Iris%20waiting%20list">Send me a note</a> and I&#39;ll add you to the waiting list.</p>
+<ul>
+<li>Iris: <a href="https://albz.it/iris/">albz.it/iris</a></li>
+<li>Original project: <a href="https://github.com/c9dev/penguin-mail">Penguin Mail on GitHub</a></li>
+</ul>
+</article></noscript></div>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-NVRFS5LVBB"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-NVRFS5LVBB');
+	</script>
+</body>
+
+</html>

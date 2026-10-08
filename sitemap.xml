@@ -16,6 +16,12 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://albz.it/articles/iris/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://albz.it/articles/the-skill-delusion/</loc>
     <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
