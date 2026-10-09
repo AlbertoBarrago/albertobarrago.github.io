@@ -8,7 +8,7 @@
  * reading experience once JS loads.
  */
 
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseFrontmatter, renderMarkdownToHTML } from './markdown.mjs';
@@ -41,16 +41,19 @@ function escapeAttr(value) {
 	return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 }
 
-function loadArticles() {
-	return readdirSync(ARTICLES_DIR)
+function loadArticles(language = 'en') {
+	const directory = language === 'it' ? join(ARTICLES_DIR, 'it') : ARTICLES_DIR;
+	if (!existsSync(directory)) return [];
+	return readdirSync(directory)
 		.filter((file) => file.endsWith('.md'))
 		.map((file) => {
 			const slug = file.replace(/\.md$/, '');
-			const raw = readFileSync(join(ARTICLES_DIR, file), 'utf8');
+			const raw = readFileSync(join(directory, file), 'utf8');
 			const { meta, body } = parseFrontmatter(raw);
 			const html = renderMarkdownToHTML(body);
 			return {
 				slug,
+				language,
 				title: /** @type {string} */ (meta.title ?? slug),
 				date: /** @type {string} */ (meta.date ?? ''),
 				label: /** @type {string} */ (meta.label ?? ''),
@@ -61,12 +64,14 @@ function loadArticles() {
 }
 
 /** @param {string} shell @param {{ slug: string, title: string, date: string, label?: string, html: string }} article @returns {string} */
-function renderArticlePage(shell, article) {
-	const url = `${SITE_URL}/articles/${article.slug}/`;
+function renderArticlePage(shell, article, hasItalian) {
+	const url = `${SITE_URL}${article.language === 'it' ? '/it' : ''}/articles/${article.slug}/`;
 	const title = `${article.title} | Alberto Barrago`;
 	const description = excerpt(article.html);
 
 	let page = shell
+		.replace(/<html lang="[^"]*">/, `<html lang="${article.language}">`)
+		.replace(/\s*<link rel="alternate" hreflang="[^"]*" href="[^"]*" \/>/g, '')
 		.replace(/<title>.*?<\/title>/s, `<title>${escapeAttr(title)}</title>`)
 		.replace(
 			/<meta name="description"[\s\S]*?\/>/,
@@ -95,9 +100,10 @@ function renderArticlePage(shell, article) {
 			author: { '@type': 'Person', name: 'Alberto Barrago', url: SITE_URL },
 			url,
 			mainEntityOfPage: url,
+			inLanguage: article.language,
 		})}
 	</script>\n</head>`;
-	page = page.replace('</head>', articleSchema);
+	page = page.replace('</head>', `${alternateLinks(`/articles/${article.slug}/`, hasItalian ? `/it/articles/${article.slug}/` : null)}${articleSchema}`);
 
 	const fallback = `<noscript><article><h1>${escapeAttr(article.title)}</h1><p>${escapeAttr(article.date)}${article.label ? ` · ${escapeAttr(article.label)}` : ''}</p>${article.html}</article></noscript>`;
 	page = page.replace('<div id="app"></div>', `<div id="app">${fallback}</div>`);
@@ -108,12 +114,13 @@ function renderArticlePage(shell, article) {
 /** @param {{ slug: string, date: string }[]} articles @returns {string} */
 function renderSitemap(articles) {
 	const urls = [
+		`  <url><loc>${SITE_URL}/it/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>`,
 		`  <url>\n    <loc>${SITE_URL}/</loc>\n    <changefreq>monthly</changefreq>\n    <priority>1.0</priority>\n  </url>`,
 		// Iris's pages are static files under static/iris/, outside the app.
 		`  <url>\n    <loc>${SITE_URL}/iris/</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
 		`  <url>\n    <loc>${SITE_URL}/iris/privacy/</loc>\n    <changefreq>yearly</changefreq>\n    <priority>0.3</priority>\n  </url>`,
 		...articles.map((article) =>
-			`  <url>\n    <loc>${SITE_URL}/articles/${article.slug}/</loc>\n    <lastmod>${article.date}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>`
+			`  <url>\n    <loc>${SITE_URL}${article.language === 'it' ? '/it' : ''}/articles/${article.slug}/</loc>\n    <lastmod>${article.date}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>`
 		),
 	];
 	return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`;
@@ -138,7 +145,7 @@ function toRFC822(isoDate) {
 /** @param {{ slug: string, title: string, date: string, html: string }[]} articles @returns {string} */
 function renderRSS(articles) {
 	const items = articles.map((article) => {
-		const url = `${SITE_URL}/articles/${article.slug}/`;
+		const url = `${SITE_URL}${article.language === 'it' ? '/it' : ''}/articles/${article.slug}/`;
 		const description = excerpt(article.html);
 		return `  <item>
     <title>${escapeXML(article.title)}</title>
@@ -162,19 +169,43 @@ ${items.join('\n')}
 `;
 }
 
+function alternateLinks(englishPath, italianPath) {
+	return `<link rel="alternate" hreflang="en" href="${SITE_URL}${englishPath}" />
+${italianPath ? `<link rel="alternate" hreflang="it" href="${SITE_URL}${italianPath}" />` : ''}
+<link rel="alternate" hreflang="x-default" href="${SITE_URL}${englishPath}" />
+`;
+}
+
 function main() {
 	const articles = loadArticles();
 	if (articles.length === 0) return;
 
 	const shell = readFileSync(join(BUILD_DIR, 'index.html'), 'utf8');
+	const italianArticles = loadArticles('it');
+	const translatedSlugs = new Set(italianArticles.map((article) => article.slug));
+	const englishSlugs = new Set(articles.map((article) => article.slug));
+	for (const article of italianArticles) {
+		if (!englishSlugs.has(article.slug)) throw new Error(`Italian article has no English counterpart: ${article.slug}`);
+	}
+	writeFileSync(join(BUILD_DIR, 'index.html'), shell.replace('</head>', `${alternateLinks('/', '/it/')}</head>`));
+	const description = 'Senior Software Engineer e product builder: progetto sistemi affidabili e realizzo software per web, mobile, cloud e AI.';
+	const italianShell = shell
+		.replace('<html lang="en">', '<html lang="it">')
+		.replace(/("description": "[^"]*")/, `"description": "${description}", "inLanguage": "it"`)
+		.replace(/(<meta (?:name="description"|property="og:description"|name="twitter:description")\s+content=")[^"]*(" \/>)/g, `$1${description}$2`)
+		.replace('rel="canonical" href="https://albz.it/"', 'rel="canonical" href="https://albz.it/it/"')
+		.replace('property="og:url" content="https://albz.it/"', 'property="og:url" content="https://albz.it/it/"')
+		.replace('</head>', `${alternateLinks('/', '/it/')}</head>`);
+	mkdirSync(join(BUILD_DIR, 'it'), { recursive: true });
+	writeFileSync(join(BUILD_DIR, 'it', 'index.html'), italianShell);
 
-	for (const article of articles) {
-		const dir = join(BUILD_DIR, 'articles', article.slug);
+	for (const article of [...articles, ...italianArticles]) {
+		const dir = join(BUILD_DIR, article.language === 'it' ? 'it' : '', 'articles', article.slug);
 		mkdirSync(dir, { recursive: true });
-		writeFileSync(join(dir, 'index.html'), renderArticlePage(shell, article));
+		writeFileSync(join(dir, 'index.html'), renderArticlePage(shell, article, translatedSlugs.has(article.slug)));
 	}
 
-	writeFileSync(join(BUILD_DIR, 'sitemap.xml'), renderSitemap(articles));
+	writeFileSync(join(BUILD_DIR, 'sitemap.xml'), renderSitemap([...articles, ...italianArticles]));
 	writeFileSync(join(BUILD_DIR, 'feed.xml'), renderRSS(articles));
 
 	console.log(`Prerendered ${articles.length} article page(s).`);

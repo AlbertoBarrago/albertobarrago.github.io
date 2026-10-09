@@ -1006,3 +1006,24 @@ button {
 		transition: none;
 	}
 }
+
+.language-selector {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: .65rem;
+	font-size: .8rem;
+	flex-shrink: 0;
+}
+.terminal > .language-selector {
+	padding: .5rem 1rem;
+	position: relative;
+	z-index: 1;
+}
+.language-selector a { color: var(--muted); text-decoration: none; padding: .3rem; }
+.language-selector a[aria-current] { color: var(--cyan); text-decoration: underline; text-underline-offset: .25em; }
+.language-selector a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+@media (max-width: 600px) {
+	.article-reader-topbar { flex-wrap: wrap; gap: .5rem; }
+	.reader-actions { flex-wrap: wrap; }
+}
