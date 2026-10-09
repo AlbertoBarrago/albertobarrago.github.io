@@ -7,11 +7,11 @@
     <language>en</language>
     <atom:link href="https://albz.it/feed.xml" rel="self" type="application/rss+xml" />
   <item>
-    <title>Iris: bringing an open-source Rust mail client to macOS</title>
+    <title>Iris: a mail and calendar app for the Mac, in Rust</title>
     <link>https://albz.it/articles/iris/</link>
     <guid isPermaLink="true">https://albz.it/articles/iris/</guid>
     <pubDate>Thu, 08 Oct 2026 00:00:00 GMT</pubDate>
-    <description>I found Penguin Mail on Hacker News. It was an open-source mail and calendar app, written in Rust, with a clear focus on keeping your mail on your own…</description>
+    <description>I wanted a mail and calendar app for my Mac that keeps my mail on my own computer, talks to Gmail and Microsoft directly, and is open source. That app is…</description>
   </item>
   <item>
     <title>The Skill Delusion: Why the Blank Slate Beats Packaged AI Prompts</title>
