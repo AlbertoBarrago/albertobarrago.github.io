@@ -1,39 +1,33 @@
 ---
-title: Iris: bringing an open-source Rust mail client to macOS
+title: Iris: a mail and calendar app for the Mac, in Rust
 date: 2026-10-08
 tags: rust, macos, email, calendar, opensource
 label: human-written, AI-reviewed
 ---
 
-I found **Penguin Mail** on Hacker News. It was an open-source mail and calendar app, written in Rust, with a clear focus on keeping your mail on your own computer. I use a Mac, so my first thought was simple: could I bring it to macOS?
+I wanted a mail and calendar app for my Mac that keeps my mail on my own computer, talks to Gmail and Microsoft directly, and is open source. That app is **Iris**.
 
-That question became **Iris**.
+## What Iris does
 
-## Starting with Penguin Mail
+Iris reads Gmail, Microsoft accounts (Outlook.com, Hotmail, Live and Microsoft 365) and any IMAP and SMTP account, and finds the server settings for you. It shows your accounts in one inbox or one at a time, with calendars and contacts next to your mail. It signs and encrypts mail with OpenPGP and S/MIME.
 
-Penguin Mail is a GTK and libadwaita app built for Linux. It supports Gmail, Microsoft accounts and IMAP, along with calendars, contacts, OpenPGP and S/MIME. The project was already doing a lot of the hard work that makes an email client useful: syncing accounts, handling messages, and keeping local data in step with remote services.
+Mail and calendar data stay on your computer, and Iris has no server of its own. Gmail talks to Google directly and Microsoft accounts talk to Microsoft Graph, so no other server sees your mail.
 
-The fact that it was written in Rust and open source made it possible to build on that work. I didn't want to start another mail client from a blank repository. I wanted to see how far I could take a project I liked onto the platform I use every day.
+## Built for macOS
 
-## From a Linux app to Iris
+The core is Rust: sync, the local store, search and the mail actions. On top of it Iris is moving to a native interface in SwiftUI and AppKit, so it behaves like a Mac app: the Keychain for passwords, the system's notifications, updates through Sparkle, the Dock badge.
 
-Porting a desktop app is more than getting it to compile on another operating system. Penguin Mail's interface and desktop integration were designed around GTK and Linux. Iris needed to become something I could use on macOS, including the parts users rely on outside the main window: account sign-in, local storage, notifications and updates.
+## An assistant, if you want one
 
-I kept Penguin Mail's foundations and adapted the app into a separate project. Iris is based on [Penguin Mail](https://github.com/c9dev/penguin-mail), created by its original author and contributors.
+Iris has an optional assistant. It stays off until you pick a model: Claude Code, an Anthropic key, or a model running on your own machine. It can summarize a conversation, find mail, draft a reply or clean up newsletters, and it asks before it acts on your mail.
 
-The project has grown beyond the first port. Iris now brings mail and calendar together, supports Gmail, Microsoft accounts and IMAP, and includes features such as an optional assistant, message signing and encryption. The assistant is off until you choose a model. Mail and calendar data stay on your computer, and Iris has no server of its own.
+## Where it is
 
-## Why keep building it?
-
-The original appeal was practical: Penguin Mail had a lot of capability, it was open source, and I wanted that kind of app on my Mac. Once the port worked, there was plenty left to shape into something that felt at home in my own workflow.
-
-Iris is still a personal project in active development. The macOS builds are test builds, and there is more work ahead. The source repository is private for now, and I plan to use Iris myself. If you're interested in the project, write to me.
-
-It began with a small experiment—take an interesting Linux app and see whether it could become useful on macOS—and turned into a project of its own.
+Iris is a project I build and use every day. The source is public on GitHub under the GPL, and the macOS builds are test builds while there is still work ahead. Iris started from the code of [Penguin Mail](https://github.com/c9dev/penguin-mail), under the same license.
 
 ## Join the waiting list
 
 Want to try Iris when there's a build ready for you? [Beam me onto the list](mailto:albertobarrago@gmail.com?subject=Iris%20waitlist%3A%20beam%20me%20in&body=Hi%20Alberto%2C%0D%0A%0D%0APlease%20add%20me%20to%20the%20Iris%20waiting%20list.%20I%27m%20ready%20to%20let%20a%20new%20client%20migrate%20into%20my%20inbox.%0D%0A%0D%0AName%3A%0D%0AmacOS%20version%3A%0D%0A%0D%0AThanks%21) and I'll add you to the waiting list.
 
 - Iris: [albz.it/iris](https://albz.it/iris/)
-- Original project: [Penguin Mail on GitHub](https://github.com/c9dev/penguin-mail)
+- Source: [github.com/AlbertoBarrago/iris](https://github.com/AlbertoBarrago/iris)
