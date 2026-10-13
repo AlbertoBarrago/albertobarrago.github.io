@@ -7,6 +7,13 @@
     <language>en</language>
     <atom:link href="https://albz.it/feed.xml" rel="self" type="application/rss+xml" />
   <item>
+    <title>A Small Toolbox for Claude Code</title>
+    <link>https://albz.it/articles/agent-toolbox/</link>
+    <guid isPermaLink="true">https://albz.it/articles/agent-toolbox/</guid>
+    <pubDate>Tue, 13 Oct 2026 00:00:00 GMT</pubDate>
+    <description>When I work with a coding agent, writing code is only part of the job. Before changing a repository, I want to understand what the change might affect.…</description>
+  </item>
+  <item>
     <title>Iris: a mail and calendar app for the Mac, in Rust</title>
     <link>https://albz.it/articles/iris/</link>
     <guid isPermaLink="true">https://albz.it/articles/iris/</guid>
