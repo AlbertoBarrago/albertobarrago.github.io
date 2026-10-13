@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Una piccola cassetta degli attrezzi per Claude Code | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="Quando lavoro con un agente di coding, scrivere codice è solo una parte del lavoro. Prima di modificare un repository, voglio capire su cosa potrebbe…" />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/it/articles/agent-toolbox/" />
+	<meta property="og:title" content="Una piccola cassetta degli attrezzi per Claude Code | Alberto Barrago" />
+	<meta property="og:description" content="Quando lavoro con un agente di coding, scrivere codice è solo una parte del lavoro. Prima di modificare un repository, voglio capire su cosa potrebbe…" />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Una piccola cassetta degli attrezzi per Claude Code | Alberto Barrago" />
+	<meta name="twitter:description" content="Quando lavoro con un agente di coding, scrivere codice è solo una parte del lavoro. Prima di modificare un repository, voglio capire su cosa potrebbe…" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/it/articles/agent-toolbox/" />
+
+	<!-- RSS feed -->
+	<link rel="alternate" type="application/rss+xml" title="Alberto Barrago | Articles" href="/feed.xml" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-BfavQAVx.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-V31z0jPh.css">
+<link rel="alternate" hreflang="en" href="https://albz.it/articles/agent-toolbox/" />
+<link rel="alternate" hreflang="it" href="https://albz.it/it/articles/agent-toolbox/" />
+<link rel="alternate" hreflang="x-default" href="https://albz.it/articles/agent-toolbox/" />
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"Article","headline":"Una piccola cassetta degli attrezzi per Claude Code","datePublished":"2026-10-13","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/it/articles/agent-toolbox/","mainEntityOfPage":"https://albz.it/it/articles/agent-toolbox/","inLanguage":"it"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article><h1>Una piccola cassetta degli attrezzi per Claude Code</h1><p>2026-10-13 · traduzione AI da un testo assistito da AI e rivisto dall’autore</p><p>Quando lavoro con un agente di coding, scrivere codice è solo una parte del lavoro.</p>
+<p>Prima di modificare un repository, voglio capire su cosa potrebbe incidere la modifica. Quando uso una libreria, voglio leggerne la documentazione, soprattutto se non la conosco bene. E prima di considerare il lavoro finito, voglio un modo concreto per verificarlo.</p>
+<p>Queste esigenze mi hanno portato a costruire tre progetti: <strong>Themis, Serval e Telemaco</strong>.</p>
+<p>Li ho sviluppati separatamente, ma credo che abbiano senso insieme. Ognuno affronta una parte del lavoro che chiedo a un agente di fare.</p>
+<p>L’idea è semplice: installare gli strumenti, renderli disponibili a Claude Code e dirgli quando usare ciascuno.</p>
+<h2>Themis: definire cosa significa “finito”</h2>
+<p>Una richiesta in linguaggio naturale lascia spazio all’interpretazione. Anche un codice che funziona può risolvere un problema diverso da quello che avevo in mente.</p>
+<p>Themis parte da una specifica con decisioni e criteri di accettazione. Organizza il lavoro degli agenti intorno a un ciclo di verifica. Approvo il piano e i test di accettazione; a quel punto i test vengono bloccati e un verificatore controlla il risultato.</p>
+<p>Claude Code è attualmente l’adapter supportato per gli agenti. Themis ne gestisce le invocazioni ed esegue direttamente la verifica. Il progetto è ancora nelle prime fasi di sviluppo e, per ora, si installa dai sorgenti.</p>
+<p>Codice: <a href="https://github.com/AlbertoBarrago/themis">github.com/AlbertoBarrago/themis</a>.</p>
+<h2>Serval: capire l’impatto di una modifica</h2>
+<p>Prima di toccare un file, la domanda è: cosa dipende da questo codice?</p>
+<p>Serval analizza un repository in locale, combinando dipendenze, cronologia Git, configurazione CI e regole per le aree critiche. Produce una stima del rischio insieme ai segnali su cui si basa.</p>
+<p>Posso chiedere a Claude di usare quell’analisi per individuare i moduli da leggere e le verifiche da eseguire. Il punteggio è un indicatore: non garantisce che una modifica sia sicura e non predice un guasto con certezza. Aiuta a decidere dove prestare attenzione.</p>
+<p>Codice: <a href="https://github.com/AlbertoBarrago/serval">github.com/AlbertoBarrago/serval</a>.</p>
+<h2>Telemaco: consultare il web mentre si lavora</h2>
+<p>Quando una modifica dipende dal comportamento di una libreria o da un’API esterna, voglio che l’agente consulti le fonti.</p>
+<p>Telemaco è un motore browser headless in Rust, pensato per lo scraping e gli agenti AI. Offre una CLI e un server MCP per accedere alle pagine ed estrarne i contenuti.</p>
+<p>In questo workflow può aiutare Claude a recuperare documentazione e informazioni dal web. L’agente deve comunque valutare quelle informazioni, citare le fonti e distinguere ciò che ha verificato da ciò che ha dedotto.</p>
+<p>Codice: <a href="https://github.com/AlbertoBarrago/telemaco">github.com/AlbertoBarrago/telemaco</a>.</p>
+<h2>Una richiesta, tre strumenti</h2>
+<p>Sono strumenti separati, installati e configurati individualmente. Una volta disponibili, il punto di partenza può essere una normale richiesta a Claude Code.</p>
+<p>Per esempio, questo è il tipo di istruzione che gli darei:</p>
+<blockquote>
+<p>Devo aggiungere il rinnovo dei token di autenticazione.</p>
+<p>Per prima cosa, usa Serval per analizzare i file coinvolti e quelli che dipendono da loro. Se ti servono informazioni sulle librerie interessate, usa Telemaco per consultare la documentazione ufficiale e riportare le fonti.</p>
+<p>Usa Themis per preparare la specifica, il piano e i test di accettazione. Fermati ai passaggi che richiedono approvazione. Dopo la mia approvazione, esegui il lavoro attraverso il suo ciclo di verifica.</p>
+<p>Alla fine, mostrami il diff, i risultati delle verifiche e gli eventuali limiti rimasti.</p>
+</blockquote>
+<p>È un esempio di come voglio comporre gli strumenti. Per rendere ripetibile il workflow, gli agenti che fanno il lavoro devono avere sia le istruzioni sia l’accesso agli strumenti. Installare un eseguibile, da solo, non basta a definire quel workflow.</p>
+<p>Themis gestisce il ciclo di esecuzione e verifica. Serval e Telemaco forniscono informazioni che possono orientare la specifica, il piano e l’implementazione. Il loro uso deve essere previsto nelle istruzioni degli agenti coinvolti.</p>
+<h2>Perché metterli insieme?</h2>
+<p>Come progetti singoli, descrivono tre problemi diversi. Insieme descrivono un modo di lavorare: capire l’impatto, consultare le fonti, definire il risultato atteso e verificarlo.</p>
+<p>Mi piace questa composizione perché ogni strumento mantiene una responsabilità chiara. Posso usarli insieme oppure scegliere solo quello che mi serve.</p>
+<p>È questa la cassetta degli attrezzi che voglio costruire intorno a Claude Code: strumenti concreti, istruzioni precise per usarli e decisioni e verifiche visibili dietro al lavoro.</p>
+</article></noscript></div>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-NVRFS5LVBB"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-NVRFS5LVBB');
+	</script>
+</body>
+
+</html>

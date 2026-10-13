@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Ho costruito una CLI per rispondere a una domanda: cosa romperà questa modifica? | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="Ci siamo passati tutti. Apri un repository, modifichi un file che sembra del tutto innocuo, esegui i test e apri una pull request. Poi qualcuno commenta:…" />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/it/articles/serval-cli/" />
+	<meta property="og:title" content="Ho costruito una CLI per rispondere a una domanda: cosa romperà questa modifica? | Alberto Barrago" />
+	<meta property="og:description" content="Ci siamo passati tutti. Apri un repository, modifichi un file che sembra del tutto innocuo, esegui i test e apri una pull request. Poi qualcuno commenta:…" />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Ho costruito una CLI per rispondere a una domanda: cosa romperà questa modifica? | Alberto Barrago" />
+	<meta name="twitter:description" content="Ci siamo passati tutti. Apri un repository, modifichi un file che sembra del tutto innocuo, esegui i test e apri una pull request. Poi qualcuno commenta:…" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/it/articles/serval-cli/" />
+
+	<!-- RSS feed -->
+	<link rel="alternate" type="application/rss+xml" title="Alberto Barrago | Articles" href="/feed.xml" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-BfavQAVx.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-V31z0jPh.css">
+<link rel="alternate" hreflang="en" href="https://albz.it/articles/serval-cli/" />
+<link rel="alternate" hreflang="it" href="https://albz.it/it/articles/serval-cli/" />
+<link rel="alternate" hreflang="x-default" href="https://albz.it/articles/serval-cli/" />
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"Article","headline":"Ho costruito una CLI per rispondere a una domanda: cosa romperà questa modifica?","datePublished":"2026-08-27","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/it/articles/serval-cli/","mainEntityOfPage":"https://albz.it/it/articles/serval-cli/","inLanguage":"it"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article><h1>Ho costruito una CLI per rispondere a una domanda: cosa romperà questa modifica?</h1><p>2026-08-27 · traduzione AI da un testo scritto dall’autore</p><p>Ci siamo passati tutti.</p>
+<p>Apri un repository, modifichi un file che sembra del tutto innocuo, esegui i test e apri una pull request.</p>
+<p>Poi qualcuno commenta:</p>
+<blockquote>
+<p>“Attenzione. Quel modulo è usato anche dalla pipeline di fatturazione.”</p>
+</blockquote>
+<p>O peggio, nessuno se ne accorge.</p>
+<p>La modifica viene integrata.</p>
+<p>E qualcosa si rompe.</p>
+<p>Il problema non è necessariamente il codice scritto male. In codebase grandi o poco familiari, capire la portata di una modifica è sorprendentemente difficile.</p>
+<p>Così ho iniziato a costruire Serval.</p>
+<p>Serval è una CLI che lavora in locale e prova a rispondere a una domanda semplice:</p>
+<p><em>Se modifico questo file, su cosa è probabile che abbia effetto?</em></p>
+<h2>Il problema</h2>
+<p>Quando voglio capire l’impatto di una modifica, di solito finisco per usare una combinazione di:</p>
+<pre><code>rg &quot;someModule&quot;
+git log
+git blame
+</code></pre>
+<p>Poi controllo gli import, cerco nella configurazione CI, verifico quali file cambiano di solito insieme e mi affido a quello che so del repository.</p>
+<p>Funziona.</p>
+<p>Ma è soprattutto lavoro manuale.</p>
+<p>E su un repository che non conosci bene, buona parte del processo diventa un’ipotesi.</p>
+<p>Volevo qualcosa di più vicino a:</p>
+<pre><code>serval inspect src/auth/token.ts
+</code></pre>
+<p>e ottenere:</p>
+<pre><code>Target
+  src/auth/token.ts
+
+Direct impact
+  src/auth/middleware.ts
+
+Indirect impact
+  src/api/client.ts
+
+CI
+  integration-auth.yml
+
+Git history
+  7 significant changes
+  3 frequently co-changed modules
+
+Risk
+  HIGH: 82/100
+
+  +28  14 downstream modules
+  +20  critical path
+  +14  high historical churn
+  +12  frequently co-changed modules
+  +8   CI workflow affected
+</code></pre>
+<p>Non una previsione.</p>
+<p>Non:</p>
+<blockquote>
+<p>“L’AI pensa che questa modifica potrebbe essere pericolosa.”</p>
+</blockquote>
+<p>Elementi concreti.</p>
+<h2>Quattro segnali invece di uno</h2>
+<p>Guardare solo gli import non basta.</p>
+<p>Un grafo delle dipendenze può dirmi:</p>
+<pre><code>A -&gt; B -&gt; C
+</code></pre>
+<p>Se modifico C, so che B e potenzialmente A ne risentono.</p>
+<p>Utile.</p>
+<p>Ma i repository contengono più informazioni del loro grafo delle dipendenze.</p>
+<h3>1. Grafo delle dipendenze</h3>
+<p>Serval scansiona il repository e costruisce un grafo a partire dalle dipendenze native dei linguaggi.</p>
+<p>Al momento comprende repository che contengono:</p>
+<ul>
+<li>JavaScript / TypeScript</li>
+<li>Go</li>
+<li>Python</li>
+<li>Java</li>
+<li>C</li>
+</ul>
+<p>Per un file di destinazione, Serval percorre il grafo nella direzione opposta e calcola quali file dipendono da lui.</p>
+<p>Questo ci dà la portata strutturale della modifica.</p>
+<p>Ma la struttura è solo il primo segnale.</p>
+<h3>2. Cronologia Git</h3>
+<p>Git contiene qualcosa di sorprendentemente vicino alla memoria di una codebase.</p>
+<p>Se due file cambiano ripetutamente insieme, è un’informazione.</p>
+<p>Se un modulo è stato modificato di continuo negli ultimi mesi, anche quella è un’informazione.</p>
+<p>Serval guarda quindi aspetti come:</p>
+<ul>
+<li>frequenza storica delle modifiche</li>
+<li>frequenza delle modifiche congiunte</li>
+</ul>
+<p>Immagina due file con grafi delle dipendenze identici.</p>
+<p>Uno non cambia da due anni.</p>
+<p>L’altro è cambiato nove volte negli ultimi 90 giorni e cambia spesso insieme ad altri 15 moduli.</p>
+<p>Probabilmente quei file non dovrebbero ricevere lo stesso punteggio di rischio.</p>
+<h3>3. Configurazione CI</h3>
+<p>C’è poi un altro grafo nascosto nella maggior parte dei repository: la CI/CD.</p>
+<p>Una modifica può attivare test di integrazione, build, deploy o pipeline di validazione a seconda dei filtri sui percorsi.</p>
+<p>Serval comprende attualmente la configurazione di:</p>
+<ul>
+<li>GitHub Actions</li>
+<li>GitLab CI</li>
+<li>Azure Pipelines</li>
+<li>Jenkins</li>
+</ul>
+<p>Questo offre un altro elemento utile: quali automazioni tocca davvero questa modifica?</p>
+<h3>4. Percorsi critici</h3>
+<p>Alcune parti di un sistema meritano semplicemente più attenzione.</p>
+<p>L’autenticazione non è la stessa cosa di una modifica a un README.</p>
+<p>La logica dei pagamenti non è la stessa cosa di una modifica a un’utilità CSS.</p>
+<p>Serval permette quindi di definire regole sui percorsi critici specifiche per il repository attraverso <code>.serval.yml</code>.</p>
+<p>Di nuovo, non sta cercando di dimostrare che qualcosa si romperà.</p>
+<p>Sta raccogliendo elementi che dicono: probabilmente dovresti guardare questa modifica con più attenzione.</p>
+<h2>Perché il punteggio è deterministico</h2>
+<p>Questa è diventata una delle decisioni progettuali più importanti del progetto.</p>
+<p>Sarebbe stato facilissimo inviare il contesto del repository a un LLM e chiedere:</p>
+<blockquote>
+<p>“Quanto è rischiosa questa modifica da 0 a 100?”</p>
+</blockquote>
+<p>Ho scelto deliberatamente di non farlo.</p>
+<p>Il punteggio di base prodotto da Serval è deterministico.</p>
+<p>Lo stesso stato del repository e la stessa configurazione producono lo stesso risultato.</p>
+<p>Soprattutto, ogni punto si può spiegare.</p>
+<p>Qualcosa del genere:</p>
+<pre><code>Risk
+  MEDIUM: 38/100
+
+  +4   2 downstream modules
+  +14  high historical churn
+  +12  91 frequently co-changed modules
+  +8   2 CI workflows affected
+</code></pre>
+<p>Non c’è un ragionamento nascosto dietro quel 38.</p>
+<p>Puoi verificarlo.</p>
+<p>Puoi non essere d’accordo.</p>
+<p>Puoi cambiare la configurazione.</p>
+<p>Ma puoi capire da dove arriva.</p>
+<p>Per gli strumenti di ingegneria, credo che questa proprietà conti.</p>
+<h2>Quindi… niente AI?</h2>
+<p>Non esattamente.</p>
+<p>Serval supporta le spiegazioni AI.</p>
+<p>Per esempio:</p>
+<pre><code>serval inspect src/auth/token.ts --explain
+</code></pre>
+<p>La parte interessante è il confine.</p>
+<p>L’AI non può cambiare il punteggio.</p>
+<p>Riceve solo l’analisi deterministica e la spiega in linguaggio naturale.</p>
+<p>E dato che Serval lavora in locale, il provider predefinito può essere un’istanza locale di Ollama.</p>
+<p>Si possono usare altri provider attraverso CLI installate in locale, come Claude, Codex o Gemini.</p>
+<p>Questa architettura mi piace molto più di un LLM al centro del sistema:</p>
+<pre><code>repository
+    ↓
+deterministic analysis
+    ↓
+risk model
+    ↓
+result
+    ↓
+optional AI explanation
+</code></pre>
+<p>Il modello spiega gli elementi disponibili. Non li inventa.</p>
+<h2>La scelta di lavorare in locale</h2>
+<p>Serval non richiede:</p>
+<ul>
+<li>un account</li>
+<li>un backend SaaS</li>
+<li>di caricare il repository altrove</li>
+<li>una chiave API per le funzionalità di base</li>
+</ul>
+<p>L’analisi avviene in locale.</p>
+<p>Questo conta per gli strumenti di sviluppo, perché il repository contiene già tutto ciò che serve per la maggior parte dell’analisi:</p>
+<ul>
+<li>codice sorgente</li>
+<li>cronologia Git</li>
+<li>configurazione CI</li>
+<li>configurazione del repository</li>
+</ul>
+<p>Perché inviare tutto altrove se possiamo calcolare la risposta in locale?</p>
+<h2>Può diventare anche un controllo in CI</h2>
+<p>La stessa analisi può essere eseguita sul diff attuale:</p>
+<pre><code>serval diff
+</code></pre>
+<p>oppure produrre output leggibile dalle macchine:</p>
+<pre><code>serval diff --json
+</code></pre>
+<p>E questo rende possibile un altro caso d’uso:</p>
+<pre><code>serval diff --fail-on high
+</code></pre>
+<p>Se uno dei file modificati raggiunge il rischio HIGH, Serval termina con uno stato diverso da zero.</p>
+<p>Significa che lo strumento può passare da “informazione interessante per lo sviluppatore” a “segnale deterministico nella pipeline di delivery”.</p>
+<p>Mi interessa particolarmente esplorare questa direzione. Non come un altro quality gate che blocca gli sviluppatori a caso, ma come un modo per rendere visibile l’impatto atteso di una modifica prima del merge.</p>
+<h2>Installazione</h2>
+<p>Serval è scritto in Go e distribuito tramite Homebrew.</p>
+<pre><code>brew install AlbertoBarrago/tap/serval
+</code></pre>
+<p>Poi, dentro un repository Git:</p>
+<pre><code>serval inspect path/to/file
+</code></pre>
+<p>oppure semplicemente:</p>
+<pre><code>serval path/to/file
+</code></pre>
+<p>Ci sono anche comandi per ispezionare direttamente il grafo e la cronologia:</p>
+<pre><code>serval graph path/to/file
+serval history path/to/file
+serval doctor
+</code></pre>
+<p>E dato che ho un debole per gli strumenti CLI della vecchia scuola:</p>
+<pre><code>man serval
+</code></pre>
+<p>esiste anche quello.</p>
+<h2>Cosa sto cercando di esplorare</h2>
+<p>Serval è ancora giovane.</p>
+<p>Mi interessa meno fingere che un punteggio da 0 a 100 possa prevedere magicamente se il software si romperà, e più una domanda diversa:</p>
+<p><em>Quante informazioni utili sul rischio di una modifica sono già dentro i nostri repository?</em></p>
+<p>I grafi delle dipendenze ci dicono cosa è collegato.</p>
+<p>Git ci dice cosa si muove insieme nella storia del progetto.</p>
+<p>La CI ci dice quali meccanismi operativi sono coinvolti.</p>
+<p>Le regole del repository ci dicono quali aree meritano più attenzione.</p>
+<p>Nessuno di questi segnali, da solo, è particolarmente rivoluzionario.</p>
+<p>L’esperimento è combinarli in uno strumento piccolo, locale e spiegabile.</p>
+<p>E forse è anche qui che l’AI si inserisce meglio in questo tipo di strumenti di sviluppo: senza sostituire l’analisi deterministica, ma aggiungendosi quando serve un ragionamento in linguaggio naturale.</p>
+<p>Serval è open source e ha licenza MIT.</p>
+<p>Progetto: <a href="https://albz.it/serval/">albz.it/serval</a></p>
+<p>Codice: <a href="https://github.com/AlbertoBarrago/serval">github.com/AlbertoBarrago/serval</a></p>
+<p>Se lavori su grandi repository, monorepo, sistemi legacy o progetti con molta CI, mi interesserebbe soprattutto sapere quali segnali usi prima di toccare una parte della codebase che non conosci.</p>
+</article></noscript></div>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-NVRFS5LVBB"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-NVRFS5LVBB');
+	</script>
+</body>
+
+</html>

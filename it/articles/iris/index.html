@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Iris: un’app di posta e calendario per il Mac, in Rust | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="Volevo un’app di posta e calendario per il mio Mac che tenesse le email sul mio computer, parlasse direttamente con Gmail e Microsoft e fosse open source.…" />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/it/articles/iris/" />
+	<meta property="og:title" content="Iris: un’app di posta e calendario per il Mac, in Rust | Alberto Barrago" />
+	<meta property="og:description" content="Volevo un’app di posta e calendario per il mio Mac che tenesse le email sul mio computer, parlasse direttamente con Gmail e Microsoft e fosse open source.…" />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Iris: un’app di posta e calendario per il Mac, in Rust | Alberto Barrago" />
+	<meta name="twitter:description" content="Volevo un’app di posta e calendario per il mio Mac che tenesse le email sul mio computer, parlasse direttamente con Gmail e Microsoft e fosse open source.…" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/it/articles/iris/" />
+
+	<!-- RSS feed -->
+	<link rel="alternate" type="application/rss+xml" title="Alberto Barrago | Articles" href="/feed.xml" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-BfavQAVx.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-V31z0jPh.css">
+<link rel="alternate" hreflang="en" href="https://albz.it/articles/iris/" />
+<link rel="alternate" hreflang="it" href="https://albz.it/it/articles/iris/" />
+<link rel="alternate" hreflang="x-default" href="https://albz.it/articles/iris/" />
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"Article","headline":"Iris: un’app di posta e calendario per il Mac, in Rust","datePublished":"2026-10-08","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/it/articles/iris/","mainEntityOfPage":"https://albz.it/it/articles/iris/","inLanguage":"it"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article><h1>Iris: un’app di posta e calendario per il Mac, in Rust</h1><p>2026-10-08 · traduzione AI da un testo scritto dall’autore</p><p>Volevo un’app di posta e calendario per il mio Mac che tenesse le email sul mio computer, parlasse direttamente con Gmail e Microsoft e fosse open source. Quell’app è <strong>Iris</strong>.</p>
+<h2>Cosa fa Iris</h2>
+<p>Iris legge la posta di Gmail, degli account Microsoft (Outlook.com, Hotmail, Live e Microsoft 365) e di qualsiasi account IMAP e SMTP, trovando per te le impostazioni del server. Mostra gli account in una casella unificata oppure uno alla volta, con calendari e contatti accanto alla posta. Firma e cifra le email con OpenPGP e S/MIME.</p>
+<p>I dati della posta e del calendario restano sul tuo computer e Iris non ha un server proprio. Gmail comunica direttamente con Google e gli account Microsoft con Microsoft Graph, quindi nessun altro server vede le tue email.</p>
+<h2>Pensata per macOS</h2>
+<p>Il cuore è in Rust: sincronizzazione, archivio locale, ricerca e operazioni sulla posta. Sopra questo nucleo, Iris sta passando a un’interfaccia nativa in SwiftUI e AppKit, così si comporta come un’app per Mac: il Portachiavi per le password, le notifiche di sistema, gli aggiornamenti tramite Sparkle, il badge nel Dock.</p>
+<h2>Un assistente, se lo vuoi</h2>
+<p>Iris ha un assistente opzionale. Resta disattivato finché non scegli un modello: Claude Code, una chiave Anthropic o un modello in esecuzione sul tuo computer. Può riassumere una conversazione, cercare email, preparare una risposta o ripulire le newsletter, e chiede prima di intervenire sulla tua posta.</p>
+<h2>A che punto è</h2>
+<p>Iris è un progetto che sviluppo e uso ogni giorno. Il codice è pubblico su GitHub sotto GPL e le build per macOS sono versioni di test: c’è ancora lavoro da fare. Iris è partita dal codice di <a href="https://github.com/c9dev/penguin-mail">Penguin Mail</a>, con la stessa licenza.</p>
+<h2>Entra nella lista d’attesa</h2>
+<p>Vuoi provare Iris quando ci sarà una build pronta per te? <a href="mailto:albertobarrago@gmail.com?subject=Iris%20waitlist%3A%20beam%20me%20in&body=Ciao%20Alberto%2C%0D%0A%0D%0AAggiungimi%20alla%20lista%20d%27attesa%20di%20Iris.%20Sono%20pronto%20a%20far%20trasferire%20un%20nuovo%20client%20nella%20mia%20casella%20di%20posta.%0D%0A%0D%0ANome%3A%0D%0AVersione%20macOS%3A%0D%0A%0D%0AGrazie%21">Teletrasportami nella lista</a> e ti aggiungo alla lista d’attesa.</p>
+<ul>
+<li>Iris: <a href="https://albz.it/iris/">albz.it/iris</a></li>
+<li>Codice: <a href="https://github.com/AlbertoBarrago/iris">github.com/AlbertoBarrago/iris</a></li>
+</ul>
+</article></noscript></div>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-NVRFS5LVBB"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-NVRFS5LVBB');
+	</script>
+</body>
+
+</html>

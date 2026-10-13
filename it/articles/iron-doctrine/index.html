@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Iron Doctrine: multiplayer online deterministico con un motore ECS condiviso | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="Iron Doctrine è un gioco di strategia in tempo reale che sto costruendo in un monorepo pnpm, con un motore ECS deterministico al centro e, da questa…" />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/it/articles/iron-doctrine/" />
+	<meta property="og:title" content="Iron Doctrine: multiplayer online deterministico con un motore ECS condiviso | Alberto Barrago" />
+	<meta property="og:description" content="Iron Doctrine è un gioco di strategia in tempo reale che sto costruendo in un monorepo pnpm, con un motore ECS deterministico al centro e, da questa…" />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Iron Doctrine: multiplayer online deterministico con un motore ECS condiviso | Alberto Barrago" />
+	<meta name="twitter:description" content="Iron Doctrine è un gioco di strategia in tempo reale che sto costruendo in un monorepo pnpm, con un motore ECS deterministico al centro e, da questa…" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/it/articles/iron-doctrine/" />
+
+	<!-- RSS feed -->
+	<link rel="alternate" type="application/rss+xml" title="Alberto Barrago | Articles" href="/feed.xml" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-BfavQAVx.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-V31z0jPh.css">
+<link rel="alternate" hreflang="en" href="https://albz.it/articles/iron-doctrine/" />
+<link rel="alternate" hreflang="it" href="https://albz.it/it/articles/iron-doctrine/" />
+<link rel="alternate" hreflang="x-default" href="https://albz.it/articles/iron-doctrine/" />
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"Article","headline":"Iron Doctrine: multiplayer online deterministico con un motore ECS condiviso","datePublished":"2026-08-31","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/it/articles/iron-doctrine/","mainEntityOfPage":"https://albz.it/it/articles/iron-doctrine/","inLanguage":"it"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article><h1>Iron Doctrine: multiplayer online deterministico con un motore ECS condiviso</h1><p>2026-08-31 · traduzione AI da un testo scritto dall’autore</p><p><strong>Iron Doctrine</strong> è un gioco di strategia in tempo reale che sto costruendo in un monorepo pnpm, con un motore ECS deterministico al centro e, da questa settimana, una modalità online 1v1 funzionante.</p>
+<h2>L’architettura</h2>
+<p>Il repository è diviso in <code>packages/</code> e <code>apps/</code>:</p>
+<ul>
+<li><strong>packages/shared</strong>: il protocollo di rete (<code>ClientMessage</code>/<code>ServerMessage</code>), tipi e costanti condivisi (<code>SIM_HZ</code>, <code>DEFAULT_INPUT_DELAY</code>) e il <code>LockstepCoordinator</code></li>
+<li><strong>packages/engine</strong>: un motore di simulazione ECS deterministico (entità/comandi/sistemi), che espone <code>Simulation.step()</code>/<code>enqueue()</code>, senza alcuna dipendenza dal rendering o dalla rete</li>
+<li><strong>apps/client</strong>: React + Pixi.js, interamente nel browser</li>
+<li><strong>apps/server</strong>: un host WebSocket Node/<code>ws</code> che inoltra i comandi senza simulare nulla</li>
+</ul>
+<h2>Il gioco locale: il game loop</h2>
+<p><code>GameRenderer</code> (una grande classe che gestisce rendering, input e audio) possiede un <code>SimBridge</code>, che a sua volta possiede un Web Worker in cui gira la <code>Simulation</code>. Il worker avanza con un clock autonomo (<code>setTimeout</code>), applica i comandi appena arrivano e produce uno snapshot per tick, che il thread principale interpola e disegna.</p>
+<h2>Il passaggio online</h2>
+<p>L’aggiunta di questa settimana: vere partite 1v1 in rete, costruite intorno al determinismo lockstep.</p>
+<ol>
+<li><strong>apps/server</strong> esegue un singolo <code>MatchRelay</code> in memoria per processo. Non simula nulla: assegna ciascun comando in arrivo a un tick futuro e ritrasmette lo stesso insieme di comandi confermati a entrambi i client ogni <code>SIM_DT_MS</code>. Il determinismo deriva dai due client che eseguono lo stesso motore sullo stesso flusso di comandi.</li>
+<li><strong>NetworkClient</strong> comunica con il server via WebSocket, traduce i tick confermati e li passa a un secondo tipo di bridge, <code>NetworkedSimBridge</code>, che implementa la stessa interfaccia <code>SimBridgeLike</code> di quello locale, con due differenze: i comandi locali vanno al server (<code>sendCommand</code>) invece che direttamente al worker, e il worker avanza di un solo tick quando arriva una conferma dalla rete (<code>networkTick</code>), invece di procedere autonomamente.</li>
+<li><strong>Il problema “sei sempre il giocatore 0”</strong>: buona parte dell’interfaccia e dell’HUD assumeva che l’utente locale fosse il giocatore 0. L’ho risolto con <code>playerPerspective.ts</code>, un modulo puro che scambia le etichette <code>owner</code>/<code>player</code>/<code>winner</code> (0↔1) solo al confine con la rete, così ogni client continua a considerarsi internamente il giocatore 0.</li>
+<li><code>GameRenderer</code> ora riceve il bridge nel costruttore (locale o di rete) invece di istanziarlo sempre da sé. Quel singolo punto di iniezione ha reso possibile il resto della modalità online senza riscrivere le circa 1700 righe della classe.</li>
+</ol>
+<h2>Perché questa scelta</h2>
+<p>Mantenere la simulazione deterministica e indipendente dalla rete in <code>packages/engine</code> significa usare lo stesso codice per schermaglie, campagna e gioco online. Il server non deve mai conoscere lo stato del gioco: è soltanto un clock autorevole per ordinare i comandi. Il compromesso è che entrambi i client devono produrre risultati identici bit per bit a partire dagli stessi input. Per questo l’intero modello di rete si basa sulla riproduzione dei comandi, non sulla sincronizzazione dello stato.</p>
+<h2>I prossimi passi</h2>
+<p>L’1v1 funziona; ora tocca gestire le riconnessioni e verificare che il modello lockstep regga con il jitter di una rete reale, non solo su localhost.</p>
+</article></noscript></div>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-NVRFS5LVBB"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-NVRFS5LVBB');
+	</script>
+</body>
+
+</html>

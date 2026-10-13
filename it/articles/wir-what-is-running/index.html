@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+	<meta charset="utf-8" />
+	<title>wir: What Is Running, uno strumento per ispezionare porte e processi scritto in C | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="Ho recentemente pubblicato wir (What Is Running), uno strumento da riga di comando scritto in C per controllare cosa gira su determinate porte e ottenere…" />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/it/articles/wir-what-is-running/" />
+	<meta property="og:title" content="wir: What Is Running, uno strumento per ispezionare porte e processi scritto in C | Alberto Barrago" />
+	<meta property="og:description" content="Ho recentemente pubblicato wir (What Is Running), uno strumento da riga di comando scritto in C per controllare cosa gira su determinate porte e ottenere…" />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="wir: What Is Running, uno strumento per ispezionare porte e processi scritto in C | Alberto Barrago" />
+	<meta name="twitter:description" content="Ho recentemente pubblicato wir (What Is Running), uno strumento da riga di comando scritto in C per controllare cosa gira su determinate porte e ottenere…" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/it/articles/wir-what-is-running/" />
+
+	<!-- RSS feed -->
+	<link rel="alternate" type="application/rss+xml" title="Alberto Barrago | Articles" href="/feed.xml" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-BfavQAVx.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-V31z0jPh.css">
+<link rel="alternate" hreflang="en" href="https://albz.it/articles/wir-what-is-running/" />
+<link rel="alternate" hreflang="it" href="https://albz.it/it/articles/wir-what-is-running/" />
+<link rel="alternate" hreflang="x-default" href="https://albz.it/articles/wir-what-is-running/" />
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"Article","headline":"wir: What Is Running, uno strumento per ispezionare porte e processi scritto in C","datePublished":"2025-12-30","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/it/articles/wir-what-is-running/","mainEntityOfPage":"https://albz.it/it/articles/wir-what-is-running/","inLanguage":"it"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article><h1>wir: What Is Running, uno strumento per ispezionare porte e processi scritto in C</h1><p>2025-12-30 · traduzione AI da un testo scritto dall’autore</p><p>Ho recentemente pubblicato <strong>wir</strong> (What Is Running), uno strumento da riga di comando scritto in C per controllare cosa gira su determinate porte e ottenere informazioni dettagliate sui processi. Un progetto nato da un’esigenza pratica, che si è trasformato in un’occasione per esplorare la programmazione di sistema in C.</p>
+<h2>Il problema</h2>
+<p>Quante volte hai trovato una porta occupata senza sapere quale processo la stesse usando? O hai dovuto risalire la gerarchia di un processo per capire chi avesse avviato cosa? Di solito ricorriamo a combinazioni di <code>lsof</code>, <code>netstat</code> e <code>ps</code>, ma perché non avere tutto in un solo comando?</p>
+<h2>La soluzione</h2>
+<p><code>wir</code> è uno strumento multipiattaforma (macOS e Linux) che permette di:</p>
+<ul>
+<li>Scoprire quale processo usa una determinata porta</li>
+<li>Ottenere informazioni dettagliate su un PID</li>
+<li>Visualizzare l’albero completo degli antenati di un processo</li>
+<li>Elencare tutti i processi in esecuzione</li>
+<li>Vedere le variabili d’ambiente di un processo</li>
+<li>Produrre output normale, breve, JSON o ad albero</li>
+<li>Ricevere avvisi di sicurezza per configurazioni potenzialmente rischiose</li>
+</ul>
+<h2>Esempi pratici</h2>
+<pre><code class="language-bash"># Who&#39;s using port 8080?
+wir --port 8080
+
+# Info about a specific process
+wir --pid 1234
+
+# Show the process ancestry tree
+wir --pid 1234 --tree
+
+# JSON output for scripting
+wir --port 3000 --json
+
+# List all processes (short format)
+wir --all --short
+
+# Security warnings only
+wir --port 8080 --warnings
+</code></pre>
+<h2>L’architettura</h2>
+<p>Il progetto è strutturato in modo modulare:</p>
+<ul>
+<li><strong>Livello di astrazione della piattaforma</strong>: gestisce le differenze tra Linux (parsing di <code>/proc</code>) e macOS (<code>libproc</code> e <code>sysctl</code>)</li>
+<li><strong>Formattazione dell’output</strong>: supporta diverse modalità di visualizzazione senza duplicare la logica</li>
+<li><strong>Gestione coerente degli errori</strong>: ogni allocazione viene controllata, ogni risorsa viene liberata</li>
+<li><strong>Gestione rigorosa della memoria</strong>: niente leak, niente comportamento indefinito</li>
+</ul>
+<h2>Cosa ho imparato</h2>
+<p>Scrivere <code>wir</code> è stata un’ottima occasione per esercitare concetti fondamentali:</p>
+<ol>
+<li><strong>Programmazione di sistema</strong>: interazione con <code>/proc</code>, chiamate di sistema, gestione dei processi</li>
+<li><strong>Sviluppo multipiattaforma</strong>: compilazione condizionale e API diverse per ogni sistema operativo</li>
+<li><strong>Sicurezza della memoria in C</strong>: gestione manuale della memoria senza garbage collector</li>
+<li><strong>Sistemi di build</strong>: Makefile con rilevamento automatico della piattaforma</li>
+<li><strong>Progettazione delle API</strong>: un’interfaccia pulita e componibile</li>
+</ol>
+<h2>Non memorizzo i comandi</h2>
+<p>Il mio approccio è questo: non mi interessa memorizzare i comandi esatti di <code>lsof</code> o <code>netstat</code>. Preferisco capire l’architettura sottostante e costruire strumenti che risolvano il problema in modo più elegante. <code>wir</code> non è solo un wrapper: è un’astrazione che nasconde la complessità delle differenze tra sistemi operativi.</p>
+<h2>Il futuro</h2>
+<p>Il progetto si presta a diverse estensioni:</p>
+<ul>
+<li>Supporto alle porte UDP</li>
+<li>Filtri avanzati sui processi</li>
+<li>Supporto ad altri sistemi operativi (BSD, ecc.)</li>
+<li>Ottimizzazioni delle prestazioni</li>
+<li>Altri formati di output</li>
+</ul>
+<h2>Provalo</h2>
+<p><a href="https://github.com/AlbertoBarrago/wir">wir</a></p>
+<p>È un progetto per imparare, quindi sentiti libero di sperimentare ed estenderlo. Costruire strumenti di sistema in C è un ottimo modo per capire cosa succede davvero sotto il cofano.</p>
+<pre><code class="language-bash"># Build and install
+brew tap AlbertoBarrago/tap
+brew install wir
+
+# Start using it
+wir --port 3000
+</code></pre>
+</article></noscript></div>
+
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-NVRFS5LVBB"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'G-NVRFS5LVBB');
+	</script>
+</body>
+
+</html>
