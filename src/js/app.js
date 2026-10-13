@@ -749,7 +749,8 @@ function executeCommand(rawCommand) {
 	if (command === 'rss') {
 		appendOutput(`<div class="output-title">RSS feed</div>
 <p class="prose">${t("Subscribe to my articles feed in any RSS reader:")}</p>
-<div class="key-value"><span class="label">url</span><a class="terminal-link" href="/feed.xml" target="_blank" rel="noopener">https://albz.it/feed.xml</a></div>`);
+<div class="key-value"><span class="label">url</span><a class="terminal-link" href="/feed.xml" target="_blank" rel="noopener">https://albz.it/feed.xml</a></div>
+<p class="prose">${t("No RSS reader on your Mac yet? I built one too:")} <a class="terminal-link" href="https://github.com/AlbertoBarrago/RSSReader/releases/latest" target="_blank" rel="noopener noreferrer">${t("download RSS Reader")}</a> 😉</p>`);
 		return;
 	}
 	if (command === 'play') {

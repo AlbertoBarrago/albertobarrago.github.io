@@ -106,6 +106,8 @@ const italian = {
 	"Let's build something useful": "Costruiamo qualcosa di utile",
 	"A real-time strategy game with a deterministic ECS engine and lockstep online 1v1 multiplayer.": "Un gioco di strategia in tempo reale con motore ECS deterministico e multiplayer online 1v1 in lockstep.",
 	"Subscribe to my articles feed in any RSS reader:": "Iscriviti al feed degli articoli con un lettore RSS:",
+	"No RSS reader on your Mac yet? I built one too:": "Non hai ancora un lettore RSS sul Mac? Ne ho fatto uno anch’io:",
+	"download RSS Reader": "scarica RSS Reader",
 	"Downloading albertobarrago_cv.pdf…": "Download di albertobarrago_cv.pdf…",
 	"No such file": "File inesistente",
 	"Unknown game": "Gioco sconosciuto",
