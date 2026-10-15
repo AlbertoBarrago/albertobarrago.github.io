@@ -2,7 +2,7 @@
 title: Una piccola cassetta degli attrezzi per Claude Code
 date: 2026-10-13
 tags: ai-agents, claude-code, developer-tools, opensource
-label: traduzione AI da un testo assistito da AI e rivisto dall’autore
+label: Traduzione AI, rivista dall’autore
 ---
 
 Quando lavoro con un agente di coding, scrivere codice è solo una parte del lavoro.
