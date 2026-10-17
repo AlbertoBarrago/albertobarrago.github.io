@@ -51,7 +51,7 @@
 		}
 		</script>
 
-  <script type="module" crossorigin src="/assets/index-BWCf4c_o.js"></script>
+  <script type="module" crossorigin src="/assets/index-DwnufQk1.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-V31z0jPh.css">
 <link rel="alternate" hreflang="en" href="https://albz.it/articles/serval-cli/" />
 <link rel="alternate" hreflang="it" href="https://albz.it/it/articles/serval-cli/" />
@@ -84,7 +84,7 @@ git blame
 <p>Poi controllo gli import, cerco nella configurazione CI, verifico quali file cambiano di solito insieme e mi affido a quello che so del repository.</p>
 <p>Funziona.</p>
 <p>Ma è soprattutto lavoro manuale.</p>
-<p>E su un repository che non conosci bene, buona parte del processo diventa un’ipotesi.</p>
+<p>E quando il repository non lo conosci bene, finisci spesso per andare a intuito.</p>
 <p>Volevo qualcosa di più vicino a:</p>
 <pre><code>serval inspect src/auth/token.ts
 </code></pre>
@@ -130,7 +130,7 @@ Risk
 <p>Ma i repository contengono più informazioni del loro grafo delle dipendenze.</p>
 <h3>1. Grafo delle dipendenze</h3>
 <p>Serval scansiona il repository e costruisce un grafo a partire dalle dipendenze native dei linguaggi.</p>
-<p>Al momento comprende repository che contengono:</p>
+<p>Al momento analizza repository scritti in:</p>
 <ul>
 <li>JavaScript / TypeScript</li>
 <li>Go</li>
@@ -138,8 +138,8 @@ Risk
 <li>Java</li>
 <li>C</li>
 </ul>
-<p>Per un file di destinazione, Serval percorre il grafo nella direzione opposta e calcola quali file dipendono da lui.</p>
-<p>Questo ci dà la portata strutturale della modifica.</p>
+<p>Dato un file, Serval percorre il grafo a ritroso e individua quali altri file ne dipendono.</p>
+<p>Questo ci dice fin dove può propagarsi la modifica attraverso le dipendenze.</p>
 <p>Ma la struttura è solo il primo segnale.</p>
 <h3>2. Cronologia Git</h3>
 <p>Git contiene qualcosa di sorprendentemente vicino alla memoria di una codebase.</p>
@@ -168,7 +168,7 @@ Risk
 <h3>4. Percorsi critici</h3>
 <p>Alcune parti di un sistema meritano semplicemente più attenzione.</p>
 <p>L’autenticazione non è la stessa cosa di una modifica a un README.</p>
-<p>La logica dei pagamenti non è la stessa cosa di una modifica a un’utilità CSS.</p>
+<p>La logica dei pagamenti non è la stessa cosa di una modifica a una utility CSS.</p>
 <p>Serval permette quindi di definire regole sui percorsi critici specifiche per il repository attraverso <code>.serval.yml</code>.</p>
 <p>Di nuovo, non sta cercando di dimostrare che qualcosa si romperà.</p>
 <p>Sta raccogliendo elementi che dicono: probabilmente dovresti guardare questa modifica con più attenzione.</p>
@@ -207,7 +207,7 @@ Risk
 <p>L’AI non può cambiare il punteggio.</p>
 <p>Riceve solo l’analisi deterministica e la spiega in linguaggio naturale.</p>
 <p>E dato che Serval lavora in locale, il provider predefinito può essere un’istanza locale di Ollama.</p>
-<p>Si possono usare altri provider attraverso CLI installate in locale, come Claude, Codex o Gemini.</p>
+<p>Si possono usare altri provider tramite CLI installate in locale, come Claude, Codex o Gemini.</p>
 <p>Questa architettura mi piace molto più di un LLM al centro del sistema:</p>
 <pre><code>repository
     ↓
@@ -247,7 +247,7 @@ optional AI explanation
 <p>E questo rende possibile un altro caso d’uso:</p>
 <pre><code>serval diff --fail-on high
 </code></pre>
-<p>Se uno dei file modificati raggiunge il rischio HIGH, Serval termina con uno stato diverso da zero.</p>
+<p>Se uno dei file modificati raggiunge il livello di rischio HIGH, Serval termina con un codice di uscita diverso da zero.</p>
 <p>Significa che lo strumento può passare da “informazione interessante per lo sviluppatore” a “segnale deterministico nella pipeline di delivery”.</p>
 <p>Mi interessa particolarmente esplorare questa direzione. Non come un altro quality gate che blocca gli sviluppatori a caso, ma come un modo per rendere visibile l’impatto atteso di una modifica prima del merge.</p>
 <h2>Installazione</h2>
@@ -274,8 +274,8 @@ serval doctor
 <p>Mi interessa meno fingere che un punteggio da 0 a 100 possa prevedere magicamente se il software si romperà, e più una domanda diversa:</p>
 <p><em>Quante informazioni utili sul rischio di una modifica sono già dentro i nostri repository?</em></p>
 <p>I grafi delle dipendenze ci dicono cosa è collegato.</p>
-<p>Git ci dice cosa si muove insieme nella storia del progetto.</p>
-<p>La CI ci dice quali meccanismi operativi sono coinvolti.</p>
+<p>Git ci dice quali file sono stati modificati insieme nel corso del progetto.</p>
+<p>La CI ci dice quali automazioni sono coinvolte.</p>
 <p>Le regole del repository ci dicono quali aree meritano più attenzione.</p>
 <p>Nessuno di questi segnali, da solo, è particolarmente rivoluzionario.</p>
 <p>L’esperimento è combinarli in uno strumento piccolo, locale e spiegabile.</p>
@@ -283,7 +283,7 @@ serval doctor
 <p>Serval è open source e ha licenza MIT.</p>
 <p>Progetto: <a href="https://albz.it/serval/">albz.it/serval</a></p>
 <p>Codice: <a href="https://github.com/AlbertoBarrago/serval">github.com/AlbertoBarrago/serval</a></p>
-<p>Se lavori su grandi repository, monorepo, sistemi legacy o progetti con molta CI, mi interesserebbe soprattutto sapere quali segnali usi prima di toccare una parte della codebase che non conosci.</p>
+<p>Se lavori su grandi repository, monorepo, sistemi legacy o progetti con pipeline CI articolate, mi interesserebbe soprattutto sapere quali segnali usi prima di toccare una parte della codebase che non conosci.</p>
 </article></noscript></div>
 
 	<!-- Google tag (gtag.js) -->

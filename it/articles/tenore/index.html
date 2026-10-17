@@ -51,7 +51,7 @@
 		}
 		</script>
 
-  <script type="module" crossorigin src="/assets/index-BWCf4c_o.js"></script>
+  <script type="module" crossorigin src="/assets/index-DwnufQk1.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-V31z0jPh.css">
 <link rel="alternate" hreflang="en" href="https://albz.it/articles/tenore/" />
 <link rel="alternate" hreflang="it" href="https://albz.it/it/articles/tenore/" />
@@ -63,9 +63,9 @@
 
 <body>
 	<div id="app"><noscript><article><h1>Tenore: smetti di mantenere tre volte la stessa configurazione degli agenti</h1><p>2026-10-01 · traduzione AI da un testo scritto dall’autore</p><p>Ho costruito <strong>Tenore</strong>, una CLI che prende una configurazione condivisa per gli agenti AI di coding e la compila nei loro file nativi.</p>
-<p>Il problema è la manutenzione ordinaria. Claude Code, Codex CLI e Antigravity hanno i propri posti per istruzioni, permessi e server MCP. Appena ne usi più di uno, le stesse regole del progetto iniziano a comparire in più file.</p>
+<p>Il problema è la manutenzione ordinaria. Claude Code, Codex CLI e Antigravity conservano istruzioni, permessi e configurazioni dei server MCP in file diversi. Appena ne usi più di uno, le stesse regole del progetto iniziano a comparire in più file.</p>
 <p>Cambi il comando dei test, aggiungi un server, restringi un permesso: ogni copia richiede attenzione. Prima o poi ne salti una. Cambiare agente significa allora controllare se la configurazione dice ancora quello che volevi.</p>
-<p>Tenore dà a quella configurazione una fonte di verità: una directory chiamata <code>.agents/</code>.</p>
+<p>Con Tenore, quella configurazione ha un unico riferimento: la directory <code>.agents/</code>.</p>
 <h2>La configurazione come codice sorgente</h2>
 <p>L’idea è mantenere le istruzioni in Markdown, le policy strutturate nel frontmatter YAML e generare i file che ogni agente si aspetta.</p>
 <p>Un repository può iniziare con:</p>
@@ -76,8 +76,8 @@
     architecture.md
 </code></pre>
 <p><code>AGENTS.md</code> contiene il testo: come lavorare nel repository, quali convenzioni contano, cosa richiede più attenzione. <code>policy.md</code> descrive permessi, server MCP e override specifici per ciascun target. I file di memoria contengono note persistenti per argomento.</p>
-<p>Tenore analizza quei sorgenti, unisce i loro ambiti e passa il risultato all’adapter di ogni target. Gli adapter producono configurazioni native, come <code>CLAUDE.md</code> o <code>.codex/config.toml</code>.</p>
-<p>I file generati diventano così output di build che si può revisionare. Le regole condivise hanno un posto esplicito e ogni traduzione ha un punto preciso nell’implementazione.</p>
+<p>Tenore analizza quei sorgenti, combina le configurazioni dei diversi ambiti e passa il risultato all’adapter di ogni agente di destinazione. Gli adapter producono configurazioni native, come <code>CLAUDE.md</code> o <code>.codex/config.toml</code>.</p>
+<p>I file generati diventano così output di build che si può revisionare. Sai dove modificare le regole condivise e dove viene implementata la conversione per ciascun agente.</p>
 <h2>Un piccolo esempio</h2>
 <p>Il pacchetto npm si chiama <code>tenore-cli</code>; l’eseguibile è <code>tenore</code>. Richiede Node.js 20.12 o successivo.</p>
 <pre><code class="language-sh">pnpm add -g tenore-cli
@@ -111,7 +111,7 @@ tenore sync
 <p>L’importazione offre un percorso di migrazione senza trascrivere tutto a mano nella nuova struttura.</p>
 <h2>Regole condivise, contesto locale</h2>
 <p>La configurazione ha tre ambiti: globale, repository e locale. Vengono uniti in quest’ordine.</p>
-<p>I sorgenti globali vivono in <code>~/.agents/</code>, quelli del repository in <code>.agents/</code> e quelli specifici della macchina in <code>.agents/local/</code>. L’inizializzazione aggiunge l’ambito locale alle regole di esclusione di Git. La configurazione globale viene inclusa esplicitamente con <code>--global</code>.</p>
+<p>I sorgenti globali si trovano in <code>~/.agents/</code>, quelli del repository in <code>.agents/</code> e quelli specifici della macchina in <code>.agents/local/</code>. L’inizializzazione aggiunge l’ambito locale alle regole di esclusione di Git. La configurazione globale viene inclusa esplicitamente con <code>--global</code>.</p>
 <p><code>tenore init --global</code> porta la stessa procedura guidata nella configurazione personale. Può importare le impostazioni globali esistenti degli agenti in <code>~/.agents/</code> e mostra il diff completo prima di scrivere le modifiche.</p>
 <p>Le regole di unione distinguono i diversi tipi di dati. Istruzioni e memoria vengono combinate nell’ordine degli ambiti. Le liste vengono deduplicate. Le impostazioni scalari prendono generalmente il valore dell’ambito più ristretto.</p>
 <p>I permessi richiedono una gestione più rigorosa: deny prevale su ask, che prevale su allow. Un allow a livello di repository non può annullare un deny globale. Le regole scartate durante l’unione producono avvisi.</p>
@@ -123,7 +123,7 @@ tenore sync
     command: npx
     args: [&quot;-y&quot;, &quot;tenore-cli&quot;, &quot;mcp&quot;]
 </code></pre>
-<p>Dopo <code>tenore sync</code>, ogni agente selezionato riceve la configurazione del server. Espone strumenti per elencare, leggere, cercare e scrivere gli argomenti di memoria, mantenendo le note persistenti nella stessa directory condivisa. Le scritture sono limitate alle directory di memoria. Quando un agente crea un nuovo argomento, esegui di nuovo <code>tenore sync</code> per includerlo nei file generati.</p>
+<p>Dopo <code>tenore sync</code>, ogni agente selezionato riceve la configurazione del server. Il server espone strumenti per elencare, leggere, cercare e aggiornare le note per argomento. Le note restano salvate nella stessa directory condivisa. Le scritture sono limitate alle directory di memoria. Quando un agente crea un nuovo argomento, esegui di nuovo <code>tenore sync</code> per includerlo nei file generati.</p>
 <p>L’accesso al web può seguire un approccio simile. Tenore permette di dichiarare una volta un server MCP web e tradurne la configurazione per ogni agente. L’esempio documentato usa <a href="https://github.com/AlbertoBarrago/telemaco">Telemaco</a>, ma si può usare un altro server MCP web o browser.</p>
 <p>Qui conta una distinzione: <code>network: none</code> disabilita l’accesso web nativo degli agenti, mentre i server MCP restano separati. L’accesso attraverso quei server è governato da regole esplicite sui permessi MCP. Questo permette di usare un server web condiviso chiedendo conferma per i suoi strumenti.</p>
 <h2>Anche i file generati vanno protetti</h2>
@@ -132,13 +132,13 @@ tenore sync
 <p>Per la CI c’è:</p>
 <pre><code class="language-sh">tenore check
 </code></pre>
-<p>Termina con esito negativo in presenza di sorgenti non validi, divergenze, conflitti o modifiche generate ancora da applicare. La coerenza della configurazione ha così un controllo accanto al resto delle verifiche del repository.</p>
+<p>Termina con esito negativo in presenza di sorgenti non validi, divergenze, conflitti o modifiche generate ancora da applicare. Anche la coerenza della configurazione entra così nelle verifiche del repository.</p>
 <p>Se smetti di usare un agente come target, Tenore segnala i suoi vecchi file generati come orfani e li mantiene per default. <code>tenore sync --prune</code> li rimuove solo se non sono stati modificati.</p>
 <h2>Dove la portabilità si complica</h2>
 <p>Gli adapter attuali coprono Claude Code, Codex CLI e Antigravity, ma i loro modelli di permessi sono diversi. Un formato sorgente comune non può far sparire quelle differenze.</p>
 <p>La policy documentata di Tenore è produrre un mapping più restrittivo con un avviso quando non è disponibile una traduzione esatta. Alcune funzionalità richiedono una gestione esplicita: i mapping del filesystem di Codex richiedono l’attivazione dei profili di permessi, mentre i permessi di Antigravity vengono configurati nell’ambito utente.</p>
-<p>Questi limiti fanno parte della revisione della configurazione generata. Le istruzioni condivise non possono nemmeno garantire comportamenti identici degli agenti; rendono coerenti e più facili da mantenere le regole desiderate.</p>
-<p>Il progetto è ancora in corso. La misura utile è capire se cambiare una regola diventa più facile da controllare e trasferire tra gli strumenti che usi.</p>
+<p>Sono limiti da considerare quando rivedi la configurazione generata. Le istruzioni condivise non possono nemmeno garantire comportamenti identici degli agenti; rendono coerenti e più facili da mantenere le regole desiderate.</p>
+<p>Il progetto è ancora in corso. Il criterio per valutarlo è semplice: quanto diventa più facile controllare la modifica a una regola e applicarla agli strumenti che usi?</p>
 <p>Tenore è scritto in TypeScript e pubblicato con licenza MIT. Il <a href="https://github.com/AlbertoBarrago/tenore">repository</a> contiene sorgenti e istruzioni di configurazione; il <a href="https://github.com/AlbertoBarrago/tenore/blob/main/docs/mapping.md">riferimento sui mapping</a> documenta le decisioni di traduzione. Puoi installarlo da <a href="https://www.npmjs.com/package/tenore-cli">npm</a>.</p>
 </article></noscript></div>
 

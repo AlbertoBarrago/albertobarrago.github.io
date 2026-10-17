@@ -13,7 +13,7 @@
 <h2>Themis: definire cosa significa “finito”</h2>
 <p>Una richiesta in linguaggio naturale lascia spazio all’interpretazione. Anche un codice che funziona può risolvere un problema diverso da quello che avevo in mente.</p>
 <p>Themis parte da una specifica con decisioni e criteri di accettazione. Organizza il lavoro degli agenti intorno a un ciclo di verifica. Approvo il piano e i test di accettazione; a quel punto i test vengono bloccati e un verificatore controlla il risultato.</p>
-<p>Claude Code è attualmente l’adapter supportato per gli agenti. Themis ne gestisce le invocazioni ed esegue direttamente la verifica. Il progetto è ancora nelle prime fasi di sviluppo e, per ora, si installa dai sorgenti.</p>
+<p>Al momento, l’adapter disponibile è quello per Claude Code. Themis ne gestisce le invocazioni ed esegue direttamente la verifica. Il progetto è ancora nelle prime fasi di sviluppo e, per ora, si installa dai sorgenti.</p>
 <p>Codice: <a href="https://github.com/AlbertoBarrago/themis">github.com/AlbertoBarrago/themis</a>.</p>
 <h2>Serval: capire l’impatto di una modifica</h2>
 <p>Prima di toccare un file, la domanda è: cosa dipende da questo codice?</p>
@@ -34,31 +34,31 @@
 <p>Usa Themis per preparare la specifica, il piano e i test di accettazione. Fermati ai passaggi che richiedono approvazione. Dopo la mia approvazione, esegui il lavoro attraverso il suo ciclo di verifica.</p>
 <p>Alla fine, mostrami il diff, i risultati delle verifiche e gli eventuali limiti rimasti.</p>
 </blockquote>
-<p>È un esempio di come voglio comporre gli strumenti. Per rendere ripetibile il workflow, gli agenti che fanno il lavoro devono avere sia le istruzioni sia l’accesso agli strumenti. Installare un eseguibile, da solo, non basta a definire quel workflow.</p>
+<p>È un esempio di come voglio usare insieme questi strumenti. Per rendere ripetibile il workflow, gli agenti che fanno il lavoro devono avere sia le istruzioni sia l’accesso agli strumenti. Installare un eseguibile non basta: bisogna anche stabilire come usarlo nel workflow.</p>
 <p>Themis gestisce il ciclo di esecuzione e verifica. Serval e Telemaco forniscono informazioni che possono orientare la specifica, il piano e l’implementazione. Il loro uso deve essere previsto nelle istruzioni degli agenti coinvolti.</p>
 <h2>Perché metterli insieme?</h2>
 <p>Come progetti singoli, descrivono tre problemi diversi. Insieme descrivono un modo di lavorare: capire l’impatto, consultare le fonti, definire il risultato atteso e verificarlo.</p>
 <p>Mi piace questa composizione perché ogni strumento mantiene una responsabilità chiara. Posso usarli insieme oppure scegliere solo quello che mi serve.</p>
-<p>È questa la cassetta degli attrezzi che voglio costruire intorno a Claude Code: strumenti concreti, istruzioni precise per usarli e decisioni e verifiche visibili dietro al lavoro.</p>
-`,Et=Object.freeze(Object.defineProperty({__proto__:null,html:_t,meta:Mt},Symbol.toStringTag,{value:"Module"})),Ot={title:"Lo sviluppo è morto",date:"2026-09-22",tags:["opinion","ai","career","italy","craft"],label:"traduzione AI da un testo scritto dall’autore"},Rt=`<p>Ho iniziato nel 2011, da freelance fino al 2014, e non ho mai smesso. Quindici anni. Abbastanza per avere delle opinioni, abbastanza pochi perché chi ha iniziato nel 1995 possa ridere delle mie.</p>
-<p>Ricordo Dreamweaver, quando ancora nessuno se ne vergognava. Ricordo Eclipse che divorava un portatile solo per aprire un progetto. Ricordo l’arrivo di Sublime Text, come se qualcuno avesse finalmente capito che un editor di testo è un editor di testo. Ricordo le librerie di pattern da cui copiavamo tutti senza mai citare nessuno. Ricordo CodePen, che <a href="https://en.wikipedia.org/wiki/CodePen">Chris Coyier ha cofondato nel 2012 con Alex Vazquez e Tim Sabat</a>, e <a href="https://chriscoyier.net/bio/">CSS-Tricks</a>, che ha gestito dal 2007 fino all’acquisizione da parte di DigitalOcean nel 2022. E lo ricordo sul palco, intorno al 2016, mentre mostrava il proprio workflow e gli strumenti che usava davvero, birra in mano: sembrava più uno che ti spiega qualcosa al bar che una keynote recitata davanti a te. Allora era normale. Il web l’ha perso e non l’ha più ritrovato.</p>
+<p>È questa la cassetta degli attrezzi che voglio costruire intorno a Claude Code: strumenti concreti, istruzioni precise e un lavoro di cui si possano vedere le decisioni e verificare i risultati.</p>
+`,Et=Object.freeze(Object.defineProperty({__proto__:null,html:_t,meta:Mt},Symbol.toStringTag,{value:"Module"})),Ot={title:"Lo sviluppo è morto",date:"2026-09-22",tags:["opinion","ai","career","italy","craft"],label:"traduzione AI da un testo scritto dall’autore"},Rt=`<p>Ho iniziato nel 2011, da freelance fino al 2014, e non ho mai smesso. Quindici anni. Abbastanza per avere delle opinioni. Ancora pochi, per chi ha iniziato nel 1995 e può ridere delle mie.</p>
+<p>Ricordo Dreamweaver, quando ancora nessuno se ne vergognava. Ricordo Eclipse che divorava un portatile solo per aprire un progetto. Ricordo l’arrivo di Sublime Text, come se qualcuno avesse finalmente capito che un editor di testo è un editor di testo. Ricordo le librerie di pattern da cui copiavamo tutti senza mai citare nessuno. Ricordo CodePen, che <a href="https://en.wikipedia.org/wiki/CodePen">Chris Coyier ha cofondato nel 2012 con Alex Vazquez e Tim Sabat</a>, e <a href="https://chriscoyier.net/bio/">CSS-Tricks</a>, che ha gestito dal 2007 fino all’acquisizione da parte di DigitalOcean nel 2022. E lo ricordo sul palco, intorno al 2016, mentre mostrava il proprio workflow e gli strumenti che usava davvero, birra in mano: sembrava di ascoltare uno che ti spiega qualcosa al bar, più che di assistere a una presentazione recitata. Allora era normale. Il web l’ha perso e non l’ha più ritrovato.</p>
 <p>Quella era la cultura. Piccola, rumorosa, generosa, costruita sull’idea che avremmo continuato a fare più o meno questo ancora a lungo.</p>
-<h2>La nota a piè di pagina italiana</h2>
+<h2>L’Italia, una nota a margine</h2>
 <p>L’Italia non ne ha mai fatto parte. Abbiamo avuto un vero momento: la <a href="https://en.wikipedia.org/wiki/Programma_101">Olivetti Programma 101</a>, New York, 1965, forse il primo computer da tavolo, oltre 40.000 unità vendute, <a href="https://www.fondazioneadrianolivetti.it/en/p101-cecam/">dieci comprate dalla NASA e usate per pianificare l’allunaggio dell’Apollo 11</a>. Poi più nulla di quella portata. Mai più.</p>
-<p>Le eccezioni ci sono e sono reali. <a href="https://en.wikipedia.org/wiki/Salvatore_Sanfilippo">Salvatore Sanfilippo ha pubblicato Redis il 26 febbraio 2009</a>, scritto in Sicilia per risolvere un problema nel suo prodotto di analytics, ed è diventato l’infrastruttura sotto una parte consistente di internet. Ma una persona non fa un movimento. La media qui è mediocre da vent’anni, tenuta a galla da una manciata di persone a cui importava più di quanto chiunque le pagasse perché importasse. Il famoso uno per cento. Chi ha davvero lavorato in questo paese sa che quel numero non è una figura retorica.</p>
+<p>Le eccezioni ci sono e sono reali. <a href="https://en.wikipedia.org/wiki/Salvatore_Sanfilippo">Salvatore Sanfilippo ha pubblicato Redis il 26 febbraio 2009</a>, scritto in Sicilia per risolvere un problema nel suo prodotto di analytics, ed è diventato l’infrastruttura sotto una parte consistente di internet. Ma una persona non fa un movimento. La media qui è mediocre da vent’anni, tenuta a galla da una manciata di persone che ci mettevano ben più passione di quanta ne giustificasse lo stipendio. Il famoso uno per cento. Chi ha davvero lavorato in questo paese sa che quel numero non è una figura retorica.</p>
 <p>L’ho affrontato nell’unico modo che funziona: ho ignorato la conversazione locale e seguito direttamente le persone che costruivano davvero, una per ambito. Prima su Twitter, poi su qualunque cosa Twitter sia diventato, ora su Bluesky per chi vuole ancora una timeline che gli appartenga.</p>
 <h2>Questa volta non è come le altre</h2>
 <p>E poi è arrivato quest’anno.</p>
 <p>Non stiamo facendo il lavoro che abbiamo fatto negli ultimi vent’anni. Non intendo che gli strumenti siano cambiati di nuovo. Gli strumenti cambiano ogni tre anni, ogni volta qualcuno dichiara morta la professione, e ogni volta si sbaglia. Ho assistito a quattro giri di questa storia.</p>
-<p>Questo non è un altro giro. Il lavoro si è spostato. Quello che faccio ora è specificare, porre vincoli, revisionare, decidere. Digitare, la parte che era il lavoro, è diventata la parte meno costosa del lavoro. E il ritmo del cambiamento non è lineare, non sta rallentando, e nessuno che stimo pensa che stia per farlo.</p>
-<p>La divisione non è tra chi usa i nuovi strumenti e chi no. È tra chi ha mantenuto i fondamentali e chi non li ha mai avuti. Se sai davvero cosa fa un sistema, puoi salire e scendere di livello: leggere il codice generato, giudicare l’architettura, fiutare l’astrazione sbagliata, decidere cosa non costruire affatto. Se non hai mai avuto quelle basi, resti bloccato a un solo livello a dire “sì, e non fare errori” a una macchina che non sei in grado di verificare. Non è una carriera. È una consegna delle chiavi.</p>
+<p>Questo non è un altro giro. Il lavoro è diventato altro. Quello che faccio ora è specificare, porre vincoli, revisionare, decidere. Scrivere codice, che prima era il lavoro, ne è diventata la parte meno costosa. E il ritmo del cambiamento non è lineare, non sta rallentando, e nessuno che stimo pensa che stia per farlo.</p>
+<p>La divisione non è tra chi usa i nuovi strumenti e chi no. È tra chi ha mantenuto i fondamentali e chi non li ha mai avuti. Se sai davvero cosa fa un sistema, puoi salire e scendere di livello: leggere il codice generato, giudicare l’architettura, fiutare l’astrazione sbagliata, decidere cosa non costruire affatto. Se non hai mai avuto quelle basi, resti bloccato a un solo livello a dire “sì, e non fare errori” a una macchina che non sei in grado di verificare. Non è una carriera. Stai consegnando le chiavi.</p>
 <p>Quindi, quando qualcuno mi chiede dove vedo questa professione tra dieci anni, salto la risposta rassicurante sui nuovi ruoli che emergeranno e sul lavoro che si limiterà a cambiare forma.</p>
 <p>Non la vedo. Ci sarà qualcos’altro, e non si chiamerà sviluppo.</p>
 <h2>Di nuovo l’uno per cento</h2>
 <p>C’è un’idea su cui continuo a tornare, e voglio essere preciso su cosa sia e cosa non sia.</p>
 <p>Chi pratica la Meditazione Trascendentale sostiene quello che chiama Effetto Maharishi: <a href="https://research.miu.edu/maharishi-effect/">un gruppo grande quanto la radice quadrata dell’uno per cento di una popolazione sarebbe sufficiente a produrre un cambiamento misurabile in quella popolazione</a>. La ricerca risale alla fine degli anni Settanta. È anche <a href="https://en.wikipedia.org/wiki/Maharishi_Effect">respinta come pseudoscienza</a>, gli studi hanno problemi reali con i controlli e con la correlazione spacciata per causalità, e non sto chiedendo a nessuno di crederci.</p>
-<p>Ne rubo la forma, non le prove. La forma è questa: la frazione di una popolazione che deve muoversi prima che tutto il resto si riorienti intorno a lei è molto più piccola di quanto si pensi. Quella parte l’ho vista succedere, senza alcuna meditazione, in ogni cambiamento che ho vissuto. Una manciata di persone è andata da qualche parte e, due anni dopo, il settore discuteva se fosse mai stato altrove.</p>
-<p>Ed è questa la parte scomoda. La radice quadrata dell’uno per cento di questo settore se n’è già andata. Non sta aspettando che il resto di noi finisca di discutere se tutto questo sia reale.</p>
+<p>Ne prendo in prestito l’idea, non le pretese scientifiche. L’idea è questa: la parte di una popolazione che deve cambiare direzione prima che tutti gli altri si riorientino di conseguenza è molto più piccola di quanto si pensi. Quella parte l’ho vista succedere, senza alcuna meditazione, in ogni cambiamento che ho vissuto. Una manciata di persone ha imboccato una strada e, due anni dopo, il settore si chiedeva se ne avesse mai percorsa un’altra.</p>
+<p>Ed è questa la parte scomoda. Quella radice quadrata dell’uno per cento, nel nostro settore, ha già cambiato strada. Non sta aspettando che il resto di noi finisca di discutere se tutto questo sia reale.</p>
 <p>Quindi, dove pensiamo di andare?</p>
 <h2>Fonti</h2>
 <ul>
@@ -67,47 +67,47 @@
 <li><a href="https://en.wikipedia.org/wiki/CodePen">CodePen, Wikipedia</a> e <a href="https://chriscoyier.net/bio/">La biografia di Chris Coyier</a></li>
 <li><a href="https://research.miu.edu/maharishi-effect/">Ricerca sull’Effetto Maharishi, MIU</a> e <a href="https://en.wikipedia.org/wiki/Maharishi_Effect">Effetto Maharishi, Wikipedia</a></li>
 </ul>
-`,$t=Object.freeze(Object.defineProperty({__proto__:null,html:Rt,meta:Ot},Symbol.toStringTag,{value:"Module"})),Dt={title:"GitLab Alert: il lavoro GitLab che ti riguarda, nella barra dei menu",date:"2026-09-16",tags:["swift","macos","gitlab","menubar","opensource"],label:"traduzione AI da un testo scritto dall’autore"},jt=`<p><strong>GitLab Alert</strong> è un’app per la barra dei menu di macOS che porta il lavoro GitLab che richiede la tua attenzione fuori da una scheda del browser e nell’angolo dello schermo: merge request in attesa della tua revisione, merge request che hai aperto, issue assegnate a te e stato delle pipeline dei progetti che segui. Nessuna icona nel Dock, nessuna finestra da gestire, nessuna scheda da dimenticare.</p>
+`,$t=Object.freeze(Object.defineProperty({__proto__:null,html:Rt,meta:Ot},Symbol.toStringTag,{value:"Module"})),Dt={title:"GitLab Alert: le attività GitLab che ti riguardano, nella barra dei menu",date:"2026-09-16",tags:["swift","macos","gitlab","menubar","opensource"],label:"traduzione AI da un testo scritto dall’autore"},jt=`<p><strong>GitLab Alert</strong> è un’app per la barra dei menu di macOS che porta nell’angolo dello schermo le attività GitLab che richiedono la tua attenzione, senza dover aprire una scheda del browser: merge request in attesa della tua revisione, merge request che hai aperto, issue assegnate a te e stato delle pipeline dei progetti che segui. Nessuna icona nel Dock, nessuna finestra da gestire, nessuna scheda da dimenticare.</p>
 <p>Funziona con GitLab.com e con le istanze self-managed, è gratuita e ha licenza MIT.</p>
-<h2>Una scheda del browser funziona male per le notifiche</h2>
-<p>Il workflow che sostituisce era il mio, ogni giorno. Apri GitLab, controlla cosa aspetta una tua revisione, controlla se la pipeline della notte è diventata rossa, chiudi la scheda, dimentica, ripeti due ore dopo.</p>
+<h2>Una scheda del browser non è un buon posto per le notifiche</h2>
+<p>Ogni giorno facevo così: aprivo GitLab, controllavo le richieste di revisione e la pipeline della notte, chiudevo la scheda e me ne dimenticavo. Due ore dopo, ricominciavo.</p>
 <p>Una scheda ti mostra tutto o niente e non ricorda quello che hai già visto. Le notifiche email di GitLab hanno il problema opposto: arrivano continuamente, arrivano per cose che non ti interessano e dopo una settimana le filtri in una cartella che non apri mai.</p>
 <p>Quindi il perimetro era volutamente ristretto:</p>
 <ul>
-<li><strong>Solo il lavoro che mi riguarda.</strong> Merge request di cui sono assegnatario, revisore o autore. Issue assegnate a me. L’ultima pipeline dei progetti inclusi.</li>
+<li><strong>Solo le attività che mi riguardano.</strong> Merge request di cui sono assegnatario, revisore o autore. Issue assegnate a me. L’ultima pipeline dei progetti inclusi.</li>
 <li><strong>Notificare i cambiamenti, non lo stato.</strong> Una pipeline fallita genera una notifica una volta, quando fallisce, non a ogni controllo per i tre giorni successivi.</li>
 <li><strong>Sola lettura, per costruzione.</strong> Il token viene richiesto con <code>read_api</code> e nient’altro. L’app non può approvare una merge request o chiudere un’issue, perché non ha il permesso di farlo.</li>
 <li><strong>Offline è uno stato, non un errore.</strong> Se manca la rete, l’ultima dashboard valida resta sullo schermo invece di sparire.</li>
 </ul>
 <h2>Tre interfacce, tre compiti</h2>
-<p>L’app è un’app accessoria: nessuna icona nel Dock, e l’elemento nella barra dei menu è l’unica presenza permanente sullo schermo. Tutto il resto viene creato solo quando serve ed eliminato alla chiusura.</p>
+<p>L’app usa la modalità accessoria di macOS: nessuna icona nel Dock. La sua unica presenza fissa sullo schermo è l’icona nella barra dei menu. Tutto il resto viene creato solo quando serve ed eliminato alla chiusura.</p>
 <p><strong>Il popover</strong> serve per dare un’occhiata. Un clic sinistro sull’icona mostra richieste di revisione, merge request che hai aperto, issue assegnate e attività dei repository, con un massimo di cinque righe per sezione espansa. Risponde a “c’è qualcosa?” in meno di un secondo e, se c’è, “vedi tutto” ti porta al passo successivo.</p>
-<p><strong>La finestra di dettaglio</strong> è lo spazio di lavoro vero e proprio. La barra laterale seleziona i dati, la tabella li filtra e li ordina, l’inspector mostra l’elemento selezionato per intero e “apri su GitLab” ti manda al browser quando devi finalmente fare il lavoro. Un clic su una notifica apre questa finestra sull’elemento giusto: l’identificatore passa attraverso una selezione in attesa che la vista risolve quando i suoi dati sono disponibili, così anche una notifica cliccata ad app chiusa arriva dove deve.</p>
-<p><strong>Le impostazioni</strong> contengono l’origine dell’istanza, il token, le notifiche e la selezione dei repository. Di default vengono inclusi i progetti di cui sei membro, attivi negli ultimi 90 giorni, escludendo i fork: di solito va bene, qualche volta no. Il pannello Repository permette di cercare nell’intero catalogo e includere o escludere singoli progetti a mano.</p>
+<p><strong>La finestra di dettaglio</strong> è lo spazio di lavoro vero e proprio. Dalla barra laterale scegli quali dati visualizzare; nella tabella li filtri e li ordini; nel pannello dei dettagli leggi per intero l’elemento selezionato e “apri su GitLab” ti manda al browser quando devi finalmente fare il lavoro. Un clic su una notifica apre questa finestra sull’elemento giusto: l’app conserva l’identificatore dell’elemento da selezionare e lo usa non appena la vista ha caricato i dati, così anche una notifica cliccata ad app chiusa arriva dove deve.</p>
+<p><strong>Le impostazioni</strong> contengono l’origine (protocollo, host e porta) dell’istanza, il token, le notifiche e la selezione dei repository. Di default vengono inclusi i progetti di cui sei membro, attivi negli ultimi 90 giorni, escludendo i fork: di solito va bene, qualche volta no. Il pannello Repository permette di cercare nell’intero catalogo e includere o escludere singoli progetti a mano.</p>
 <h2>Essere silenziosa è una funzionalità, e ha richiesto lavoro</h2>
-<p>Qualunque cosa faccia polling e mandi notifiche è a una decisione sbagliata dal diventare rumore da silenziare. Tre decisioni fanno gran parte del lavoro.</p>
-<p><strong>Il primo aggiornamento è silenzioso.</strong> Una nuova installazione inizializza i riferimenti delle notifiche dal primo ciclo riuscito, senza notificare nulla. Altrimenti il primo avvio scaricherebbe dodici notifiche su merge request che ignori da una settimana, e chiuderesti l’app prima che abbia dimostrato di essere utile.</p>
-<p><strong>Lo stato viene scritto prima di inviare le notifiche.</strong> Lo snapshot, i suoi riferimenti e il registro delle attività risultante vengono salvati in un’unica scrittura dello stato, e solo dopo partono le notifiche. Un crash nel momento sbagliato non può riproporre al prossimo avvio la pipeline fallita ieri.</p>
-<p><strong>Lo stato di lettura è locale ed esplicito.</strong> Aprire il popover non segna nulla come visto. Espandere una sezione non segna nulla come visto. Sei tu a segnare le righe, e questo cambia solo la presentazione locale: l’app non chiude, conferma o aggiorna mai nulla su GitLab. Gli identificatori degli elementi visti sono limitati e persistenti, così un elemento che hai archiviato resta tale tra un avvio e l’altro, mentre un evento successivo sullo stesso elemento riceve un identificatore distinto e torna non letto per la propria rilevanza.</p>
+<p>Basta una scelta sbagliata perché un’app che fa polling e manda notifiche diventi rumore da silenziare. Per evitarlo, ho fatto tre scelte.</p>
+<p><strong>Il primo aggiornamento è silenzioso.</strong> Una nuova installazione usa il primo ciclo riuscito come punto di partenza per le notifiche, senza notificare nulla. Altrimenti il primo avvio scaricherebbe dodici notifiche su merge request che ignori da una settimana, e chiuderesti l’app prima che abbia dimostrato di essere utile.</p>
+<p><strong>Lo stato viene scritto prima di inviare le notifiche.</strong> Lo snapshot, i riferimenti usati per distinguere gli eventi nuovi da quelli già elaborati e il relativo registro delle attività vengono salvati in un’unica scrittura dello stato, e solo dopo partono le notifiche. Un crash nel momento sbagliato non può riproporre al prossimo avvio la pipeline fallita ieri.</p>
+<p><strong>Lo stato di lettura è locale ed esplicito.</strong> Aprire il popover non segna nulla come visto. Espandere una sezione non segna nulla come visto. Sei tu a segnare le righe, e questo cambia solo la presentazione locale: l’app non chiude, conferma o aggiorna mai nulla su GitLab. L’elenco degli identificatori degli elementi già visti ha una dimensione limitata e viene salvato su disco, così un elemento che hai archiviato resta tale tra un avvio e l’altro, mentre un evento successivo sullo stesso elemento riceve un identificatore distinto e compare come nuovo evento non letto.</p>
 <h2>Un polling che si comporta bene sul server di qualcun altro</h2>
-<p>Le istanze GitLab self-managed sono spesso macchine piccole, mantenute da qualcuno dell’infrastruttura oltre al suo vero lavoro. Un’app che le martella ogni 30 secondi è un’app che viene bloccata.</p>
-<p>Un singolo actor, <code>PollScheduler</code>, gestisce l’intero ciclo. Serializza i cambiamenti del ciclo di vita e unisce un aggiornamento manuale a uno automatico, così non c’è mai più di un ciclo di rete in corso, per quanto tu prema con entusiasmo il pulsante di aggiornamento. Sospensione, spegnimento dello schermo e cambiamenti di sessione arrivano da AppKit e gli vengono inoltrati. Raggiungibilità della rete, stato energetico e apertura del popover contribuiscono tutti al prossimo intervallo: un portatile sospeso e a batteria non ha bisogno di fare polling.</p>
-<p>Durante un ciclo, le richieste indipendenti vengono eseguite in parallelo, gli endpoint degli elenchi seguono correttamente la paginazione di GitLab invece di leggere la prima pagina e sperare, e i controlli delle pipeline per progetto girano in un task group con concorrenza limitata. Il client rispetta <code>Retry-After</code> e aspetta il ripristino dei limiti di richieste esauriti prima di iniziare altro. Dimensione delle pagine e concorrenza delle pipeline sono configurabili nelle impostazioni, entro limiti sicuri, perché i numeri giusti per gitlab.com non sono quelli giusti per un’istanza self-managed con 40 utenti.</p>
-<h2>Dove stanno le cose</h2>
+<p>Le istanze GitLab self-managed sono spesso macchine piccole, che qualcuno del team infrastruttura mantiene oltre alle proprie mansioni ordinarie. Un’app che le martella ogni 30 secondi è un’app che viene bloccata.</p>
+<p>Un singolo actor, <code>PollScheduler</code>, gestisce l’intero ciclo. Serializza i cambiamenti del ciclo di vita e unisce un aggiornamento manuale a uno automatico, così non c’è mai più di un ciclo di rete in corso, per quanto tu prema con entusiasmo il pulsante di aggiornamento. Sospensione, spegnimento dello schermo e cambiamenti di sessione arrivano da AppKit e gli vengono inoltrati. Raggiungibilità della rete, stato energetico e apertura del popover determinano insieme l’intervallo prima del prossimo controllo: un portatile sospeso e a batteria non ha bisogno di fare polling.</p>
+<p>Durante un ciclo, le richieste indipendenti vengono eseguite in parallelo, gli endpoint degli elenchi seguono correttamente la paginazione di GitLab invece di leggere la prima pagina e sperare, e i controlli delle pipeline per progetto girano in un task group con concorrenza limitata. Il client rispetta <code>Retry-After</code>. Se raggiunge il rate limit, attende prima di inviare altre richieste. Dimensione delle pagine e concorrenza delle pipeline sono configurabili nelle impostazioni, entro limiti sicuri, perché i numeri giusti per gitlab.com non sono quelli giusti per un’istanza self-managed con 40 utenti.</p>
+<h2>Come è organizzato il codice</h2>
 <p>Due moduli, e la separazione è anche la strategia di test.</p>
-<p><code>GitLabKit</code> è un pacchetto SwiftPM locale senza alcuna dipendenza dall’interfaccia: client REST v4, modelli, archivi su Portachiavi e file, rate limiting e un motore puro di differenze delle attività che confronta gli snapshot precedente e attuale. <code>GitLabAlert</code> è il contenitore: ciclo di vita AppKit, elemento nella barra dei menu, viste SwiftUI, impostazioni, notifiche. Le viste parlano con un <code>AppModel</code> sul main actor e con nient’altro, così nessuna vista crea mai un client di rete o scrive stato persistente, e <code>AppDelegate</code> costruisce l’intero grafo delle dipendenze.</p>
-<p>Poiché la logica interessante è in un pacchetto senza viste, i test coprono mapping delle API, gestione degli errori del Portachiavi tramite archivi di test, aggiornamenti concorrenti, cancellazione, sostituzione dell’account, navigazione dalle notifiche e stato di lettura persistente. L’interfaccia nella barra dei menu mantiene comunque una checklist di QA manuale, che è la risposta onesta.</p>
-<p>Cambiare l’origine GitLab viene trattato come un confine tra account, non come una preferenza. Il lavoro in corso viene annullato, lo scheduler fermato e svuotato, il token precedente eliminato e un nuovo client costruito prima di accettare il token sostitutivo. Le risposte tardive portano una revisione e non possono far riapparire nel nuovo account i dati del precedente.</p>
-<p>Il token vive nel Portachiavi, non raggiunge mai una vista e viene inviato nell’header <code>PRIVATE-TOKEN</code> solo all’origine configurata. I file di stato contengono i dati della dashboard e nessuna credenziale, scritti atomicamente con permessi riservati al proprietario. Nessuna analytics, nessun servizio di terze parti a runtime.</p>
+<p><code>GitLabKit</code> è un pacchetto SwiftPM locale senza alcuna dipendenza dall’interfaccia: client REST v4, modelli, archivi su Portachiavi e file, rate limiting e un motore senza effetti collaterali che rileva le differenze nelle attività che confronta gli snapshot precedente e attuale. <code>GitLabAlert</code> è il contenitore: ciclo di vita AppKit, elemento nella barra dei menu, viste SwiftUI, impostazioni, notifiche. Le viste parlano con un <code>AppModel</code> sul main actor e con nient’altro, così nessuna vista crea mai un client di rete o scrive stato persistente, e <code>AppDelegate</code> costruisce l’intero grafo delle dipendenze.</p>
+<p>Poiché la logica interessante è in un pacchetto senza viste, i test coprono mapping delle API, gestione degli errori del Portachiavi tramite implementazioni di test degli archivi, aggiornamenti concorrenti, cancellazione, sostituzione dell’account, navigazione dalle notifiche e stato di lettura persistente. L’interfaccia nella barra dei menu mantiene comunque una checklist di QA manuale, che è la risposta onesta.</p>
+<p>Cambiare l’origine GitLab viene trattato come un confine tra account, non come una preferenza. L’app annulla il lavoro in corso, ferma lo scheduler e ne azzera lo stato, elimina il vecchio token e crea un nuovo client. Solo allora accetta il token del nuovo account. Le risposte arrivate in ritardo sono associate a un identificatore di revisione e non possono far riapparire nel nuovo account i dati del precedente.</p>
+<p>Il token vive nel Portachiavi, non raggiunge mai una vista e viene inviato nell’header <code>PRIVATE-TOKEN</code> solo all’origine configurata. I file di stato contengono i dati della dashboard e nessuna credenziale, scritti atomicamente con permessi riservati al proprietario. Nessun tracciamento d’uso, nessun servizio di terze parti a runtime.</p>
 <h2>Stato del progetto</h2>
 <p>In sviluppo attivo. Le release sono firmate con l’identità stabile del progetto, ma non notarizzate da Apple, quindi il primo avvio richiede un passaggio in <strong>Privacy e sicurezza → Apri comunque</strong>. Il README lo spiega, insieme alla compilazione dai sorgenti via SwiftPM (non c’è un <code>.xcodeproj</code> e Xcode non è necessario). Le istanze GitLab ospitate sotto un sottopercorso dell’URL non sono ancora supportate.</p>
-<p>Il repository è su <a href="https://github.com/AlbertoBarrago/gitlab-alert">github.com/AlbertoBarrago/gitlab-alert</a>, con la pagina del prodotto su <a href="https://albz.it/gitlab-alert/">albz.it/gitlab-alert</a>. Se si guadagna un posto nella tua barra dei menu, una stella è apprezzata.</p>
+<p>Il repository è su <a href="https://github.com/AlbertoBarrago/gitlab-alert">github.com/AlbertoBarrago/gitlab-alert</a>, con la pagina del prodotto su <a href="https://albz.it/gitlab-alert/">albz.it/gitlab-alert</a>. Se trova posto nella tua barra dei menu, una stella su GitHub fa piacere.</p>
 `,Bt=Object.freeze(Object.defineProperty({__proto__:null,html:jt,meta:Dt},Symbol.toStringTag,{value:"Module"})),Gt={title:"Iris: un’app di posta e calendario per il Mac, in Rust",date:"2026-10-08",tags:["rust","macos","email","calendar","opensource"],label:"traduzione AI da un testo scritto dall’autore"},Nt=`<p>Volevo un’app di posta e calendario per il mio Mac che tenesse le email sul mio computer, parlasse direttamente con Gmail e Microsoft e fosse open source. Quell’app è <strong>Iris</strong>.</p>
 <h2>Cosa fa Iris</h2>
-<p>Iris legge la posta di Gmail, degli account Microsoft (Outlook.com, Hotmail, Live e Microsoft 365) e di qualsiasi account IMAP e SMTP, trovando per te le impostazioni del server. Mostra gli account in una casella unificata oppure uno alla volta, con calendari e contatti accanto alla posta. Firma e cifra le email con OpenPGP e S/MIME.</p>
-<p>I dati della posta e del calendario restano sul tuo computer e Iris non ha un server proprio. Gmail comunica direttamente con Google e gli account Microsoft con Microsoft Graph, quindi nessun altro server vede le tue email.</p>
+<p>Iris legge la posta di Gmail, degli account Microsoft (Outlook.com, Hotmail, Live e Microsoft 365) e degli altri account tramite IMAP e SMTP, individuando automaticamente le impostazioni del server. Mostra la posta in una casella unificata oppure separata per account, con calendari e contatti accanto alla posta. Firma e cifra le email con OpenPGP e S/MIME.</p>
+<p>I dati della posta e del calendario restano sul tuo computer e Iris non ha un server proprio. Per Gmail, Iris comunica direttamente con Google; per gli account Microsoft usa Microsoft Graph, quindi nessun altro server vede le tue email.</p>
 <h2>Pensata per macOS</h2>
-<p>Il cuore è in Rust: sincronizzazione, archivio locale, ricerca e operazioni sulla posta. Sopra questo nucleo, Iris sta passando a un’interfaccia nativa in SwiftUI e AppKit, così si comporta come un’app per Mac: il Portachiavi per le password, le notifiche di sistema, gli aggiornamenti tramite Sparkle, il badge nel Dock.</p>
+<p>Il cuore è in Rust: sincronizzazione, archivio locale, ricerca e operazioni sulla posta. Per l’interfaccia, sto passando a SwiftUI e AppKit, così si comporta come un’app per Mac: il Portachiavi per le password, le notifiche di sistema, gli aggiornamenti tramite Sparkle, il badge nel Dock.</p>
 <h2>Un assistente, se lo vuoi</h2>
 <p>Iris ha un assistente opzionale. Resta disattivato finché non scegli un modello: Claude Code, una chiave Anthropic o un modello in esecuzione sul tuo computer. Può riassumere una conversazione, cercare email, preparare una risposta o ripulire le newsletter, e chiede prima di intervenire sulla tua posta.</p>
 <h2>A che punto è</h2>
@@ -128,17 +128,17 @@
 <li><strong>apps/server</strong>: un host WebSocket Node/<code>ws</code> che inoltra i comandi senza simulare nulla</li>
 </ul>
 <h2>Il gioco locale: il game loop</h2>
-<p><code>GameRenderer</code> (una grande classe che gestisce rendering, input e audio) possiede un <code>SimBridge</code>, che a sua volta possiede un Web Worker in cui gira la <code>Simulation</code>. Il worker avanza con un clock autonomo (<code>setTimeout</code>), applica i comandi appena arrivano e produce uno snapshot per tick, che il thread principale interpola e disegna.</p>
+<p><code>GameRenderer</code> (una grande classe che gestisce rendering, input e audio) gestisce un <code>SimBridge</code>, che a sua volta gestisce il Web Worker in cui gira la <code>Simulation</code>. Il worker avanza con un clock autonomo (<code>setTimeout</code>), applica i comandi appena arrivano e produce uno snapshot per tick, che il thread principale interpola e disegna.</p>
 <h2>Il passaggio online</h2>
-<p>L’aggiunta di questa settimana: vere partite 1v1 in rete, costruite intorno al determinismo lockstep.</p>
+<p>L’aggiunta di questa settimana: partite 1v1 in rete basate sul modello deterministico lockstep.</p>
 <ol>
-<li><strong>apps/server</strong> esegue un singolo <code>MatchRelay</code> in memoria per processo. Non simula nulla: assegna ciascun comando in arrivo a un tick futuro e ritrasmette lo stesso insieme di comandi confermati a entrambi i client ogni <code>SIM_DT_MS</code>. Il determinismo deriva dai due client che eseguono lo stesso motore sullo stesso flusso di comandi.</li>
+<li><strong>apps/server</strong> esegue un singolo <code>MatchRelay</code> in memoria per processo. Non simula nulla: assegna ciascun comando in arrivo a un tick futuro e ritrasmette lo stesso insieme di comandi confermati a entrambi i client ogni <code>SIM_DT_MS</code>. La simulazione è deterministica perché entrambi i client eseguono lo stesso motore sullo stesso flusso di comandi.</li>
 <li><strong>NetworkClient</strong> comunica con il server via WebSocket, traduce i tick confermati e li passa a un secondo tipo di bridge, <code>NetworkedSimBridge</code>, che implementa la stessa interfaccia <code>SimBridgeLike</code> di quello locale, con due differenze: i comandi locali vanno al server (<code>sendCommand</code>) invece che direttamente al worker, e il worker avanza di un solo tick quando arriva una conferma dalla rete (<code>networkTick</code>), invece di procedere autonomamente.</li>
 <li><strong>Il problema “sei sempre il giocatore 0”</strong>: buona parte dell’interfaccia e dell’HUD assumeva che l’utente locale fosse il giocatore 0. L’ho risolto con <code>playerPerspective.ts</code>, un modulo puro che scambia le etichette <code>owner</code>/<code>player</code>/<code>winner</code> (0↔1) solo al confine con la rete, così ogni client continua a considerarsi internamente il giocatore 0.</li>
 <li><code>GameRenderer</code> ora riceve il bridge nel costruttore (locale o di rete) invece di istanziarlo sempre da sé. Quel singolo punto di iniezione ha reso possibile il resto della modalità online senza riscrivere le circa 1700 righe della classe.</li>
 </ol>
 <h2>Perché questa scelta</h2>
-<p>Mantenere la simulazione deterministica e indipendente dalla rete in <code>packages/engine</code> significa usare lo stesso codice per schermaglie, campagna e gioco online. Il server non deve mai conoscere lo stato del gioco: è soltanto un clock autorevole per ordinare i comandi. Il compromesso è che entrambi i client devono produrre risultati identici bit per bit a partire dagli stessi input. Per questo l’intero modello di rete si basa sulla riproduzione dei comandi, non sulla sincronizzazione dello stato.</p>
+<p>Mantenere la simulazione deterministica e indipendente dalla rete in <code>packages/engine</code> significa usare lo stesso codice per schermaglie, campagna e gioco online. Il server non deve mai conoscere lo stato del gioco: fornisce soltanto il riferimento temporale comune con cui ordinare i comandi. Il compromesso è che entrambi i client devono produrre risultati identici bit per bit a partire dagli stessi input. Per questo l’intero modello di rete si basa sulla riproduzione dei comandi, non sulla sincronizzazione dello stato.</p>
 <h2>I prossimi passi</h2>
 <p>L’1v1 funziona; ora tocca gestire le riconnessioni e verificare che il modello lockstep regga con il jitter di una rete reale, non solo su localhost.</p>
 `,Ft=Object.freeze(Object.defineProperty({__proto__:null,html:Wt,meta:Ut},Symbol.toStringTag,{value:"Module"})),Vt={title:"I miei primi (e ultimi?) quarant’anni",date:"2026-09-29",tags:["opinion","life","freedom","career","italy"],label:"testo originale dell’autore, refusi corretti con AI"},Yt=`<p>Domani compio quarant’anni.</p>
@@ -157,10 +157,10 @@
 <p>Bisogna solo trovarlo.</p>
 <p><em>Valete.</em></p>
 `,Qt=Object.freeze(Object.defineProperty({__proto__:null,html:Yt,meta:Vt},Symbol.toStringTag,{value:"Module"})),Jt={title:"Otelma: costruire da zero un runtime locale per LLM",date:"2026-08-31",tags:["go","llm","llama-cpp","apple-silicon","ai"],label:"traduzione AI da un testo scritto dall’autore"},Kt=`<p><strong>Otelma</strong> è un runtime locale per l’inferenza LLM che sto costruendo in Go.</p>
-<p>L’idea è volutamente più piccola di Ollama: capire cosa c’è davvero tra un file GGUF e un’applicazione locale che usa un LLM, trattando la memoria unificata come una risorsa reale e finita, invece di qualcosa di cui prima o poi si occuperà il sistema operativo.</p>
+<p>L’obiettivo è costruire qualcosa di volutamente più piccolo di Ollama: capire cosa c’è davvero tra un file GGUF e un’applicazione locale che usa un LLM, trattando la memoria unificata come una risorsa reale e finita, invece di qualcosa di cui prima o poi si occuperà il sistema operativo.</p>
 <p>Al momento gira su Apple Silicon, usa <code>llama.cpp</code> come primo backend di inferenza ed espone sia la propria API locale sia un’interfaccia minima compatibile con OpenAI.</p>
 <h2>L’architettura</h2>
-<p>Otelma è divisa in quattro livelli principali:</p>
+<p>Otelma è diviso in quattro livelli principali:</p>
 <ul>
 <li><strong>CLI</strong>: <code>pull</code>, <code>list</code>, <code>ps</code>, <code>run</code>, <code>chat</code>, <code>serve</code>, <code>config</code>, <code>version</code></li>
 <li><strong>API del runtime locale</strong>: ciclo di vita dei modelli, scheduling, contabilizzazione della memoria ed endpoint HTTP</li>
@@ -177,7 +177,7 @@
 <p>Ogni modello passa invece attraverso una macchina a stati esplicita:</p>
 <p><code>NOT_PRESENT → DOWNLOADED → LOADING → READY → BUSY → UNLOADING</code></p>
 <p>Il gestore dei modelli è responsabile di quelle transizioni.</p>
-<p>Questo dà al runtime un unico posto in cui rispondere a domande come:</p>
+<p>Il runtime ha così un unico punto in cui gestire domande come:</p>
 <ul>
 <li>questo modello è davvero disponibile in locale?</li>
 <li>è già caricato?</li>
@@ -185,22 +185,22 @@
 <li>sta generando in questo momento?</li>
 <li>può essere scaricato dalla memoria in sicurezza?</li>
 </ul>
-<p>Il registro viene salvato su disco, così i modelli scaricati sopravvivono ai riavvii del runtime senza dover riscoprire tutto da zero.</p>
+<p>Il registro viene salvato su disco, così il runtime ritrova i modelli scaricati anche dopo un riavvio, senza doverli cercare di nuovo.</p>
 <h2>La memoria unificata fa parte dell’architettura</h2>
 <p>Apple Silicon rende comoda l’inferenza locale perché CPU e GPU condividono la memoria unificata.</p>
 <p>Significa anche che fingere che la memoria sia illimitata è una cattiva astrazione.</p>
 <p>Su una macchina con 24 GB di memoria unificata, caricare più modelli grandi insieme può diventare molto rapidamente un problema del sistema operativo.</p>
 <p>Otelma ha quindi un <code>Budget</code> di memoria esplicito.</p>
-<p>Prima di caricare un modello, il gestore ne riserva l’utilizzo previsto di memoria. Se la prenotazione superasse il limite configurato, il caricamento viene rifiutato prima che il processo di inferenza parta.</p>
-<p>La distinzione importante è che la pressione sulla memoria diventa una decisione del runtime:</p>
+<p>Prima di caricare un modello, il gestore riserva la quantità di memoria prevista. Se questa riserva supera il limite configurato, il caricamento viene rifiutato prima che il processo di inferenza parta.</p>
+<p>La distinzione importante è che è il runtime a decidere se c’è abbastanza memoria per caricare il modello:</p>
 <p><code>canLoad(model) → yes/no</code></p>
 <p>invece di un eventuale OOM.</p>
 <p>Questo vincolo ha influenzato l’architettura molto più di quanto mi aspettassi all’inizio.</p>
 <h2>llama.cpp è un backend, non il runtime</h2>
 <p>Otelma non implementa direttamente le operazioni sui tensori o l’inferenza dei transformer.</p>
-<p>Per l’inferenza reale, il backend attuale avvia <code>llama-server</code> di <code>llama.cpp</code>.</p>
+<p>Per eseguire l’inferenza, il backend attuale avvia <code>llama-server</code> di <code>llama.cpp</code>.</p>
 <p>Ma il resto di Otelma non lo sa.</p>
-<p>Il runtime comunica attraverso un’interfaccia del backend responsabile di caricare, scaricare dalla memoria e generare con un modello. <code>llama.cpp</code> è semplicemente la prima implementazione.</p>
+<p>Il runtime comunica attraverso un’interfaccia del backend che gestisce il caricamento dei modelli, il loro scaricamento dalla memoria e la generazione. <code>llama.cpp</code> è semplicemente la prima implementazione.</p>
 <p>Questa separazione dovrebbe permettere di aggiungere in seguito un backend MLX senza cambiare la gestione dei modelli, lo scheduling, l’archivio o l’API pubblica.</p>
 <p>Quella distinzione è stata una delle ragioni principali per costruire il progetto: un motore di inferenza e un runtime di inferenza risolvono problemi diversi.</p>
 <h2>Compatibile con OpenAI fin dall’inizio</h2>
@@ -224,14 +224,14 @@
 <p>con metadati persistenti dei modelli, contesto su più turni, avvio del server in background e inferenza reale.</p>
 <h2>Perché costruirlo?</h2>
 <p>Esistono già ottimi strumenti per eseguire LLM in locale.</p>
-<p>È proprio per questo che Otelma è volutamente piccola.</p>
-<p>Non volevo un’altra interfaccia sopra un runtime esistente. Volevo capire il runtime stesso: ciclo di vita dei modelli, gestione dei processi, prenotazioni di memoria, scheduling, archivio, compatibilità delle API e dove dovrebbe iniziare e finire il motore di inferenza vero e proprio.</p>
-<p>Costruire la versione più piccola rende visibili quei confini.</p>
+<p>È proprio per questo che voglio mantenere Otelma piccolo.</p>
+<p>Non volevo un’altra interfaccia sopra un runtime esistente. Volevo capire il runtime stesso: ciclo di vita dei modelli, gestione dei processi, riserve di memoria, scheduling, archivio, compatibilità delle API e dove dovrebbe iniziare e finire il motore di inferenza vero e proprio.</p>
+<p>Costruire una versione essenziale rende visibili quei confini.</p>
 <h2>I prossimi passi</h2>
 <p>Lo scheduler attuale serializza volutamente le richieste ed è ancora basato su un singolo mutex.</p>
-<p>È sufficiente a rendere deterministico il ciclo di vita, ma è anche il prossimo evidente vincolo architetturale da rimuovere.</p>
+<p>È sufficiente a rendere deterministico il ciclo di vita, ma è anche il prossimo limite architetturale da superare.</p>
 <p>Poi: scheduling migliore, rimozione dei modelli, risposte in streaming e un backend MLX.</p>
-<p>Il progetto è ancora abbastanza piccolo perché ogni astrazione abbia una ragione di esistere, ed è esattamente dove voglio che resti per ora.</p>
+<p>Il progetto è ancora abbastanza piccolo perché ogni astrazione abbia una ragione di esistere, e per ora voglio mantenerlo così.</p>
 `,Xt=Object.freeze(Object.defineProperty({__proto__:null,html:Kt,meta:Jt},Symbol.toStringTag,{value:"Module"})),Zt={title:"Ho costruito una CLI per rispondere a una domanda: cosa romperà questa modifica?",date:"2026-08-27",tags:["programming","devops","go","opensource"],label:"traduzione AI da un testo scritto dall’autore"},ei=`<p>Ci siamo passati tutti.</p>
 <p>Apri un repository, modifichi un file che sembra del tutto innocuo, esegui i test e apri una pull request.</p>
 <p>Poi qualcuno commenta:</p>
@@ -254,7 +254,7 @@ git blame
 <p>Poi controllo gli import, cerco nella configurazione CI, verifico quali file cambiano di solito insieme e mi affido a quello che so del repository.</p>
 <p>Funziona.</p>
 <p>Ma è soprattutto lavoro manuale.</p>
-<p>E su un repository che non conosci bene, buona parte del processo diventa un’ipotesi.</p>
+<p>E quando il repository non lo conosci bene, finisci spesso per andare a intuito.</p>
 <p>Volevo qualcosa di più vicino a:</p>
 <pre><code>serval inspect src/auth/token.ts
 </code></pre>
@@ -300,7 +300,7 @@ Risk
 <p>Ma i repository contengono più informazioni del loro grafo delle dipendenze.</p>
 <h3>1. Grafo delle dipendenze</h3>
 <p>Serval scansiona il repository e costruisce un grafo a partire dalle dipendenze native dei linguaggi.</p>
-<p>Al momento comprende repository che contengono:</p>
+<p>Al momento analizza repository scritti in:</p>
 <ul>
 <li>JavaScript / TypeScript</li>
 <li>Go</li>
@@ -308,8 +308,8 @@ Risk
 <li>Java</li>
 <li>C</li>
 </ul>
-<p>Per un file di destinazione, Serval percorre il grafo nella direzione opposta e calcola quali file dipendono da lui.</p>
-<p>Questo ci dà la portata strutturale della modifica.</p>
+<p>Dato un file, Serval percorre il grafo a ritroso e individua quali altri file ne dipendono.</p>
+<p>Questo ci dice fin dove può propagarsi la modifica attraverso le dipendenze.</p>
 <p>Ma la struttura è solo il primo segnale.</p>
 <h3>2. Cronologia Git</h3>
 <p>Git contiene qualcosa di sorprendentemente vicino alla memoria di una codebase.</p>
@@ -338,7 +338,7 @@ Risk
 <h3>4. Percorsi critici</h3>
 <p>Alcune parti di un sistema meritano semplicemente più attenzione.</p>
 <p>L’autenticazione non è la stessa cosa di una modifica a un README.</p>
-<p>La logica dei pagamenti non è la stessa cosa di una modifica a un’utilità CSS.</p>
+<p>La logica dei pagamenti non è la stessa cosa di una modifica a una utility CSS.</p>
 <p>Serval permette quindi di definire regole sui percorsi critici specifiche per il repository attraverso <code>.serval.yml</code>.</p>
 <p>Di nuovo, non sta cercando di dimostrare che qualcosa si romperà.</p>
 <p>Sta raccogliendo elementi che dicono: probabilmente dovresti guardare questa modifica con più attenzione.</p>
@@ -377,7 +377,7 @@ Risk
 <p>L’AI non può cambiare il punteggio.</p>
 <p>Riceve solo l’analisi deterministica e la spiega in linguaggio naturale.</p>
 <p>E dato che Serval lavora in locale, il provider predefinito può essere un’istanza locale di Ollama.</p>
-<p>Si possono usare altri provider attraverso CLI installate in locale, come Claude, Codex o Gemini.</p>
+<p>Si possono usare altri provider tramite CLI installate in locale, come Claude, Codex o Gemini.</p>
 <p>Questa architettura mi piace molto più di un LLM al centro del sistema:</p>
 <pre><code>repository
     ↓
@@ -417,7 +417,7 @@ optional AI explanation
 <p>E questo rende possibile un altro caso d’uso:</p>
 <pre><code>serval diff --fail-on high
 </code></pre>
-<p>Se uno dei file modificati raggiunge il rischio HIGH, Serval termina con uno stato diverso da zero.</p>
+<p>Se uno dei file modificati raggiunge il livello di rischio HIGH, Serval termina con un codice di uscita diverso da zero.</p>
 <p>Significa che lo strumento può passare da “informazione interessante per lo sviluppatore” a “segnale deterministico nella pipeline di delivery”.</p>
 <p>Mi interessa particolarmente esplorare questa direzione. Non come un altro quality gate che blocca gli sviluppatori a caso, ma come un modo per rendere visibile l’impatto atteso di una modifica prima del merge.</p>
 <h2>Installazione</h2>
@@ -444,8 +444,8 @@ serval doctor
 <p>Mi interessa meno fingere che un punteggio da 0 a 100 possa prevedere magicamente se il software si romperà, e più una domanda diversa:</p>
 <p><em>Quante informazioni utili sul rischio di una modifica sono già dentro i nostri repository?</em></p>
 <p>I grafi delle dipendenze ci dicono cosa è collegato.</p>
-<p>Git ci dice cosa si muove insieme nella storia del progetto.</p>
-<p>La CI ci dice quali meccanismi operativi sono coinvolti.</p>
+<p>Git ci dice quali file sono stati modificati insieme nel corso del progetto.</p>
+<p>La CI ci dice quali automazioni sono coinvolte.</p>
 <p>Le regole del repository ci dicono quali aree meritano più attenzione.</p>
 <p>Nessuno di questi segnali, da solo, è particolarmente rivoluzionario.</p>
 <p>L’esperimento è combinarli in uno strumento piccolo, locale e spiegabile.</p>
@@ -453,26 +453,26 @@ serval doctor
 <p>Serval è open source e ha licenza MIT.</p>
 <p>Progetto: <a href="https://albz.it/serval/">albz.it/serval</a></p>
 <p>Codice: <a href="https://github.com/AlbertoBarrago/serval">github.com/AlbertoBarrago/serval</a></p>
-<p>Se lavori su grandi repository, monorepo, sistemi legacy o progetti con molta CI, mi interesserebbe soprattutto sapere quali segnali usi prima di toccare una parte della codebase che non conosci.</p>
-`,ti=Object.freeze(Object.defineProperty({__proto__:null,html:ei,meta:Zt},Symbol.toStringTag,{value:"Module"})),ii={title:"Telemaco: un motore browser headless in Rust, senza Chromium",date:"2026-09-04",tags:["rust","browser","scraping","ai-agents","cdp","sideprojects"],label:"traduzione AI da un testo scritto dall’autore"},oi=`<p><strong>Telemaco</strong> è un motore browser headless che sto costruendo in Rust. Esegue JavaScript reale tramite V8, mantiene un vero albero DOM, ha una propria pipeline di layout e rendering e parla il Chrome DevTools Protocol, così Puppeteer e Playwright si collegano senza configurazioni aggiuntive. Niente Chromium, niente WebView, niente download da 300 MB. Un eseguibile da 70 MB che parte subito e carica una pagina in circa 85 ms.</p>
+<p>Se lavori su grandi repository, monorepo, sistemi legacy o progetti con pipeline CI articolate, mi interesserebbe soprattutto sapere quali segnali usi prima di toccare una parte della codebase che non conosci.</p>
+`,ti=Object.freeze(Object.defineProperty({__proto__:null,html:ei,meta:Zt},Symbol.toStringTag,{value:"Module"})),ii={title:"Telemaco: un motore browser headless in Rust, senza Chromium",date:"2026-09-04",tags:["rust","browser","scraping","ai-agents","cdp","sideprojects"],label:"traduzione AI da un testo scritto dall’autore"},oi=`<p><strong>Telemaco</strong> è un motore browser headless che sto costruendo in Rust. Esegue JavaScript reale tramite V8, mantiene un vero albero DOM, ha una propria pipeline di layout e rendering e comunica tramite il Chrome DevTools Protocol, così Puppeteer e Playwright si collegano senza configurazioni aggiuntive. Niente Chromium, niente WebView, niente download da 300 MB. Un eseguibile da 70 MB che parte subito e carica una pagina in circa 85 ms.</p>
 <p>Questa è la storia di come è nato, perché esiste e quali scelte gli hanno dato forma.</p>
 <h2>Il problema: Chromium come tassa</h2>
-<p>Per anni, “browser headless” ha significato una sola cosa: Chrome headless. Funziona, ma porta con sé un costo di cui ti accorgi solo quando aumenti la scala.</p>
+<p>Per anni, “browser headless” ha significato una sola cosa: Chrome headless. Funziona, ma porta con sé un costo di cui ti accorgi solo quando aumentano i carichi.</p>
 <ul>
 <li><strong>Il download.</strong> Ogni runner CI, ogni container nuovo, ogni portatile di un collega scarica circa 300 MB di Chromium. Playwright e Puppeteer rendono l’operazione indolore, ed è proprio per questo che nessuno la mette in discussione.</li>
 <li><strong>La memoria.</strong> Una singola istanza di Chrome headless, senza fare nulla, occupa oltre 200 MB. Avviane qualcuna per fare scraping in parallelo e ti ritrovi a pianificare la RAM come nel 2010.</li>
 <li><strong>L’avvio.</strong> Due secondi per partire prima ancora di aver caricato una pagina.</li>
-<li><strong>L’impronta.</strong> Chrome headless è facilissimo da riconoscere. Se fai scraping di qualcosa che ci presta attenzione, sei già in una corsa agli armamenti contro i sistemi anti-bot.</li>
+<li><strong>Il fingerprint.</strong> Chrome headless è facilissimo da riconoscere. Se il sito da cui estrai dati usa sistemi di rilevamento, sei già in una corsa agli armamenti contro i sistemi anti-bot.</li>
 </ul>
 <p>Niente di tutto questo è intrinseco al compito. Un motore browser è un parser, un DOM, un motore di layout, una pipeline di rendering e un runtime JavaScript. Chromium è un modo molto pesante di assemblare quei pezzi. Ne volevo uno più leggero.</p>
 <h2>L’esigenza da cui è partito</h2>
 <p>Due esigenze concrete hanno guidato il progetto.</p>
-<p>La prima: <strong>ricerca ed estrazione efficienti dal web</strong>. Lavoro con colleghi che passano le giornate a estrarre dati strutturati dal web, come record Salesforce, documentazione MDN e pagine di prodotti. Gli strumenti sono o un client HTTP grezzo (che non può eseguire JavaScript) o un browser completo (che è eccessivo). Mancava una via di mezzo: qualcosa che eseguisse JavaScript e DOM reali, ma abbastanza piccolo da essere trattato come un’utilità, non come un progetto infrastrutturale.</p>
+<p>La prima: <strong>ricerca ed estrazione efficienti dal web</strong>. Lavoro con colleghi che passano le giornate a estrarre dati strutturati dal web, come record Salesforce, documentazione MDN e pagine di prodotti. Gli strumenti sono o un client HTTP grezzo (che non può eseguire JavaScript) o un browser completo (che è eccessivo). Mancava una via di mezzo: qualcosa che eseguisse davvero JavaScript e gestisse un DOM completo, ma abbastanza piccolo da essere trattato come un’utilità, non come un progetto infrastrutturale.</p>
 <p>La seconda: <strong>test end-to-end senza Chromium</strong>. Se hai mai eseguito una suite Playwright in CI, conosci il rituale: scarica il browser, spera che i flag della sandbox siano giusti, guarda salire la memoria. Volevo la stessa interfaccia di automazione CDP, gli stessi <code>page.goto</code> e <code>page.evaluate</code>, ma con qualcosa che non richiedesse affatto l’installazione di un browser. Un singolo eseguibile che <em>è</em> il browser.</p>
 <h2>Sulle spalle di molti progetti</h2>
-<p>Non volevo reinventare un browser da zero, e non ho dovuto farlo. L’ecosistema Rust ha messo insieme quasi tutti i pezzi senza fare troppo rumore, e Telemaco è costruito volutamente sopra di loro.</p>
+<p>Non volevo reinventare un browser da zero, e non ho dovuto farlo. L’ecosistema Rust ha messo insieme quasi tutti i pezzi senza fare troppo rumore, e ho scelto di costruire Telemaco su quei componenti.</p>
 <ul>
-<li><strong>I componenti di Servo</strong>: <code>html5ever</code> per il parsing HTML, <code>selectors</code> per la corrispondenza dei selettori CSS, <code>cssparser</code>, <code>servo_arc</code>. I meccanismi DOM e CSS che il browser di ricerca di Mozilla ha consolidato per anni.</li>
+<li><strong>I componenti di Servo</strong>: <code>html5ever</code> per il parsing HTML, <code>selectors</code> per individuare gli elementi che corrispondono ai selettori CSS, <code>cssparser</code>, <code>servo_arc</code>. I meccanismi DOM e CSS che il browser di ricerca di Mozilla ha consolidato per anni.</li>
 <li><strong><code>taffy</code></strong> per il motore di layout, una libreria flexbox/grid interamente in Rust.</li>
 <li><strong><code>tiny-skia</code></strong> per la rasterizzazione e <strong><code>ab_glyph</code></strong> per il rendering dei glifi: la pipeline di rendering, anch’essa interamente in Rust.</li>
 <li><strong>V8 tramite <code>deno_core</code></strong> per JavaScript. V8 vero, lo stesso motore usato da Chrome, così la semantica JavaScript è esattamente quella che ti aspetti.</li>
@@ -480,7 +480,7 @@ serval doctor
 </ul>
 <p>Il progetto è nato come fork di <strong>Obscura</strong> (Apache-2.0), un motore browser headless di h4ckf0r0day. Questa è l’origine, senza giri di parole: non sono partito da una pagina bianca, ma da una base solida che ho portato in una direzione diversa. Sono cambiati i nomi dei crate, l’interfaccia della CLI e l’identità del progetto, e la codebase è stata adattata ed estesa con un obiettivo pratico, orientato allo scraping e agli agenti. L’attribuzione è nel file <code>NOTICE</code> del repository: è un’opera derivata, e lo dichiara.</p>
 <h2>L’architettura</h2>
-<p>Telemaco è un workspace di nove crate, un livello per crate, con le chiamate tra crate che passano attraverso il livello superiore invece che lateralmente:</p>
+<p>Telemaco è un workspace di nove crate, con un crate per livello. Le chiamate tra crate passano dal livello superiore, anziché avvenire tra componenti dello stesso livello. Ecco come sono suddivisi:</p>
 <table>
 <thead>
 <tr>
@@ -602,18 +602,18 @@ const stories = await page.evaluate(() =&gt;
 </tbody></table>
 <p>Caricamenti delle pagine circa 12 volte più veloci e un sesto della memoria sulle pagine con framework, con la stessa interfaccia di automazione CDP.</p>
 <h2>Perché “Telemaco”</h2>
-<p>Il nome è quello del figlio di Ulisse, che parte alla ricerca di notizie del padre. Un cercatore, per definizione. Mi sembrava giusto per uno strumento il cui intero lavoro è andare a recuperare quello che c’è sul web.</p>
+<p>Il nome è quello del figlio di Ulisse, che parte alla ricerca di notizie del padre. Un cercatore, per definizione. Mi sembrava giusto per uno strumento che serve a cercare e recuperare ciò che si trova sul web.</p>
 <h2>Una direzione, più che un prodotto</h2>
 <p>Telemaco non sta cercando di vendere niente. È una visione diversa di cosa possa essere un motore browser: abbastanza piccolo da essere un’utilità, abbastanza veloce da essere uno strumento e onesto sulle proprie origini. È costruito sul lavoro di molti progetti e persone stimati, come Servo, taffy, tiny-skia, deno_core e Obscura, ed è open source sotto Apache-2.0, così chiunque può prenderlo e usarlo per il proprio problema.</p>
-<p>Se hai mai desiderato che lo scraping o i tuoi test e2e non richiedessero l’installazione di un browser, è l’esigenza a cui risponde. Clonalo, compilalo, usalo.</p>
+<p>Se hai mai voluto fare scraping o eseguire test e2e senza installare un browser, Telemaco nasce proprio da questa esigenza. Clonalo, compilalo, usalo.</p>
 <ul>
 <li>Pagina del progetto: <a href="https://albz.it/telemaco/">albz.it/telemaco</a></li>
 <li>Codice: <a href="https://github.com/AlbertoBarrago/telemaco">github.com/AlbertoBarrago/telemaco</a></li>
 </ul>
 `,ni=Object.freeze(Object.defineProperty({__proto__:null,html:oi,meta:ii},Symbol.toStringTag,{value:"Module"})),ai={title:"Tenore: smetti di mantenere tre volte la stessa configurazione degli agenti",date:"2026-10-01",tags:["programming","ai-agents","developer-tools","typescript","opensource"],label:"traduzione AI da un testo scritto dall’autore"},ri=`<p>Ho costruito <strong>Tenore</strong>, una CLI che prende una configurazione condivisa per gli agenti AI di coding e la compila nei loro file nativi.</p>
-<p>Il problema è la manutenzione ordinaria. Claude Code, Codex CLI e Antigravity hanno i propri posti per istruzioni, permessi e server MCP. Appena ne usi più di uno, le stesse regole del progetto iniziano a comparire in più file.</p>
+<p>Il problema è la manutenzione ordinaria. Claude Code, Codex CLI e Antigravity conservano istruzioni, permessi e configurazioni dei server MCP in file diversi. Appena ne usi più di uno, le stesse regole del progetto iniziano a comparire in più file.</p>
 <p>Cambi il comando dei test, aggiungi un server, restringi un permesso: ogni copia richiede attenzione. Prima o poi ne salti una. Cambiare agente significa allora controllare se la configurazione dice ancora quello che volevi.</p>
-<p>Tenore dà a quella configurazione una fonte di verità: una directory chiamata <code>.agents/</code>.</p>
+<p>Con Tenore, quella configurazione ha un unico riferimento: la directory <code>.agents/</code>.</p>
 <h2>La configurazione come codice sorgente</h2>
 <p>L’idea è mantenere le istruzioni in Markdown, le policy strutturate nel frontmatter YAML e generare i file che ogni agente si aspetta.</p>
 <p>Un repository può iniziare con:</p>
@@ -624,8 +624,8 @@ const stories = await page.evaluate(() =&gt;
     architecture.md
 </code></pre>
 <p><code>AGENTS.md</code> contiene il testo: come lavorare nel repository, quali convenzioni contano, cosa richiede più attenzione. <code>policy.md</code> descrive permessi, server MCP e override specifici per ciascun target. I file di memoria contengono note persistenti per argomento.</p>
-<p>Tenore analizza quei sorgenti, unisce i loro ambiti e passa il risultato all’adapter di ogni target. Gli adapter producono configurazioni native, come <code>CLAUDE.md</code> o <code>.codex/config.toml</code>.</p>
-<p>I file generati diventano così output di build che si può revisionare. Le regole condivise hanno un posto esplicito e ogni traduzione ha un punto preciso nell’implementazione.</p>
+<p>Tenore analizza quei sorgenti, combina le configurazioni dei diversi ambiti e passa il risultato all’adapter di ogni agente di destinazione. Gli adapter producono configurazioni native, come <code>CLAUDE.md</code> o <code>.codex/config.toml</code>.</p>
+<p>I file generati diventano così output di build che si può revisionare. Sai dove modificare le regole condivise e dove viene implementata la conversione per ciascun agente.</p>
 <h2>Un piccolo esempio</h2>
 <p>Il pacchetto npm si chiama <code>tenore-cli</code>; l’eseguibile è <code>tenore</code>. Richiede Node.js 20.12 o successivo.</p>
 <pre><code class="language-sh">pnpm add -g tenore-cli
@@ -659,7 +659,7 @@ tenore sync
 <p>L’importazione offre un percorso di migrazione senza trascrivere tutto a mano nella nuova struttura.</p>
 <h2>Regole condivise, contesto locale</h2>
 <p>La configurazione ha tre ambiti: globale, repository e locale. Vengono uniti in quest’ordine.</p>
-<p>I sorgenti globali vivono in <code>~/.agents/</code>, quelli del repository in <code>.agents/</code> e quelli specifici della macchina in <code>.agents/local/</code>. L’inizializzazione aggiunge l’ambito locale alle regole di esclusione di Git. La configurazione globale viene inclusa esplicitamente con <code>--global</code>.</p>
+<p>I sorgenti globali si trovano in <code>~/.agents/</code>, quelli del repository in <code>.agents/</code> e quelli specifici della macchina in <code>.agents/local/</code>. L’inizializzazione aggiunge l’ambito locale alle regole di esclusione di Git. La configurazione globale viene inclusa esplicitamente con <code>--global</code>.</p>
 <p><code>tenore init --global</code> porta la stessa procedura guidata nella configurazione personale. Può importare le impostazioni globali esistenti degli agenti in <code>~/.agents/</code> e mostra il diff completo prima di scrivere le modifiche.</p>
 <p>Le regole di unione distinguono i diversi tipi di dati. Istruzioni e memoria vengono combinate nell’ordine degli ambiti. Le liste vengono deduplicate. Le impostazioni scalari prendono generalmente il valore dell’ambito più ristretto.</p>
 <p>I permessi richiedono una gestione più rigorosa: deny prevale su ask, che prevale su allow. Un allow a livello di repository non può annullare un deny globale. Le regole scartate durante l’unione producono avvisi.</p>
@@ -671,7 +671,7 @@ tenore sync
     command: npx
     args: [&quot;-y&quot;, &quot;tenore-cli&quot;, &quot;mcp&quot;]
 </code></pre>
-<p>Dopo <code>tenore sync</code>, ogni agente selezionato riceve la configurazione del server. Espone strumenti per elencare, leggere, cercare e scrivere gli argomenti di memoria, mantenendo le note persistenti nella stessa directory condivisa. Le scritture sono limitate alle directory di memoria. Quando un agente crea un nuovo argomento, esegui di nuovo <code>tenore sync</code> per includerlo nei file generati.</p>
+<p>Dopo <code>tenore sync</code>, ogni agente selezionato riceve la configurazione del server. Il server espone strumenti per elencare, leggere, cercare e aggiornare le note per argomento. Le note restano salvate nella stessa directory condivisa. Le scritture sono limitate alle directory di memoria. Quando un agente crea un nuovo argomento, esegui di nuovo <code>tenore sync</code> per includerlo nei file generati.</p>
 <p>L’accesso al web può seguire un approccio simile. Tenore permette di dichiarare una volta un server MCP web e tradurne la configurazione per ogni agente. L’esempio documentato usa <a href="https://github.com/AlbertoBarrago/telemaco">Telemaco</a>, ma si può usare un altro server MCP web o browser.</p>
 <p>Qui conta una distinzione: <code>network: none</code> disabilita l’accesso web nativo degli agenti, mentre i server MCP restano separati. L’accesso attraverso quei server è governato da regole esplicite sui permessi MCP. Questo permette di usare un server web condiviso chiedendo conferma per i suoi strumenti.</p>
 <h2>Anche i file generati vanno protetti</h2>
@@ -680,62 +680,62 @@ tenore sync
 <p>Per la CI c’è:</p>
 <pre><code class="language-sh">tenore check
 </code></pre>
-<p>Termina con esito negativo in presenza di sorgenti non validi, divergenze, conflitti o modifiche generate ancora da applicare. La coerenza della configurazione ha così un controllo accanto al resto delle verifiche del repository.</p>
+<p>Termina con esito negativo in presenza di sorgenti non validi, divergenze, conflitti o modifiche generate ancora da applicare. Anche la coerenza della configurazione entra così nelle verifiche del repository.</p>
 <p>Se smetti di usare un agente come target, Tenore segnala i suoi vecchi file generati come orfani e li mantiene per default. <code>tenore sync --prune</code> li rimuove solo se non sono stati modificati.</p>
 <h2>Dove la portabilità si complica</h2>
 <p>Gli adapter attuali coprono Claude Code, Codex CLI e Antigravity, ma i loro modelli di permessi sono diversi. Un formato sorgente comune non può far sparire quelle differenze.</p>
 <p>La policy documentata di Tenore è produrre un mapping più restrittivo con un avviso quando non è disponibile una traduzione esatta. Alcune funzionalità richiedono una gestione esplicita: i mapping del filesystem di Codex richiedono l’attivazione dei profili di permessi, mentre i permessi di Antigravity vengono configurati nell’ambito utente.</p>
-<p>Questi limiti fanno parte della revisione della configurazione generata. Le istruzioni condivise non possono nemmeno garantire comportamenti identici degli agenti; rendono coerenti e più facili da mantenere le regole desiderate.</p>
-<p>Il progetto è ancora in corso. La misura utile è capire se cambiare una regola diventa più facile da controllare e trasferire tra gli strumenti che usi.</p>
+<p>Sono limiti da considerare quando rivedi la configurazione generata. Le istruzioni condivise non possono nemmeno garantire comportamenti identici degli agenti; rendono coerenti e più facili da mantenere le regole desiderate.</p>
+<p>Il progetto è ancora in corso. Il criterio per valutarlo è semplice: quanto diventa più facile controllare la modifica a una regola e applicarla agli strumenti che usi?</p>
 <p>Tenore è scritto in TypeScript e pubblicato con licenza MIT. Il <a href="https://github.com/AlbertoBarrago/tenore">repository</a> contiene sorgenti e istruzioni di configurazione; il <a href="https://github.com/AlbertoBarrago/tenore/blob/main/docs/mapping.md">riferimento sui mapping</a> documenta le decisioni di traduzione. Puoi installarlo da <a href="https://www.npmjs.com/package/tenore-cli">npm</a>.</p>
-`,si=Object.freeze(Object.defineProperty({__proto__:null,html:ri,meta:ai},Symbol.toStringTag,{value:"Module"})),li={title:"L’illusione delle skill: perché partire da zero batte i prompt AI preconfezionati",date:"2026-10-05",tags:["opinion","ai","agents","architecture","engineering"],label:"traduzione AI da un testo scritto dall’autore"},ci=`<p>Negli ultimi diciotto mesi, un’illusione rassicurante ha invaso gli strumenti AI: la convinzione che i grandi modelli linguistici abbiano bisogno di “skill”.</p>
-<p>Le vedi ovunque. Skill, persona, pacchetti per agenti, directory di prompt specializzati. Vengono vendute come formule segrete o condivise in repository GitHub con migliaia di stelle: “l’architetto React senior definitivo”, “la persona per le migrazioni cloud”, “il toolkit di refactoring Go per la produzione”. Le persone scaricano cartelle di file Markdown, le inseriscono nella configurazione dell’agente e si convincono di aver appena aggiunto al modello vent’anni di esperienza nel settore.</p>
+`,si=Object.freeze(Object.defineProperty({__proto__:null,html:ri,meta:ai},Symbol.toStringTag,{value:"Module"})),li={title:"L’illusione delle skill: perché partire da una pagina bianca funziona meglio dei prompt AI preconfezionati",date:"2026-10-05",tags:["opinion","ai","agents","architecture","engineering"],label:"traduzione AI da un testo scritto dall’autore"},ci=`<p>Negli ultimi diciotto mesi, un’illusione rassicurante ha invaso gli strumenti AI: la convinzione che i grandi modelli linguistici abbiano bisogno di “skill”.</p>
+<p>Le vedi ovunque. Skill, profili per agenti, pacchetti di istruzioni, raccolte di prompt specializzati. Vengono vendute come formule segrete o condivise in repository GitHub con migliaia di stelle: “l’architetto React senior definitivo”, “l’esperto di migrazioni cloud”, “il toolkit di refactoring Go per la produzione”. Le persone scaricano cartelle di file Markdown, le inseriscono nella configurazione dell’agente e si convincono di aver appena aggiunto al modello vent’anni di esperienza nel settore.</p>
 <p>È fumo negli occhi. Anzi, è peggio. Nel migliore dei casi, le skill preconfezionate sono peso morto nella finestra di contesto. Nel peggiore, peggiorano attivamente il ragionamento, inquinano il meccanismo di attenzione e rovinano l’output.</p>
-<p>Le skill non fanno nulla. Partire da una pagina bianca le batte ogni volta.</p>
+<p>Le skill non fanno nulla. Una pagina bianca funziona meglio, ogni volta.</p>
 <h2>Il telefono senza fili semantico</h2>
-<p>Quando inserisci una skill di terze parti nel ciclo del tuo agente, non stai dando più conoscenza al modello. Stai rinunciando alla fedeltà semantica. Stai lasciando che uno sconosciuto anonimo decida come il modello debba interpretare la tua intenzione.</p>
+<p>Quando inserisci una skill di terze parti nel ciclo di esecuzione del tuo agente, non stai dando più conoscenza al modello. Accetti che il senso delle tue istruzioni possa essere alterato. Stai lasciando che uno sconosciuto anonimo decida come il modello debba interpretare ciò che vuoi ottenere.</p>
 <p>Considera cosa succede quando chiedi a un modello di frontiera di fare qualcosa di concreto:</p>
 <blockquote>
 <p>“Rendi deterministica questa macchina a stati e rimuovi tutte le mutazioni implicite.”</p>
 </blockquote>
-<p>Con un contesto pulito, il modello dedica tutta la propria attenzione alla tua codebase e al tuo vincolo esatto. Ogni token di ragionamento va nell’analisi delle strutture dati, delle transizioni di stato e delle invarianti.</p>
-<p>Ora immagina di far passare la stessa istruzione attraverso una tipica “skill di architettura esperta”. Prima ancora che il modello tocchi il codice, millecinquecento token di dogmi preconfezionati vengono spinti nel contesto: regole generiche di programmazione difensiva, convenzioni obbligatorie di boilerplate, consigli per tenere le funzioni sotto le venti righe, pattern enterprise astratti e tre istruzioni separate su come strutturare le spiegazioni.</p>
+<p>Con un contesto pulito, il modello dedica tutta la propria attenzione alla tua codebase e al vincolo preciso che hai posto. Ogni token di ragionamento va nell’analisi delle strutture dati, delle transizioni di stato e delle invarianti.</p>
+<p>Ora immagina di far passare la stessa istruzione attraverso una tipica “skill di architettura esperta”. Prima ancora che il modello tocchi il codice, nel contesto finiscono millecinquecento token di dogmi preconfezionati: regole generiche di programmazione difensiva, codice di contorno obbligatorio, consigli per tenere le funzioni sotto le venti righe, pattern enterprise astratti e tre istruzioni separate su come strutturare le spiegazioni.</p>
 <p>A quel punto il modello non sta più risolvendo il tuo problema. Sta giocando al telefono senza fili.</p>
 <p>Invece di scrivere codice deterministico, è impegnato a bilanciare il tuo prompt con le fissazioni di qualcun altro. Introduce classi wrapper inutili perché la skill gli ha detto di essere modulare. Divide una logica pulita in quattro file perché la skill ha prescritto la separazione delle responsabilità. Si inventa casi limite che non esistono nel tuo dominio perché la skill gli ha detto di essere prudente.</p>
-<p>Non hai ottenuto un risultato migliore. Hai ottenuto le opinioni di qualcun altro che intralciano la tua macchina.</p>
+<p>Non hai ottenuto un risultato migliore. Hai lasciato che le opinioni di qualcun altro intralciassero il lavoro del modello.</p>
 <h2>L’harness e la skill</h2>
 <p>Chi vende e colleziona skill sta confondendo due cose completamente diverse: l’harness e il prompt.</p>
-<p>L’harness di un agente è qualcosa di reale. È il ciclo di esecuzione:</p>
+<p>L’harness di un agente ha una funzione concreta: gestisce il ciclo di esecuzione.</p>
 <ul>
 <li>Dà al modello accesso al filesystem.</li>
 <li>Fornisce una shell in cui eseguire comandi.</li>
 <li>Esegue il compilatore, la suite di test e il linter.</li>
 <li>Cattura stderr e restituisce il codice di uscita.</li>
 </ul>
-<p>L’harness non dice al modello cosa pensare. Fornisce un ciclo di riscontro con la realtà. Quando un modello scrive codice sbagliato in un buon harness, il compilatore protesta, i test falliscono e il modello legge la traccia per correggersi. È oggettivo. È verificato.</p>
-<p>Una skill non fa niente di tutto questo. È solo testo statico. È qualcuno che scrive “ricordati di gestire gli errori in modo robusto” in un file Markdown. Dà al modello zero nuove capacità, zero meccanismi di riscontro e zero validazione.</p>
+<p>L’harness non dice al modello cosa pensare. Mette il risultato alla prova dei fatti e restituisce al modello ciò che è successo. Quando un modello scrive codice sbagliato in un buon harness, il compilatore protesta, i test falliscono e il modello legge gli errori per correggersi. È oggettivo. È verificato.</p>
+<p>Una skill non fa niente di tutto questo. È solo testo statico. È qualcuno che scrive “ricordati di gestire gli errori in modo robusto” in un file Markdown. Dà al modello zero nuove capacità, nessun feedback e nessuna verifica.</p>
 <p>Un modello di frontiera dentro un harness essenziale è un ingegnere con un terminale funzionante. Un modello caricato con venti skill è lo stesso ingegnere costretto a lavorare mentre qualcuno gli recita un manuale generico nell’orecchio.</p>
 <h2>Cosa ci dicono davvero i benchmark</h2>
 <p>Non è solo una preferenza personale. Ogni dato serio del 2025 e del 2026 va nella stessa direzione.</p>
-<p>Guarda le classifiche SWE-bench e gli strumenti che producono davvero codice funzionante: Claude Code, Aider e SWE-agent. Nessuno si basa su librerie di persona di dominio preconfezionate. Non hanno una “persona Rust” o una “skill Django”. Eseguono cicli semplici e stretti intorno a primitive di base: leggere un file, modificarlo, eseguire un comando bash, controllare il diff.</p>
-<p>La prova più significativa è arrivata da Princeton e Stanford con mini-swe-agent. Hanno costruito un agente di coding completo in circa cento righe di Python. Nessun framework complesso per agenti, nessun instradamento di persona, nessun modulo di skill. Solo un ciclo di base che dà al modello accesso diretto ai comandi bash. Quello script di cento righe ha superato il settanta per cento su SWE-bench Verified, rivaleggiando con enormi framework modulari.</p>
-<p>Valutazioni recenti su SWE-bench Pro e Verified mostrano che cambiare l’architettura dell’harness può spostare le prestazioni di oltre ventidue punti percentuali con lo stesso identico modello. Nel frattempo, passare tra i migliori modelli di frontiera sullo stesso harness spesso cambia il risultato di meno dell’uno per cento. L’harness fa la differenza. Le skill preconfezionate non la fanno affatto.</p>
-<p>Nel proprio lavoro di ricerca sulla costruzione di agenti efficaci, Anthropic è arrivata alla stessa conclusione: mantenere semplici le architetture degli agenti. Appena introduci instradamenti complessi di persona, dibattiti tra agenti e astrazioni rigide dei prompt, i tassi di fallimento schizzano in alto.</p>
-<p>Poi c’è <em>The Bitter Lesson</em> di Rich Sutton: la lezione più grande della storia dell’AI è che i metodi generali che sfruttano il calcolo battono costantemente le euristiche progettate dagli esseri umani. La conoscenza costruita a mano perde sempre. Le skill preconfezionate non sono altro che euristiche artigianali che fingono di essere software.</p>
+<p>Guarda le classifiche SWE-bench e gli strumenti che producono davvero codice funzionante: Claude Code, Aider e SWE-agent. Nessuno si basa su raccolte di profili specialistici preconfezionati. Non hanno un “profilo da esperto Rust” o una “skill Django”. Si basano su cicli brevi e semplici, composti da poche operazioni di base: leggere un file, modificarlo, eseguire un comando bash, controllare il diff.</p>
+<p>La prova più significativa è arrivata da Princeton e Stanford con mini-swe-agent. Hanno costruito un agente di coding completo in circa cento righe di Python. Nessun framework complesso per agenti, nessuno smistamento tra profili specialistici, nessun modulo di skill. Solo un ciclo di base che dà al modello accesso diretto ai comandi bash. Quello script di cento righe ha superato il settanta per cento su SWE-bench Verified, rivaleggiando con enormi framework modulari.</p>
+<p>Valutazioni recenti su SWE-bench Pro e Verified mostrano che cambiare l’architettura dell’harness può spostare le prestazioni di oltre ventidue punti percentuali con lo stesso identico modello. Nel frattempo, passare da un modello di frontiera a un altro sullo stesso harness spesso cambia il risultato di meno dell’uno per cento. L’harness fa la differenza. Le skill preconfezionate non la fanno affatto.</p>
+<p>Nel proprio lavoro di ricerca sulla costruzione di agenti efficaci, Anthropic è arrivata alla stessa conclusione: mantenere semplici le architetture degli agenti. Appena introduci meccanismi complessi per scegliere tra profili specialistici, dibattiti tra agenti e astrazioni rigide dei prompt, i tassi di fallimento schizzano in alto.</p>
+<p>Poi c’è <em>The Bitter Lesson</em> di Rich Sutton: la lezione più grande della storia dell’AI è che i metodi generali che sfruttano il calcolo battono costantemente le euristiche progettate dagli esseri umani. La conoscenza codificata a mano perde sempre. Le skill preconfezionate non sono altro che euristiche artigianali che fingono di essere software.</p>
 <h2>Deterioramento del contesto ed economia dell’attenzione</h2>
 <p>Ogni token nel prompt di sistema ha un costo. Non solo economico, ma cognitivo.</p>
-<p>Nel luglio 2025, Chroma Research ha pubblicato il proprio studio su Context Rot, valutando diciotto modelli di frontiera con contesti di lunghezza crescente. I risultati erano netti: ogni modello subisce un peggioramento delle prestazioni e bruschi cali di accuratezza molto prima di raggiungere la finestra di contesto dichiarata. L’attenzione si diluisce mentre il prompt cresce.</p>
-<p>All’inizio del 2026, LOCA-bench ha confermato la stessa realtà per gli agenti autonomi: accumulare istruzioni, cronologia dello stato e linee guida ridondanti causa deviazioni catastrofiche dal compito.</p>
+<p>Nel luglio 2025, Chroma Research ha pubblicato il proprio studio su Context Rot, valutando diciotto modelli di frontiera con contesti di lunghezza crescente. I risultati erano chiari: ogni modello subisce un peggioramento delle prestazioni e bruschi cali di accuratezza molto prima di raggiungere la finestra di contesto dichiarata. L’attenzione si diluisce mentre il prompt cresce.</p>
+<p>All’inizio del 2026, LOCA-bench ha confermato la stessa realtà per gli agenti autonomi: accumulare istruzioni, cronologia degli stati e linee guida ridondanti causa deviazioni catastrofiche dal compito.</p>
 <p>Quando riempi il prompt con centinaia di righe di istruzioni preconfezionate, succedono due cose:</p>
 <ol>
 <li><strong>Deriva delle istruzioni:</strong> il modello deve trovare un compromesso tra vincoli negativi in conflitto. Se la tua skill dice “usa sempre pattern funzionali” e la codebase usa una macchina a stati a oggetti, il modello spreca token di ragionamento per risolvere una contraddizione artificiale.</li>
-<li><strong>Perdita di sfumature:</strong> quando il contesto è pulito, i vincoli sottili del tuo prompt arrivano al modello con il massimo peso. Quando il contesto è sommerso dal boilerplate, quei vincoli vengono appiattiti.</li>
+<li><strong>Perdita di sfumature:</strong> quando il contesto è pulito, anche le sfumature dei vincoli nel tuo prompt mantengono tutto il loro peso. Quando il contesto è sommerso dal boilerplate, quei vincoli vengono appiattiti.</li>
 </ol>
-<p>Partire da zero ti dà una risposta immediata al primo token, caching affidabile dei prompt e nessun inquinamento del contesto. Il modello risponde a quello che dici tu, non a quello che qualcun altro ha detto sei mesi fa.</p>
+<p>Partire da una pagina bianca rende immediata la generazione del primo token, affidabile il caching dei prompt e mantiene pulito il contesto. Il modello risponde a quello che dici tu, non a quello che qualcun altro ha detto sei mesi fa.</p>
 <h2>Smetti di comprare le parole degli altri</h2>
 <p>L’impulso a collezionare skill nasce da un fraintendimento di cosa sia davvero programmare con l’AI.</p>
-<p>Se sai cosa stai costruendo, non ti serve il prompt di qualcun altro. Ti serve la tua conoscenza del dominio: le tue invarianti, i tuoi schemi, le tue suite di test e i tuoi vincoli. Scrivi la specifica, esegui l’harness, revisioni il diff.</p>
-<p>E se non sai cosa stai costruendo, nessuna skill preconfezionata da “Senior Architect” lo saprà al posto tuo. Ti darà solo mediocrità generica e sicura di sé, al triplo del costo in token.</p>
+<p>Se sai cosa stai costruendo, non ti serve il prompt di qualcun altro. Ti serve la tua conoscenza del dominio: le tue invarianti, i tuoi schemi, le tue suite di test e i tuoi vincoli. Scrivi la specifica, avvia l’harness, rivedi il diff.</p>
+<p>E se non sai cosa stai costruendo, nessuna skill preconfezionata da “Senior Architect” lo saprà al posto tuo. Ti darà solo risposte mediocri e generiche, espresse con assoluta sicurezza, al triplo del costo in token.</p>
 <p>Lascia perdere i pacchetti di skill. Tieni l’harness essenziale, il terminale aperto e parti da una pagina bianca.</p>
 <h2>Fonti</h2>
 <ul>
@@ -767,7 +767,7 @@ tenore sync
 <ul>
 <li>Scoprire quale processo usa una determinata porta</li>
 <li>Ottenere informazioni dettagliate su un PID</li>
-<li>Visualizzare l’albero completo degli antenati di un processo</li>
+<li>Visualizzare l’intera catena dei processi padre</li>
 <li>Elencare tutti i processi in esecuzione</li>
 <li>Vedere le variabili d’ambiente di un processo</li>
 <li>Produrre output normale, breve, JSON o ad albero</li>
@@ -801,7 +801,7 @@ wir --port 8080 --warnings
 <li><strong>Gestione rigorosa della memoria</strong>: niente leak, niente comportamento indefinito</li>
 </ul>
 <h2>Cosa ho imparato</h2>
-<p>Scrivere <code>wir</code> è stata un’ottima occasione per esercitare concetti fondamentali:</p>
+<p>Scrivere <code>wir</code> è stata un’ottima occasione per mettere in pratica concetti fondamentali:</p>
 <ol>
 <li><strong>Programmazione di sistema</strong>: interazione con <code>/proc</code>, chiamate di sistema, gestione dei processi</li>
 <li><strong>Sviluppo multipiattaforma</strong>: compilazione condizionale e API diverse per ogni sistema operativo</li>
@@ -822,7 +822,7 @@ wir --port 8080 --warnings
 </ul>
 <h2>Provalo</h2>
 <p><a href="https://github.com/AlbertoBarrago/wir">wir</a></p>
-<p>È un progetto per imparare, quindi sentiti libero di sperimentare ed estenderlo. Costruire strumenti di sistema in C è un ottimo modo per capire cosa succede davvero sotto il cofano.</p>
+<p>È un progetto nato per imparare, quindi sentiti libero di sperimentare ed estenderlo. Costruire strumenti di sistema in C è un ottimo modo per capire cosa succede davvero sotto il cofano.</p>
 <pre><code class="language-bash"># Build and install
 brew tap AlbertoBarrago/tap
 brew install wir
@@ -1768,7 +1768,7 @@ ${vt.map(e=>`<div class="utils-group">
 ├── <button class="inline-command file" data-command="contact">contact.vcf</button>
 ├── <button class="inline-command file" data-command="cv">albertobarrago_cv.pdf</button>
 └── <button class="inline-command directory" data-command="games">games/</button></div>`}const Po=[" █████  ██     ","██   ██ ██     ","███████ ██     ","██   ██ ██     ","██   ██ ███████","               ","██████  ███████","██   ██     ██ ","██████     ██  ","██   ██   ██   ","██████  ███████"].join(`
-`);function qo(e){const i=Math.floor(e/1e3),t=[["day",Math.floor(i/86400)],["hour",Math.floor(i/3600)%24],["min",Math.floor(i/60)%60],["sec",i%60]].filter(([,o])=>o>0);return(t.length?t:[["sec",0]]).slice(0,2).map(([o,r])=>`${r} ${o}${r===1?"":"s"}`).join(", ")}function Mo(){const e=navigator.userAgent,i=[[/Firefox\/(\d+)/,"Firefox"],[/Edg\/(\d+)/,"Edge"],[/OPR\/(\d+)/,"Opera"],[/Chrome\/(\d+)/,"Chrome"],[/Version\/(\d+).*Safari/,"Safari"]];for(const[t,a]of i){const o=e.match(t);if(o)return`${a} ${o[1]}`}return"Web browser"}function _o(){const e="Zoser@Sosaria",i=[["OS",`albz-sh ${Oe}`],["Host","GitHub Pages"],["Kernel","Vanilla JS (ES2022)"],["Uptime",qo(Date.now()-ao)],["Packages","0 (runtime)"],["Shell","albz-sh"],["Guild","AdE"],["Alignment","Player Killer"],["Resolution",`${window.screen.width}x${window.screen.height}`],["Terminal",Mo()],["Commands",String(Ve.length)],[n("Articles"),String(U.length)],["Games",String(Object.keys(Re).length)],["Build","2026-10-16"]];return`<div class="neofetch"><div class="neofetch-mark" aria-hidden="true">${Po}</div><div><span class="accent">${e}</span>
+`);function qo(e){const i=Math.floor(e/1e3),t=[["day",Math.floor(i/86400)],["hour",Math.floor(i/3600)%24],["min",Math.floor(i/60)%60],["sec",i%60]].filter(([,o])=>o>0);return(t.length?t:[["sec",0]]).slice(0,2).map(([o,r])=>`${r} ${o}${r===1?"":"s"}`).join(", ")}function Mo(){const e=navigator.userAgent,i=[[/Firefox\/(\d+)/,"Firefox"],[/Edg\/(\d+)/,"Edge"],[/OPR\/(\d+)/,"Opera"],[/Chrome\/(\d+)/,"Chrome"],[/Version\/(\d+).*Safari/,"Safari"]];for(const[t,a]of i){const o=e.match(t);if(o)return`${a} ${o[1]}`}return"Web browser"}function _o(){const e="Zoser@Sosaria",i=[["OS",`albz-sh ${Oe}`],["Host","GitHub Pages"],["Kernel","Vanilla JS (ES2022)"],["Uptime",qo(Date.now()-ao)],["Packages","0 (runtime)"],["Shell","albz-sh"],["Guild","AdE"],["Alignment","Player Killer"],["Resolution",`${window.screen.width}x${window.screen.height}`],["Terminal",Mo()],["Commands",String(Ve.length)],[n("Articles"),String(U.length)],["Games",String(Object.keys(Re).length)],["Build","2026-10-17"]];return`<div class="neofetch"><div class="neofetch-mark" aria-hidden="true">${Po}</div><div><span class="accent">${e}</span>
 <span class="muted">${"─".repeat(e.length)}</span>
 ${i.map(([t,a])=>`<span><span class="label">${t}:</span> ${me(a)}</span>`).join(`
 `)}

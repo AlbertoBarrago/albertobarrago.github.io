@@ -51,7 +51,7 @@
 		}
 		</script>
 
-  <script type="module" crossorigin src="/assets/index-BWCf4c_o.js"></script>
+  <script type="module" crossorigin src="/assets/index-DwnufQk1.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-V31z0jPh.css">
 <link rel="alternate" hreflang="en" href="https://albz.it/articles/telemaco/" />
 <link rel="alternate" hreflang="it" href="https://albz.it/it/articles/telemaco/" />
@@ -62,25 +62,25 @@
 </head>
 
 <body>
-	<div id="app"><noscript><article><h1>Telemaco: un motore browser headless in Rust, senza Chromium</h1><p>2026-09-04 · traduzione AI da un testo scritto dall’autore</p><p><strong>Telemaco</strong> è un motore browser headless che sto costruendo in Rust. Esegue JavaScript reale tramite V8, mantiene un vero albero DOM, ha una propria pipeline di layout e rendering e parla il Chrome DevTools Protocol, così Puppeteer e Playwright si collegano senza configurazioni aggiuntive. Niente Chromium, niente WebView, niente download da 300 MB. Un eseguibile da 70 MB che parte subito e carica una pagina in circa 85 ms.</p>
+	<div id="app"><noscript><article><h1>Telemaco: un motore browser headless in Rust, senza Chromium</h1><p>2026-09-04 · traduzione AI da un testo scritto dall’autore</p><p><strong>Telemaco</strong> è un motore browser headless che sto costruendo in Rust. Esegue JavaScript reale tramite V8, mantiene un vero albero DOM, ha una propria pipeline di layout e rendering e comunica tramite il Chrome DevTools Protocol, così Puppeteer e Playwright si collegano senza configurazioni aggiuntive. Niente Chromium, niente WebView, niente download da 300 MB. Un eseguibile da 70 MB che parte subito e carica una pagina in circa 85 ms.</p>
 <p>Questa è la storia di come è nato, perché esiste e quali scelte gli hanno dato forma.</p>
 <h2>Il problema: Chromium come tassa</h2>
-<p>Per anni, “browser headless” ha significato una sola cosa: Chrome headless. Funziona, ma porta con sé un costo di cui ti accorgi solo quando aumenti la scala.</p>
+<p>Per anni, “browser headless” ha significato una sola cosa: Chrome headless. Funziona, ma porta con sé un costo di cui ti accorgi solo quando aumentano i carichi.</p>
 <ul>
 <li><strong>Il download.</strong> Ogni runner CI, ogni container nuovo, ogni portatile di un collega scarica circa 300 MB di Chromium. Playwright e Puppeteer rendono l’operazione indolore, ed è proprio per questo che nessuno la mette in discussione.</li>
 <li><strong>La memoria.</strong> Una singola istanza di Chrome headless, senza fare nulla, occupa oltre 200 MB. Avviane qualcuna per fare scraping in parallelo e ti ritrovi a pianificare la RAM come nel 2010.</li>
 <li><strong>L’avvio.</strong> Due secondi per partire prima ancora di aver caricato una pagina.</li>
-<li><strong>L’impronta.</strong> Chrome headless è facilissimo da riconoscere. Se fai scraping di qualcosa che ci presta attenzione, sei già in una corsa agli armamenti contro i sistemi anti-bot.</li>
+<li><strong>Il fingerprint.</strong> Chrome headless è facilissimo da riconoscere. Se il sito da cui estrai dati usa sistemi di rilevamento, sei già in una corsa agli armamenti contro i sistemi anti-bot.</li>
 </ul>
 <p>Niente di tutto questo è intrinseco al compito. Un motore browser è un parser, un DOM, un motore di layout, una pipeline di rendering e un runtime JavaScript. Chromium è un modo molto pesante di assemblare quei pezzi. Ne volevo uno più leggero.</p>
 <h2>L’esigenza da cui è partito</h2>
 <p>Due esigenze concrete hanno guidato il progetto.</p>
-<p>La prima: <strong>ricerca ed estrazione efficienti dal web</strong>. Lavoro con colleghi che passano le giornate a estrarre dati strutturati dal web, come record Salesforce, documentazione MDN e pagine di prodotti. Gli strumenti sono o un client HTTP grezzo (che non può eseguire JavaScript) o un browser completo (che è eccessivo). Mancava una via di mezzo: qualcosa che eseguisse JavaScript e DOM reali, ma abbastanza piccolo da essere trattato come un’utilità, non come un progetto infrastrutturale.</p>
+<p>La prima: <strong>ricerca ed estrazione efficienti dal web</strong>. Lavoro con colleghi che passano le giornate a estrarre dati strutturati dal web, come record Salesforce, documentazione MDN e pagine di prodotti. Gli strumenti sono o un client HTTP grezzo (che non può eseguire JavaScript) o un browser completo (che è eccessivo). Mancava una via di mezzo: qualcosa che eseguisse davvero JavaScript e gestisse un DOM completo, ma abbastanza piccolo da essere trattato come un’utilità, non come un progetto infrastrutturale.</p>
 <p>La seconda: <strong>test end-to-end senza Chromium</strong>. Se hai mai eseguito una suite Playwright in CI, conosci il rituale: scarica il browser, spera che i flag della sandbox siano giusti, guarda salire la memoria. Volevo la stessa interfaccia di automazione CDP, gli stessi <code>page.goto</code> e <code>page.evaluate</code>, ma con qualcosa che non richiedesse affatto l’installazione di un browser. Un singolo eseguibile che <em>è</em> il browser.</p>
 <h2>Sulle spalle di molti progetti</h2>
-<p>Non volevo reinventare un browser da zero, e non ho dovuto farlo. L’ecosistema Rust ha messo insieme quasi tutti i pezzi senza fare troppo rumore, e Telemaco è costruito volutamente sopra di loro.</p>
+<p>Non volevo reinventare un browser da zero, e non ho dovuto farlo. L’ecosistema Rust ha messo insieme quasi tutti i pezzi senza fare troppo rumore, e ho scelto di costruire Telemaco su quei componenti.</p>
 <ul>
-<li><strong>I componenti di Servo</strong>: <code>html5ever</code> per il parsing HTML, <code>selectors</code> per la corrispondenza dei selettori CSS, <code>cssparser</code>, <code>servo_arc</code>. I meccanismi DOM e CSS che il browser di ricerca di Mozilla ha consolidato per anni.</li>
+<li><strong>I componenti di Servo</strong>: <code>html5ever</code> per il parsing HTML, <code>selectors</code> per individuare gli elementi che corrispondono ai selettori CSS, <code>cssparser</code>, <code>servo_arc</code>. I meccanismi DOM e CSS che il browser di ricerca di Mozilla ha consolidato per anni.</li>
 <li><strong><code>taffy</code></strong> per il motore di layout, una libreria flexbox/grid interamente in Rust.</li>
 <li><strong><code>tiny-skia</code></strong> per la rasterizzazione e <strong><code>ab_glyph</code></strong> per il rendering dei glifi: la pipeline di rendering, anch’essa interamente in Rust.</li>
 <li><strong>V8 tramite <code>deno_core</code></strong> per JavaScript. V8 vero, lo stesso motore usato da Chrome, così la semantica JavaScript è esattamente quella che ti aspetti.</li>
@@ -88,7 +88,7 @@
 </ul>
 <p>Il progetto è nato come fork di <strong>Obscura</strong> (Apache-2.0), un motore browser headless di h4ckf0r0day. Questa è l’origine, senza giri di parole: non sono partito da una pagina bianca, ma da una base solida che ho portato in una direzione diversa. Sono cambiati i nomi dei crate, l’interfaccia della CLI e l’identità del progetto, e la codebase è stata adattata ed estesa con un obiettivo pratico, orientato allo scraping e agli agenti. L’attribuzione è nel file <code>NOTICE</code> del repository: è un’opera derivata, e lo dichiara.</p>
 <h2>L’architettura</h2>
-<p>Telemaco è un workspace di nove crate, un livello per crate, con le chiamate tra crate che passano attraverso il livello superiore invece che lateralmente:</p>
+<p>Telemaco è un workspace di nove crate, con un crate per livello. Le chiamate tra crate passano dal livello superiore, anziché avvenire tra componenti dello stesso livello. Ecco come sono suddivisi:</p>
 <table>
 <thead>
 <tr>
@@ -210,10 +210,10 @@ const stories = await page.evaluate(() =&gt;
 </tbody></table>
 <p>Caricamenti delle pagine circa 12 volte più veloci e un sesto della memoria sulle pagine con framework, con la stessa interfaccia di automazione CDP.</p>
 <h2>Perché “Telemaco”</h2>
-<p>Il nome è quello del figlio di Ulisse, che parte alla ricerca di notizie del padre. Un cercatore, per definizione. Mi sembrava giusto per uno strumento il cui intero lavoro è andare a recuperare quello che c’è sul web.</p>
+<p>Il nome è quello del figlio di Ulisse, che parte alla ricerca di notizie del padre. Un cercatore, per definizione. Mi sembrava giusto per uno strumento che serve a cercare e recuperare ciò che si trova sul web.</p>
 <h2>Una direzione, più che un prodotto</h2>
 <p>Telemaco non sta cercando di vendere niente. È una visione diversa di cosa possa essere un motore browser: abbastanza piccolo da essere un’utilità, abbastanza veloce da essere uno strumento e onesto sulle proprie origini. È costruito sul lavoro di molti progetti e persone stimati, come Servo, taffy, tiny-skia, deno_core e Obscura, ed è open source sotto Apache-2.0, così chiunque può prenderlo e usarlo per il proprio problema.</p>
-<p>Se hai mai desiderato che lo scraping o i tuoi test e2e non richiedessero l’installazione di un browser, è l’esigenza a cui risponde. Clonalo, compilalo, usalo.</p>
+<p>Se hai mai voluto fare scraping o eseguire test e2e senza installare un browser, Telemaco nasce proprio da questa esigenza. Clonalo, compilalo, usalo.</p>
 <ul>
 <li>Pagina del progetto: <a href="https://albz.it/telemaco/">albz.it/telemaco</a></li>
 <li>Codice: <a href="https://github.com/AlbertoBarrago/telemaco">github.com/AlbertoBarrago/telemaco</a></li>

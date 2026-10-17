@@ -12,7 +12,7 @@
 	<meta name="theme-color" content="#0b0f14" />
 
 	<!-- SEO Meta Tags -->
-	<meta name="description" content="Otelma è un runtime locale per l’inferenza LLM che sto costruendo in Go. L’idea è volutamente più piccola di Ollama: capire cosa c’è davvero tra un file…" />
+	<meta name="description" content="Otelma è un runtime locale per l’inferenza LLM che sto costruendo in Go. L’obiettivo è costruire qualcosa di volutamente più piccolo di Ollama: capire…" />
 	<meta name="keywords"
 		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
 	<meta name="author" content="Alberto Barrago" />
@@ -21,13 +21,13 @@
 	<meta property="og:type" content="article" />
 	<meta property="og:url" content="https://albz.it/it/articles/otelma/" />
 	<meta property="og:title" content="Otelma: costruire da zero un runtime locale per LLM | Alberto Barrago" />
-	<meta property="og:description" content="Otelma è un runtime locale per l’inferenza LLM che sto costruendo in Go. L’idea è volutamente più piccola di Ollama: capire cosa c’è davvero tra un file…" />
+	<meta property="og:description" content="Otelma è un runtime locale per l’inferenza LLM che sto costruendo in Go. L’obiettivo è costruire qualcosa di volutamente più piccolo di Ollama: capire…" />
 	<meta property="og:image" content="https://github.com/albertobarrago.png" />
 
 	<!-- Twitter -->
 	<meta name="twitter:card" content="summary" />
 	<meta name="twitter:title" content="Otelma: costruire da zero un runtime locale per LLM | Alberto Barrago" />
-	<meta name="twitter:description" content="Otelma è un runtime locale per l’inferenza LLM che sto costruendo in Go. L’idea è volutamente più piccola di Ollama: capire cosa c’è davvero tra un file…" />
+	<meta name="twitter:description" content="Otelma è un runtime locale per l’inferenza LLM che sto costruendo in Go. L’obiettivo è costruire qualcosa di volutamente più piccolo di Ollama: capire…" />
 
 	<!-- Canonical URL -->
 	<link rel="canonical" href="https://albz.it/it/articles/otelma/" />
@@ -51,7 +51,7 @@
 		}
 		</script>
 
-  <script type="module" crossorigin src="/assets/index-BWCf4c_o.js"></script>
+  <script type="module" crossorigin src="/assets/index-DwnufQk1.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-V31z0jPh.css">
 <link rel="alternate" hreflang="en" href="https://albz.it/articles/otelma/" />
 <link rel="alternate" hreflang="it" href="https://albz.it/it/articles/otelma/" />
@@ -63,10 +63,10 @@
 
 <body>
 	<div id="app"><noscript><article><h1>Otelma: costruire da zero un runtime locale per LLM</h1><p>2026-08-31 · traduzione AI da un testo scritto dall’autore</p><p><strong>Otelma</strong> è un runtime locale per l’inferenza LLM che sto costruendo in Go.</p>
-<p>L’idea è volutamente più piccola di Ollama: capire cosa c’è davvero tra un file GGUF e un’applicazione locale che usa un LLM, trattando la memoria unificata come una risorsa reale e finita, invece di qualcosa di cui prima o poi si occuperà il sistema operativo.</p>
+<p>L’obiettivo è costruire qualcosa di volutamente più piccolo di Ollama: capire cosa c’è davvero tra un file GGUF e un’applicazione locale che usa un LLM, trattando la memoria unificata come una risorsa reale e finita, invece di qualcosa di cui prima o poi si occuperà il sistema operativo.</p>
 <p>Al momento gira su Apple Silicon, usa <code>llama.cpp</code> come primo backend di inferenza ed espone sia la propria API locale sia un’interfaccia minima compatibile con OpenAI.</p>
 <h2>L’architettura</h2>
-<p>Otelma è divisa in quattro livelli principali:</p>
+<p>Otelma è diviso in quattro livelli principali:</p>
 <ul>
 <li><strong>CLI</strong>: <code>pull</code>, <code>list</code>, <code>ps</code>, <code>run</code>, <code>chat</code>, <code>serve</code>, <code>config</code>, <code>version</code></li>
 <li><strong>API del runtime locale</strong>: ciclo di vita dei modelli, scheduling, contabilizzazione della memoria ed endpoint HTTP</li>
@@ -83,7 +83,7 @@
 <p>Ogni modello passa invece attraverso una macchina a stati esplicita:</p>
 <p><code>NOT_PRESENT → DOWNLOADED → LOADING → READY → BUSY → UNLOADING</code></p>
 <p>Il gestore dei modelli è responsabile di quelle transizioni.</p>
-<p>Questo dà al runtime un unico posto in cui rispondere a domande come:</p>
+<p>Il runtime ha così un unico punto in cui gestire domande come:</p>
 <ul>
 <li>questo modello è davvero disponibile in locale?</li>
 <li>è già caricato?</li>
@@ -91,22 +91,22 @@
 <li>sta generando in questo momento?</li>
 <li>può essere scaricato dalla memoria in sicurezza?</li>
 </ul>
-<p>Il registro viene salvato su disco, così i modelli scaricati sopravvivono ai riavvii del runtime senza dover riscoprire tutto da zero.</p>
+<p>Il registro viene salvato su disco, così il runtime ritrova i modelli scaricati anche dopo un riavvio, senza doverli cercare di nuovo.</p>
 <h2>La memoria unificata fa parte dell’architettura</h2>
 <p>Apple Silicon rende comoda l’inferenza locale perché CPU e GPU condividono la memoria unificata.</p>
 <p>Significa anche che fingere che la memoria sia illimitata è una cattiva astrazione.</p>
 <p>Su una macchina con 24 GB di memoria unificata, caricare più modelli grandi insieme può diventare molto rapidamente un problema del sistema operativo.</p>
 <p>Otelma ha quindi un <code>Budget</code> di memoria esplicito.</p>
-<p>Prima di caricare un modello, il gestore ne riserva l’utilizzo previsto di memoria. Se la prenotazione superasse il limite configurato, il caricamento viene rifiutato prima che il processo di inferenza parta.</p>
-<p>La distinzione importante è che la pressione sulla memoria diventa una decisione del runtime:</p>
+<p>Prima di caricare un modello, il gestore riserva la quantità di memoria prevista. Se questa riserva supera il limite configurato, il caricamento viene rifiutato prima che il processo di inferenza parta.</p>
+<p>La distinzione importante è che è il runtime a decidere se c’è abbastanza memoria per caricare il modello:</p>
 <p><code>canLoad(model) → yes/no</code></p>
 <p>invece di un eventuale OOM.</p>
 <p>Questo vincolo ha influenzato l’architettura molto più di quanto mi aspettassi all’inizio.</p>
 <h2>llama.cpp è un backend, non il runtime</h2>
 <p>Otelma non implementa direttamente le operazioni sui tensori o l’inferenza dei transformer.</p>
-<p>Per l’inferenza reale, il backend attuale avvia <code>llama-server</code> di <code>llama.cpp</code>.</p>
+<p>Per eseguire l’inferenza, il backend attuale avvia <code>llama-server</code> di <code>llama.cpp</code>.</p>
 <p>Ma il resto di Otelma non lo sa.</p>
-<p>Il runtime comunica attraverso un’interfaccia del backend responsabile di caricare, scaricare dalla memoria e generare con un modello. <code>llama.cpp</code> è semplicemente la prima implementazione.</p>
+<p>Il runtime comunica attraverso un’interfaccia del backend che gestisce il caricamento dei modelli, il loro scaricamento dalla memoria e la generazione. <code>llama.cpp</code> è semplicemente la prima implementazione.</p>
 <p>Questa separazione dovrebbe permettere di aggiungere in seguito un backend MLX senza cambiare la gestione dei modelli, lo scheduling, l’archivio o l’API pubblica.</p>
 <p>Quella distinzione è stata una delle ragioni principali per costruire il progetto: un motore di inferenza e un runtime di inferenza risolvono problemi diversi.</p>
 <h2>Compatibile con OpenAI fin dall’inizio</h2>
@@ -130,14 +130,14 @@
 <p>con metadati persistenti dei modelli, contesto su più turni, avvio del server in background e inferenza reale.</p>
 <h2>Perché costruirlo?</h2>
 <p>Esistono già ottimi strumenti per eseguire LLM in locale.</p>
-<p>È proprio per questo che Otelma è volutamente piccola.</p>
-<p>Non volevo un’altra interfaccia sopra un runtime esistente. Volevo capire il runtime stesso: ciclo di vita dei modelli, gestione dei processi, prenotazioni di memoria, scheduling, archivio, compatibilità delle API e dove dovrebbe iniziare e finire il motore di inferenza vero e proprio.</p>
-<p>Costruire la versione più piccola rende visibili quei confini.</p>
+<p>È proprio per questo che voglio mantenere Otelma piccolo.</p>
+<p>Non volevo un’altra interfaccia sopra un runtime esistente. Volevo capire il runtime stesso: ciclo di vita dei modelli, gestione dei processi, riserve di memoria, scheduling, archivio, compatibilità delle API e dove dovrebbe iniziare e finire il motore di inferenza vero e proprio.</p>
+<p>Costruire una versione essenziale rende visibili quei confini.</p>
 <h2>I prossimi passi</h2>
 <p>Lo scheduler attuale serializza volutamente le richieste ed è ancora basato su un singolo mutex.</p>
-<p>È sufficiente a rendere deterministico il ciclo di vita, ma è anche il prossimo evidente vincolo architetturale da rimuovere.</p>
+<p>È sufficiente a rendere deterministico il ciclo di vita, ma è anche il prossimo limite architetturale da superare.</p>
 <p>Poi: scheduling migliore, rimozione dei modelli, risposte in streaming e un backend MLX.</p>
-<p>Il progetto è ancora abbastanza piccolo perché ogni astrazione abbia una ragione di esistere, ed è esattamente dove voglio che resti per ora.</p>
+<p>Il progetto è ancora abbastanza piccolo perché ogni astrazione abbia una ragione di esistere, e per ora voglio mantenerlo così.</p>
 </article></noscript></div>
 
 	<!-- Google tag (gtag.js) -->
