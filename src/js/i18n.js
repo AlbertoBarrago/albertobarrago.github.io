@@ -10,6 +10,11 @@ export function articlePath(slug, lang = language) {
 	return `${lang === 'it' ? '/it' : ''}/articles/${slug}/`;
 }
 
+/** Path of the blog index listing every article. */
+export function articlesIndexPath(lang = language) {
+	return `${lang === 'it' ? '/it' : ''}/articles/`;
+}
+
 const italian = {
 	"Cagliari, Italy": "Cagliari, Italia",
 	"Senior Software Engineer with a product-builder mindset, turning ideas into scalable, production-ready tools that solve real-world problems.": "Senior Software Engineer con la mentalità di chi costruisce prodotti: trasformo idee in strumenti scalabili, pronti per la produzione, che risolvono problemi reali.",
@@ -113,7 +118,19 @@ const italian = {
 	"Unknown game": "Gioco sconosciuto",
 	"command not found:": "comando non trovato:",
 	"Launching": "Avvio di",
-	"Permission granted. Opening contact details…": "Permesso accordato. Apro i contatti…"
+	"Permission granted. Opening contact details…": "Permesso accordato. Apro i contatti…",
+	"Technical articles and notes by Alberto Barrago.": "Articoli tecnici e appunti di Alberto Barrago.",
+	"Notes on the tools I build, the code I ship and the craft behind both.": "Appunti sugli strumenti che costruisco, sul codice che rilascio e sul mestiere dietro entrambi.",
+	"filter by title or tag": "filtra per titolo o tag",
+	"Filter articles": "Filtra gli articoli",
+	"Filter by tag": "Filtra per tag",
+	"newest first": "più recenti",
+	"oldest first": "meno recenti",
+	"all": "tutti",
+	"latest": "ultimo",
+	"read": "leggi",
+	"no matches for": "nessun risultato per",
+	"reset filters": "azzera filtri"
 };
 
 /** English source text is the dictionary key. Product names and commands stay unchanged. */

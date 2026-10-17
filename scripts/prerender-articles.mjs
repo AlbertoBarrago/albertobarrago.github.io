@@ -63,21 +63,24 @@ function loadArticles(language = 'en') {
 		.sort((a, b) => b.date.localeCompare(a.date));
 }
 
-/** @param {string} shell @param {{ slug: string, title: string, date: string, label?: string, html: string }} article @returns {string} */
-function renderArticlePage(shell, article, hasItalian) {
-	const url = `${SITE_URL}${article.language === 'it' ? '/it' : ''}/articles/${article.slug}/`;
-	const title = `${article.title} | Alberto Barrago`;
-	const description = excerpt(article.html);
-
-	let page = shell
-		.replace(/<html lang="[^"]*">/, `<html lang="${article.language}">`)
+/**
+ * Rewrites the shell's language, title, description, Open Graph, Twitter and
+ * canonical tags for one page, dropping any hreflang links so the caller can
+ * add the right alternates.
+ * @param {string} shell
+ * @param {{ language: string, url: string, title: string, description: string, type: 'article' | 'website' }} page
+ * @returns {string}
+ */
+function applyPageMeta(shell, { language, url, title, description, type }) {
+	return shell
+		.replace(/<html lang="[^"]*">/, `<html lang="${language}">`)
 		.replace(/\s*<link rel="alternate" hreflang="[^"]*" href="[^"]*" \/>/g, '')
 		.replace(/<title>.*?<\/title>/s, `<title>${escapeAttr(title)}</title>`)
 		.replace(
 			/<meta name="description"[\s\S]*?\/>/,
 			`<meta name="description" content="${escapeAttr(description)}" />`
 		)
-		.replace(/<meta property="og:type" content="[^"]*" \/>/, '<meta property="og:type" content="article" />')
+		.replace(/<meta property="og:type" content="[^"]*" \/>/, `<meta property="og:type" content="${type}" />`)
 		.replace(/<meta property="og:url" content="[^"]*" \/>/, `<meta property="og:url" content="${url}" />`)
 		.replace(/<meta property="og:title" content="[^"]*" \/>/, `<meta property="og:title" content="${escapeAttr(title)}" />`)
 		.replace(
@@ -90,6 +93,15 @@ function renderArticlePage(shell, article, hasItalian) {
 			`<meta name="twitter:description" content="${escapeAttr(description)}" />`
 		)
 		.replace(/<link rel="canonical" href="[^"]*" \/>/, `<link rel="canonical" href="${url}" />`);
+}
+
+/** @param {string} shell @param {{ slug: string, title: string, date: string, label?: string, html: string }} article @returns {string} */
+function renderArticlePage(shell, article, hasItalian) {
+	const url = `${SITE_URL}${article.language === 'it' ? '/it' : ''}/articles/${article.slug}/`;
+	const title = `${article.title} | Alberto Barrago`;
+	const description = excerpt(article.html);
+
+	let page = applyPageMeta(shell, { language: article.language, url, title, description, type: 'article' });
 
 	const articleSchema = `\t<script type="application/ld+json">
 		${JSON.stringify({
@@ -111,12 +123,41 @@ function renderArticlePage(shell, article, hasItalian) {
 	return page;
 }
 
+/**
+ * Static shell for the blog index (/articles/ or /it/articles/), so a direct
+ * load or a crawler gets a real page; the client app opens the interactive
+ * index on boot. The <noscript> list is newest first, like the UI default.
+ * @param {string} shell
+ * @param {{ slug: string, language: string, title: string, date: string, html: string }[]} list
+ * @param {'en' | 'it'} language
+ * @returns {string}
+ */
+function renderIndexPage(shell, list, language) {
+	const url = `${SITE_URL}${language === 'it' ? '/it' : ''}/articles/`;
+	const title = `${language === 'it' ? 'Articoli' : 'Articles'} | Alberto Barrago`;
+	const description = language === 'it'
+		? 'Articoli tecnici e appunti di Alberto Barrago.'
+		: 'Technical articles and notes by Alberto Barrago.';
+
+	let page = applyPageMeta(shell, { language, url, title, description, type: 'website' });
+	page = page.replace('</head>', `${alternateLinks('/articles/', '/it/articles/')}</head>`);
+
+	const items = list.map((article) => {
+		const href = `${article.language === 'it' ? '/it' : ''}/articles/${article.slug}/`;
+		return `<li><a href="${href}" hreflang="${article.language}">${escapeAttr(article.title)}</a> <time datetime="${article.date}">${article.date}</time><p>${escapeAttr(excerpt(article.html))}</p></li>`;
+	});
+	const fallback = `<noscript><h1>${language === 'it' ? 'Articoli' : 'Articles'}</h1><ul>${items.join('')}</ul></noscript>`;
+	return page.replace('<div id="app"></div>', `<div id="app">${fallback}</div>`);
+}
+
 /** @param {{ slug: string, date: string }[]} articles @returns {string} */
 function renderSitemap(articles) {
 	const urls = [
 		`  <url><loc>${SITE_URL}/it/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>`,
 		`  <url>\n    <loc>${SITE_URL}/</loc>\n    <changefreq>monthly</changefreq>\n    <priority>1.0</priority>\n  </url>`,
 		// Iris's pages are static files under static/iris/, outside the app.
+		`  <url>\n    <loc>${SITE_URL}/articles/</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
+		`  <url>\n    <loc>${SITE_URL}/it/articles/</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
 		`  <url>\n    <loc>${SITE_URL}/iris/</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
 		`  <url>\n    <loc>${SITE_URL}/iris/privacy/</loc>\n    <changefreq>yearly</changefreq>\n    <priority>0.3</priority>\n  </url>`,
 		...articles.map((article) =>
@@ -204,6 +245,13 @@ function main() {
 		mkdirSync(dir, { recursive: true });
 		writeFileSync(join(dir, 'index.html'), renderArticlePage(shell, article, translatedSlugs.has(article.slug)));
 	}
+
+	mkdirSync(join(BUILD_DIR, 'articles'), { recursive: true });
+	writeFileSync(join(BUILD_DIR, 'articles', 'index.html'), renderIndexPage(shell, articles, 'en'));
+	// Italian index lists the Italian version where it exists, the English one otherwise, as the client does.
+	const italianIndex = articles.map((article) => italianArticles.find((entry) => entry.slug === article.slug) ?? article);
+	mkdirSync(join(BUILD_DIR, 'it', 'articles'), { recursive: true });
+	writeFileSync(join(BUILD_DIR, 'it', 'articles', 'index.html'), renderIndexPage(shell, italianIndex, 'it'));
 
 	writeFileSync(join(BUILD_DIR, 'sitemap.xml'), renderSitemap([...articles, ...italianArticles]));
 	writeFileSync(join(BUILD_DIR, 'feed.xml'), renderRSS(articles));

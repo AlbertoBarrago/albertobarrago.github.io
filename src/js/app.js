@@ -1,4 +1,4 @@
-import { language, locale, homePath, articlePath, t } from './i18n.js';
+import { language, locale, homePath, articlePath, articlesIndexPath, t } from './i18n.js';
 /**
  * @file Interactive terminal portfolio
  * @description Keyboard-first portfolio shell with command history, shortcuts,
@@ -15,7 +15,10 @@ import { initPong } from './games/pong.js';
 import { initFlappyBird } from './games/flappyBird.js';
 import { printConsoleBanner } from './console-banner.js';
 import { escapeHTML } from './utils.js';
-import { articles, getArticleHTML } from './articles.js';
+import {
+	articles, getArticleHTML, sortArticlesByDateAscending, sortArticlesByDateDescending,
+	filterArticles, articleTags, articleExcerpt,
+} from './articles.js';
 
 /** @typedef {'space' | 'tetris' | 'pong' | 'flappy'} GameName */
 /** @typedef {{ label: string, key: string }} GameControl */
@@ -100,12 +103,15 @@ function metaLanguage(slug) {
 	return articles.find((article) => article.slug === slug)?.language ?? 'en';
 }
 
-function languageSelectorHTML(slug) {
+/** @param {string} [slug] @param {boolean} [isIndex] whether the blog index is the current view */
+function languageSelectorHTML(slug, isIndex = false) {
 	const translated = !slug || articles.find((article) => article.slug === slug)?.hasItalian;
+	const italianHref = slug && translated ? articlePath(slug, 'it') : isIndex ? articlesIndexPath('it') : '/it/';
+	const englishHref = slug ? articlePath(slug, 'en') : isIndex ? articlesIndexPath('en') : '/';
 	return `<nav class="language-selector" aria-label="${language === 'it' ? 'Lingua' : 'Language'}">
-		<a href="${slug && translated ? articlePath(slug, 'it') : '/it/'}" lang="it" hreflang="it" ${language === 'it' ? 'aria-current="page"' : ''} ${slug && !translated ? 'title="Versione italiana non disponibile: vai al portfolio italiano"' : ''}>IT</a>
+		<a href="${italianHref}" lang="it" hreflang="it" ${language === 'it' ? 'aria-current="page"' : ''} ${slug && !translated ? 'title="Versione italiana non disponibile: vai al portfolio italiano"' : ''}>IT</a>
 		<span aria-hidden="true">|</span>
-		<a href="${slug ? articlePath(slug, 'en') : '/'}" lang="en" hreflang="en" ${language === 'en' ? 'aria-current="page"' : ''}>EN</a>
+		<a href="${englishHref}" lang="en" hreflang="en" ${language === 'en' ? 'aria-current="page"' : ''}>EN</a>
 	</nav>`;
 }
 
@@ -114,14 +120,15 @@ const homeDescription = language === 'it'
 	? 'Senior Software Engineer e product builder: progetto sistemi affidabili e realizzo software per web, mobile, cloud e AI.'
 	: 'Senior Software Engineer and product builder designing reliable systems and shipping production software across web, mobile, cloud, and AI.';
 
-function updatePageMetadata(slug) {
+/** @param {string} [slug] @param {boolean} [isIndex] whether the blog index is the current view */
+function updatePageMetadata(slug, isIndex = false) {
 	const meta = articles.find((article) => article.slug === slug);
-	const path = meta ? articlePath(slug, meta.language) : homePath;
+	const path = meta ? articlePath(meta.slug, meta.language) : isIndex ? articlesIndexPath() : homePath;
 	const url = `${window.location.origin}${path}`;
-	const title = meta ? `${meta.title} | Alberto Barrago` : homeTitle;
+	const title = meta ? `${meta.title} | Alberto Barrago` : isIndex ? `${t('Articles')} | Alberto Barrago` : homeTitle;
 	const description = meta
-		? (getArticleHTML(slug) ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155)
-		: homeDescription;
+		? (getArticleHTML(meta.slug) ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155)
+		: isIndex ? t('Technical articles and notes by Alberto Barrago.') : homeDescription;
 	document.title = title;
 	document.querySelector('link[rel="canonical"]')?.setAttribute('href', url);
 	for (const [selector, value] of [
@@ -136,7 +143,8 @@ function updatePageMetadata(slug) {
 		const link = document.createElement('link');
 		link.rel = 'alternate';
 		link.hreflang = lang;
-		link.href = `${window.location.origin}${meta ? articlePath(slug, lang === 'it' ? 'it' : 'en') : lang === 'it' ? '/it/' : '/'}`;
+		const linkLang = lang === 'it' ? 'it' : 'en';
+		link.href = `${window.location.origin}${meta ? articlePath(meta.slug, linkLang) : isIndex ? articlesIndexPath(linkLang) : linkLang === 'it' ? '/it/' : '/'}`;
 		document.head.appendChild(link);
 	}
 }
@@ -257,17 +265,206 @@ function formatArticleDate(isoDate) {
 	return new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(parsed);
 }
 
-function articlesHTML() {
-	if (articles.length === 0) {
-		return `<div class="output-title">${t("Articles")}</div>
-<p class="prose muted">${t("No articles yet.")}</p>`;
+/** @typedef {'desc' | 'asc'} BlogOrder */
+/** @typedef {{ query: string, tag: string, order: BlogOrder }} BlogFilters */
+
+const BLOG_FILTERS_KEY = 'blogFilters';
+const BLOG_TAGS = articleTags(articles);
+/** Tags used by a single article stay reachable from the post itself, not as chips. */
+const BLOG_CHIP_TAGS = BLOG_TAGS.filter(({ count }) => count > 1);
+const LATEST_SLUG = articles.at(-1)?.slug;
+
+/**
+ * Restores the last blog filters, discarding anything malformed or a tag
+ * that no longer exists, so stale storage can never hide every article.
+ * @returns {BlogFilters}
+ */
+function loadBlogFilters() {
+	/** @type {BlogFilters} */
+	const defaults = { query: '', tag: '', order: 'desc' };
+	try {
+		const stored = JSON.parse(localStorage.getItem(BLOG_FILTERS_KEY) ?? 'null');
+		if (!stored || typeof stored !== 'object') return defaults;
+		return {
+			query: typeof stored.query === 'string' ? stored.query : '',
+			tag: typeof stored.tag === 'string' && BLOG_TAGS.some(({ tag }) => tag === stored.tag) ? stored.tag : '',
+			order: stored.order === 'asc' ? 'asc' : 'desc',
+		};
+	} catch (error) {
+		console.warn('Could not restore blog filters, using defaults.', error);
+		return defaults;
 	}
-	const ascending = [...articles].sort((a, b) => a.date.localeCompare(b.date));
-	return `<div class="output-title">${t("Articles")}</div>
-<div class="project-list">${ascending.map((article) => `<article class="project-item">
-	<div><button class="terminal-link project-name inline-command" data-command="cat ${article.slug}.md">${article.title} ↗</button><span class="project-language">${formatArticleDate(article.date)}</span></div>
-	<p class="muted">${article.tags.join('  ·  ')}${language === 'it' && article.language === 'en' ? ' · Disponibile in inglese' : ''}</p>
-</article>`).join('')}</div>`;
+}
+
+const blogFilters = loadBlogFilters();
+
+function saveBlogFilters() {
+	try {
+		localStorage.setItem(BLOG_FILTERS_KEY, JSON.stringify(blogFilters));
+	} catch (error) {
+		console.warn('Could not persist blog filters.', error);
+	}
+}
+
+/** @param {import('./articles.js').ArticleMeta} article @returns {string} */
+function blogPostHTML(article) {
+	const html = getArticleHTML(article.slug) ?? '';
+	const isLatest = article.slug === LATEST_SLUG;
+	const tags = article.tags.map((tag) =>
+		`<li><button class="blog-post-tag" type="button" data-action="filter-tag" data-tag="${tag}" aria-pressed="${blogFilters.tag === tag}">#${tag}</button></li>`
+	).join('');
+	return `<article class="blog-post${isLatest ? ' is-latest' : ''}" lang="${article.language}" aria-labelledby="post-${article.slug}">
+		<p class="blog-post-meta">
+			<time datetime="${article.date}">${formatArticleDate(article.date)}</time>
+			<span>~${articleStats(html).minutes} ${t('min read')}</span>
+			${isLatest ? `<span class="blog-post-badge">${t('latest')}</span>` : ''}
+			${language === 'it' && article.language === 'en' ? '<span>Disponibile in inglese</span>' : ''}
+		</p>
+		<h2 class="blog-post-title" id="post-${article.slug}"><button class="blog-post-link" type="button" data-action="read-article" data-slug="${article.slug}">${article.title}</button></h2>
+		<p class="blog-post-excerpt">${escapeHTML(articleExcerpt(html))}</p>
+		<div class="blog-post-footer">
+			${tags ? `<ul class="blog-post-tags" aria-label="Tags">${tags}</ul>` : ''}
+			${article.label ? `<span class="reader-label">${article.label}</span>` : ''}
+		</div>
+	</article>`;
+}
+
+/** Shell of the blog index overlay; the filterable parts are filled by renderBlogResults. */
+function blogIndexHTML() {
+	return `<div class="article-reader blog-index" id="blog-index" role="dialog" aria-modal="true" aria-labelledby="blog-title">
+		<div class="article-reader-topbar">
+			<button class="reader-back" type="button" data-action="close-blog">${t("back")}</button>
+			<div class="reader-actions">
+				${languageSelectorHTML(undefined, true)}
+				<span class="reader-hint muted" aria-hidden="true">${t("ESC · CLOSE")}</span>
+			</div>
+		</div>
+		<div class="article-reader-body">
+			<div class="article-reader-main blog-main">
+				<header class="blog-header">
+					<h1 class="blog-title" id="blog-title" tabindex="-1">~/articles</h1>
+					<p class="blog-intro">${t("Notes on the tools I build, the code I ship and the craft behind both.")}</p>
+				</header>
+				${articles.length === 0 ? `<p class="blog-empty">${t("No articles yet.")}</p>` : `
+				<search class="blog-controls">
+					<label class="blog-search" for="blog-search">
+						<span class="blog-search-prompt" aria-hidden="true">grep</span>
+						<span class="sr-only">${t("Filter articles")}</span>
+						<input id="blog-search" class="blog-search-input" type="search" value="${escapeHTML(blogFilters.query)}"
+							placeholder="${t("filter by title or tag")}" autocomplete="off" autocapitalize="off" spellcheck="false"
+							aria-controls="blog-list" aria-describedby="blog-count">
+					</label>
+					<button class="reader-action blog-sort" type="button" id="blog-sort" data-action="toggle-sort" aria-controls="blog-list"></button>
+				</search>
+				<div class="blog-tags" id="blog-tags" role="group" aria-label="${t("Filter by tag")}"></div>
+				<p class="blog-count" id="blog-count" role="status" aria-live="polite"></p>
+				<div class="blog-list" id="blog-list"></div>`}
+			</div>
+		</div>
+	</div>`;
+}
+
+/**
+ * Re-renders the filter-dependent parts of the blog index in place, leaving
+ * the search input untouched so typing never loses focus or caret position.
+ * @param {string} [focusTag] when set, focus moves to that tag's chip (or the
+ *   "all" chip for an empty string) because the clicked control was replaced.
+ */
+function renderBlogResults(focusTag) {
+	const overlay = document.getElementById('blog-index');
+	const list = overlay?.querySelector('#blog-list');
+	if (!overlay || !list) return;
+	const filtered = filterArticles(articles, blogFilters);
+	const visible = blogFilters.order === 'desc' ? sortArticlesByDateDescending(filtered) : sortArticlesByDateAscending(filtered);
+	const chips = BLOG_CHIP_TAGS.some(({ tag }) => tag === blogFilters.tag) || !blogFilters.tag
+		? BLOG_CHIP_TAGS
+		: [...BLOG_CHIP_TAGS, ...BLOG_TAGS.filter(({ tag }) => tag === blogFilters.tag)];
+
+	const sort = /** @type {HTMLButtonElement} */ (overlay.querySelector('#blog-sort'));
+	sort.textContent = blogFilters.order === 'desc' ? `${t('newest first')} ↓` : `${t('oldest first')} ↑`;
+	/** @type {HTMLElement} */ (overlay.querySelector('#blog-tags')).innerHTML = [
+		`<button class="tag-chip" type="button" data-action="filter-tag" data-tag="" aria-pressed="${!blogFilters.tag}">${t('all')}</button>`,
+		...chips.map(({ tag, count }) =>
+			`<button class="tag-chip" type="button" data-action="filter-tag" data-tag="${tag}" aria-pressed="${blogFilters.tag === tag}">#${tag}<span class="tag-count" aria-label="(${count})">${count}</span></button>`
+		),
+	].join('');
+	/** @type {HTMLElement} */ (overlay.querySelector('#blog-count')).textContent =
+		`${visible.length}/${articles.length} ${t('Articles').toLowerCase()}`;
+	const criteria = [blogFilters.query.trim() && `"${blogFilters.query.trim()}"`, blogFilters.tag && `#${blogFilters.tag}`].filter(Boolean).join(' ');
+	list.innerHTML = visible.length
+		? visible.map(blogPostHTML).join('')
+		: `<p class="blog-empty">grep: ${t('no matches for')} ${escapeHTML(criteria)} · <button class="reader-nav-link" type="button" data-action="reset-blog-filters">${t('reset filters')}</button></p>`;
+
+	if (focusTag !== undefined) {
+		const chip = /** @type {HTMLElement | null} */ (overlay.querySelector(`#blog-tags [data-tag="${CSS.escape(focusTag)}"]`));
+		// Not preventScroll: when a tag inside a post was clicked, the chip row must scroll back into view.
+		(chip ?? /** @type {HTMLElement} */ (overlay.querySelector('#blog-search'))).focus();
+	}
+}
+
+function openBlogIndex() {
+	if (!document.getElementById('blog-index')) {
+		input.blur();
+		const wrapper = document.createElement('div');
+		wrapper.innerHTML = blogIndexHTML();
+		const overlay = /** @type {HTMLDivElement} */ (wrapper.firstElementChild);
+		app.appendChild(overlay);
+		renderBlogResults();
+		// The heading, not the search field: focusing an input would pop the keyboard on mobile.
+		/** @type {HTMLElement} */ (overlay.querySelector('#blog-title')).focus({ preventScroll: true });
+	}
+	syncOverlayInert();
+	updatePageMetadata(undefined, true);
+	if (window.location.pathname !== articlesIndexPath()) {
+		window.history.pushState(null, '', articlesIndexPath());
+	}
+}
+
+function closeBlogIndex() {
+	document.getElementById('blog-index')?.remove();
+	syncOverlayInert();
+	if (isBlogIndexLocation()) window.history.pushState(null, '', homePath);
+	updatePageMetadata();
+	input?.focus({ preventScroll: true });
+}
+
+/**
+ * Keeps keyboard and assistive-tech focus on the topmost layer: the terminal
+ * goes inert under any overlay, the blog index goes inert under the reader.
+ */
+function syncOverlayInert() {
+	const reader = document.getElementById('article-reader');
+	const blogIndex = document.getElementById('blog-index');
+	const terminal = app.querySelector('.terminal');
+	if (terminal instanceof HTMLElement) terminal.inert = Boolean(reader || blogIndex);
+	if (blogIndex) blogIndex.inert = Boolean(reader);
+}
+
+/** @returns {boolean} */
+function isBlogIndexLocation() {
+	return /^(?:\/it)?\/articles\/?$/.test(window.location.pathname);
+}
+
+/** @param {string} tag the tag to toggle; an empty string clears the tag filter */
+function toggleBlogTag(tag) {
+	blogFilters.tag = blogFilters.tag === tag ? '' : tag;
+	saveBlogFilters();
+	renderBlogResults(tag);
+}
+
+function toggleBlogOrder() {
+	blogFilters.order = blogFilters.order === 'desc' ? 'asc' : 'desc';
+	saveBlogFilters();
+	renderBlogResults();
+}
+
+function resetBlogFilters() {
+	blogFilters.query = '';
+	blogFilters.tag = '';
+	saveBlogFilters();
+	const search = /** @type {HTMLInputElement | null} */ (document.getElementById('blog-search'));
+	if (search) search.value = '';
+	renderBlogResults('');
 }
 
 const WORDS_PER_MINUTE = 200;
@@ -418,18 +615,38 @@ function openArticleReader(slug) {
 	app.appendChild(overlay);
 	overlay.scrollTop = 0;
 	buildArticleTOC(overlay);
+	syncOverlayInert();
+	// The post link that opened the reader is now inert: move focus into the reader instead of losing it.
+	if (document.getElementById('blog-index')) {
+		/** @type {HTMLElement} */ (overlay.querySelector('.reader-back')).focus({ preventScroll: true });
+	}
 	updatePageMetadata(slug);
 	if (window.location.pathname !== articlePath(slug, metaLanguage(slug))) {
 		window.history.pushState(null, '', articlePath(slug, metaLanguage(slug)));
 	}
 }
 
-function closeArticleReader() {
+/** Tears down the reader overlay and its TOC observers without touching history. */
+function removeArticleReader() {
 	tocObserver?.disconnect();
 	tocObserver = null;
 	tocScrollFallback?.container.removeEventListener('scroll', tocScrollFallback.handler);
 	tocScrollFallback = null;
 	document.getElementById('article-reader')?.remove();
+	syncOverlayInert();
+}
+
+function closeArticleReader() {
+	const slug = articleSlugFromLocation();
+	removeArticleReader();
+	const blogIndex = document.getElementById('blog-index');
+	if (blogIndex) {
+		// Opened from the blog index: go back to it and return focus to the post the reader came from.
+		openBlogIndex();
+		const origin = slug ? blogIndex.querySelector(`.blog-post-link[data-slug="${CSS.escape(slug)}"]`) : null;
+		/** @type {HTMLElement} */ (origin ?? blogIndex.querySelector('#blog-title')).focus({ preventScroll: true });
+		return;
+	}
 	if (/^(?:\/it)?\/articles\//.test(window.location.pathname)) {
 		window.history.pushState(null, '', homePath);
 	}
@@ -723,9 +940,14 @@ function executeCommand(rawCommand) {
 		return;
 	}
 
+	if (command === 'articles') {
+		openBlogIndex();
+		return;
+	}
+
 	const renderers = /** @type {Record<string, () => string>} */ ({
 		help: helpHTML, skills: skillsHTML, experience: experienceHTML,
-		projects: projectsHTML, articles: articlesHTML, utils: utilsHTML, contact: contactHTML, games: gamesHTML,
+		projects: projectsHTML, utils: utilsHTML, contact: contactHTML, games: gamesHTML,
 		ls: lsHTML, tree: treeHTML, neofetch: neofetchHTML,
 	});
 	if (renderers[command]) {
@@ -878,12 +1100,18 @@ function articleSlugFromLocation() {
 
 const bootSlug = articleSlugFromLocation();
 if (bootSlug && getArticleHTML(bootSlug)) openArticleReader(bootSlug);
+else if (isBlogIndexLocation()) openBlogIndex();
 
 window.addEventListener('popstate', () => {
 	const slug = articleSlugFromLocation();
 	if (slug && getArticleHTML(slug)) openArticleReader(slug);
-	else {
-		document.getElementById('article-reader')?.remove();
+	else if (isBlogIndexLocation()) {
+		removeArticleReader();
+		openBlogIndex();
+	} else {
+		removeArticleReader();
+		document.getElementById('blog-index')?.remove();
+		syncOverlayInert();
 		updatePageMetadata();
 	}
 });
@@ -897,6 +1125,13 @@ form.addEventListener('submit', (event) => {
 
 input.addEventListener('input', () => {
 	lastTabPrefix = null;
+});
+
+app.addEventListener('input', (event) => {
+	if (!(event.target instanceof HTMLInputElement) || event.target.id !== 'blog-search') return;
+	blogFilters.query = event.target.value;
+	saveBlogFilters();
+	renderBlogResults();
 });
 
 input.addEventListener('keydown', (event) => {
@@ -960,6 +1195,23 @@ app.addEventListener('click', (event) => {
 		closeArticleReader();
 		return;
 	}
+	if (target.closest('[data-action="close-blog"]')) {
+		closeBlogIndex();
+		return;
+	}
+	const tagTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="filter-tag"]'));
+	if (tagTarget) {
+		toggleBlogTag(tagTarget.dataset.tag ?? '');
+		return;
+	}
+	if (target.closest('[data-action="toggle-sort"]')) {
+		toggleBlogOrder();
+		return;
+	}
+	if (target.closest('[data-action="reset-blog-filters"]')) {
+		resetBlogFilters();
+		return;
+	}
 	const shareTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="share-article"]'));
 	if (shareTarget?.dataset.slug) {
 		shareArticle(shareTarget.dataset.slug, shareTarget);
@@ -984,7 +1236,7 @@ app.addEventListener('click', (event) => {
 	const commandTarget = /** @type {HTMLElement | null} */ (target.closest('[data-command]'));
 	if (commandTarget?.dataset.command) executeCommand(commandTarget.dataset.command);
 	if (target.closest('[data-action="exit-game"]')) exitGame();
-	if (!target.closest('a') && !document.getElementById('game-overlay') && !document.getElementById('article-reader')) {
+	if (!target.closest('a') && !document.getElementById('game-overlay') && !document.getElementById('article-reader') && !document.getElementById('blog-index')) {
 		input.focus({ preventScroll: true });
 	}
 });
@@ -997,4 +1249,16 @@ window.addEventListener('blur', releaseAllGameControls);
 document.addEventListener('keydown', (event) => {
 	if (event.key === 'Escape' && document.getElementById('game-overlay')) exitGame();
 	if (event.key === 'Escape' && document.getElementById('article-reader')) closeArticleReader();
+	else if (event.key === 'Escape' && document.getElementById('blog-index')) {
+		// First ESC in a non-empty search clears it (like the native search field), the next one closes.
+		if (event.target instanceof HTMLInputElement && event.target.id === 'blog-search' && event.target.value) {
+			event.preventDefault();
+			event.target.value = '';
+			blogFilters.query = '';
+			saveBlogFilters();
+			renderBlogResults();
+			return;
+		}
+		closeBlogIndex();
+	}
 });

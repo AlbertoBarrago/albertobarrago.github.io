@@ -18,6 +18,77 @@ function sortArticlesByDateAscending(list) {
 	return [...list].sort((a, b) => a.date.localeCompare(b.date));
 }
 
+/**
+ * Sorts articles by date, descending (newest first, LIFO), as shown by the
+ * blog index.
+ * @template {{ date: string }} T
+ * @param {T[]} list
+ * @returns {T[]}
+ */
+function sortArticlesByDateDescending(list) {
+	return [...list].sort((a, b) => b.date.localeCompare(a.date));
+}
+
+/**
+ * Filters articles by a free-text query (matched case-insensitively against
+ * title and tags) and by an exact tag. Empty criteria match everything.
+ * @template {{ title: string, tags: string[] }} T
+ * @param {T[]} list
+ * @param {{ query?: string, tag?: string }} criteria
+ * @returns {T[]}
+ */
+function filterArticles(list, { query = '', tag = '' }) {
+	const needle = query.trim().toLowerCase();
+	return list.filter((article) =>
+		(!tag || article.tags.includes(tag))
+		&& (!needle
+			|| article.title.toLowerCase().includes(needle)
+			|| article.tags.some((entry) => entry.toLowerCase().includes(needle)))
+	);
+}
+
+/**
+ * Collects unique tags with their usage count, most used first, ties broken
+ * alphabetically so the chip order is stable across builds.
+ * @param {{ tags: string[] }[]} list
+ * @returns {{ tag: string, count: number }[]}
+ */
+function articleTags(list) {
+	/** @type {Map<string, number>} */
+	const counts = new Map();
+	for (const article of list) {
+		for (const tag of article.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+	}
+	return [...counts]
+		.map(([tag, count]) => ({ tag, count }))
+		.sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
+}
+
+/** Entities `marked` emits in text nodes; decoded so excerpts can be re-escaped safely. */
+const HTML_ENTITIES = /** @type {Record<string, string>} */ ({
+	'&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&#039;': "'",
+});
+
+/**
+ * Builds a plain-text excerpt from rendered article HTML, cut at a word
+ * boundary. Only paragraph text is used so headings, lists and code blocks
+ * never leak into the teaser. The result is unescaped text: callers must
+ * escape it before injecting it into markup.
+ * @param {string} html
+ * @param {number} [limit]
+ * @returns {string}
+ */
+function articleExcerpt(html, limit = 220) {
+	const paragraphs = html.match(/<p>[\s\S]*?<\/p>/gi)?.join(' ') ?? html;
+	const text = paragraphs
+		.replace(/<[^>]*>/g, ' ')
+		.replace(/&(?:amp|lt|gt|quot|#0?39);/g, (entity) => HTML_ENTITIES[entity] ?? entity)
+		.replace(/\s+/g, ' ')
+		.trim();
+	if (text.length <= limit) return text;
+	return `${text.slice(0, limit).replace(/\s+\S*$/, '')}…`;
+}
+
 const italianModules = /** @type {Record<string, RenderedArticle>} */ (
 	import.meta.glob('/src/content/articles/it/*.md', { eager: true })
 );
@@ -52,4 +123,7 @@ function getArticleHTML(slug) {
 	return htmlBySlug.has(slug) ? /** @type {string} */ (htmlBySlug.get(slug)) : null;
 }
 
-export { articles, getArticleHTML, sortArticlesByDateAscending };
+export {
+	articles, getArticleHTML, sortArticlesByDateAscending, sortArticlesByDateDescending,
+	filterArticles, articleTags, articleExcerpt,
+};
