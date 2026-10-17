@@ -43,7 +43,7 @@ Funziona.
 
 Ma è soprattutto lavoro manuale.
 
-E su un repository che non conosci bene, buona parte del processo diventa un’ipotesi.
+E quando il repository non lo conosci bene, finisci spesso per andare a intuito.
 
 Volevo qualcosa di più vicino a:
 
@@ -108,7 +108,7 @@ Ma i repository contengono più informazioni del loro grafo delle dipendenze.
 
 Serval scansiona il repository e costruisce un grafo a partire dalle dipendenze native dei linguaggi.
 
-Al momento comprende repository che contengono:
+Al momento analizza repository scritti in:
 
 - JavaScript / TypeScript
 - Go
@@ -116,9 +116,9 @@ Al momento comprende repository che contengono:
 - Java
 - C
 
-Per un file di destinazione, Serval percorre il grafo nella direzione opposta e calcola quali file dipendono da lui.
+Dato un file, Serval percorre il grafo a ritroso e individua quali altri file ne dipendono.
 
-Questo ci dà la portata strutturale della modifica.
+Questo ci dice fin dove può propagarsi la modifica attraverso le dipendenze.
 
 Ma la struttura è solo il primo segnale.
 
@@ -164,7 +164,7 @@ Alcune parti di un sistema meritano semplicemente più attenzione.
 
 L’autenticazione non è la stessa cosa di una modifica a un README.
 
-La logica dei pagamenti non è la stessa cosa di una modifica a un’utilità CSS.
+La logica dei pagamenti non è la stessa cosa di una modifica a una utility CSS.
 
 Serval permette quindi di definire regole sui percorsi critici specifiche per il repository attraverso `.serval.yml`.
 
@@ -232,7 +232,7 @@ Riceve solo l’analisi deterministica e la spiega in linguaggio naturale.
 
 E dato che Serval lavora in locale, il provider predefinito può essere un’istanza locale di Ollama.
 
-Si possono usare altri provider attraverso CLI installate in locale, come Claude, Codex o Gemini.
+Si possono usare altri provider tramite CLI installate in locale, come Claude, Codex o Gemini.
 
 Questa architettura mi piace molto più di un LLM al centro del sistema:
 
@@ -290,7 +290,7 @@ E questo rende possibile un altro caso d’uso:
 serval diff --fail-on high
 ```
 
-Se uno dei file modificati raggiunge il rischio HIGH, Serval termina con uno stato diverso da zero.
+Se uno dei file modificati raggiunge il livello di rischio HIGH, Serval termina con un codice di uscita diverso da zero.
 
 Significa che lo strumento può passare da “informazione interessante per lo sviluppatore” a “segnale deterministico nella pipeline di delivery”.
 
@@ -342,9 +342,9 @@ Mi interessa meno fingere che un punteggio da 0 a 100 possa prevedere magicament
 
 I grafi delle dipendenze ci dicono cosa è collegato.
 
-Git ci dice cosa si muove insieme nella storia del progetto.
+Git ci dice quali file sono stati modificati insieme nel corso del progetto.
 
-La CI ci dice quali meccanismi operativi sono coinvolti.
+La CI ci dice quali automazioni sono coinvolte.
 
 Le regole del repository ci dicono quali aree meritano più attenzione.
 
@@ -360,4 +360,4 @@ Progetto: [albz.it/serval](https://albz.it/serval/)
 
 Codice: [github.com/AlbertoBarrago/serval](https://github.com/AlbertoBarrago/serval)
 
-Se lavori su grandi repository, monorepo, sistemi legacy o progetti con molta CI, mi interesserebbe soprattutto sapere quali segnali usi prima di toccare una parte della codebase che non conosci.
+Se lavori su grandi repository, monorepo, sistemi legacy o progetti con pipeline CI articolate, mi interesserebbe soprattutto sapere quali segnali usi prima di toccare una parte della codebase che non conosci.

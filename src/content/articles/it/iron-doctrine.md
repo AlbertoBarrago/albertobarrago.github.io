@@ -18,20 +18,20 @@ Il repository è diviso in `packages/` e `apps/`:
 
 ## Il gioco locale: il game loop
 
-`GameRenderer` (una grande classe che gestisce rendering, input e audio) possiede un `SimBridge`, che a sua volta possiede un Web Worker in cui gira la `Simulation`. Il worker avanza con un clock autonomo (`setTimeout`), applica i comandi appena arrivano e produce uno snapshot per tick, che il thread principale interpola e disegna.
+`GameRenderer` (una grande classe che gestisce rendering, input e audio) gestisce un `SimBridge`, che a sua volta gestisce il Web Worker in cui gira la `Simulation`. Il worker avanza con un clock autonomo (`setTimeout`), applica i comandi appena arrivano e produce uno snapshot per tick, che il thread principale interpola e disegna.
 
 ## Il passaggio online
 
-L’aggiunta di questa settimana: vere partite 1v1 in rete, costruite intorno al determinismo lockstep.
+L’aggiunta di questa settimana: partite 1v1 in rete basate sul modello deterministico lockstep.
 
-1. **apps/server** esegue un singolo `MatchRelay` in memoria per processo. Non simula nulla: assegna ciascun comando in arrivo a un tick futuro e ritrasmette lo stesso insieme di comandi confermati a entrambi i client ogni `SIM_DT_MS`. Il determinismo deriva dai due client che eseguono lo stesso motore sullo stesso flusso di comandi.
+1. **apps/server** esegue un singolo `MatchRelay` in memoria per processo. Non simula nulla: assegna ciascun comando in arrivo a un tick futuro e ritrasmette lo stesso insieme di comandi confermati a entrambi i client ogni `SIM_DT_MS`. La simulazione è deterministica perché entrambi i client eseguono lo stesso motore sullo stesso flusso di comandi.
 2. **NetworkClient** comunica con il server via WebSocket, traduce i tick confermati e li passa a un secondo tipo di bridge, `NetworkedSimBridge`, che implementa la stessa interfaccia `SimBridgeLike` di quello locale, con due differenze: i comandi locali vanno al server (`sendCommand`) invece che direttamente al worker, e il worker avanza di un solo tick quando arriva una conferma dalla rete (`networkTick`), invece di procedere autonomamente.
 3. **Il problema “sei sempre il giocatore 0”**: buona parte dell’interfaccia e dell’HUD assumeva che l’utente locale fosse il giocatore 0. L’ho risolto con `playerPerspective.ts`, un modulo puro che scambia le etichette `owner`/`player`/`winner` (0↔1) solo al confine con la rete, così ogni client continua a considerarsi internamente il giocatore 0.
 4. `GameRenderer` ora riceve il bridge nel costruttore (locale o di rete) invece di istanziarlo sempre da sé. Quel singolo punto di iniezione ha reso possibile il resto della modalità online senza riscrivere le circa 1700 righe della classe.
 
 ## Perché questa scelta
 
-Mantenere la simulazione deterministica e indipendente dalla rete in `packages/engine` significa usare lo stesso codice per schermaglie, campagna e gioco online. Il server non deve mai conoscere lo stato del gioco: è soltanto un clock autorevole per ordinare i comandi. Il compromesso è che entrambi i client devono produrre risultati identici bit per bit a partire dagli stessi input. Per questo l’intero modello di rete si basa sulla riproduzione dei comandi, non sulla sincronizzazione dello stato.
+Mantenere la simulazione deterministica e indipendente dalla rete in `packages/engine` significa usare lo stesso codice per schermaglie, campagna e gioco online. Il server non deve mai conoscere lo stato del gioco: fornisce soltanto il riferimento temporale comune con cui ordinare i comandi. Il compromesso è che entrambi i client devono produrre risultati identici bit per bit a partire dagli stessi input. Per questo l’intero modello di rete si basa sulla riproduzione dei comandi, non sulla sincronizzazione dello stato.
 
 ## I prossimi passi
 

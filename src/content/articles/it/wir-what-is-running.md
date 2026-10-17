@@ -17,7 +17,7 @@ Quante volte hai trovato una porta occupata senza sapere quale processo la stess
 
 - Scoprire quale processo usa una determinata porta
 - Ottenere informazioni dettagliate su un PID
-- Visualizzare l’albero completo degli antenati di un processo
+- Visualizzare l’intera catena dei processi padre
 - Elencare tutti i processi in esecuzione
 - Vedere le variabili d’ambiente di un processo
 - Produrre output normale, breve, JSON o ad albero
@@ -56,7 +56,7 @@ Il progetto è strutturato in modo modulare:
 
 ## Cosa ho imparato
 
-Scrivere `wir` è stata un’ottima occasione per esercitare concetti fondamentali:
+Scrivere `wir` è stata un’ottima occasione per mettere in pratica concetti fondamentali:
 
 1. **Programmazione di sistema**: interazione con `/proc`, chiamate di sistema, gestione dei processi
 2. **Sviluppo multipiattaforma**: compilazione condizionale e API diverse per ogni sistema operativo
@@ -82,7 +82,7 @@ Il progetto si presta a diverse estensioni:
 
 [wir](https://github.com/AlbertoBarrago/wir)
 
-È un progetto per imparare, quindi sentiti libero di sperimentare ed estenderlo. Costruire strumenti di sistema in C è un ottimo modo per capire cosa succede davvero sotto il cofano.
+È un progetto nato per imparare, quindi sentiti libero di sperimentare ed estenderlo. Costruire strumenti di sistema in C è un ottimo modo per capire cosa succede davvero sotto il cofano.
 
 ```bash
 # Build and install

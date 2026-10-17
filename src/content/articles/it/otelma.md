@@ -7,13 +7,13 @@ label: traduzione AI da un testo scritto dall’autore
 
 **Otelma** è un runtime locale per l’inferenza LLM che sto costruendo in Go.
 
-L’idea è volutamente più piccola di Ollama: capire cosa c’è davvero tra un file GGUF e un’applicazione locale che usa un LLM, trattando la memoria unificata come una risorsa reale e finita, invece di qualcosa di cui prima o poi si occuperà il sistema operativo.
+L’obiettivo è costruire qualcosa di volutamente più piccolo di Ollama: capire cosa c’è davvero tra un file GGUF e un’applicazione locale che usa un LLM, trattando la memoria unificata come una risorsa reale e finita, invece di qualcosa di cui prima o poi si occuperà il sistema operativo.
 
 Al momento gira su Apple Silicon, usa `llama.cpp` come primo backend di inferenza ed espone sia la propria API locale sia un’interfaccia minima compatibile con OpenAI.
 
 ## L’architettura
 
-Otelma è divisa in quattro livelli principali:
+Otelma è diviso in quattro livelli principali:
 
 * **CLI**: `pull`, `list`, `ps`, `run`, `chat`, `serve`, `config`, `version`
 * **API del runtime locale**: ciclo di vita dei modelli, scheduling, contabilizzazione della memoria ed endpoint HTTP
@@ -40,7 +40,7 @@ Ogni modello passa invece attraverso una macchina a stati esplicita:
 
 Il gestore dei modelli è responsabile di quelle transizioni.
 
-Questo dà al runtime un unico posto in cui rispondere a domande come:
+Il runtime ha così un unico punto in cui gestire domande come:
 
 * questo modello è davvero disponibile in locale?
 * è già caricato?
@@ -48,7 +48,7 @@ Questo dà al runtime un unico posto in cui rispondere a domande come:
 * sta generando in questo momento?
 * può essere scaricato dalla memoria in sicurezza?
 
-Il registro viene salvato su disco, così i modelli scaricati sopravvivono ai riavvii del runtime senza dover riscoprire tutto da zero.
+Il registro viene salvato su disco, così il runtime ritrova i modelli scaricati anche dopo un riavvio, senza doverli cercare di nuovo.
 
 ## La memoria unificata fa parte dell’architettura
 
@@ -60,9 +60,9 @@ Su una macchina con 24 GB di memoria unificata, caricare più modelli grandi ins
 
 Otelma ha quindi un `Budget` di memoria esplicito.
 
-Prima di caricare un modello, il gestore ne riserva l’utilizzo previsto di memoria. Se la prenotazione superasse il limite configurato, il caricamento viene rifiutato prima che il processo di inferenza parta.
+Prima di caricare un modello, il gestore riserva la quantità di memoria prevista. Se questa riserva supera il limite configurato, il caricamento viene rifiutato prima che il processo di inferenza parta.
 
-La distinzione importante è che la pressione sulla memoria diventa una decisione del runtime:
+La distinzione importante è che è il runtime a decidere se c’è abbastanza memoria per caricare il modello:
 
 `canLoad(model) → yes/no`
 
@@ -74,11 +74,11 @@ Questo vincolo ha influenzato l’architettura molto più di quanto mi aspettass
 
 Otelma non implementa direttamente le operazioni sui tensori o l’inferenza dei transformer.
 
-Per l’inferenza reale, il backend attuale avvia `llama-server` di `llama.cpp`.
+Per eseguire l’inferenza, il backend attuale avvia `llama-server` di `llama.cpp`.
 
 Ma il resto di Otelma non lo sa.
 
-Il runtime comunica attraverso un’interfaccia del backend responsabile di caricare, scaricare dalla memoria e generare con un modello. `llama.cpp` è semplicemente la prima implementazione.
+Il runtime comunica attraverso un’interfaccia del backend che gestisce il caricamento dei modelli, il loro scaricamento dalla memoria e la generazione. `llama.cpp` è semplicemente la prima implementazione.
 
 Questa separazione dovrebbe permettere di aggiungere in seguito un backend MLX senza cambiare la gestione dei modelli, lo scheduling, l’archivio o l’API pubblica.
 
@@ -126,18 +126,18 @@ con metadati persistenti dei modelli, contesto su più turni, avvio del server i
 
 Esistono già ottimi strumenti per eseguire LLM in locale.
 
-È proprio per questo che Otelma è volutamente piccola.
+È proprio per questo che voglio mantenere Otelma piccolo.
 
-Non volevo un’altra interfaccia sopra un runtime esistente. Volevo capire il runtime stesso: ciclo di vita dei modelli, gestione dei processi, prenotazioni di memoria, scheduling, archivio, compatibilità delle API e dove dovrebbe iniziare e finire il motore di inferenza vero e proprio.
+Non volevo un’altra interfaccia sopra un runtime esistente. Volevo capire il runtime stesso: ciclo di vita dei modelli, gestione dei processi, riserve di memoria, scheduling, archivio, compatibilità delle API e dove dovrebbe iniziare e finire il motore di inferenza vero e proprio.
 
-Costruire la versione più piccola rende visibili quei confini.
+Costruire una versione essenziale rende visibili quei confini.
 
 ## I prossimi passi
 
 Lo scheduler attuale serializza volutamente le richieste ed è ancora basato su un singolo mutex.
 
-È sufficiente a rendere deterministico il ciclo di vita, ma è anche il prossimo evidente vincolo architetturale da rimuovere.
+È sufficiente a rendere deterministico il ciclo di vita, ma è anche il prossimo limite architetturale da superare.
 
 Poi: scheduling migliore, rimozione dei modelli, risposte in streaming e un backend MLX.
 
-Il progetto è ancora abbastanza piccolo perché ogni astrazione abbia una ragione di esistere, ed è esattamente dove voglio che resti per ora.
+Il progetto è ancora abbastanza piccolo perché ogni astrazione abbia una ragione di esistere, e per ora voglio mantenerlo così.

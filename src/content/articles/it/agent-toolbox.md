@@ -21,7 +21,7 @@ Una richiesta in linguaggio naturale lascia spazio all’interpretazione. Anche 
 
 Themis parte da una specifica con decisioni e criteri di accettazione. Organizza il lavoro degli agenti intorno a un ciclo di verifica. Approvo il piano e i test di accettazione; a quel punto i test vengono bloccati e un verificatore controlla il risultato.
 
-Claude Code è attualmente l’adapter supportato per gli agenti. Themis ne gestisce le invocazioni ed esegue direttamente la verifica. Il progetto è ancora nelle prime fasi di sviluppo e, per ora, si installa dai sorgenti.
+Al momento, l’adapter disponibile è quello per Claude Code. Themis ne gestisce le invocazioni ed esegue direttamente la verifica. Il progetto è ancora nelle prime fasi di sviluppo e, per ora, si installa dai sorgenti.
 
 Codice: [github.com/AlbertoBarrago/themis](https://github.com/AlbertoBarrago/themis).
 
@@ -59,7 +59,7 @@ Per esempio, questo è il tipo di istruzione che gli darei:
 >
 > Alla fine, mostrami il diff, i risultati delle verifiche e gli eventuali limiti rimasti.
 
-È un esempio di come voglio comporre gli strumenti. Per rendere ripetibile il workflow, gli agenti che fanno il lavoro devono avere sia le istruzioni sia l’accesso agli strumenti. Installare un eseguibile, da solo, non basta a definire quel workflow.
+È un esempio di come voglio usare insieme questi strumenti. Per rendere ripetibile il workflow, gli agenti che fanno il lavoro devono avere sia le istruzioni sia l’accesso agli strumenti. Installare un eseguibile non basta: bisogna anche stabilire come usarlo nel workflow.
 
 Themis gestisce il ciclo di esecuzione e verifica. Serval e Telemaco forniscono informazioni che possono orientare la specifica, il piano e l’implementazione. Il loro uso deve essere previsto nelle istruzioni degli agenti coinvolti.
 
@@ -69,4 +69,4 @@ Come progetti singoli, descrivono tre problemi diversi. Insieme descrivono un mo
 
 Mi piace questa composizione perché ogni strumento mantiene una responsabilità chiara. Posso usarli insieme oppure scegliere solo quello che mi serve.
 
-È questa la cassetta degli attrezzi che voglio costruire intorno a Claude Code: strumenti concreti, istruzioni precise per usarli e decisioni e verifiche visibili dietro al lavoro.
+È questa la cassetta degli attrezzi che voglio costruire intorno a Claude Code: strumenti concreti, istruzioni precise e un lavoro di cui si possano vedere le decisioni e verificare i risultati.

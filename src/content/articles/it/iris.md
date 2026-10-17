@@ -9,13 +9,13 @@ Volevo un’app di posta e calendario per il mio Mac che tenesse le email sul mi
 
 ## Cosa fa Iris
 
-Iris legge la posta di Gmail, degli account Microsoft (Outlook.com, Hotmail, Live e Microsoft 365) e di qualsiasi account IMAP e SMTP, trovando per te le impostazioni del server. Mostra gli account in una casella unificata oppure uno alla volta, con calendari e contatti accanto alla posta. Firma e cifra le email con OpenPGP e S/MIME.
+Iris legge la posta di Gmail, degli account Microsoft (Outlook.com, Hotmail, Live e Microsoft 365) e degli altri account tramite IMAP e SMTP, individuando automaticamente le impostazioni del server. Mostra la posta in una casella unificata oppure separata per account, con calendari e contatti accanto alla posta. Firma e cifra le email con OpenPGP e S/MIME.
 
-I dati della posta e del calendario restano sul tuo computer e Iris non ha un server proprio. Gmail comunica direttamente con Google e gli account Microsoft con Microsoft Graph, quindi nessun altro server vede le tue email.
+I dati della posta e del calendario restano sul tuo computer e Iris non ha un server proprio. Per Gmail, Iris comunica direttamente con Google; per gli account Microsoft usa Microsoft Graph, quindi nessun altro server vede le tue email.
 
 ## Pensata per macOS
 
-Il cuore è in Rust: sincronizzazione, archivio locale, ricerca e operazioni sulla posta. Sopra questo nucleo, Iris sta passando a un’interfaccia nativa in SwiftUI e AppKit, così si comporta come un’app per Mac: il Portachiavi per le password, le notifiche di sistema, gli aggiornamenti tramite Sparkle, il badge nel Dock.
+Il cuore è in Rust: sincronizzazione, archivio locale, ricerca e operazioni sulla posta. Per l’interfaccia, sto passando a SwiftUI e AppKit, così si comporta come un’app per Mac: il Portachiavi per le password, le notifiche di sistema, gli aggiornamenti tramite Sparkle, il badge nel Dock.
 
 ## Un assistente, se lo vuoi
 
