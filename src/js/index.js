@@ -61,6 +61,12 @@ const openSource = [
 		language: "TypeScript (0 deps)"
 	},
 	{
+		name: "Iris",
+		description: t("A native macOS mail and calendar app with a Rust core: Gmail, Microsoft and any IMAP account in one inbox, with your mail kept on your Mac."),
+		url: "https://github.com/AlbertoBarrago/iris",
+		language: "Swift + Rust"
+	},
+	{
 		name: "Telemaco",
 		description: t("A headless browser engine in Rust: real JavaScript, real DOM, native layout and paint, speaking the Chrome DevTools Protocol. No Chromium required."),
 		url: "https://github.com/AlbertoBarrago/telemaco",
