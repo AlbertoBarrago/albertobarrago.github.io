@@ -15,6 +15,7 @@ import { initPong } from './games/pong.js';
 import { initFlappyBird } from './games/flappyBird.js';
 import { printConsoleBanner } from './console-banner.js';
 import { escapeHTML } from './utils.js';
+import { startNowPlaying } from './now-playing.js';
 import {
 	articles, getArticleHTML, sortArticlesByDateAscending, sortArticlesByDateDescending,
 	filterArticles, articleTags, articleExcerpt,
@@ -197,7 +198,7 @@ ${t("I turn ambiguity into reliable systems and useful products.")}
 ${articles.length ? `
 <span class="muted">${t("Latest write-up:")}</span> <button class="inline-command command" data-command="cat ${articles[articles.length - 1].slug}.md">${articles[articles.length - 1].title} →</button>${language === 'it' && articles[articles.length - 1].language === 'en' ? ' <span class="muted">(in inglese)</span>' : ''}` : ''}
 
-<span class="muted">${t('At my desk, usually with music in my headphones.')}</span> <button class="inline-command command" data-command="music">music →</button>
+<span class="muted" data-now-playing>${t('At my desk, usually with music in my headphones.')}</span> <button class="inline-command command" data-command="music">music →</button>
 
 ${language === 'it' ? 'Scrivi' : 'Type'} <button class="inline-command command" data-command="help">help</button> ${language === 'it' ? 'per esplorare, oppure usa i comandi qui sotto.' : 'to explore, or use the shortcuts below.'}</div>`;
 }
@@ -1124,6 +1125,7 @@ const output = /** @type {HTMLElement} */ (document.getElementById('terminal-out
 const form = /** @type {HTMLFormElement} */ (document.getElementById('terminal-form'));
 const input = /** @type {HTMLInputElement} */ (document.getElementById('terminal-input'));
 appendOutput(bannerHTML(), 'welcome-block');
+startNowPlaying(import.meta.env.VITE_SPOTIFY_ENDPOINT);
 animateBannerGlitch();
 printConsoleBanner();
 

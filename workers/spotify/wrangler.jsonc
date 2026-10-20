@@ -1,0 +1,6 @@
+{
+	"name": "albz-spotify",
+	"main": "index.js",
+	"compatibility_date": "2026-10-20",
+	"workers_dev": true
+}

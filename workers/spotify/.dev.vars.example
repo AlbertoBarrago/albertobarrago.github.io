@@ -1,0 +1,4 @@
+SPOTIFY_CLIENT_ID=
+SPOTIFY_CLIENT_SECRET=
+# Filled by: node workers/spotify/connect.mjs
+SPOTIFY_REFRESH_TOKEN=

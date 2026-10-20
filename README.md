@@ -116,6 +116,31 @@ npm run deploy
 
 The deploy script builds the project, adds `.nojekyll`, and publishes the generated `build/` directory through the `gh-pages` package. The custom domain is configured by `static/CNAME`.
 
+## Spotify now playing
+
+The optional Worker in `workers/spotify` publishes only the current track's public
+metadata. The site polls every 30 seconds while visible and keeps its normal
+introduction when playback is paused, unavailable, or not configured.
+
+1. Create a Web API app at https://developer.spotify.com/dashboard using your
+   Premium account. Set the redirect URI to `http://127.0.0.1:8888/callback`.
+2. Copy `workers/spotify/.dev.vars.example` to `workers/spotify/.dev.vars` and fill
+   the Client ID and Client Secret locally. Never put these in a `VITE_` variable.
+3. Run `node workers/spotify/connect.mjs` (Node 24), open the printed authorization
+   URL, and approve reading your currently playing track. The script saves the
+   refresh token in the ignored `.dev.vars` file; no token is printed.
+4. Run `npx wrangler login`, then `npx wrangler deploy --config workers/spotify/wrangler.jsonc`.
+5. Upload the three values as Worker secrets using
+   `npx wrangler secret bulk workers/spotify/.dev.vars --config workers/spotify/wrangler.jsonc`.
+6. Copy `.env.example` to `.env.local`. Set `VITE_SPOTIFY_ENDPOINT` to the deployed
+   Worker's `https://albz-spotify.<your-subdomain>.workers.dev/now-playing` URL.
+7. Play a track and check the endpoint, then rebuild and deploy the website.
+
+The Worker caches public responses for 30 seconds and keeps access tokens in
+memory until renewal. Its endpoint is public by design; only the owner's account
+is authorized. Spotify credentials remain in Cloudflare secrets. Re-run the local
+connection and upload the secrets again if Spotify access is revoked.
+
 ## Reusing the Project
 
 You may copy and adapt the software for personal and other permitted noncommercial projects under the included license.

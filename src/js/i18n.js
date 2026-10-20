@@ -76,6 +76,7 @@ const italian = {
 	"Spotify music player": "Player musicale Spotify",
 	"Open in Spotify": "Apri su Spotify",
 	"At my desk, usually with music in my headphones.": "Al monitor, quasi sempre con qualcosa in cuffia.",
+	"In my headphones now:": "In cuffia ora:",
 	"Today's recommendations": "I consigli di oggi",
 	"Three picks from my listening rotation, changing daily. Links open Spotify search.": "Tre brani dai miei ascolti, diversi ogni giorno. I link aprono la ricerca su Spotify.",
 	"Useful free resources and links": "Risorse e link gratuiti",
