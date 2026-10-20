@@ -269,6 +269,24 @@ button {
 	color: var(--blue);
 }
 
+.spotify-player {
+	display: block;
+	width: 100%;
+	max-width: 660px;
+	margin: 12px 0;
+	border: 0;
+	border-radius: 12px;
+}
+
+.music-picks {
+	margin: 12px 0;
+	padding-left: 1.5em;
+}
+
+.music-picks li + li {
+	margin-top: 8px;
+}
+
 .file,
 .green {
 	color: var(--green);

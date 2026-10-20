@@ -26,9 +26,20 @@ import {
 const PROMPT = 'alberto@portfolio:~';
 /** Page load timestamp, used as the shell's uptime origin. */
 const BOOT_TIME = Date.now();
+const MUSIC_PICKS = Object.freeze([
+	['Ojai', 'Catching Flies'],
+	['Unfinished Colours', 'Parra for Cuva, Other'],
+	['Solo Para Mi', 'Be Svendsen'],
+	['Louna', 'Sam Shure'],
+	['Atacama', 'PAAX (Tulum)'],
+	['Believe', 'Viken Arman, Jo.Ke'],
+	['Who Loves The Sun', 'Jo.Ke, Nu'],
+	['Daymarks', 'Catching Flies'],
+	['State the Obvious', 'Be Svendsen'],
+]);
 const COMMAND_NAMES = Object.freeze([
 	'help', 'about', 'skills', 'experience', 'projects', 'articles', 'utils', 'contact', 'cv',
-	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear', 'rss',
+	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear', 'rss', 'music',
 ]);
 const MOBILE_COMMANDS = Object.freeze([
 	['help', 'help'], ['about', 'about'], ['skills', 'skills'],
@@ -186,7 +197,23 @@ ${t("I turn ambiguity into reliable systems and useful products.")}
 ${articles.length ? `
 <span class="muted">${t("Latest write-up:")}</span> <button class="inline-command command" data-command="cat ${articles[articles.length - 1].slug}.md">${articles[articles.length - 1].title} →</button>${language === 'it' && articles[articles.length - 1].language === 'en' ? ' <span class="muted">(in inglese)</span>' : ''}` : ''}
 
+<span class="muted">${t('At my desk, usually with music in my headphones.')}</span> <button class="inline-command command" data-command="music">music →</button>
+
 ${language === 'it' ? 'Scrivi' : 'Type'} <button class="inline-command command" data-command="help">help</button> ${language === 'it' ? 'per esplorare, oppure usa i comandi qui sotto.' : 'to explore, or use the shortcuts below.'}</div>`;
+}
+
+function dailyMusicHTML() {
+	// Rome's calendar day keeps the selection identical across visitor time zones.
+	const parts = new Intl.DateTimeFormat('en-GB', {
+		timeZone: 'Europe/Rome', year: 'numeric', month: '2-digit', day: '2-digit',
+	}).formatToParts(new Date());
+	const date = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+	const day = Math.floor(Date.UTC(Number(date.year), Number(date.month) - 1, Number(date.day)) / 86400000);
+	const start = day % MUSIC_PICKS.length;
+	const picks = Array.from({ length: 3 }, (_, index) => MUSIC_PICKS[(start + index * 4) % MUSIC_PICKS.length]);
+	return `<p class="output-title">${t("Today's recommendations")}</p>
+<ul class="music-picks">${picks.map(([title, artist]) => `<li><a class="terminal-link" href="https://open.spotify.com/search/${encodeURIComponent(`${title} ${artist}`)}" target="_blank" rel="noopener noreferrer">${escapeHTML(title)}</a> <span class="muted">— ${escapeHTML(artist)}</span></li>`).join('')}</ul>
+<p class="output-note">${t('Three picks from my listening rotation, changing daily. Links open Spotify search.')}</p>`;
 }
 
 function helpHTML() {
@@ -197,6 +224,7 @@ function helpHTML() {
 		['projects', t("Selected open-source work and Homebrew formulae")],
 		['articles', t("Technical articles and notes")],
 		['rss', t("Subscribe to the articles feed")],
+		['music', t("Listen to a track I've picked")],
 		['utils', t("Useful free resources and links")],
 		['contact', t("Ways to get in touch")],
 		['cv', t("Download my resume")],
@@ -966,6 +994,13 @@ function executeCommand(rawCommand) {
 	}
 	if (command === 'date') {
 		appendOutput(new Intl.DateTimeFormat(locale, { dateStyle: 'full', timeStyle: 'long' }).format(new Date()));
+		return;
+	}
+	if (command === 'music') {
+		appendOutput(`<div class="output-title">${t("A track I've picked")}</div>
+<iframe class="spotify-player" title="${t('Spotify music player')}" src="https://open.spotify.com/embed/track/3jIlUwCAEo9VCMbo3U9tBt?theme=0" width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<a class="terminal-link" href="https://open.spotify.com/track/3jIlUwCAEo9VCMbo3U9tBt" target="_blank" rel="noopener noreferrer">${t('Open in Spotify')} ↗</a>
+${dailyMusicHTML()}`);
 		return;
 	}
 	if (command === 'rss') {
