@@ -12,10 +12,12 @@ export function startNowPlaying(endpoint) {
 			if (response.ok) track = await response.json();
 		} catch { /* Keep the normal introduction when Spotify is unavailable. */ }
 		finally { busy = false; }
+		const playing = Boolean(track?.playing && typeof track.title === 'string' && typeof track.artist === 'string'
+			&& /^https:\/\/open\.spotify\.com\/track\/[A-Za-z0-9]+$/.test(track.url));
+		for (const shortcut of document.querySelectorAll('[data-music-shortcut]')) shortcut.hidden = playing;
 		for (const element of document.querySelectorAll('[data-now-playing]')) {
 			element.replaceChildren();
-			if (track?.playing && typeof track.title === 'string' && typeof track.artist === 'string'
-				&& /^https:\/\/open\.spotify\.com\/track\/[A-Za-z0-9]+$/.test(track.url)) {
+			if (playing) {
 				element.append(`${t('In my headphones now:')} `);
 				const link = document.createElement('a');
 				link.className = 'terminal-link';

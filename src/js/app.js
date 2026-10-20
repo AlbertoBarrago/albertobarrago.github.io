@@ -198,7 +198,7 @@ ${t("I turn ambiguity into reliable systems and useful products.")}
 ${articles.length ? `
 <span class="muted">${t("Latest write-up:")}</span> <button class="inline-command command" data-command="cat ${articles[articles.length - 1].slug}.md">${articles[articles.length - 1].title} →</button>${language === 'it' && articles[articles.length - 1].language === 'en' ? ' <span class="muted">(in inglese)</span>' : ''}` : ''}
 
-<span class="muted" data-now-playing>${t('At my desk, usually with music in my headphones.')}</span> <button class="inline-command command" data-command="music">music →</button>
+<span class="muted" data-now-playing>${t('At my desk, usually with music in my headphones.')}</span><span data-music-shortcut> <button class="inline-command command" data-command="music">music →</button></span>
 
 ${language === 'it' ? 'Scrivi' : 'Type'} <button class="inline-command command" data-command="help">help</button> ${language === 'it' ? 'per esplorare, oppure usa i comandi qui sotto.' : 'to explore, or use the shortcuts below.'}</div>`;
 }
