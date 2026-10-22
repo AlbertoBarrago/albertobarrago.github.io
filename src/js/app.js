@@ -196,9 +196,7 @@ ${t("Technical leadership · Architecture · Web · Mobile · Cloud · AI")}
 ${t("I turn ambiguity into reliable systems and useful products.")}
 <span class="muted">${t('Based in')} ${location}</span>
 ${articles.length ? `
-<span class="muted">${t("Latest write-up:")}</span> <button class="inline-command command" data-command="cat ${articles[articles.length - 1].slug}.md">${articles[articles.length - 1].title} →</button>${language === 'it' && articles[articles.length - 1].language === 'en' ? ' <span class="muted">(in inglese)</span>' : ''}` : ''}
-
-<span class="muted" data-now-playing>${t('At my desk, usually with music in my headphones.')}</span><span data-music-shortcut> <button class="inline-command command" data-command="music">music →</button></span>
+<span class="muted">${t("Latest write-up:")}</span> <button class="inline-command command" data-command="cat ${articles[articles.length - 1].slug}.md">${articles[articles.length - 1].title} →</button>${language === 'it' && articles[articles.length - 1].language === 'en' ? ' <span class="muted">(in inglese)</span>' : ''}` : ''}<span class="muted" data-now-playing hidden></span>
 
 ${language === 'it' ? 'Scrivi' : 'Type'} <button class="inline-command command" data-command="help">help</button> ${language === 'it' ? 'per esplorare, oppure usa i comandi qui sotto.' : 'to explore, or use the shortcuts below.'}</div>`;
 }
@@ -431,13 +429,19 @@ function renderBlogResults(focusTag) {
 	}
 }
 
+/** @param {string} html @returns {HTMLDivElement} */
+function appendOverlay(html) {
+	const wrapper = document.createElement('div');
+	wrapper.innerHTML = html;
+	const overlay = /** @type {HTMLDivElement} */ (wrapper.firstElementChild);
+	app.appendChild(overlay);
+	return overlay;
+}
+
 function openBlogIndex() {
 	if (!document.getElementById('blog-index')) {
 		input.blur();
-		const wrapper = document.createElement('div');
-		wrapper.innerHTML = blogIndexHTML();
-		const overlay = /** @type {HTMLDivElement} */ (wrapper.firstElementChild);
-		app.appendChild(overlay);
+		const overlay = appendOverlay(blogIndexHTML());
 		renderBlogResults();
 		// The heading, not the search field: focusing an input would pop the keyboard on mobile.
 		/** @type {HTMLElement} */ (overlay.querySelector('#blog-title')).focus({ preventScroll: true });
@@ -638,10 +642,7 @@ function openArticleReader(slug) {
 	}
 	document.getElementById('article-reader')?.remove();
 	input.blur();
-	const wrapper = document.createElement('div');
-	wrapper.innerHTML = articleReaderHTML(slug);
-	const overlay = /** @type {HTMLDivElement} */ (wrapper.firstElementChild);
-	app.appendChild(overlay);
+	const overlay = appendOverlay(articleReaderHTML(slug));
 	overlay.scrollTop = 0;
 	buildArticleTOC(overlay);
 	syncOverlayInert();
@@ -871,11 +872,6 @@ function glitchArt(art, intensity) {
 	).join('')).join('\n');
 }
 
-/** @param {number} intensity @returns {string} */
-function glitchFrame(intensity) {
-	return glitchArt(SECRET_ART, intensity);
-}
-
 /**
  * Boot-time glitch reveal for the ALBZ banner. Purely additive: it settles on
  * the exact same static art, so the final look is unchanged.
@@ -906,7 +902,7 @@ function launchCatEasterEgg() {
 	let frame = 0;
 	const intervalId = window.setInterval(() => {
 		frame += 1;
-		block.textContent = frame >= totalFrames ? SECRET_ART.join('\n') : glitchFrame(Math.max(0, 0.6 - frame * 0.12));
+		block.textContent = frame >= totalFrames ? SECRET_ART.join('\n') : glitchArt(SECRET_ART, Math.max(0, 0.6 - frame * 0.12));
 		requestAnimationFrame(() => { output.scrollTop = output.scrollHeight; });
 		if (frame >= totalFrames) {
 			window.clearInterval(intervalId);
@@ -1054,10 +1050,7 @@ function gameOverlayHTML(type) {
 function launchGame(type) {
 	exitGame();
 	input.blur();
-	const wrapper = document.createElement('div');
-	wrapper.innerHTML = gameOverlayHTML(type);
-	const overlay = /** @type {HTMLDivElement} */ (wrapper.firstElementChild);
-	app.appendChild(overlay);
+	const overlay = appendOverlay(gameOverlayHTML(type));
 	const canvas = /** @type {HTMLCanvasElement} */ (overlay.querySelector('.game-canvas'));
 	requestAnimationFrame(() => {
 		if (overlay.isConnected) gameCleanup = GAME_INIT[type](canvas, exitGame);
@@ -1099,24 +1092,24 @@ function pressGameControl(event) {
 
 /** @param {PointerEvent} event */
 function releaseGameControl(event) {
-	const active = activeControlPointers.get(event.pointerId);
-	if (!active) return;
+	if (!activeControlPointers.has(event.pointerId)) return;
 	event.preventDefault();
+	releaseControlPointer(event.pointerId);
+}
+
+/** @param {number} pointerId */
+function releaseControlPointer(pointerId) {
+	const active = activeControlPointers.get(pointerId);
+	if (!active) return;
 	if (active.delayId) window.clearTimeout(active.delayId);
 	if (active.intervalId) window.clearInterval(active.intervalId);
 	active.button.classList.remove('is-pressed');
-	activeControlPointers.delete(event.pointerId);
+	activeControlPointers.delete(pointerId);
 	dispatchGameKey(active.key, 'keyup');
 }
 
 function releaseAllGameControls() {
-	for (const active of activeControlPointers.values()) {
-		if (active.delayId) window.clearTimeout(active.delayId);
-		if (active.intervalId) window.clearInterval(active.intervalId);
-		active.button.classList.remove('is-pressed');
-		dispatchGameKey(active.key, 'keyup');
-	}
-	activeControlPointers.clear();
+	for (const pointerId of activeControlPointers.keys()) releaseControlPointer(pointerId);
 }
 
 document.documentElement.lang = language;

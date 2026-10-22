@@ -7,7 +7,7 @@ const ARTICLES_DIR = '/src/content/articles/';
 /**
  * Pre-renders src/content/articles/*.md to { meta, html } at build/dev time
  * using `marked` (a Node-only devDependency). No markdown parser ever ships
- * to the browser — public site or admin panel — because of this.
+ * to the browser.
  */
 const articlesRenderPlugin = {
 	name: 'articles-render',
