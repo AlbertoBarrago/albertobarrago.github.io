@@ -47,11 +47,13 @@ body {
 	overflow: hidden;
 	pointer-events: none;
 	opacity: 0;
+	/* Softens the LED segments so they never compete with terminal text. */
+	filter: blur(6px);
 	transition: opacity 1.8s ease;
 }
 
 .music-ambience.is-playing {
-	opacity: 0.14;
+	opacity: 0.08;
 }
 
 .music-ambience i {
@@ -59,7 +61,7 @@ body {
 	--delay: calc(var(--bar) * -0.63s);
 	position: relative;
 	flex: 1;
-	height: 65%;
+	height: 40%;
 	-webkit-mask-image: repeating-linear-gradient(to top, #000 0 7px, transparent 7px 10px);
 	mask-image: repeating-linear-gradient(to top, #000 0 7px, transparent 7px 10px);
 }
@@ -80,7 +82,7 @@ body {
 }
 
 .music-ambience i::after {
-	background: linear-gradient(var(--bright) 0 7px, transparent 7px);
+	background: linear-gradient(var(--cyan) 0 7px, transparent 7px);
 	transform: translateY(80%);
 	animation-name: music-peak;
 }
@@ -102,7 +104,7 @@ body {
 }
 
 @media (max-width: 600px) {
-	.music-ambience.is-playing { opacity: 0.1; }
+	.music-ambience.is-playing { opacity: 0.06; }
 	.music-ambience { gap: 1vw; }
 }
 
