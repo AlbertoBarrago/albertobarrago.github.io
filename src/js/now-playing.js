@@ -2,6 +2,15 @@ import { t } from './i18n.js';
 
 export function startNowPlaying(endpoint) {
 	if (!endpoint) return;
+	const ambience = document.createElement('div');
+	ambience.className = 'music-ambience';
+	ambience.setAttribute('aria-hidden', 'true');
+	for (let index = 0; index < 12; index++) {
+		const bar = document.createElement('i');
+		bar.style.setProperty('--bar', index);
+		ambience.append(bar);
+	}
+	document.body.prepend(ambience);
 	let busy = false;
 	async function update() {
 		if (document.hidden || busy) return;
@@ -14,6 +23,7 @@ export function startNowPlaying(endpoint) {
 		finally { busy = false; }
 		const playing = Boolean(track?.playing && typeof track.title === 'string' && typeof track.artist === 'string'
 			&& /^https:\/\/open\.spotify\.com\/track\/[A-Za-z0-9]+$/.test(track.url));
+		ambience.classList.toggle('is-playing', playing);
 		for (const element of document.querySelectorAll('[data-now-playing]')) {
 			element.hidden = !playing;
 			element.replaceChildren();
@@ -31,5 +41,8 @@ export function startNowPlaying(endpoint) {
 	}
 	void update();
 	setInterval(update, 30000);
-	document.addEventListener('visibilitychange', update);
+	document.addEventListener('visibilitychange', () => {
+		ambience.classList.toggle('is-suspended', document.hidden);
+		void update();
+	});
 }

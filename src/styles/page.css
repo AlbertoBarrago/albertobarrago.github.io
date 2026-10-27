@@ -32,6 +32,58 @@ body {
 		radial-gradient(circle at 85% 90%, rgba(122, 162, 247, 0.05), transparent 32rem);
 }
 
+.music-ambience {
+	position: fixed;
+	inset: 0;
+	display: flex;
+	align-items: flex-end;
+	gap: 2vw;
+	padding: 0 3vw;
+	overflow: hidden;
+	pointer-events: none;
+	opacity: 0;
+	filter: blur(30px);
+	transition: opacity 1.8s ease;
+}
+
+.music-ambience.is-playing {
+	opacity: 0.16;
+}
+
+.music-ambience i {
+	flex: 1;
+	height: 65%;
+	border-radius: 50% 50% 0 0;
+	background: linear-gradient(to top, var(--cyan), transparent);
+	transform: scaleY(0.3);
+	transform-origin: bottom;
+	animation: music-sway calc(2.4s + var(--bar) * 0.17s) ease-in-out infinite alternate;
+	animation-delay: calc(var(--bar) * -0.63s);
+	animation-play-state: paused;
+}
+
+.music-ambience i:nth-child(3n) {
+	background: linear-gradient(to top, var(--purple), transparent);
+}
+
+.music-ambience.is-playing:not(.is-suspended) i {
+	animation-play-state: running;
+}
+
+@keyframes music-sway {
+	0% { transform: scaleY(0.2); }
+	45% { transform: scaleY(0.75); }
+	100% { transform: scaleY(0.4); }
+}
+
+@media (max-width: 600px) {
+	.music-ambience.is-playing { opacity: 0.1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.music-ambience { display: none; }
+}
+
 button,
 input {
 	font: inherit;
