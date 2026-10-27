@@ -5,7 +5,7 @@ export function startNowPlaying(endpoint) {
 	const ambience = document.createElement('div');
 	ambience.className = 'music-ambience';
 	ambience.setAttribute('aria-hidden', 'true');
-	for (let index = 0; index < 12; index++) {
+	for (let index = 0; index < 24; index++) {
 		const bar = document.createElement('i');
 		bar.style.setProperty('--bar', index);
 		ambience.append(bar);

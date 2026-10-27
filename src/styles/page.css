@@ -32,52 +32,78 @@ body {
 		radial-gradient(circle at 85% 90%, rgba(122, 162, 247, 0.05), transparent 32rem);
 }
 
+/* Retro spectrum analyzer: each bar is a static column masked into LED
+   segments. ::before is the level that scales under the mask (stepped, so it
+   lights whole segments) and ::after is a full-height layer whose top edge is
+   the peak-hold cap. Both share the bar's duration and delay, so the cap rises
+   with the level, holds while it drops, then falls back on the reverse pass. */
 .music-ambience {
 	position: fixed;
 	inset: 0;
 	display: flex;
 	align-items: flex-end;
-	gap: 2vw;
+	gap: 0.6vw;
 	padding: 0 3vw;
 	overflow: hidden;
 	pointer-events: none;
 	opacity: 0;
-	filter: blur(30px);
 	transition: opacity 1.8s ease;
 }
 
 .music-ambience.is-playing {
-	opacity: 0.16;
+	opacity: 0.14;
 }
 
 .music-ambience i {
+	--duration: calc(2.4s + var(--bar) * 0.17s);
+	--delay: calc(var(--bar) * -0.63s);
+	position: relative;
 	flex: 1;
 	height: 65%;
-	border-radius: 50% 50% 0 0;
-	background: linear-gradient(to top, var(--cyan), transparent);
-	transform: scaleY(0.3);
+	-webkit-mask-image: repeating-linear-gradient(to top, #000 0 7px, transparent 7px 10px);
+	mask-image: repeating-linear-gradient(to top, #000 0 7px, transparent 7px 10px);
+}
+
+.music-ambience i::before,
+.music-ambience i::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	animation: var(--duration) steps(12) var(--delay) infinite alternate paused;
+}
+
+.music-ambience i::before {
+	background: linear-gradient(to top, var(--cyan) 40%, var(--purple));
+	transform: scaleY(0.2);
 	transform-origin: bottom;
-	animation: music-sway calc(2.4s + var(--bar) * 0.17s) ease-in-out infinite alternate;
-	animation-delay: calc(var(--bar) * -0.63s);
-	animation-play-state: paused;
+	animation-name: music-level;
 }
 
-.music-ambience i:nth-child(3n) {
-	background: linear-gradient(to top, var(--purple), transparent);
+.music-ambience i::after {
+	background: linear-gradient(var(--bright) 0 7px, transparent 7px);
+	transform: translateY(80%);
+	animation-name: music-peak;
 }
 
-.music-ambience.is-playing:not(.is-suspended) i {
+.music-ambience.is-playing:not(.is-suspended) i::before,
+.music-ambience.is-playing:not(.is-suspended) i::after {
 	animation-play-state: running;
 }
 
-@keyframes music-sway {
+@keyframes music-level {
 	0% { transform: scaleY(0.2); }
 	45% { transform: scaleY(0.75); }
 	100% { transform: scaleY(0.4); }
 }
 
+@keyframes music-peak {
+	0% { transform: translateY(78%); }
+	45%, 100% { transform: translateY(23%); }
+}
+
 @media (max-width: 600px) {
 	.music-ambience.is-playing { opacity: 0.1; }
+	.music-ambience { gap: 1vw; }
 }
 
 @media (prefers-reduced-motion: reduce) {
