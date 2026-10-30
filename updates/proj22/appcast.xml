@@ -3,6 +3,15 @@
     <channel>
         <title>Proj22</title>
         <item>
+            <title>0.5.3</title>
+            <pubDate>Fri, 30 Oct 2026 13:49:50 +0000</pubDate>
+            <sparkle:version>10</sparkle:version>
+            <sparkle:shortVersionString>0.5.3</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:releaseNotesLink>https://albz.it/updates/proj22/Proj22-0.5.3-10.md</sparkle:releaseNotesLink>
+            <enclosure url="https://albz.it/updates/proj22/Proj22-0.5.3-10.zip" length="6083391" type="application/octet-stream" sparkle:edSignature="3F1wreJd6/Wkoq4yH7MgXGkp7Vy/J9b/rBdRXGXBhZ3Ro7XkLF/cqLdgSEfnarJe6Ii6PXYvzY8v73D0Bn3LBw=="/>
+        </item>
+        <item>
             <title>0.5.2</title>
             <pubDate>Wed, 28 Oct 2026 11:46:41 +0000</pubDate>
             <sparkle:version>9</sparkle:version>
@@ -19,15 +28,6 @@
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
             <sparkle:releaseNotesLink>https://albz.it/updates/proj22/Proj22-0.5.1-8.md</sparkle:releaseNotesLink>
             <enclosure url="https://albz.it/updates/proj22/Proj22-0.5.1-8.zip" length="6079257" type="application/octet-stream" sparkle:edSignature="C1sRuh1eM3eKSNWn9A3OVDqDSbDTcpNULAV/+hSQCQ23Zf8mFOvtJOzgfVBIPs7nQUi4bX85QP/oZeQQRmowAw=="/>
-        </item>
-        <item>
-            <title>0.5.0</title>
-            <pubDate>Tue, 27 Oct 2026 11:27:41 +0000</pubDate>
-            <sparkle:version>7</sparkle:version>
-            <sparkle:shortVersionString>0.5.0</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:releaseNotesLink>https://albz.it/updates/proj22/Proj22-0.5.0-7.md</sparkle:releaseNotesLink>
-            <enclosure url="https://albz.it/updates/proj22/Proj22-0.5.0-7.zip" length="6013466" type="application/octet-stream" sparkle:edSignature="bryAq52evuJiD/QFVlMkljVtV8N7DB7F1BpHTuIcyNf82z3TYTZKwyj8aTQDkPLbPLyV0xtGyteGxs3wTcS5Ag=="/>
         </item>
     </channel>
 </rss>
