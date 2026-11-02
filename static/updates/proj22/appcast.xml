@@ -3,6 +3,15 @@
     <channel>
         <title>Proj22</title>
         <item>
+            <title>0.5.4</title>
+            <pubDate>Mon, 02 Nov 2026 12:19:41 +0000</pubDate>
+            <sparkle:version>11</sparkle:version>
+            <sparkle:shortVersionString>0.5.4</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:releaseNotesLink>https://albz.it/updates/proj22/Proj22-0.5.4-11.md</sparkle:releaseNotesLink>
+            <enclosure url="https://albz.it/updates/proj22/Proj22-0.5.4-11.zip" length="6085290" type="application/octet-stream" sparkle:edSignature="T+A1K4cUrhWt8XUpJwAxGDNF9aEuJ+Ii4Hs2ptGgRgZdqsOE7q5v2pQpYHustdRReaQCprlGmQBD+CxxzmB+DQ=="/>
+        </item>
+        <item>
             <title>0.5.3</title>
             <pubDate>Fri, 30 Oct 2026 13:49:50 +0000</pubDate>
             <sparkle:version>10</sparkle:version>
@@ -19,15 +28,6 @@
             <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
             <sparkle:releaseNotesLink>https://albz.it/updates/proj22/Proj22-0.5.2-9.md</sparkle:releaseNotesLink>
             <enclosure url="https://albz.it/updates/proj22/Proj22-0.5.2-9.zip" length="6080516" type="application/octet-stream" sparkle:edSignature="sQc6Z9XI+xWdIxwOi7iQeHTBHOJXpCkOrPbod3j/dx6ZHPYuggW2EP/C/nzcwqzAYL4k+cwb3kTcrXexeEMqCw=="/>
-        </item>
-        <item>
-            <title>0.5.1</title>
-            <pubDate>Wed, 28 Oct 2026 11:18:25 +0000</pubDate>
-            <sparkle:version>8</sparkle:version>
-            <sparkle:shortVersionString>0.5.1</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
-            <sparkle:releaseNotesLink>https://albz.it/updates/proj22/Proj22-0.5.1-8.md</sparkle:releaseNotesLink>
-            <enclosure url="https://albz.it/updates/proj22/Proj22-0.5.1-8.zip" length="6079257" type="application/octet-stream" sparkle:edSignature="C1sRuh1eM3eKSNWn9A3OVDqDSbDTcpNULAV/+hSQCQ23Zf8mFOvtJOzgfVBIPs7nQUi4bX85QP/oZeQQRmowAw=="/>
         </item>
     </channel>
 </rss>
