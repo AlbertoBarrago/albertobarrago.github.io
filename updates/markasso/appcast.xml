@@ -3,6 +3,15 @@
     <channel>
         <title>Markasso</title>
         <item>
+            <title>0.9.7</title>
+            <pubDate>Thu, 05 Nov 2026 16:40:44 +0100</pubDate>
+            <sparkle:version>8</sparkle:version>
+            <sparkle:shortVersionString>0.9.7</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <sparkle:releaseNotesLink>https://albz.it/updates/markasso/Markasso-0.9.7-8.md</sparkle:releaseNotesLink>
+            <enclosure url="https://albz.it/updates/markasso/Markasso-0.9.7-8.zip" length="10895625" type="application/octet-stream" sparkle:edSignature="lIUctwH+pSDCJNCsZ6tmjI/tWNGKiyDpq31CyvJtdocgVR5303JfkgtJws+9IZzopNGSxrYrqp9ge4daD95BBQ=="/>
+        </item>
+        <item>
             <title>0.9.6</title>
             <pubDate>Thu, 05 Nov 2026 10:46:43 +0100</pubDate>
             <sparkle:version>7</sparkle:version>
