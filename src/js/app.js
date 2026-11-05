@@ -995,8 +995,8 @@ function executeCommand(rawCommand) {
 	}
 	if (command === 'music') {
 		appendOutput(`<div class="output-title">${t("A track I've picked")}</div>
-<iframe class="spotify-player" title="${t('Spotify music player')}" src="https://open.spotify.com/embed/track/3jIlUwCAEo9VCMbo3U9tBt?theme=0" width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-<a class="terminal-link" href="https://open.spotify.com/track/3jIlUwCAEo9VCMbo3U9tBt" target="_blank" rel="noopener noreferrer">${t('Open in Spotify')} ↗</a>
+<iframe class="spotify-player" title="${t('Spotify music player')}" src="https://open.spotify.com/embed/track/52UthFOfrbtnjBMK6jyLqk?theme=0" width="100%" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<a class="terminal-link" href="https://open.spotify.com/track/52UthFOfrbtnjBMK6jyLqk" target="_blank" rel="noopener noreferrer">${t('Open in Spotify')} ↗</a>
 ${dailyMusicHTML()}`);
 		return;
 	}
