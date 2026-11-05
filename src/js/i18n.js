@@ -15,6 +15,11 @@ export function articlesIndexPath(lang = language) {
 	return `${lang === 'it' ? '/it' : ''}/articles/`;
 }
 
+/** Static privacy policy page, outside the app (see static/privacy/). */
+export function privacyPath(lang = language) {
+	return `${lang === 'it' ? '/it' : ''}/privacy/`;
+}
+
 const italian = {
 	"Cagliari, Italy": "Cagliari, Italia",
 	"Senior Software Engineer with a product-builder mindset, turning ideas into scalable, production-ready tools that solve real-world problems.": "Senior Software Engineer con la mentalità di chi costruisce prodotti: trasformo idee in strumenti scalabili, pronti per la produzione, che risolvono problemi reali.",
@@ -81,6 +86,8 @@ const italian = {
 	"Useful free resources and links": "Risorse e link gratuiti",
 	"Ways to get in touch": "Come contattarmi",
 	"Download my resume": "Scarica il mio CV",
+	"Read the privacy policy": "Leggi l’informativa privacy",
+	"Opening the privacy policy…": "Apro l’informativa privacy…",
 	"List embedded retro games": "Elenca i giochi retro",
 	"Launch space, tetris, pong, or flappy": "Avvia space, tetris, pong o flappy",
 	"Browse the portfolio filesystem": "Esplora i file del portfolio",

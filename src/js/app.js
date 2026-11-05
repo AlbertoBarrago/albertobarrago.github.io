@@ -1,4 +1,4 @@
-import { language, locale, homePath, articlePath, articlesIndexPath, t } from './i18n.js';
+import { language, locale, homePath, articlePath, articlesIndexPath, privacyPath, t } from './i18n.js';
 /**
  * @file Interactive terminal portfolio
  * @description Keyboard-first portfolio shell with command history, shortcuts,
@@ -39,7 +39,7 @@ const MUSIC_PICKS = Object.freeze([
 	['State the Obvious', 'Be Svendsen'],
 ]);
 const COMMAND_NAMES = Object.freeze([
-	'help', 'about', 'skills', 'experience', 'projects', 'articles', 'utils', 'contact', 'cv',
+	'help', 'about', 'skills', 'experience', 'projects', 'articles', 'utils', 'contact', 'cv', 'privacy',
 	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear', 'rss', 'music',
 ]);
 const MOBILE_COMMANDS = Object.freeze([
@@ -198,7 +198,8 @@ ${t("I turn ambiguity into reliable systems and useful products.")}
 ${articles.length ? `
 <span class="muted">${t("Latest write-up:")}</span> <button class="inline-command command" data-command="cat ${articles[articles.length - 1].slug}.md">${articles[articles.length - 1].title} →</button>${language === 'it' && articles[articles.length - 1].language === 'en' ? ' <span class="muted">(in inglese)</span>' : ''}` : ''}<span class="muted" data-now-playing hidden></span>
 
-${language === 'it' ? 'Scrivi' : 'Type'} <button class="inline-command command" data-command="help">help</button> ${language === 'it' ? 'per esplorare, oppure usa i comandi qui sotto.' : 'to explore, or use the shortcuts below.'}</div>`;
+${language === 'it' ? 'Scrivi' : 'Type'} <button class="inline-command command" data-command="help">help</button> ${language === 'it' ? 'per esplorare, oppure usa i comandi qui sotto.' : 'to explore, or use the shortcuts below.'}
+<a class="terminal-link muted" href="${privacyPath()}">${language === 'it' ? 'Privacy: niente cookie' : 'Privacy: no cookies'}</a></div>`;
 }
 
 function dailyMusicHTML() {
@@ -227,6 +228,7 @@ function helpHTML() {
 		['utils', t("Useful free resources and links")],
 		['contact', t("Ways to get in touch")],
 		['cv', t("Download my resume")],
+		['privacy', t("Read the privacy policy")],
 		['games', t("List embedded retro games")],
 		['play &lt;game&gt;', t("Launch space, tetris, pong, or flappy")],
 		['ls / tree', t("Browse the portfolio filesystem")],
@@ -980,6 +982,11 @@ function executeCommand(rawCommand) {
 		return;
 	}
 
+	if (command === 'privacy') {
+		appendOutput(`<span class="green">${t('Opening the privacy policy…')}</span>`);
+		window.location.assign(privacyPath());
+		return;
+	}
 	if (command === 'cv') {
 		downloadCv();
 		appendOutput(`<span class="green">${t('Downloading albertobarrago_cv.pdf…')}</span>`);

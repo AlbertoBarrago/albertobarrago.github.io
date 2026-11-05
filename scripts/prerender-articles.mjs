@@ -159,6 +159,8 @@ function renderSitemap(articles) {
 		`  <url>\n    <loc>${SITE_URL}/articles/</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
 		`  <url>\n    <loc>${SITE_URL}/it/articles/</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
 		`  <url>\n    <loc>${SITE_URL}/iris/</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
+		`  <url>\n    <loc>${SITE_URL}/privacy/</loc>\n    <changefreq>yearly</changefreq>\n    <priority>0.3</priority>\n  </url>`,
+		`  <url>\n    <loc>${SITE_URL}/it/privacy/</loc>\n    <changefreq>yearly</changefreq>\n    <priority>0.3</priority>\n  </url>`,
 		`  <url>\n    <loc>${SITE_URL}/iris/privacy/</loc>\n    <changefreq>yearly</changefreq>\n    <priority>0.3</priority>\n  </url>`,
 		...articles.map((article) =>
 			`  <url>\n    <loc>${SITE_URL}${article.language === 'it' ? '/it' : ''}/articles/${article.slug}/</loc>\n    <lastmod>${article.date}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>`

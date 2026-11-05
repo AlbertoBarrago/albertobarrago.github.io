@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { languageFromPath, articlePath } from './i18n.js';
+import { languageFromPath, articlePath, privacyPath } from './i18n.js';
 
 afterEach(() => { vi.unstubAllGlobals(); vi.resetModules(); });
 
@@ -13,6 +13,10 @@ describe('language URLs', () => {
 	it('preserves existing English article URLs', () => {
 		expect(articlePath('iris', 'en')).toBe('/articles/iris/');
 		expect(articlePath('iris', 'it')).toBe('/it/articles/iris/');
+	});
+	it('points to the static privacy page in each language', () => {
+		expect(privacyPath('en')).toBe('/privacy/');
+		expect(privacyPath('it')).toBe('/it/privacy/');
 	});
 	it('loads Italian portfolio content while keeping product names and commands', async () => {
 		vi.stubGlobal('location', { pathname: '/it/' });
