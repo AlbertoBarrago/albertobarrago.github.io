@@ -28,6 +28,10 @@ Single-page app with a state-based, event-delegation pattern. No framework.
 - **Styles**: `src/styles/main.css` (reset) + `src/styles/page.css` (all component styles, CRT effects, responsive at 600px breakpoint)
 - **Static assets**: `static/` directory (favicon, CV PDF, robots.txt, sitemap.xml)
 
+## Markasso for Mac release notes
+
+`static/updates/markasso/index.html` (https://albz.it/updates/markasso/) is generated, not hand-written: it lists every Mac version from `appcast.xml` with its `Markasso-<version>-<build>.md` notes. After copying a new Mac update into `static/updates/markasso/`, run `node scripts/markasso-release-notes.mjs` and commit the page with the update, before `npm run deploy`. It is a manual step, outside `npm run build`; `npm test` fails while the committed page is out of date.
+
 ## Key Patterns
 
 - **JSDoc typing throughout** with strict TypeScript checking enabled via `jsconfig.json` (`checkJs: true`, ES2022 target). This is vanilla JS with JSDoc types, not TypeScript.
