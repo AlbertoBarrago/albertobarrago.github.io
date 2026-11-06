@@ -80,6 +80,15 @@ export function parseAppcast(xml) {
 }
 
 /**
+ * Matches the link to the full update history (host and path, any scheme).
+ * The Mac app's release script appends a paragraph with this link to every
+ * published notes file because Sparkle shows only the newest version's notes;
+ * on the history page itself that paragraph would link to itself, so
+ * `parseNotes` drops it.
+ */
+const HISTORY_LINK = /albz\.it\/updates\/markasso/;
+
+/**
  * Splits a notes file into its English and Italian halves. Each language
  * section ends with a bullet list, so the first list closes the English half.
  * A file with a single section is treated as English only.
@@ -104,7 +113,9 @@ export function parseNotes(markdown) {
 			}
 			blocks.push({ kind: 'ul', items });
 		} else {
-			blocks.push({ kind: 'p', text: chunkLines.map((line) => line.trim()).join(' ') });
+			const text = chunkLines.map((line) => line.trim()).join(' ');
+			if (HISTORY_LINK.test(text)) continue;
+			blocks.push({ kind: 'p', text });
 		}
 	}
 

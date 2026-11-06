@@ -38,6 +38,18 @@ describe('parseNotes', () => {
 	it('treats a single section as English only', () => {
 		expect(parseNotes('# Markasso 1.0\n\n- Only\n').it).toEqual([]);
 	});
+
+	it('drops the history link footer appended for Sparkle', () => {
+		const body = '# Markasso 0.9.0\n\nIntro.\n\n- One\n- Two\n\nIntroduzione.\n\n- Uno\n- Due\n';
+		const footer = '\nAll versions and their notes: https://albz.it/updates/markasso/\n'
+			+ 'Tutte le versioni con le note: https://albz.it/updates/markasso/\n';
+		expect(parseNotes(body + footer)).toEqual(parseNotes(body));
+	});
+
+	it('keeps paragraphs without the history link', () => {
+		const notes = parseNotes('Intro.\n\n- One\n\nSee https://albz.it/blog/ for more.\n');
+		expect(notes.it).toEqual([{ kind: 'p', text: 'See https://albz.it/blog/ for more.' }]);
+	});
 });
 
 describe('renderInline', () => {
