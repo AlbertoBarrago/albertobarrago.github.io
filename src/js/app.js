@@ -28,15 +28,15 @@ const PROMPT = 'alberto@portfolio:~';
 /** Page load timestamp, used as the shell's uptime origin. */
 const BOOT_TIME = Date.now();
 const MUSIC_PICKS = Object.freeze([
-	['Ojai', 'Catching Flies'],
-	['Unfinished Colours', 'Parra for Cuva, Other'],
-	['Solo Para Mi', 'Be Svendsen'],
-	['Louna', 'Sam Shure'],
-	['Atacama', 'PAAX (Tulum)'],
-	['Believe', 'Viken Arman, Jo.Ke'],
-	['Who Loves The Sun', 'Jo.Ke, Nu'],
-	['Daymarks', 'Catching Flies'],
-	['State the Obvious', 'Be Svendsen'],
+	['Beyond Beliefs', 'Ben Böhmer'],
+	['Father Ocean (Ben Böhmer Remix)', 'Monolink, Ben Böhmer'],
+	['Wicked Games', 'Parra for Cuva, Anna Naklab'],
+	['Mi Mujer', 'Nicolas Jaar'],
+	['Empty Floor', 'Jan Blomqvist'],
+	['Abu Simbel', 'Adriatique, WhoMadeWho'],
+	['Fingerprint', 'Lane 8'],
+	['Rej', 'Âme'],
+	['The Rapture Pt.III', '&ME'],
 ]);
 const COMMAND_NAMES = Object.freeze([
 	'help', 'about', 'skills', 'experience', 'projects', 'articles', 'utils', 'contact', 'cv', 'privacy',
