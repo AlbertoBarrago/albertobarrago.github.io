@@ -167,7 +167,10 @@ function terminalHTML() {
 	).join('');
 
 	return `<main class="terminal" aria-label="${t('Alberto Barrago portfolio terminal')}">
-		${languageSelectorHTML()}
+		<div class="terminal-topbar">
+			<a class="terminal-link muted terminal-privacy" href="${privacyPath()}">${language === 'it' ? 'Privacy: niente cookie' : 'Privacy: no cookies'}</a>
+			${languageSelectorHTML()}
+		</div>
 		<div class="terminal-glow" aria-hidden="true"></div>
 		<section class="terminal-output" id="terminal-output" role="log" aria-live="polite" aria-relevant="additions"></section>
 		<div class="terminal-bottom">
@@ -198,8 +201,7 @@ ${t("I turn ambiguity into reliable systems and useful products.")}
 ${articles.length ? `
 <span class="muted">${t("Latest write-up:")}</span> <button class="inline-command command" data-command="cat ${articles[articles.length - 1].slug}.md">${articles[articles.length - 1].title} →</button>${language === 'it' && articles[articles.length - 1].language === 'en' ? ' <span class="muted">(in inglese)</span>' : ''}` : ''}<span class="muted" data-now-playing hidden></span>
 
-${language === 'it' ? 'Scrivi' : 'Type'} <button class="inline-command command" data-command="help">help</button> ${language === 'it' ? 'per esplorare, oppure usa i comandi qui sotto.' : 'to explore, or use the shortcuts below.'}
-<a class="terminal-link muted" href="${privacyPath()}">${language === 'it' ? 'Privacy: niente cookie' : 'Privacy: no cookies'}</a></div>`;
+${language === 'it' ? 'Scrivi' : 'Type'} <button class="inline-command command" data-command="help">help</button> ${language === 'it' ? 'per esplorare, oppure usa i comandi qui sotto.' : 'to explore, or use the shortcuts below.'}</div>`;
 }
 
 function dailyMusicHTML() {

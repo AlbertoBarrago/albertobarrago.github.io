@@ -1373,10 +1373,18 @@ button {
 	font-size: .8rem;
 	flex-shrink: 0;
 }
-.terminal > .language-selector {
+.terminal-topbar {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 1rem;
+	flex-shrink: 0;
 	padding: .5rem 1rem;
 	position: relative;
 	z-index: 1;
+}
+.terminal-privacy {
+	font-size: .7rem;
 }
 .language-selector a { color: var(--muted); text-decoration: none; padding: .3rem; }
 .language-selector a[aria-current] { color: var(--cyan); text-decoration: underline; text-underline-offset: .25em; }
