@@ -37,6 +37,12 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://albz.it/articles/ai-code-understanding/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://albz.it/articles/markasso-cloud/</loc>
     <lastmod>2026-11-04</lastmod>
     <changefreq>monthly</changefreq>
@@ -117,6 +123,12 @@
   <url>
     <loc>https://albz.it/articles/wir-what-is-running/</loc>
     <lastmod>2025-12-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://albz.it/it/articles/ai-code-understanding/</loc>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

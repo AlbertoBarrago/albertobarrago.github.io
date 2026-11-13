@@ -7,6 +7,13 @@
     <language>en</language>
     <atom:link href="https://albz.it/feed.xml" rel="self" type="application/rss+xml" />
   <item>
+    <title>The Problem Isn&apos;t How Much Code AI Writes. It&apos;s How Much of It We Understand.</title>
+    <link>https://albz.it/articles/ai-code-understanding/</link>
+    <guid isPermaLink="true">https://albz.it/articles/ai-code-understanding/</guid>
+    <pubDate>Fri, 13 Nov 2026 00:00:00 GMT</pubDate>
+    <description>A reflection on AI in software development, on the risk of losing skills, and on what it really means to be a developer today. I read Is There a Right…</description>
+  </item>
+  <item>
     <title>Markasso Cloud, and a gift for the Mac</title>
     <link>https://albz.it/articles/markasso-cloud/</link>
     <guid isPermaLink="true">https://albz.it/articles/markasso-cloud/</guid>
