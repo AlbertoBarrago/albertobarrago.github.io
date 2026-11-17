@@ -255,19 +255,22 @@ const utils = [
 ];
 
 /**
- * The "How we build" guide (command `howwebuild`): practices for working with
- * coding agents. Prose goes through t(); copyable blocks are raw files in
+ * The "How we build" guide (command `howwebuild`, page /how-we-build/):
+ * practices for working with coding agents. When the advice in a section
+ * changes, bump its `updated` date and add a changelog entry (newest first). Prose goes through t(); copyable blocks are raw files in
  * src/content/how-we-build/ and stay in English. Public site: only my own open
  * projects, never client work, internal URLs, personal paths or contacts
  * (how-we-build.test.js checks the blocks).
  * @type {import('./how-we-build.js').HowWeBuildGuide}
  */
 const howWeBuild = {
-	updated: "2026-11-17",
+	published: "2026-11-17",
 	inspiration: { label: t("Verification loops, by the Claude Code team at Anthropic") },
 	practices: [
 		{
 			id: "claude-md-rules",
+			added: "2026-11-17",
+			status: "adopted",
 			title: t("Verification rules in CLAUDE.md"),
 			why: t("An agent does what its instructions make cheap. Without written rules it declares victory on a green build, retries a flaky test until it passes, or edits the test instead of the code. A few explicit lines in the global CLAUDE.md change the default for every session."),
 			steps: [
@@ -290,6 +293,8 @@ const howWeBuild = {
 		},
 		{
 			id: "verify-skill",
+			added: "2026-11-17",
+			status: "adopted",
 			title: t("A verify skill in every repo"),
 			why: t("\"Run the app\" means something different in every repo. A `verify` skill writes it down once: the cheap checks, how to boot the real thing, which flows to drive and what to expect, so the agent collects evidence instead of guessing."),
 			steps: [
@@ -324,6 +329,8 @@ const howWeBuild = {
 		},
 		{
 			id: "verified-trailer",
+			added: "2026-11-17",
+			status: "adopted",
 			title: t("A Verified trailer on every commit"),
 			why: t("After the fact, nobody remembers whether a commit was run, tested or just built. A one-line trailer records it, and because `none` is allowed, unverified commits stay honest and easy to find."),
 			steps: [
@@ -337,6 +344,8 @@ const howWeBuild = {
 		},
 		{
 			id: "browser-tool",
+			added: "2026-11-17",
+			status: "trial",
 			title: t("Choosing the browser tool"),
 			why: t("A verify skill is only as good as the browser that drives it. We ran one real test on Markasso's canvas: draw a rectangle, then check that it landed in localStorage. The results decided which tool does what."),
 			steps: [
@@ -357,6 +366,8 @@ const howWeBuild = {
 		},
 		{
 			id: "second-opinion",
+			added: "2026-11-17",
+			status: "trial",
 			title: t("A second opinion with Codex or opencode"),
 			why: t("An agent reviewing its own diff shares its own blind spots. A second model with a fresh prompt finds a different set of bugs, as long as you give it the code, not your conclusion, and treat its output as input, not truth."),
 			steps: [
@@ -372,6 +383,8 @@ const howWeBuild = {
 		},
 		{
 			id: "themis-gates",
+			added: "2026-11-17",
+			status: "adopted",
 			title: t("Themis: gates and a locked contract"),
 			why: t("For larger work, rules are not enough: the agent must not be able to move the goalposts. Themis turns a spec into acceptance tests, locks them by digest, and only then lets agents write code that a separate verifier judges."),
 			steps: [
@@ -402,6 +415,7 @@ const howWeBuild = {
 	pitfalls: [
 		{
 			id: "dev-server-port",
+			added: "2026-11-17",
 			title: t("The dev server port belongs to someone else"),
 			why: t("Several sessions and agents run at once. An agent that finds port 5173 busy may happily test the server another agent started, on different code, and report a pass that means nothing."),
 			steps: [
@@ -416,6 +430,7 @@ const howWeBuild = {
 		},
 		{
 			id: "telemaco-no-layout",
+			added: "2026-11-17",
 			title: t("Telemaco has a DOM, not a layout"),
 			why: t("Telemaco runs real JavaScript and a real DOM but no layout engine: sizes are placeholders and computed styles come back as defaults. Canvas hit-testing and visual checks cannot be driven from it, `browser_evaluate` returns before a Promise settles, and pretending otherwise produces false passes."),
 			steps: [
@@ -435,6 +450,7 @@ const howWeBuild = {
 		},
 		{
 			id: "ui-language",
+			added: "2026-11-17",
 			title: t("A real browser speaks the system language"),
 			why: t("A real Chrome opens the app in the system language. On an Italian Mac a selector like `title^=\"Rectangle\"` finds nothing, because the button now reads \"Rettangolo\", and the check fails for a reason that has nothing to do with the change."),
 			steps: [
@@ -447,6 +463,7 @@ const howWeBuild = {
 		},
 		{
 			id: "lint-untracked",
+			added: "2026-11-17",
 			title: t("Untracked editor folders break the linter"),
 			why: t("`biome check .` walks every folder in the working tree, including local editor settings and scratch directories that are not part of the project, and fails on them. The agent then \"fixes\" files nobody asked it to touch, or reports a red lint that is not real."),
 			steps: [
@@ -482,6 +499,12 @@ const howWeBuild = {
 		{
 			title: t("Audit Telemaco"),
 			summary: t("Slim Telemaco down to what it does best: reading the web, search and stealth fetches.")
+		}
+	],
+	changelog: [
+		{
+			date: "2026-11-17",
+			summary: t("First edition: six practices, four pitfalls and a roadmap, on a page of its own with a link for every section.")
 		}
 	]
 };

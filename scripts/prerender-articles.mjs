@@ -6,11 +6,15 @@
  * JS or execute only the SPA shell) a real, indexable, shareable URL for
  * each article, while the client-side app still owns the interactive
  * reading experience once JS loads.
+ *
+ * It also prerenders the "How we build" guide (/how-we-build/ and
+ * /it/how-we-build/) from the same data and templates the client uses.
  */
 
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createServer } from 'vite';
 import { parseFrontmatter, renderMarkdownToHTML } from './markdown.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -150,14 +154,99 @@ function renderIndexPage(shell, list, language) {
 	return page.replace('<div id="app"></div>', `<div id="app">${fallback}</div>`);
 }
 
-/** @param {{ slug: string, date: string }[]} articles @returns {string} */
-function renderSitemap(articles) {
+/**
+ * @typedef {{
+ *   language: 'en' | 'it',
+ *   title: string,
+ *   description: string,
+ *   published: string,
+ *   modified: string,
+ *   html: string,
+ * }} GuidePage
+ */
+
+/**
+ * Renders the guide in both languages with the client's own data and
+ * templates, loaded through Vite because they import `?raw` blocks and JSON.
+ * i18n.js picks the language from `location.pathname` when it is evaluated,
+ * so each language is a fresh evaluation with `location` pointing at it.
+ * @returns {Promise<GuidePage[]>}
+ */
+async function loadGuidePages() {
+	const server = await createServer({
+		root: ROOT,
+		logLevel: 'error',
+		appType: 'custom',
+		server: { middlewareMode: true, hmr: false, watch: null },
+	});
+	try {
+		/** @type {GuidePage[]} */
+		const pages = [];
+		for (const language of /** @type {const} */ (['en', 'it'])) {
+			Object.defineProperty(globalThis, 'location', {
+				value: { pathname: language === 'it' ? '/it/' : '/' },
+				configurable: true,
+				writable: true,
+			});
+			server.moduleGraph.invalidateAll();
+			const { howWeBuild } = await server.ssrLoadModule('/src/js/index.js');
+			const { t } = await server.ssrLoadModule('/src/js/i18n.js');
+			const { guideLastModified, isoDay } = await server.ssrLoadModule('/src/js/how-we-build.js');
+			const { guideArticleHTML } = await server.ssrLoadModule('/src/js/how-we-build-view.js');
+			pages.push({
+				language,
+				title: `${t('How we build')} | Alberto Barrago`,
+				description: t('A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.'),
+				published: howWeBuild.published,
+				modified: guideLastModified(howWeBuild),
+				html: guideArticleHTML(howWeBuild, { interactive: false, today: isoDay() }),
+			});
+		}
+		return pages;
+	} finally {
+		Reflect.deleteProperty(globalThis, 'location');
+		await server.close();
+	}
+}
+
+/** @param {string} shell @param {GuidePage} guide @returns {string} */
+function renderGuidePage(shell, guide) {
+	const path = `${guide.language === 'it' ? '/it' : ''}/how-we-build/`;
+	const url = `${SITE_URL}${path}`;
+	let page = applyPageMeta(shell, { language: guide.language, url, title: guide.title, description: guide.description, type: 'article' });
+	const schema = `\t<script type="application/ld+json">
+		${JSON.stringify({
+			'@context': 'https://schema.org',
+			'@type': 'TechArticle',
+			headline: guide.title.replace(/ \| Alberto Barrago$/, ''),
+			description: guide.description,
+			datePublished: guide.published,
+			dateModified: guide.modified,
+			author: { '@type': 'Person', name: 'Alberto Barrago', url: SITE_URL },
+			url,
+			mainEntityOfPage: url,
+			inLanguage: guide.language,
+		})}
+	</script>\n</head>`;
+	page = page.replace('</head>', `${alternateLinks('/how-we-build/', '/it/how-we-build/')}${schema}`);
+	return page.replace('<div id="app"></div>', `<div id="app"><noscript>${guide.html}</noscript></div>`);
+}
+
+/**
+ * @param {{ slug: string, date: string }[]} articles
+ * @param {string} guideModified last modified date of the guide
+ * @returns {string}
+ */
+function renderSitemap(articles, guideModified) {
 	const urls = [
 		`  <url><loc>${SITE_URL}/it/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>`,
 		`  <url>\n    <loc>${SITE_URL}/</loc>\n    <changefreq>monthly</changefreq>\n    <priority>1.0</priority>\n  </url>`,
 		// Iris's pages are static files under static/iris/, outside the app.
 		`  <url>\n    <loc>${SITE_URL}/articles/</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
 		`  <url>\n    <loc>${SITE_URL}/it/articles/</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
+		...['', '/it'].map((prefix) =>
+			`  <url>\n    <loc>${SITE_URL}${prefix}/how-we-build/</loc>\n    <lastmod>${guideModified}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`
+		),
 		`  <url>\n    <loc>${SITE_URL}/iris/</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
 		`  <url>\n    <loc>${SITE_URL}/privacy/</loc>\n    <changefreq>yearly</changefreq>\n    <priority>0.3</priority>\n  </url>`,
 		`  <url>\n    <loc>${SITE_URL}/it/privacy/</loc>\n    <changefreq>yearly</changefreq>\n    <priority>0.3</priority>\n  </url>`,
@@ -219,7 +308,7 @@ ${italianPath ? `<link rel="alternate" hreflang="it" href="${SITE_URL}${italianP
 `;
 }
 
-function main() {
+async function main() {
 	const articles = loadArticles();
 	if (articles.length === 0) return;
 
@@ -255,10 +344,17 @@ function main() {
 	mkdirSync(join(BUILD_DIR, 'it', 'articles'), { recursive: true });
 	writeFileSync(join(BUILD_DIR, 'it', 'articles', 'index.html'), renderIndexPage(shell, italianIndex, 'it'));
 
-	writeFileSync(join(BUILD_DIR, 'sitemap.xml'), renderSitemap([...articles, ...italianArticles]));
+	const guidePages = await loadGuidePages();
+	for (const guide of guidePages) {
+		const dir = join(BUILD_DIR, guide.language === 'it' ? 'it' : '', 'how-we-build');
+		mkdirSync(dir, { recursive: true });
+		writeFileSync(join(dir, 'index.html'), renderGuidePage(shell, guide));
+	}
+
+	writeFileSync(join(BUILD_DIR, 'sitemap.xml'), renderSitemap([...articles, ...italianArticles], guidePages[0].modified));
 	writeFileSync(join(BUILD_DIR, 'feed.xml'), renderRSS(articles));
 
-	console.log(`Prerendered ${articles.length} article page(s).`);
+	console.log(`Prerendered ${articles.length} article page(s) and the guide (${guidePages.length} languages).`);
 }
 
-main();
+await main();

@@ -820,6 +820,164 @@ summary.guide-snippet-title::marker {
 	color: var(--bright);
 }
 
+/* Guide page: the reader overlay with a contents sidebar and a wider column for the code blocks. */
+/* Scoped to beat .article-reader-main, defined later: centered items would size to the widest code line. */
+.guide-reader .guide-main {
+	align-items: stretch;
+	max-width: 88ch;
+}
+
+.guide-main > .guide {
+	width: 100%;
+	min-width: 0;
+}
+
+.guide-header {
+	margin-bottom: 1rem;
+}
+
+.guide-latest {
+	max-width: 78ch;
+	margin-top: 1.1rem;
+	padding: 0.75rem 1rem;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-left: 2px solid var(--cyan);
+	border-radius: 4px;
+	color: var(--muted);
+	font-size: 0.9rem;
+}
+
+.guide-latest .guide-label {
+	margin: 0 0.4rem 0 0;
+}
+
+.guide-latest p {
+	margin: 0.3rem 0;
+	color: var(--foreground);
+}
+
+.guide-latest .reader-nav-link {
+	padding: 0;
+	font: inherit;
+}
+
+.guide-part {
+	margin: 2.75rem 0 0;
+	padding-bottom: 0.4rem;
+	border-bottom: 1px dashed var(--border);
+	color: var(--purple);
+	font-size: 0.85rem;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+/* Deep links land on the heading with breathing room above it. */
+.guide-main .guide-title,
+.guide-main .guide-part {
+	scroll-margin-top: 1.25rem;
+}
+
+.guide-main .guide-section {
+	max-width: none;
+}
+
+.guide-section-meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.4rem 0.75rem;
+	margin: 0 0 0.25rem;
+	color: var(--muted);
+	font-size: 0.82rem;
+}
+
+.guide-status,
+.guide-badge {
+	padding: 0.05rem 0.45rem;
+	border: 1px solid currentColor;
+	border-radius: 3px;
+	font-size: 0.75rem;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+.guide-status.is-adopted {
+	color: var(--green);
+}
+
+.guide-status.is-trial {
+	color: var(--yellow);
+}
+
+.guide-badge {
+	color: var(--cyan);
+	border-style: dashed;
+}
+
+.guide-anchor {
+	margin-left: auto;
+	color: var(--muted);
+	font-size: 0.75rem;
+}
+
+.guide-reader .reader-toc-list {
+	margin: 0;
+	padding: 0;
+}
+
+.guide-toc-group {
+	margin-top: 0.4rem;
+	color: var(--muted);
+	font-size: 0.72rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+/* Desktop only: below 900px the TOC becomes the shared slide-in drawer. */
+@media (min-width: 901px) {
+	.guide-reader .reader-toc {
+		width: 16rem;
+		max-height: calc(100dvh - 8rem);
+		overflow-y: auto;
+	}
+}
+
+.guide-toc-dot {
+	color: var(--cyan);
+	font-size: 0.6em;
+	vertical-align: middle;
+}
+
+.guide-closing .guide-roadmap,
+.guide-changelog {
+	margin-top: 1rem;
+}
+
+.guide-changelog {
+	display: grid;
+	gap: 0.75rem;
+	max-width: 78ch;
+	padding: 0;
+	list-style: none;
+}
+
+.guide-changelog time {
+	color: var(--yellow);
+	font-size: 0.85rem;
+}
+
+.guide-changelog p {
+	margin: 0.2rem 0 0;
+	color: var(--foreground);
+}
+
+.guide-changelog-sections .reader-nav-link {
+	padding: 0;
+	font: inherit;
+	font-size: 0.85rem;
+}
+
 .project-item {
 	padding: 0.85rem 1rem;
 	background: rgba(17, 24, 32, 0.6);
@@ -1533,6 +1691,8 @@ summary.guide-snippet-title::marker {
 		position: fixed;
 		z-index: 4;
 		inset: 0 auto 0 0;
+		/* The desktop flex-start would shrink the fixed drawer to its content height. */
+		align-self: stretch;
 		width: min(80vw, 20rem);
 		background: var(--background-deep);
 		border-right: 1px solid rgba(94, 234, 212, 0.25);

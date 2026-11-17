@@ -15,6 +15,11 @@ export function articlesIndexPath(lang = language) {
 	return `${lang === 'it' ? '/it' : ''}/articles/`;
 }
 
+/** Path of the "How we build" guide page; sections are `#<section id>` fragments. */
+export function guidePath(lang = language) {
+	return `${lang === 'it' ? '/it' : ''}/how-we-build/`;
+}
+
 /** Static privacy policy page, outside the app (see static/privacy/). */
 export function privacyPath(lang = language) {
 	return `${lang === 'it' ? '/it' : ''}/privacy/`;
@@ -254,8 +259,36 @@ const italian = {
 	"Adopt Playwright MCP": "Adottare Playwright MCP",
 	"Move the verify skills that drive local apps from Telemaco to Playwright MCP, starting with Markasso.": "Spostare da Telemaco a Playwright MCP le skill verify che pilotano app locali, a partire da Markasso.",
 	"Audit Telemaco": "Audit di Telemaco",
-	"Slim Telemaco down to what it does best: reading the web, search and stealth fetches.": "Snellire Telemaco riducendolo a ciò che fa meglio: leggere il web, cercare e fare fetch stealth."
+	"Slim Telemaco down to what it does best: reading the web, search and stealth fetches.": "Snellire Telemaco riducendolo a ciò che fa meglio: leggere il web, cercare e fare fetch stealth.",
+	"First edition: six practices, four pitfalls and a roadmap, on a page of its own with a link for every section.": "Prima edizione: sei pratiche, quattro insidie e una roadmap, su una pagina tutta sua con un link per ogni sezione.",
+	"adopted": "adottata",
+	"in trial": "in prova",
+	"new": "nuova",
+	"recently updated": "aggiornata di recente",
+	"added": "aggiunta il",
+	"practices": "pratiche",
+	"pitfalls": "insidie",
+	"Changelog": "Registro delle modifiche",
+	"Latest change": "Ultima modifica",
+	"see every change": "tutte le modifiche",
+	"Copy the link to this section": "Copia il link a questa sezione",
+	"open the guide": "apri la guida",
+	"Copy the guide link": "Copia il link alla guida",
+	"More": "Altro"
 };
+
+/**
+ * Formats an ISO date (YYYY-MM-DD) for the page language; anything that does
+ * not parse is returned unchanged.
+ * @param {string} isoDate
+ * @returns {string}
+ */
+export function formatDate(isoDate) {
+	if (!isoDate) return isoDate;
+	const parsed = new Date(`${isoDate}T00:00:00`);
+	if (Number.isNaN(parsed.getTime())) return isoDate;
+	return new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(parsed);
+}
 
 /** English source text is the dictionary key. Product names and commands stay unchanged. */
 export function t(text) {

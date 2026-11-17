@@ -1,4 +1,4 @@
-import { language, locale, homePath, articlePath, articlesIndexPath, privacyPath, t } from './i18n.js';
+import { language, locale, homePath, articlePath, articlesIndexPath, guidePath, privacyPath, t, formatDate } from './i18n.js';
 /**
  * @file Interactive terminal portfolio
  * @description Keyboard-first portfolio shell with command history, shortcuts,
@@ -9,7 +9,8 @@ import {
 	name, role, location, profile, skills, experience,
 	openSource, brewFormulas, utils, howWeBuild, links, version, downloadCv,
 } from './index.js';
-import { inlineMarkup, guideDiagrams, wrapIndex } from './how-we-build.js';
+import { inlineMarkup, guideDiagrams, guideSections, isoDay, wrapIndex } from './how-we-build.js';
+import { guideArticleHTML, guideCardHTML, guideContentsHTML, ROADMAP_ID, CHANGELOG_ID } from './how-we-build-view.js';
 import { initSpaceInvaders } from './games/spaceInvaders.js';
 import { initTetris } from './games/tetris.js';
 import { initPong } from './games/pong.js';
@@ -116,15 +117,25 @@ function metaLanguage(slug) {
 	return articles.find((article) => article.slug === slug)?.language ?? 'en';
 }
 
-/** @param {string} [slug] @param {boolean} [isIndex] whether the blog index is the current view */
-function languageSelectorHTML(slug, isIndex = false) {
-	const translated = !slug || articles.find((article) => article.slug === slug)?.hasItalian;
-	const italianHref = slug && translated ? articlePath(slug, 'it') : isIndex ? articlesIndexPath('it') : '/it/';
-	const englishHref = slug ? articlePath(slug, 'en') : isIndex ? articlesIndexPath('en') : '/';
+/**
+ * What the document head and the language selector need to know about the
+ * view on screen. `alternates.it` is null when the view has no Italian
+ * version: the IT link then falls back to the Italian home.
+ * @typedef {{
+ *   path: string,
+ *   title: string,
+ *   description: string,
+ *   type: 'article' | 'website',
+ *   alternates: { en: string, it: string | null },
+ * }} PageMeta
+ */
+
+/** @param {PageMeta['alternates']} alternates */
+function languageSelectorHTML(alternates) {
 	return `<nav class="language-selector" aria-label="${language === 'it' ? 'Lingua' : 'Language'}">
-		<a href="${italianHref}" lang="it" hreflang="it" ${language === 'it' ? 'aria-current="page"' : ''} ${slug && !translated ? 'title="Versione italiana non disponibile: vai al portfolio italiano"' : ''}>IT</a>
+		<a href="${alternates.it ?? '/it/'}" lang="it" hreflang="it" ${language === 'it' ? 'aria-current="page"' : ''} ${alternates.it ? '' : 'title="Versione italiana non disponibile: vai al portfolio italiano"'}>IT</a>
 		<span aria-hidden="true">|</span>
-		<a href="${englishHref}" lang="en" hreflang="en" ${language === 'en' ? 'aria-current="page"' : ''}>EN</a>
+		<a href="${alternates.en}" lang="en" hreflang="en" ${language === 'en' ? 'aria-current="page"' : ''}>EN</a>
 	</nav>`;
 }
 
@@ -133,31 +144,66 @@ const homeDescription = language === 'it'
 	? 'Senior Software Engineer e product builder: progetto sistemi affidabili e realizzo software per web, mobile, cloud e AI.'
 	: 'Senior Software Engineer and product builder designing reliable systems and shipping production software across web, mobile, cloud, and AI.';
 
-/** @param {string} [slug] @param {boolean} [isIndex] whether the blog index is the current view */
-function updatePageMetadata(slug, isIndex = false) {
+/** @returns {PageMeta} */
+function homePage() {
+	return { path: homePath, title: homeTitle, description: homeDescription, type: 'website', alternates: { en: '/', it: '/it/' } };
+}
+
+/** @returns {PageMeta} */
+function blogIndexPage() {
+	return {
+		path: articlesIndexPath(),
+		title: `${t('Articles')} | Alberto Barrago`,
+		description: t('Technical articles and notes by Alberto Barrago.'),
+		type: 'website',
+		alternates: { en: articlesIndexPath('en'), it: articlesIndexPath('it') },
+	};
+}
+
+/** @param {string} slug @returns {PageMeta} */
+function articlePage(slug) {
 	const meta = articles.find((article) => article.slug === slug);
-	const path = meta ? articlePath(meta.slug, meta.language) : isIndex ? articlesIndexPath() : homePath;
-	const url = `${window.location.origin}${path}`;
-	const title = meta ? `${meta.title} | Alberto Barrago` : isIndex ? `${t('Articles')} | Alberto Barrago` : homeTitle;
-	const description = meta
-		? (getArticleHTML(meta.slug) ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155)
-		: isIndex ? t('Technical articles and notes by Alberto Barrago.') : homeDescription;
-	document.title = title;
+	if (!meta) return homePage();
+	return {
+		path: articlePath(meta.slug, meta.language),
+		title: `${meta.title} | Alberto Barrago`,
+		description: (getArticleHTML(meta.slug) ?? '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155),
+		type: 'article',
+		alternates: { en: articlePath(slug, 'en'), it: meta.hasItalian ? articlePath(slug, 'it') : null },
+	};
+}
+
+/** @returns {PageMeta} */
+function guidePage() {
+	return {
+		path: guidePath(),
+		title: `${t('How we build')} | Alberto Barrago`,
+		description: t('A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.'),
+		type: 'article',
+		alternates: { en: guidePath('en'), it: guidePath('it') },
+	};
+}
+
+/** @param {PageMeta} [page] */
+function updatePageMetadata(page = homePage()) {
+	const url = `${window.location.origin}${page.path}`;
+	document.title = page.title;
 	document.querySelector('link[rel="canonical"]')?.setAttribute('href', url);
 	for (const [selector, value] of [
-		['meta[name="description"]', description], ['meta[property="og:description"]', description],
-		['meta[name="twitter:description"]', description], ['meta[property="og:title"]', title],
-		['meta[name="twitter:title"]', title], ['meta[property="og:url"]', url],
-		['meta[property="og:type"]', meta ? 'article' : 'website'],
+		['meta[name="description"]', page.description], ['meta[property="og:description"]', page.description],
+		['meta[name="twitter:description"]', page.description], ['meta[property="og:title"]', page.title],
+		['meta[name="twitter:title"]', page.title], ['meta[property="og:url"]', url],
+		['meta[property="og:type"]', page.type],
 	]) document.querySelector(selector)?.setAttribute('content', value);
 	document.querySelectorAll('link[hreflang]').forEach((link) => link.remove());
-	for (const lang of ['en', 'it', 'x-default']) {
-		if (meta && lang === 'it' && !meta.hasItalian) continue;
+	/** @type {[string, string | null][]} */
+	const alternates = [['en', page.alternates.en], ['it', page.alternates.it], ['x-default', page.alternates.en]];
+	for (const [hreflang, path] of alternates) {
+		if (!path) continue;
 		const link = document.createElement('link');
 		link.rel = 'alternate';
-		link.hreflang = lang;
-		const linkLang = lang === 'it' ? 'it' : 'en';
-		link.href = `${window.location.origin}${meta ? articlePath(meta.slug, linkLang) : isIndex ? articlesIndexPath(linkLang) : linkLang === 'it' ? '/it/' : '/'}`;
+		link.hreflang = hreflang;
+		link.href = `${window.location.origin}${path}`;
 		document.head.appendChild(link);
 	}
 }
@@ -170,7 +216,7 @@ function terminalHTML() {
 	return `<main class="terminal" aria-label="${t('Alberto Barrago portfolio terminal')}">
 		<div class="terminal-topbar">
 			<a class="terminal-link muted terminal-privacy" href="${privacyPath()}">${language === 'it' ? 'Privacy: niente cookie' : 'Privacy: no cookies'}</a>
-			${languageSelectorHTML()}
+			${languageSelectorHTML(homePage().alternates)}
 		</div>
 		<div class="terminal-glow" aria-hidden="true"></div>
 		<section class="terminal-output" id="terminal-output" role="log" aria-live="polite" aria-relevant="additions"></section>
@@ -290,14 +336,6 @@ function projectsHTML() {
 </article>`).join('')}</div>`;
 }
 
-/** @param {string} isoDate @returns {string} */
-function formatArticleDate(isoDate) {
-	if (!isoDate) return isoDate;
-	const parsed = new Date(`${isoDate}T00:00:00`);
-	if (Number.isNaN(parsed.getTime())) return isoDate;
-	return new Intl.DateTimeFormat(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }).format(parsed);
-}
-
 /** @typedef {'desc' | 'asc'} BlogOrder */
 /** @typedef {{ query: string, tag: string, order: BlogOrder }} BlogFilters */
 
@@ -348,7 +386,7 @@ function blogPostHTML(article) {
 	).join('');
 	return `<article class="blog-post${isLatest ? ' is-latest' : ''}" lang="${article.language}" aria-labelledby="post-${article.slug}">
 		<p class="blog-post-meta">
-			<time datetime="${article.date}">${formatArticleDate(article.date)}</time>
+			<time datetime="${article.date}">${formatDate(article.date)}</time>
 			<span>~${articleStats(html).minutes} ${t('min read')}</span>
 			${isLatest ? `<span class="blog-post-badge">${t('latest')}</span>` : ''}
 			${language === 'it' && article.language === 'en' ? '<span>Disponibile in inglese</span>' : ''}
@@ -368,7 +406,7 @@ function blogIndexHTML() {
 		<div class="article-reader-topbar">
 			<button class="reader-back" type="button" data-action="close-blog">${t("back")}</button>
 			<div class="reader-actions">
-				${languageSelectorHTML(undefined, true)}
+				${languageSelectorHTML(blogIndexPage().alternates)}
 				<span class="reader-hint muted" aria-hidden="true">${t("ESC · CLOSE")}</span>
 			</div>
 		</div>
@@ -453,7 +491,7 @@ function openBlogIndex() {
 		/** @type {HTMLElement} */ (overlay.querySelector('#blog-title')).focus({ preventScroll: true });
 	}
 	syncOverlayInert();
-	updatePageMetadata(undefined, true);
+	updatePageMetadata(blogIndexPage());
 	if (window.location.pathname !== articlesIndexPath()) {
 		window.history.pushState(null, '', articlesIndexPath());
 	}
@@ -469,15 +507,18 @@ function closeBlogIndex() {
 
 /**
  * Keeps keyboard and assistive-tech focus on the topmost layer: the terminal
- * goes inert under any overlay, the blog index goes inert under the reader.
+ * goes inert under any overlay, the blog index goes inert under the reader,
+ * the guide goes inert under the diagram viewer.
  */
 function syncOverlayInert() {
 	const reader = document.getElementById('article-reader');
 	const blogIndex = document.getElementById('blog-index');
 	const diagramViewer = document.getElementById('diagram-viewer');
+	const guide = document.getElementById('guide-reader');
 	const terminal = app.querySelector('.terminal');
-	if (terminal instanceof HTMLElement) terminal.inert = Boolean(reader || blogIndex || diagramViewer);
+	if (terminal instanceof HTMLElement) terminal.inert = Boolean(reader || blogIndex || diagramViewer || guide);
 	if (blogIndex) blogIndex.inert = Boolean(reader);
+	if (guide) guide.inert = Boolean(diagramViewer);
 }
 
 /** @returns {boolean} */
@@ -535,7 +576,7 @@ function articleReaderHTML(slug) {
 		<div class="article-reader-topbar">
 			<button class="reader-back" type="button" data-action="close-reader">${t("back")}</button>
 			<div class="reader-actions">
-				${languageSelectorHTML(slug)}
+				${languageSelectorHTML(articlePage(slug).alternates)}
 				<button class="reader-action reader-toc-toggle" type="button" data-action="toggle-toc" id="reader-toc-toggle" hidden>${t("chapters")}</button>
 				<button class="reader-action" type="button" data-action="share-article" data-slug="${slug}">${t("share")}</button>
 				<button class="reader-action" type="button" data-action="copy-article-link" data-slug="${slug}">${t("copy link")}</button>
@@ -547,7 +588,7 @@ function articleReaderHTML(slug) {
 			<div class="article-reader-main">
 				<article class="prose" lang="${meta.language}">
 					<h1>${meta.title}</h1>
-					<p class="reader-meta muted">${formatArticleDate(meta.date)}${meta.tags.length ? ` · ${meta.tags.join(' · ')}` : ''}${meta.label ? ` · <span class="reader-label">${meta.label}</span>` : ''}</p>
+					<p class="reader-meta muted">${formatDate(meta.date)}${meta.tags.length ? ` · ${meta.tags.join(' · ')}` : ''}${meta.label ? ` · <span class="reader-label">${meta.label}</span>` : ''}</p>
 					<p class="reader-stats muted">${stats.words.toLocaleString(locale)} ${t('words')} · ${stats.chars.toLocaleString(locale)} ${t('chars')} · ~${stats.minutes} ${t('min read')}</p>
 					${getArticleHTML(slug)}
 				</article>
@@ -596,14 +637,18 @@ function buildArticleTOC(overlay) {
 	overlay.classList.add('has-toc');
 	const toggle = /** @type {HTMLButtonElement | null} */ (overlay.querySelector('#reader-toc-toggle'));
 	if (toggle) toggle.hidden = false;
-	observeArticleHeadings(overlay, Array.from(headings));
+	observeReaderTargets(overlay, Array.from(headings));
 }
 
-/** @param {HTMLElement} overlay @param {HTMLHeadingElement[]} headings */
-function observeArticleHeadings(overlay, headings) {
-	tocObserver?.disconnect();
-	tocScrollFallback?.container.removeEventListener('scroll', tocScrollFallback.handler);
-	tocScrollFallback = null;
+/**
+ * Scrollspy for a reader overlay (article or guide): highlights the
+ * `.reader-toc-link` whose `data-target` is the id of the topmost visible
+ * target. Only one reader is open at a time, so the observer is shared.
+ * @param {HTMLElement} overlay
+ * @param {HTMLElement[]} headings targets in page order, each with an id
+ */
+function observeReaderTargets(overlay, headings) {
+	teardownReaderToc();
 	const container = /** @type {HTMLElement} */ (overlay.querySelector('.article-reader-body'));
 	const links = /** @type {NodeListOf<HTMLElement>} */ (overlay.querySelectorAll('.reader-toc-link'));
 	/** @type {Set<string>} */
@@ -657,18 +702,24 @@ function openArticleReader(slug) {
 	if (document.getElementById('blog-index')) {
 		/** @type {HTMLElement} */ (overlay.querySelector('.reader-back')).focus({ preventScroll: true });
 	}
-	updatePageMetadata(slug);
+	updatePageMetadata(articlePage(slug));
 	if (window.location.pathname !== articlePath(slug, metaLanguage(slug))) {
 		window.history.pushState(null, '', articlePath(slug, metaLanguage(slug)));
 	}
 }
 
-/** Tears down the reader overlay and its TOC observers without touching history. */
-function removeArticleReader() {
+/** Stops the scrollspy of the open reader overlay. */
+function teardownReaderToc() {
 	tocObserver?.disconnect();
 	tocObserver = null;
 	tocScrollFallback?.container.removeEventListener('scroll', tocScrollFallback.handler);
 	tocScrollFallback = null;
+}
+
+/** Tears down the reader overlay and its TOC observers without touching history. */
+function removeArticleReader() {
+	if (!document.getElementById('article-reader')) return;
+	teardownReaderToc();
 	document.getElementById('article-reader')?.remove();
 	syncOverlayInert();
 }
@@ -744,43 +795,6 @@ ${utils.map((group) => `<div class="utils-group">
 </div>`).join('')}</div>`;
 }
 
-/** @param {import('./how-we-build.js').GuideSnippet} snippet @returns {string} */
-function guideSnippetHTML(snippet) {
-	const bar = `<div class="guide-snippet-bar"><span class="guide-snippet-lang">${escapeHTML(snippet.language)}</span><button class="reader-action guide-copy" type="button" data-action="copy-snippet">${t('copy')}</button></div>`;
-	const body = `${bar}<pre class="guide-code"><code>${escapeHTML(snippet.code)}</code></pre>${snippet.origin
-		? `<p class="guide-origin">${t('from')} ${snippet.origin.url
-			? `<a class="terminal-link" href="${snippet.origin.url}" target="_blank" rel="noopener noreferrer">${escapeHTML(snippet.origin.label)} ↗</a>`
-			: escapeHTML(snippet.origin.label)}</p>`
-		: ''}`;
-	return snippet.collapsed
-		? `<details class="guide-snippet"><summary class="guide-snippet-title">${inlineMarkup(snippet.title)}</summary>${body}</details>`
-		: `<div class="guide-snippet"><div class="guide-snippet-title">${inlineMarkup(snippet.title)}</div>${body}</div>`;
-}
-
-/**
- * One practice or pitfall. Sections are found by `data-guide-id`, not by DOM
- * id: the command can run several times, so the same section may be in the
- * terminal log more than once.
- * @param {import('./how-we-build.js').GuideSection} section
- * @param {number} index
- * @returns {string}
- */
-function guideSectionHTML(section, index) {
-	const diagrams = (section.diagrams ?? []).map((diagram) => `<figure class="guide-figure">
-	<a href="${diagram.src}" target="_blank" rel="noopener" data-action="open-diagram" data-diagram="${GUIDE_DIAGRAMS.indexOf(diagram)}" aria-label="${t('Open diagram')}: ${escapeHTML(diagram.caption)}"><img src="${diagram.src}" alt="${escapeHTML(diagram.alt)}" loading="lazy" decoding="async"></a>
-	<figcaption>${inlineMarkup(diagram.caption)} <a class="terminal-link" href="${diagram.source}" download>${t('Markasso source')}</a></figcaption>
-</figure>`).join('');
-	return `<section class="guide-section" data-guide-id="${section.id}">
-	<h2 class="guide-title"><span class="guide-number">${String(index + 1).padStart(2, '0')}</span>${inlineMarkup(section.title)}</h2>
-	<div class="guide-label">${t('why')}</div>
-	<p class="guide-why">${inlineMarkup(section.why)}</p>
-	<div class="guide-label">${t('how')}</div>
-	<ol class="guide-steps" role="list">${section.steps.map((step) => `<li>${inlineMarkup(step)}</li>`).join('')}</ol>
-	${section.snippets.map(guideSnippetHTML).join('')}
-	${diagrams}
-</section>`;
-}
-
 /** Slides of the diagram viewer, in page order. */
 const GUIDE_DIAGRAMS = guideDiagrams(howWeBuild);
 /** Index of the slide on screen while the viewer is open. */
@@ -837,39 +851,6 @@ function closeDiagramViewer() {
 	diagramOrigin = null;
 }
 
-/** @param {import('./how-we-build.js').GuideSection[]} sections @returns {string} */
-function guideIndexHTML(sections) {
-	return sections.map((section) =>
-		`<li><button class="reader-nav-link" type="button" data-action="goto-guide" data-target="${section.id}">${inlineMarkup(section.title)}</button></li>`
-	).join('');
-}
-
-/**
- * Renders the "How we build" guide from `howWeBuild` data: an index, the
- * practices, the pitfalls, and a short roadmap.
- * @returns {string}
- */
-function howWeBuildHTML() {
-	const { practices, pitfalls, roadmap, inspiration, updated } = howWeBuild;
-	const credit = inspiration.url
-		? `<a class="terminal-link" href="${inspiration.url}" target="_blank" rel="noopener noreferrer">${escapeHTML(inspiration.label)} ↗</a>`
-		: `<em>${escapeHTML(inspiration.label)}</em>`;
-	return `<div class="guide">
-<div class="output-title">${t('How we build')}</div>
-<p class="prose">${t('A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.')}</p>
-<p class="guide-meta">${t('Inspired by')} ${credit} · ${t('updated')} <time datetime="${updated}">${formatArticleDate(updated)}</time></p>
-<nav class="guide-index" aria-label="${t('Guide contents')}">
-	<div class="utils-category">${t('Practices')}</div><ol role="list">${guideIndexHTML(practices)}</ol>
-	<div class="utils-category">${t('Pitfalls')}</div><ol role="list">${guideIndexHTML(pitfalls)}</ol>
-</nav>
-${practices.map(guideSectionHTML).join('')}
-<div class="output-title output-title-spaced">${t('Pitfalls we hit')}</div>
-${pitfalls.map(guideSectionHTML).join('')}
-<div class="output-title output-title-spaced">${t('Next up')}</div>
-<ul class="guide-roadmap" role="list">${roadmap.map((item) => `<li><span class="guide-roadmap-title">${inlineMarkup(item.title)}</span><p>${inlineMarkup(item.summary)}</p></li>`).join('')}</ul>
-</div>`;
-}
-
 /**
  * Copies the code of the snippet that holds `button`. When the clipboard is
  * unavailable (insecure context, denied permission) the code is selected
@@ -892,9 +873,110 @@ async function copySnippet(button) {
 	}
 }
 
-/** @param {HTMLElement} trigger @param {string} id */
-function scrollToGuideSection(trigger, id) {
-	trigger.closest('.guide')?.querySelector(`[data-guide-id="${id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+/** Every fragment the guide page answers to, in page order. */
+const GUIDE_TARGETS = Object.freeze([...guideSections(howWeBuild).map((section) => section.id), ROADMAP_ID, CHANGELOG_ID]);
+
+/** Shell of the guide overlay: topbar, contents sidebar and the page body. */
+function guideReaderHTML() {
+	const options = { interactive: true, today: isoDay() };
+	return `<div class="article-reader guide-reader has-toc" id="guide-reader" role="dialog" aria-modal="true" aria-labelledby="guide-title">
+		<div class="article-reader-topbar">
+			<button class="reader-back" type="button" data-action="close-guide">${t('back')}</button>
+			<div class="reader-actions">
+				${languageSelectorHTML(guidePage().alternates)}
+				<button class="reader-action reader-toc-toggle" type="button" data-action="toggle-toc" aria-controls="guide-toc">${t('chapters')}</button>
+				<button class="reader-action" type="button" data-action="copy-guide-link" aria-label="${t('Copy the guide link')}">${t('copy link')}</button>
+				<span class="reader-hint muted" aria-hidden="true">${t('ESC · CLOSE')}</span>
+			</div>
+		</div>
+		<div class="article-reader-body">
+			<nav class="reader-toc" id="guide-toc" aria-label="${t('Guide contents')}"><span class="reader-toc-title">${t('chapters')}</span>${guideContentsHTML(howWeBuild, options)}</nav>
+			<div class="article-reader-main guide-main">${guideArticleHTML(howWeBuild, options)}</div>
+		</div>
+	</div>`;
+}
+
+/** @returns {boolean} */
+function isGuideLocation() {
+	return /^(?:\/it)?\/how-we-build\/?$/.test(window.location.pathname);
+}
+
+/** @returns {string | undefined} the URL fragment, when it names a part of the guide */
+function guideTargetFromLocation() {
+	const id = decodeURIComponent(window.location.hash.slice(1));
+	return GUIDE_TARGETS.includes(id) ? id : undefined;
+}
+
+/** @param {string} id @param {ScrollBehavior} behavior */
+function scrollGuideTo(id, behavior) {
+	const overlay = document.getElementById('guide-reader');
+	overlay?.querySelector(`#${CSS.escape(id)}`)?.scrollIntoView({ behavior, block: 'start' });
+	overlay?.querySelector('.reader-toc')?.classList.remove('is-open');
+}
+
+/**
+ * Opens the guide page, or keeps it open, and scrolls to `target`. The URL
+ * becomes /how-we-build/#target: pushed when coming from another view,
+ * replaced when only the fragment changes, untouched on boot and
+ * back/forward where it is already right.
+ * @param {string} [target] a section id, ROADMAP_ID or CHANGELOG_ID
+ */
+function openGuide(target) {
+	let overlay = document.getElementById('guide-reader');
+	const opening = !overlay;
+	if (!overlay) {
+		input.blur();
+		overlay = appendOverlay(guideReaderHTML());
+		const targets = GUIDE_TARGETS
+			.map((id) => overlay?.querySelector(`#${CSS.escape(id)}`))
+			.filter((element) => element instanceof HTMLElement);
+		observeReaderTargets(overlay, targets);
+		/** @type {HTMLElement} */ (overlay.querySelector('#guide-title')).focus({ preventScroll: true });
+	}
+	syncOverlayInert();
+	updatePageMetadata(guidePage());
+	// Jump straight to a deep link on open; glide when moving inside the page.
+	if (target) scrollGuideTo(target, opening ? 'auto' : 'smooth');
+	const url = `${guidePath()}${target ? `#${target}` : ''}`;
+	if (!isGuideLocation()) window.history.pushState(null, '', url);
+	else if (target && window.location.hash !== `#${target}`) window.history.replaceState(null, '', url);
+}
+
+/** Removes the guide overlay and its scrollspy without touching history. */
+function removeGuide() {
+	const overlay = document.getElementById('guide-reader');
+	if (!overlay) return;
+	teardownReaderToc();
+	overlay.remove();
+	syncOverlayInert();
+}
+
+function closeGuide() {
+	removeGuide();
+	if (isGuideLocation()) window.history.pushState(null, '', homePath);
+	updatePageMetadata();
+	input?.focus({ preventScroll: true });
+}
+
+/** The `howwebuild` command: a summary in the log, then the guide page. */
+function showGuide() {
+	appendOutput(guideCardHTML(howWeBuild));
+	openGuide();
+}
+
+/**
+ * Copies the guide URL, or the URL of one of its parts when `target` is set.
+ * @param {HTMLElement} button
+ * @param {string} [target]
+ */
+async function copyGuideLink(button, target) {
+	const url = `${window.location.origin}${guidePath()}${target ? `#${target}` : ''}`;
+	try {
+		await navigator.clipboard.writeText(url);
+		flashActionLabel(button);
+	} catch {
+		window.prompt(t("Copy this link:"), url);
+	}
 }
 
 function contactHTML() {
@@ -1119,6 +1201,7 @@ function executeCommand(rawCommand) {
 	if (['about', 'whoami', 'cat'].includes(command)) {
 		if (command !== 'cat' || !argument || argument === 'about.txt') appendOutput(aboutHTML());
 		else if (argument === 'contact.vcf') appendOutput(contactHTML());
+		else if (argument === 'how-we-build.md') showGuide();
 		else if (argument.endsWith('.md') && getArticleHTML(argument.slice(0, -3))) {
 			openArticleReader(argument.slice(0, -3));
 		}
@@ -1131,9 +1214,14 @@ function executeCommand(rawCommand) {
 		return;
 	}
 
+	if (command === 'howwebuild') {
+		showGuide();
+		return;
+	}
+
 	const renderers = /** @type {Record<string, () => string>} */ ({
 		help: helpHTML, skills: skillsHTML, experience: experienceHTML,
-		projects: projectsHTML, howwebuild: howWeBuildHTML, utils: utilsHTML, contact: contactHTML, games: gamesHTML,
+		projects: projectsHTML, utils: utilsHTML, contact: contactHTML, games: gamesHTML,
 		ls: lsHTML, tree: treeHTML, neofetch: neofetchHTML,
 	});
 	if (renderers[command]) {
@@ -1297,8 +1385,16 @@ function articleSlugFromLocation() {
 const bootSlug = articleSlugFromLocation();
 if (bootSlug && getArticleHTML(bootSlug)) openArticleReader(bootSlug);
 else if (isBlogIndexLocation()) openBlogIndex();
+else if (isGuideLocation()) openGuide(guideTargetFromLocation());
 
 window.addEventListener('popstate', () => {
+	if (isGuideLocation()) {
+		removeArticleReader();
+		document.getElementById('blog-index')?.remove();
+		openGuide(guideTargetFromLocation());
+		return;
+	}
+	removeGuide();
 	const slug = articleSlugFromLocation();
 	if (slug && getArticleHTML(slug)) openArticleReader(slug);
 	else if (isBlogIndexLocation()) {
@@ -1378,8 +1474,8 @@ input.addEventListener('keydown', (event) => {
 
 app.addEventListener('click', (event) => {
 	const target = /** @type {HTMLElement} */ (event.target);
-	const openToc = document.querySelector('#reader-toc.is-open');
-	if (openToc && !target.closest('#reader-toc') && !target.closest('[data-action="toggle-toc"]')) {
+	const openToc = document.querySelector('.reader-toc.is-open');
+	if (openToc && !target.closest('.reader-toc') && !target.closest('[data-action="toggle-toc"]')) {
 		openToc.classList.remove('is-open');
 	}
 	const readArticleTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="read-article"]'));
@@ -1445,11 +1541,25 @@ app.addEventListener('click', (event) => {
 	}
 	const guideTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="goto-guide"]'));
 	if (guideTarget?.dataset.target) {
-		scrollToGuideSection(guideTarget, guideTarget.dataset.target);
+		openGuide(guideTarget.dataset.target);
+		return;
+	}
+	const openGuideTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="open-guide"]'));
+	if (openGuideTarget) {
+		openGuide(openGuideTarget.dataset.target);
+		return;
+	}
+	const guideLinkTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="copy-guide-link"]'));
+	if (guideLinkTarget) {
+		copyGuideLink(guideLinkTarget, guideLinkTarget.dataset.target);
+		return;
+	}
+	if (target.closest('[data-action="close-guide"]')) {
+		closeGuide();
 		return;
 	}
 	if (target.closest('[data-action="toggle-toc"]')) {
-		document.getElementById('reader-toc')?.classList.toggle('is-open');
+		target.closest('.article-reader')?.querySelector('.reader-toc')?.classList.toggle('is-open');
 		return;
 	}
 	const headingTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="goto-heading"]'));
@@ -1462,7 +1572,7 @@ app.addEventListener('click', (event) => {
 	const commandTarget = /** @type {HTMLElement | null} */ (target.closest('[data-command]'));
 	if (commandTarget?.dataset.command) executeCommand(commandTarget.dataset.command);
 	if (target.closest('[data-action="exit-game"]')) exitGame();
-	if (!target.closest('a') && !document.getElementById('game-overlay') && !document.getElementById('article-reader') && !document.getElementById('blog-index')) {
+	if (!target.closest('a') && !document.getElementById('game-overlay') && !document.getElementById('article-reader') && !document.getElementById('blog-index') && !document.getElementById('guide-reader')) {
 		input.focus({ preventScroll: true });
 	}
 });
@@ -1484,6 +1594,7 @@ document.addEventListener('keydown', (event) => {
 	}
 	if (event.key === 'Escape' && document.getElementById('game-overlay')) exitGame();
 	if (event.key === 'Escape' && document.getElementById('article-reader')) closeArticleReader();
+	else if (event.key === 'Escape' && document.getElementById('guide-reader')) closeGuide();
 	else if (event.key === 'Escape' && document.getElementById('blog-index')) {
 		// First ESC in a non-empty search clears it (like the native search field), the next one closes.
 		if (event.target instanceof HTMLInputElement && event.target.id === 'blog-search' && event.target.value) {
