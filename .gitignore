@@ -27,6 +27,7 @@ vite.config.ts.timestamp-*
 
 # Agents
 AGENTS.md
+.playwright-mcp/
 
 # pnpm (project uses npm)
 pnpm-lock.yaml
