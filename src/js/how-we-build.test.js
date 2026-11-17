@@ -263,6 +263,17 @@ describe('guide view', () => {
 		expect(targets).toEqual([...sectionsOf(howWeBuild).map((section) => section.id), ROADMAP_ID, CHANGELOG_ID]);
 	});
 
+	it('wraps prose blocks and keeps code blocks on their own lines', () => {
+		const snippets = [
+			{ id: 'prompt', title: 'Prompt', language: 'markdown', code: '# Rules' },
+			{ id: 'cmd', title: 'Command', language: 'bash', code: 'npm test' },
+		];
+		const guide = { ...howWeBuild, practices: [fixtureSection({ snippets })], pitfalls: [] };
+		const html = guideArticleHTML(guide, { interactive: true, today });
+		expect(html).toContain('<pre class="guide-code is-prose"><code># Rules');
+		expect(html).toContain('<pre class="guide-code"><code>npm test');
+	});
+
 	it('shows a badge only on fresh sections', () => {
 		const guide = { ...howWeBuild, pitfalls: [...howWeBuild.pitfalls, fixtureSection({ id: 'later', added: '2026-12-01', snippets: [] })] };
 		const html = guideArticleHTML(guide, { interactive: true, today: '2026-12-02' });

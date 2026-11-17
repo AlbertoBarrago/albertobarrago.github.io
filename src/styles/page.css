@@ -704,6 +704,16 @@ summary.guide-snippet-title::marker {
 	overflow-wrap: normal;
 }
 
+/* Prose blocks wrap like a prompt library: indentation and list markers are
+   kept, long paths and URLs break anywhere instead of overflowing. */
+.guide-code.is-prose {
+	white-space: pre-wrap;
+}
+
+.guide-section .guide-code.is-prose code {
+	overflow-wrap: anywhere;
+}
+
 .guide-origin {
 	font-size: 0.85rem;
 }

@@ -46,6 +46,14 @@ function gotoHTML(id, label, interactive, className = 'reader-nav-link') {
 		: `<a class="${className}" href="#${id}">${label}</a>`;
 }
 
+/**
+ * Languages whose blocks are prose (prompts, CLAUDE.md excerpts, skill
+ * templates): they wrap to the column so a paragraph reads without scrolling
+ * sideways. Code keeps its lines, since wrapping a shell command reads as two.
+ * Copying is unaffected: the button copies the raw text.
+ */
+const PROSE_LANGUAGES = new Set(['markdown', 'text']);
+
 /** @param {GuideSnippet} snippet @param {boolean} interactive @returns {string} */
 function snippetHTML(snippet, interactive) {
 	const copy = interactive ? `<button class="reader-action guide-copy" type="button" data-action="copy-snippet">${t('copy')}</button>` : '';
@@ -55,7 +63,7 @@ function snippetHTML(snippet, interactive) {
 			? `<a class="terminal-link" href="${snippet.origin.url}" target="_blank" rel="noopener noreferrer">${escapeHTML(snippet.origin.label)} ↗</a>`
 			: escapeHTML(snippet.origin.label)}</p>`
 		: '';
-	const body = `${bar}<pre class="guide-code"><code>${escapeHTML(snippet.code)}</code></pre>${origin}`;
+	const body = `${bar}<pre class="guide-code${PROSE_LANGUAGES.has(snippet.language) ? ' is-prose' : ''}"><code>${escapeHTML(snippet.code)}</code></pre>${origin}`;
 	return snippet.collapsed
 		? `<details class="guide-snippet"><summary class="guide-snippet-title">${inlineMarkup(snippet.title)}</summary>${body}</details>`
 		: `<div class="guide-snippet"><div class="guide-snippet-title">${inlineMarkup(snippet.title)}</div>${body}</div>`;
