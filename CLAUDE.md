@@ -4,29 +4,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Retro Amiga Workbench 3.1-inspired portfolio website. Pure vanilla JavaScript (ES2022+) with zero runtime dependencies. Uses Vite 6 as build tool and deploys to GitHub Pages. Package manager is npm.
+Interactive terminal portfolio (albz.it): a keyboard-first shell where visitors type commands (`help`, `about`, `projects`, `articles`, ...) and the output is appended to a log, with CRT styling and embedded retro games. Bilingual: English at `/`, Italian under `/it/`. Pure vanilla JavaScript (ES2022+) with zero runtime dependencies. Uses Vite 6 as build tool and deploys to GitHub Pages. Package manager is npm.
 
 ## Commands
 
 ```bash
 npm run dev        # Start Vite dev server
-npm run build      # Production build (output: build/)
+npm test           # Vitest (unit tests next to the code, *.test.js / *.test.mjs)
+npm run build      # Vite build (output: build/) + scripts/prerender-articles.mjs
 npm run preview    # Preview production build
 npm run deploy     # Build + deploy to GitHub Pages
 ```
 
-No test suite or linter is configured.
+No linter is configured. Type checking is JSDoc-based through `jsconfig.json` (editor only, no CLI step).
 
 ## Architecture
 
-Single-page app with a state-based, event-delegation pattern. No framework.
+Single-page app with event delegation on a single root handler using `data-*` attributes. No framework.
 
-- **Entry point**: `index.html` → imports `src/js/app.js` as ES module
-- **Data layer**: `src/js/index.js` — portfolio content (about, skills, experience, contact links)
-- **App controller**: `src/js/app.js` — boot sequence, section rendering via HTML template functions, event delegation on a single root handler using `data-*` attributes, game launcher
-- **Games**: `src/js/games/` — self-contained modules (Space Invaders, Tetris, Pong), each exports an init function that returns a cleanup function. Uses Canvas API.
-- **Styles**: `src/styles/main.css` (reset) + `src/styles/page.css` (all component styles, CRT effects, responsive at 600px breakpoint)
-- **Static assets**: `static/` directory (favicon, CV PDF, robots.txt, sitemap.xml)
+- **Entry point**: `index.html` imports `src/js/app.js` as ES module
+- **Data layer**: `src/js/index.js`: portfolio content (profile, skills, experience, projects, Homebrew formulae, utils, links)
+- **App controller**: `src/js/app.js`: boot, one `*HTML()` template function per command, `executeCommand` dispatching through the `renderers` map, Tab completion from `COMMAND_NAMES`, overlays (blog index, article reader, games)
+- **i18n**: `src/js/i18n.js`: language from the path (`/it/` is Italian), `t()` looks up the Italian string for an English source string, plus path helpers (`articlePath`, `privacyPath`, ...)
+- **Articles**: Markdown in `src/content/articles/` (Italian versions in `src/content/articles/it/`), front matter `title`, `date`, `tags`, `label`. Rendered to HTML at build/dev time by the Vite plugin in `vite.config.js` (`marked`, Node only), loaded by `src/js/articles.js`
+- **Prerender**: `scripts/prerender-articles.mjs` runs after `vite build` and writes a static page per article and for the blog index (meta, Open Graph, JSON-LD, `<noscript>` body), plus `sitemap.xml` and `feed.xml`
+- **Games**: `src/js/games/`: self-contained Canvas modules (Space Invaders, Tetris, Pong, Flappy Bird), each init function returns a cleanup function
+- **Styles**: `src/styles/main.css` (reset) + `src/styles/page.css` (design tokens on `:root`, component styles, CRT overlay, mobile layout at 680px)
+- **Static assets**: `static/` is Vite's `publicDir`, copied as is (favicon, CV PDF, robots.txt, privacy pages, app update feeds under `static/updates/`)
 
 ## Markasso for Mac release notes
 
@@ -35,11 +39,13 @@ Single-page app with a state-based, event-delegation pattern. No framework.
 ## Key Patterns
 
 - **JSDoc typing throughout** with strict TypeScript checking enabled via `jsconfig.json` (`checkJs: true`, ES2022 target). This is vanilla JS with JSDoc types, not TypeScript.
-- **ES module system** — all files use `import`/`export`
-- **HTML templates** built with tagged template literals in `app.js`
-- **Game registry**: `GAME_INIT` object maps game names to factory functions
-- **Web Audio API** for modem dial-up sound synthesis
-- **Local storage** for game high scores
+- **ES module system**: all files use `import`/`export`
+- **HTML templates** built with template literals in `app.js`; escape any user input with `escapeHTML` (`src/js/utils.js`)
+- **Adding a command**: write a `*HTML()` renderer, register it in `renderers` inside `executeCommand`, add it to `COMMAND_NAMES` (Tab completion), `helpHTML`, and `treeHTML`/`lsHTML` when it is a section
+- **Every visible string goes through `t()`**, with its Italian translation added to the `italian` map in `i18n.js`
+- **Content is data**: sections render from arrays in `index.js`; adding an item means editing data, not templates
+- **Game registry**: `GAME_INIT` maps game names to factory functions
+- **Local storage** for game high scores and blog filters
 
 ## Git Workflow
 
