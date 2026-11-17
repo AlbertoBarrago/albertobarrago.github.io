@@ -552,6 +552,274 @@ button {
 	margin-bottom: 0.5rem;
 }
 
+/* "How we build" guide: index, practices with copyable blocks, roadmap. */
+.guide-meta,
+.guide-why,
+.guide-steps,
+.guide-origin,
+.guide-roadmap p,
+.guide-figure figcaption {
+	max-width: 78ch;
+	margin: 0.2rem 0 0;
+	color: var(--muted);
+}
+
+.guide-meta {
+	font-size: 0.9rem;
+}
+
+.guide-index {
+	margin: 1rem 0 0.5rem;
+}
+
+.guide-index ol {
+	display: grid;
+	gap: 0.2rem;
+	margin: 0 0 0.75rem;
+	padding-left: 1.5rem;
+}
+
+.guide-index li::marker {
+	color: var(--muted);
+}
+
+.guide-index .reader-nav-link {
+	padding: 0;
+	font: inherit;
+}
+
+.guide-section {
+	max-width: 88ch;
+	margin-top: 1.75rem;
+	padding-left: 1rem;
+	border-left: 1px solid var(--border);
+}
+
+.guide-title {
+	display: flex;
+	gap: 0.75rem;
+	margin: 0 0 0.5rem;
+	color: var(--green);
+	font-size: 1rem;
+}
+
+.guide-number {
+	color: var(--yellow);
+}
+
+.guide-label {
+	margin-top: 0.75rem;
+	color: var(--cyan);
+	font-size: 0.78rem;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.guide-why {
+	color: var(--bright);
+}
+
+.guide-steps {
+	display: grid;
+	gap: 0.35rem;
+	padding-left: 1.5rem;
+}
+
+.guide-steps li::marker {
+	color: var(--yellow);
+}
+
+.guide-section code,
+.guide-roadmap code {
+	padding: 0.05em 0.35em;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 3px;
+	color: var(--cyan);
+	font-size: 0.9em;
+	overflow-wrap: anywhere;
+}
+
+.guide-snippet {
+	margin-top: 1rem;
+}
+
+.guide-snippet-title {
+	color: var(--bright);
+}
+
+summary.guide-snippet-title {
+	cursor: pointer;
+}
+
+summary.guide-snippet-title::marker {
+	color: var(--yellow);
+}
+
+.guide-snippet-bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 0.4rem;
+	padding: 0.3rem 0.75rem;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-bottom: 0;
+	border-radius: 4px 4px 0 0;
+}
+
+.guide-snippet-lang {
+	color: var(--muted);
+	font-size: 0.8rem;
+}
+
+.guide-copy {
+	color: var(--cyan);
+}
+
+.guide-copy:hover,
+.guide-copy:focus-visible {
+	color: var(--bright);
+}
+
+.guide-code {
+	max-height: 28rem;
+	margin: 0;
+	padding: 0.75rem;
+	overflow: auto;
+	background: var(--background-deep);
+	border: 1px solid var(--border);
+	border-radius: 0 0 4px 4px;
+	font-size: 0.85rem;
+	line-height: 1.5;
+}
+
+/* Blocks are copied verbatim: no chip styling inside them. */
+.guide-section .guide-code code {
+	padding: 0;
+	background: none;
+	border: 0;
+	color: var(--foreground);
+	font-size: inherit;
+	overflow-wrap: normal;
+}
+
+.guide-origin {
+	font-size: 0.85rem;
+}
+
+.guide-figure {
+	margin: 1.25rem 0 0;
+}
+
+.guide-figure img {
+	display: block;
+	width: 100%;
+	max-width: 560px;
+	height: auto;
+	padding: 0.75rem;
+	background: var(--background-deep);
+	border: 1px solid var(--border);
+	border-radius: 4px;
+}
+
+.guide-figure figcaption {
+	font-size: 0.9rem;
+}
+
+/* Diagram viewer: full-screen slideshow over the terminal, reusing the reader topbar. */
+.diagram-viewer {
+	position: fixed;
+	inset: 0;
+	z-index: 110;
+	display: flex;
+	flex-direction: column;
+	background: rgba(7, 10, 14, 0.96);
+	animation: output-in 180ms ease-out both;
+}
+
+.diagram-viewer-count {
+	color: var(--muted);
+	font-variant-numeric: tabular-nums;
+}
+
+.diagram-viewer-stage {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+	min-height: 0;
+	padding: 1rem max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+}
+
+.diagram-viewer-figure {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.75rem;
+	max-width: min(100%, 1100px);
+	max-height: 100%;
+	min-height: 0;
+	margin: 0;
+}
+
+.diagram-viewer-image {
+	display: block;
+	max-width: 100%;
+	max-height: calc(100dvh - 9rem);
+	min-height: 0;
+	object-fit: contain;
+	padding: 1rem;
+	background: var(--background-deep);
+	border: 1px solid var(--border);
+	border-radius: 4px;
+}
+
+.diagram-viewer-caption {
+	color: var(--muted);
+	text-align: center;
+}
+
+.diagram-viewer-nav {
+	flex: none;
+	width: 2.75rem;
+	height: 2.75rem;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 50%;
+	color: var(--cyan);
+	cursor: pointer;
+	font: inherit;
+	font-size: 1.5rem;
+	line-height: 1;
+}
+
+.diagram-viewer-nav:hover,
+.diagram-viewer-nav:focus-visible {
+	border-color: var(--cyan);
+	color: var(--bright);
+}
+
+.guide-figure a {
+	display: inline-block;
+	cursor: zoom-in;
+}
+
+.guide-roadmap {
+	display: grid;
+	gap: 0.6rem;
+	max-width: 78ch;
+	margin: 0;
+	padding: 0 0 0 1rem;
+	border-left: 1px dashed var(--border);
+	list-style: none;
+}
+
+.guide-roadmap-title {
+	color: var(--bright);
+}
+
 .project-item {
 	padding: 0.85rem 1rem;
 	background: rgba(17, 24, 32, 0.6);
@@ -1281,6 +1549,32 @@ button {
 }
 
 @media (max-width: 680px) {
+	.guide-section {
+		padding-left: 0.6rem;
+	}
+
+	.guide-code {
+		max-height: 22rem;
+		font-size: 0.78rem;
+	}
+
+	/* On phones the arrows go under the diagram so it gets the full width. */
+	.diagram-viewer-stage {
+		flex-wrap: wrap;
+		align-content: center;
+		gap: 0.75rem;
+	}
+
+	.diagram-viewer-figure {
+		order: -1;
+		flex-basis: 100%;
+	}
+
+	.diagram-viewer-image {
+		padding: 0.5rem;
+		max-height: calc(100dvh - 12rem);
+	}
+
 	html,
 	body {
 		font-size: 14px;

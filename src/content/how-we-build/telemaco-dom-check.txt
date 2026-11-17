@@ -1,0 +1,22 @@
+// Telemaco runs real JavaScript and a real DOM, but has no layout engine:
+// getBoundingClientRect returns placeholders and getComputedStyle returns defaults.
+// So assert on structure and state, never on pixels, sizes or computed colors.
+// browser_evaluate does not await Promises: return plain values, and read async
+// results in a second call (store them on window in the first one).
+
+// 1. browser_navigate to http://localhost:$PORT/ and check the title first.
+document.title.startsWith('My App') || 'not my server: stop';
+
+// 2. browser_evaluate: drive the app through the DOM and return evidence.
+(() => {
+  const input = document.querySelector('#search');
+  input.value = 'invoices';
+  input.form.requestSubmit();          // fires the app's own submit handler
+  return {
+    results: document.querySelectorAll('.result').length,
+    empty: !!document.querySelector('.empty-state'),
+  };
+})();
+
+// Out of scope: canvas drawing and hit-testing, visual layout, phone widths.
+// Cover canvas logic with unit tests; ask a human for the visual check (Verified: manual).

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="917" height="808" viewBox="0 0 917 808">
+<g><path d="M 398 24 L 530 24 C 552.09 24 570 41.91 570 64 C 570 86.09 552.09 104 530 104 L 398 104 C 375.91 104 358 86.09 358 64 C 358 41.91 375.91 24 398 24 Z" fill="rgba(77,150,255,0.18)" stroke="#4d96ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><text font-family="Arial, sans-serif" font-size="16" fill="#4d96ff" opacity="1" text-anchor="middle" dominant-baseline="central"><tspan x="464" y="64">Agent makes a change</tspan></text></g>
+<g><path d="M 324 184 L 604 184 L 604 264 L 324 264 Z" fill="rgba(199,125,255,0.18)" stroke="#c77dff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><path d="M 340 184 L 340 264 M 588 184 L 588 264" fill="none" stroke="#c77dff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><text font-family="Arial, sans-serif" font-size="16" fill="#c77dff" opacity="1" text-anchor="middle" dominant-baseline="central"><tspan x="464" y="214.4">Verify by running</tspan><tspan x="464" y="233.6">(verify skill, or drive the real app)</tspan></text></g>
+<polygon points="464,344 544,394 464,444 384,394" fill="rgba(255,212,59,0.18)" stroke="#ffd43b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<text font-family="Arial, sans-serif" font-size="16" fill="#ffd43b" opacity="1" text-anchor="middle" dominant-baseline="central"><tspan x="464" y="394">Passes?</tspan></text>
+<polygon points="464,524 547,574 464,624 381,574" fill="rgba(255,212,59,0.18)" stroke="#ffd43b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<text font-family="Arial, sans-serif" font-size="16" fill="#ffd43b" opacity="1" text-anchor="middle" dominant-baseline="central"><tspan x="464" y="574">Round &lt; 3?</tspan></text>
+<rect x="24" y="539" width="241" height="70" rx="8" fill="none" stroke="#e2e2ef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+<text font-family="Arial, sans-serif" font-size="16" fill="#e2e2ef" opacity="1" text-anchor="middle" dominant-baseline="central"><tspan x="144.5" y="564.4">Fix the code</tspan><tspan x="144.5" y="583.6">(no retries, sleeps or skips)</tspan></text>
+<g><path d="M 393 704 L 536 704 C 558.09 704 576 721.91 576 744 C 576 766.09 558.09 784 536 784 L 393 784 C 370.91 784 353 766.09 353 744 C 353 721.91 370.91 704 393 704 Z" fill="rgba(255,107,107,0.18)" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><text font-family="Arial, sans-serif" font-size="16" fill="#ff6b6b" opacity="1" text-anchor="middle" dominant-baseline="central"><tspan x="464.5" y="734.4">Stop: bring in the human</tspan><tspan x="464.5" y="753.6">with output and attempts</tspan></text></g>
+<g><path d="M 704 354 L 853 354 C 875.09 354 893 371.91 893 394 C 893 416.09 875.09 434 853 434 L 704 434 C 681.91 434 664 416.09 664 394 C 664 371.91 681.91 354 704 354 Z" fill="rgba(107,203,119,0.18)" stroke="#6bcb77" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><text font-family="Arial, sans-serif" font-size="16" fill="#6bcb77" opacity="1" text-anchor="middle" dominant-baseline="central"><tspan x="778.5" y="384.4">Ready for testing</tspan><tspan x="778.5" y="403.6">commit stamped Verified:</tspan></text></g>
+<line x1="464" y1="104" x2="464" y2="184" stroke="#e2e2ef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="1"/>
+<polyline points="458,173.61 464,184 470,173.61" stroke="#e2e2ef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1" fill="none"/>
+<line x1="464" y1="264" x2="464" y2="344" stroke="#e2e2ef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="1"/>
+<polyline points="458,333.61 464,344 470,333.61" stroke="#e2e2ef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1" fill="none"/>
+<line x1="544" y1="394" x2="664" y2="394" stroke="#6bcb77" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="1"/>
+<polyline points="653.61,400 664,394 653.61,388" stroke="#6bcb77" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1" fill="none"/>
+<line x1="464" y1="444" x2="464" y2="524" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="1"/>
+<polyline points="458,513.61 464,524 470,513.61" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1" fill="none"/>
+<line x1="381" y1="574" x2="265" y2="574" stroke="#e2e2ef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="1"/>
+<polyline points="275.39,568 265,574 275.39,580" stroke="#e2e2ef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1" fill="none"/>
+<line x1="176.45" y1="539" x2="427.49" y2="264" stroke="#e2e2ef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="1" stroke-dasharray="12 6"/>
+<polyline points="424.91,275.72 427.49,264 416.05,267.63" stroke="#e2e2ef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1" fill="none"/>
+<line x1="464.15" y1="623.91" x2="464.38" y2="704" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="1"/>
+<polyline points="458.35,693.63 464.38,704 470.35,693.59" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="1" fill="none"/>
+<rect x="589.86" y="382" width="28.27" height="24" fill="#080808"/>
+<text font-family="Arial, sans-serif" font-size="12" fill="#6bcb77" opacity="1" text-anchor="middle" dominant-baseline="central"><tspan x="604" y="394">yes</tspan></text>
+<rect x="452.53" y="472" width="22.94" height="24" fill="#080808"/>
+<text font-family="Arial, sans-serif" font-size="12" fill="#ff6b6b" opacity="1" text-anchor="middle" dominant-baseline="central"><tspan x="464" y="484">no</tspan></text>
+<rect x="308.86" y="562" width="28.27" height="24" fill="#080808"/>
+<text font-family="Arial, sans-serif" font-size="12" fill="#e2e2ef" opacity="1" text-anchor="middle" dominant-baseline="central"><tspan x="323" y="574">yes</tspan></text>
+<rect x="268.82" y="389.5" width="66.3" height="24" fill="#080808"/>
+<text font-family="Arial, sans-serif" font-size="12" fill="#e2e2ef" opacity="1" text-anchor="middle" dominant-baseline="central"><tspan x="301.97" y="401.5">next round</tspan></text>
+<rect x="452.79" y="651.96" width="22.94" height="24" fill="#080808"/>
+<text font-family="Arial, sans-serif" font-size="12" fill="#ff6b6b" opacity="1" text-anchor="middle" dominant-baseline="central"><tspan x="464.26" y="663.96">no</tspan></text>
+</svg>

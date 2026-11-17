@@ -1,5 +1,19 @@
 import { t } from './i18n.js';
 import pkg from "../../package.json";
+import claudeMdRules from "../content/how-we-build/claude-md-verification-rules.md?raw";
+import verifySkillTemplate from "../content/how-we-build/verify-skill-template.md?raw";
+import verifySkillMarkasso from "../content/how-we-build/verify-skill-markasso.md?raw";
+import verifySkillThemis from "../content/how-we-build/verify-skill-themis.md?raw";
+import verifiedTrailer from "../content/how-we-build/verified-trailer.sh?raw";
+import secondOpinion from "../content/how-we-build/second-opinion.sh?raw";
+import themisGates from "../content/how-we-build/themis-gates.sh?raw";
+import devServerFreePort from "../content/how-we-build/dev-server-free-port.sh?raw";
+import telemacoDomCheck from "../content/how-we-build/telemaco-dom-check.txt?raw";
+import verifySkillKickoff from "../content/how-we-build/verify-skill-kickoff.sh?raw";
+import verifySkillPlaywrightE2e from "../content/how-we-build/verify-skill-playwright-e2e.md?raw";
+import playwrightMcpSetup from "../content/how-we-build/playwright-mcp-setup.sh?raw";
+import languageIndependentSelectors from "../content/how-we-build/language-independent-selectors.txt?raw";
+import biomeTrackedFiles from "../content/how-we-build/biome-tracked-files.sh?raw";
 
 const name = "Alberto Barrago";
 const role = "Senior Software Engineer";
@@ -240,6 +254,238 @@ const utils = [
 	}
 ];
 
+/**
+ * The "How we build" guide (command `howwebuild`): practices for working with
+ * coding agents. Prose goes through t(); copyable blocks are raw files in
+ * src/content/how-we-build/ and stay in English. Public site: only my own open
+ * projects, never client work, internal URLs, personal paths or contacts
+ * (how-we-build.test.js checks the blocks).
+ * @type {import('./how-we-build.js').HowWeBuildGuide}
+ */
+const howWeBuild = {
+	updated: "2026-11-17",
+	inspiration: { label: t("Verification loops, by the Claude Code team at Anthropic") },
+	practices: [
+		{
+			id: "claude-md-rules",
+			title: t("Verification rules in CLAUDE.md"),
+			why: t("An agent does what its instructions make cheap. Without written rules it declares victory on a green build, retries a flaky test until it passes, or edits the test instead of the code. A few explicit lines in the global CLAUDE.md change the default for every session."),
+			steps: [
+				t("Put the rules in the global `~/.claude/CLAUDE.md`, so they apply to every repo, and keep project specifics in the repo's own CLAUDE.md."),
+				t("Verify by running: the repo's `verify` skill when there is one, otherwise drive the real app."),
+				t("Three rounds, then stop: after three failed fix attempts the agent hands over the failing output and what it tried."),
+				t("Keep the checks out of reach: a change must never weaken the tests, lint config or `verify` skill that judge it in the same commit.")
+			],
+			snippets: [
+				{ id: "claude-md-rules", title: t("Excerpt for your CLAUDE.md"), language: "markdown", code: claudeMdRules }
+			],
+			diagrams: [
+				{
+					src: "/how-we-build/verification-loop.svg",
+					source: "/how-we-build/verification-loop.markasso",
+					alt: t("Flowchart: the agent makes a change and verifies it by running the app. If it passes, the change is ready for testing with a Verified commit stamp. If not, the agent fixes the code and verifies again, up to three rounds, then stops and brings in the human."),
+					caption: t("The loop these rules describe.")
+				}
+			]
+		},
+		{
+			id: "verify-skill",
+			title: t("A verify skill in every repo"),
+			why: t("\"Run the app\" means something different in every repo. A `verify` skill writes it down once: the cheap checks, how to boot the real thing, which flows to drive and what to expect, so the agent collects evidence instead of guessing."),
+			steps: [
+				t("Copy the template to `<repo>/.claude/skills/verify/SKILL.md` and replace every placeholder; delete the sections that do not apply."),
+				t("Track it in git: ignore `.claude/*` but not `.claude/skills/`."),
+				t("Run it twice in a row on a clean main before trusting it: it is your smoke test harness, it must be fast and deterministic."),
+				t("Say what is out of scope (paid API calls, deploys, what the tools cannot see) and when to ask a human instead."),
+				t("Every new project starts with `.claude/skills/verify` from the template, on day one."),
+				t("In work or client repos you don't own, keep the skill local with `.git/info/exclude` and never commit it.")
+			],
+			snippets: [
+				{ id: "verify-skill-template", title: t("Template"), language: "markdown", code: verifySkillTemplate },
+				{ id: "verify-skill-kickoff", title: t("Kickoff, and local-only skills for repos you don't own"), language: "bash", code: verifySkillKickoff },
+				{ id: "verify-skill-playwright-e2e", title: t("Section for an end-to-end Playwright suite"), language: "markdown", code: verifySkillPlaywrightE2e },
+				{
+					id: "verify-skill-markasso",
+					title: t("Real example: Markasso, a web app driven through Telemaco"),
+					language: "markdown",
+					code: verifySkillMarkasso,
+					origin: { label: "Markasso", url: "https://github.com/AlbertoBarrago/markasso" },
+					collapsed: true
+				},
+				{
+					id: "verify-skill-themis",
+					title: t("Real example: Themis, a CLI driven in a temp project"),
+					language: "markdown",
+					code: verifySkillThemis,
+					origin: { label: "Themis", url: "https://github.com/AlbertoBarrago/themis" },
+					collapsed: true
+				}
+			]
+		},
+		{
+			id: "verified-trailer",
+			title: t("A Verified trailer on every commit"),
+			why: t("After the fact, nobody remembers whether a commit was run, tested or just built. A one-line trailer records it, and because `none` is allowed, unverified commits stay honest and easy to find."),
+			steps: [
+				t("End every commit message with `Verified: verify`, `tests`, `manual` or `none (<reason>)`."),
+				t("Let the `verify` skill's report tell the agent which value to use."),
+				t("Query it with `git log` trailers: no tooling needed.")
+			],
+			snippets: [
+				{ id: "verified-trailer", title: t("Format and queries"), language: "bash", code: verifiedTrailer }
+			]
+		},
+		{
+			id: "browser-tool",
+			title: t("Choosing the browser tool"),
+			why: t("A verify skill is only as good as the browser that drives it. We ran one real test on Markasso's canvas: draw a rectangle, then check that it landed in localStorage. The results decided which tool does what."),
+			steps: [
+				t("Telemaco: FAIL. No layout engine, and `browser_evaluate` does not await Promises."),
+				t("chrome-devtools-mcp: PASS only with synthetic events dispatched from a script, since it has no drag at coordinates; about 36 s."),
+				t("Playwright MCP: PASS with real mouse input (`browser_mouse_drag_xy`), about 24 s. On the first try it even hit a panel lying over the canvas, exactly as a real user would."),
+				t("Decision: Telemaco stays for reading the web, search and stealth fetches; driving local apps moves to Playwright MCP. The adoption is in progress.")
+			],
+			snippets: [
+				{
+					id: "playwright-mcp-setup",
+					title: t("Playwright MCP for local apps"),
+					language: "bash",
+					code: playwrightMcpSetup,
+					origin: { label: "Playwright MCP", url: "https://github.com/microsoft/playwright-mcp" }
+				}
+			]
+		},
+		{
+			id: "second-opinion",
+			title: t("A second opinion with Codex or opencode"),
+			why: t("An agent reviewing its own diff shares its own blind spots. A second model with a fresh prompt finds a different set of bugs, as long as you give it the code, not your conclusion, and treat its output as input, not truth."),
+			steps: [
+				t("Codex is the long-term reviewer for deep and critical reviews; opencode's free models run alongside as an experiment on smaller diffs and scoped tasks."),
+				t("Ask before running it, and say what you send and why."),
+				t("Read-only by default: opencode's `plan` agent or Codex's `read-only` sandbox. Write access only inside a separate git worktree."),
+				t("Use only models whose provider keeps no data and does not train on it, and never send secrets or client code you may not share."),
+				t("Verify every finding against the code, fix what is real, and write down what you rejected and why.")
+			],
+			snippets: [
+				{ id: "second-opinion", title: t("Commands"), language: "bash", code: secondOpinion }
+			]
+		},
+		{
+			id: "themis-gates",
+			title: t("Themis: gates and a locked contract"),
+			why: t("For larger work, rules are not enough: the agent must not be able to move the goalposts. Themis turns a spec into acceptance tests, locks them by digest, and only then lets agents write code that a separate verifier judges."),
+			steps: [
+				t("Write the spec: goal, verify steps, limits, acceptance criteria."),
+				t("Approve the plan (gate 1) and the tests (gate 2): approving the tests records the digests of tests, spec, verifier and config in `.themis/lock.json`, and a guard rejects any change to them."),
+				t("Run: each task works in its own worktree; the verifier's exit code says retry or blocked, and `max_iterations` caps the attempts."),
+				t("Close with a retro (gate 3): misses become changes to the agents' instructions.")
+			],
+			snippets: [
+				{
+					id: "themis-gates",
+					title: t("The gated flow"),
+					language: "bash",
+					code: themisGates,
+					origin: { label: "Themis", url: "https://github.com/AlbertoBarrago/themis" }
+				}
+			],
+			diagrams: [
+				{
+					src: "/how-we-build/themis-pipeline.svg",
+					source: "/how-we-build/themis-pipeline.markasso",
+					alt: t("Flowchart of the Themis pipeline: spec, plan, locked contract, worker, verifier with retries and a guard on the locked checks, failed or blocked after max iterations, reviewer on the committed diff, merge, retro."),
+					caption: t("The Themis gated pipeline: the checks are locked before the worker starts.")
+				}
+			]
+		}
+	],
+	pitfalls: [
+		{
+			id: "dev-server-port",
+			title: t("The dev server port belongs to someone else"),
+			why: t("Several sessions and agents run at once. An agent that finds port 5173 busy may happily test the server another agent started, on different code, and report a pass that means nothing."),
+			steps: [
+				t("Pick a free port at runtime and start with `--strictPort`, so a race fails instead of silently moving."),
+				t("Fail the wait loop if your own process dies."),
+				t("Check a marker that proves the server is yours (the page title, a health payload) before testing, and never stop a server you did not start."),
+				t("Playwright with a fixed port and `reuseExistingServer` has the same trap: check that the port is free before the suite runs.")
+			],
+			snippets: [
+				{ id: "dev-server-free-port", title: t("Free port, strict, checked"), language: "bash", code: devServerFreePort }
+			]
+		},
+		{
+			id: "telemaco-no-layout",
+			title: t("Telemaco has a DOM, not a layout"),
+			why: t("Telemaco runs real JavaScript and a real DOM but no layout engine: sizes are placeholders and computed styles come back as defaults. Canvas hit-testing and visual checks cannot be driven from it, `browser_evaluate` returns before a Promise settles, and pretending otherwise produces false passes."),
+			steps: [
+				t("Assert on structure and state: titles, element counts, text, console errors."),
+				t("Drive forms through the DOM, for example `form.requestSubmit()`."),
+				t("Cover canvas logic with unit tests, and ask a human for visual and phone-width checks (`Verified: manual`).")
+			],
+			snippets: [
+				{
+					id: "telemaco-dom-check",
+					title: t("A DOM-only check"),
+					language: "javascript",
+					code: telemacoDomCheck,
+					origin: { label: "Telemaco", url: "https://github.com/AlbertoBarrago/telemaco" }
+				}
+			]
+		},
+		{
+			id: "ui-language",
+			title: t("A real browser speaks the system language"),
+			why: t("A real Chrome opens the app in the system language. On an Italian Mac a selector like `title^=\"Rectangle\"` finds nothing, because the button now reads \"Rettangolo\", and the check fails for a reason that has nothing to do with the change."),
+			steps: [
+				t("Prefer selectors that do not depend on the language: structure, roles, `data-*` hooks you own."),
+				t("When the app has no stable hooks yet, force the `en-US` locale in the browser tool and say so in the verify skill.")
+			],
+			snippets: [
+				{ id: "language-independent-selectors", title: t("Fragile and robust selectors"), language: "javascript", code: languageIndependentSelectors }
+			]
+		},
+		{
+			id: "lint-untracked",
+			title: t("Untracked editor folders break the linter"),
+			why: t("`biome check .` walks every folder in the working tree, including local editor settings and scratch directories that are not part of the project, and fails on them. The agent then \"fixes\" files nobody asked it to touch, or reports a red lint that is not real."),
+			steps: [
+				t("Lint exactly what git knows about: tracked files plus new, non-ignored ones."),
+				t("Use that command in the verify skill, so humans and agents run the same check.")
+			],
+			snippets: [
+				{ id: "biome-tracked-files", title: t("Lint only what git tracks"), language: "bash", code: biomeTrackedFiles }
+			]
+		}
+	],
+	roadmap: [
+		{
+			title: t("Stop hook in observe mode"),
+			summary: t("A global hook that logs when a session ends without verification, without blocking anything yet, so false positives surface before it ever enforces.")
+		},
+		{
+			title: t("A REVIEW.md per repo"),
+			summary: t("What the reviewer should look at for this code, always read from the base branch so a change cannot rewrite its own review rules.")
+		},
+		{
+			title: t("One reviewer, several rounds"),
+			summary: t("Tune a single reviewer and feed each round the findings and failures of the previous ones, instead of stacking parallel reviewers.")
+		},
+		{
+			title: t("A diff-triggered reliability checklist"),
+			summary: t("Checklist items with a trigger readable from a diff, matched through Serval's blast radius, so only the few relevant checks run on each change.")
+		},
+		{
+			title: t("Adopt Playwright MCP"),
+			summary: t("Move the verify skills that drive local apps from Telemaco to Playwright MCP, starting with Markasso.")
+		},
+		{
+			title: t("Audit Telemaco"),
+			summary: t("Slim Telemaco down to what it does best: reading the web, search and stealth fetches.")
+		}
+	]
+};
+
 const links = {
 	github: "https://github.com/AlbertoBarrago",
 	email: `mailto:${email}`,
@@ -266,6 +512,7 @@ export {
 	openSource,
 	brewFormulas,
 	utils,
+	howWeBuild,
 	links,
 	version,
 	downloadCv

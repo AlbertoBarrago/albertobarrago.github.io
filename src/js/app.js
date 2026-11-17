@@ -7,8 +7,9 @@ import { language, locale, homePath, articlePath, articlesIndexPath, privacyPath
 
 import {
 	name, role, location, profile, skills, experience,
-	openSource, brewFormulas, utils, links, version, downloadCv,
+	openSource, brewFormulas, utils, howWeBuild, links, version, downloadCv,
 } from './index.js';
+import { inlineMarkup, guideDiagrams, wrapIndex } from './how-we-build.js';
 import { initSpaceInvaders } from './games/spaceInvaders.js';
 import { initTetris } from './games/tetris.js';
 import { initPong } from './games/pong.js';
@@ -39,7 +40,7 @@ const MUSIC_PICKS = Object.freeze([
 	['The Rapture Pt.III', '&ME'],
 ]);
 const COMMAND_NAMES = Object.freeze([
-	'help', 'about', 'skills', 'experience', 'projects', 'articles', 'utils', 'contact', 'cv', 'privacy',
+	'help', 'about', 'skills', 'experience', 'projects', 'articles', 'howwebuild', 'utils', 'contact', 'cv', 'privacy',
 	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear', 'rss', 'music',
 ]);
 const MOBILE_COMMANDS = Object.freeze([
@@ -225,6 +226,7 @@ function helpHTML() {
 		['experience', t("Professional timeline")],
 		['projects', t("Selected open-source work and Homebrew formulae")],
 		['articles', t("Technical articles and notes")],
+		['howwebuild', t("A practical guide to working with coding agents")],
 		['rss', t("Subscribe to the articles feed")],
 		['music', t("Listen to a track I've picked")],
 		['utils', t("Useful free resources and links")],
@@ -472,8 +474,9 @@ function closeBlogIndex() {
 function syncOverlayInert() {
 	const reader = document.getElementById('article-reader');
 	const blogIndex = document.getElementById('blog-index');
+	const diagramViewer = document.getElementById('diagram-viewer');
 	const terminal = app.querySelector('.terminal');
-	if (terminal instanceof HTMLElement) terminal.inert = Boolean(reader || blogIndex);
+	if (terminal instanceof HTMLElement) terminal.inert = Boolean(reader || blogIndex || diagramViewer);
 	if (blogIndex) blogIndex.inert = Boolean(reader);
 }
 
@@ -693,10 +696,10 @@ function articleURL(slug) {
 	return `${window.location.origin}${articlePath(slug, metaLanguage(slug))}`;
 }
 
-/** @param {HTMLElement} button */
-function flashActionLabel(button) {
+/** @param {HTMLElement} button @param {string} [label] */
+function flashActionLabel(button, label = t("copied ✓")) {
 	const original = button.textContent;
-	button.textContent = t("copied ✓");
+	button.textContent = label;
 	button.disabled = true;
 	window.setTimeout(() => {
 		button.textContent = original;
@@ -741,6 +744,159 @@ ${utils.map((group) => `<div class="utils-group">
 </div>`).join('')}</div>`;
 }
 
+/** @param {import('./how-we-build.js').GuideSnippet} snippet @returns {string} */
+function guideSnippetHTML(snippet) {
+	const bar = `<div class="guide-snippet-bar"><span class="guide-snippet-lang">${escapeHTML(snippet.language)}</span><button class="reader-action guide-copy" type="button" data-action="copy-snippet">${t('copy')}</button></div>`;
+	const body = `${bar}<pre class="guide-code"><code>${escapeHTML(snippet.code)}</code></pre>${snippet.origin
+		? `<p class="guide-origin">${t('from')} ${snippet.origin.url
+			? `<a class="terminal-link" href="${snippet.origin.url}" target="_blank" rel="noopener noreferrer">${escapeHTML(snippet.origin.label)} ↗</a>`
+			: escapeHTML(snippet.origin.label)}</p>`
+		: ''}`;
+	return snippet.collapsed
+		? `<details class="guide-snippet"><summary class="guide-snippet-title">${inlineMarkup(snippet.title)}</summary>${body}</details>`
+		: `<div class="guide-snippet"><div class="guide-snippet-title">${inlineMarkup(snippet.title)}</div>${body}</div>`;
+}
+
+/**
+ * One practice or pitfall. Sections are found by `data-guide-id`, not by DOM
+ * id: the command can run several times, so the same section may be in the
+ * terminal log more than once.
+ * @param {import('./how-we-build.js').GuideSection} section
+ * @param {number} index
+ * @returns {string}
+ */
+function guideSectionHTML(section, index) {
+	const diagrams = (section.diagrams ?? []).map((diagram) => `<figure class="guide-figure">
+	<a href="${diagram.src}" target="_blank" rel="noopener" data-action="open-diagram" data-diagram="${GUIDE_DIAGRAMS.indexOf(diagram)}" aria-label="${t('Open diagram')}: ${escapeHTML(diagram.caption)}"><img src="${diagram.src}" alt="${escapeHTML(diagram.alt)}" loading="lazy" decoding="async"></a>
+	<figcaption>${inlineMarkup(diagram.caption)} <a class="terminal-link" href="${diagram.source}" download>${t('Markasso source')}</a></figcaption>
+</figure>`).join('');
+	return `<section class="guide-section" data-guide-id="${section.id}">
+	<h2 class="guide-title"><span class="guide-number">${String(index + 1).padStart(2, '0')}</span>${inlineMarkup(section.title)}</h2>
+	<div class="guide-label">${t('why')}</div>
+	<p class="guide-why">${inlineMarkup(section.why)}</p>
+	<div class="guide-label">${t('how')}</div>
+	<ol class="guide-steps" role="list">${section.steps.map((step) => `<li>${inlineMarkup(step)}</li>`).join('')}</ol>
+	${section.snippets.map(guideSnippetHTML).join('')}
+	${diagrams}
+</section>`;
+}
+
+/** Slides of the diagram viewer, in page order. */
+const GUIDE_DIAGRAMS = guideDiagrams(howWeBuild);
+/** Index of the slide on screen while the viewer is open. */
+let diagramIndex = 0;
+/** @type {HTMLElement | null} Element that opened the viewer, refocused on close. */
+let diagramOrigin = null;
+
+/** @returns {string} */
+function diagramViewerHTML() {
+	const multiple = GUIDE_DIAGRAMS.length > 1;
+	return `<div class="diagram-viewer" id="diagram-viewer" role="dialog" aria-modal="true" aria-label="${t('Diagram viewer')}">
+	<div class="article-reader-topbar">
+		<button class="reader-back" type="button" data-action="close-diagram">${t('close')}</button>
+		<span class="diagram-viewer-count" aria-live="polite"></span>
+	</div>
+	<div class="diagram-viewer-stage">
+		${multiple ? `<button class="diagram-viewer-nav" type="button" data-action="diagram-prev" aria-label="${t('previous diagram')}">‹</button>` : ''}
+		<figure class="diagram-viewer-figure"><img class="diagram-viewer-image" src="" alt=""><figcaption class="diagram-viewer-caption"></figcaption></figure>
+		${multiple ? `<button class="diagram-viewer-nav" type="button" data-action="diagram-next" aria-label="${t('next diagram')}">›</button>` : ''}
+	</div>
+</div>`;
+}
+
+/**
+ * Shows slide `index` (wrapped) in the open viewer, updating it in place so
+ * the focused control keeps its focus while browsing.
+ * @param {number} index
+ */
+function showDiagram(index) {
+	const viewer = document.getElementById('diagram-viewer');
+	if (!viewer || GUIDE_DIAGRAMS.length === 0) return;
+	diagramIndex = wrapIndex(index, GUIDE_DIAGRAMS.length);
+	const diagram = GUIDE_DIAGRAMS[diagramIndex];
+	const image = /** @type {HTMLImageElement} */ (viewer.querySelector('.diagram-viewer-image'));
+	image.src = diagram.src;
+	image.alt = diagram.alt;
+	/** @type {HTMLElement} */ (viewer.querySelector('.diagram-viewer-caption')).innerHTML = inlineMarkup(diagram.caption);
+	/** @type {HTMLElement} */ (viewer.querySelector('.diagram-viewer-count')).textContent = `${diagramIndex + 1} / ${GUIDE_DIAGRAMS.length}`;
+}
+
+/** @param {number} index @param {HTMLElement} origin */
+function openDiagramViewer(index, origin) {
+	diagramOrigin = origin;
+	const viewer = document.getElementById('diagram-viewer') ?? appendOverlay(diagramViewerHTML());
+	showDiagram(index);
+	syncOverlayInert();
+	/** @type {HTMLElement} */ (viewer.querySelector('[data-action="close-diagram"]')).focus({ preventScroll: true });
+}
+
+function closeDiagramViewer() {
+	document.getElementById('diagram-viewer')?.remove();
+	syncOverlayInert();
+	diagramOrigin?.focus({ preventScroll: true });
+	diagramOrigin = null;
+}
+
+/** @param {import('./how-we-build.js').GuideSection[]} sections @returns {string} */
+function guideIndexHTML(sections) {
+	return sections.map((section) =>
+		`<li><button class="reader-nav-link" type="button" data-action="goto-guide" data-target="${section.id}">${inlineMarkup(section.title)}</button></li>`
+	).join('');
+}
+
+/**
+ * Renders the "How we build" guide from `howWeBuild` data: an index, the
+ * practices, the pitfalls, and a short roadmap.
+ * @returns {string}
+ */
+function howWeBuildHTML() {
+	const { practices, pitfalls, roadmap, inspiration, updated } = howWeBuild;
+	const credit = inspiration.url
+		? `<a class="terminal-link" href="${inspiration.url}" target="_blank" rel="noopener noreferrer">${escapeHTML(inspiration.label)} ↗</a>`
+		: `<em>${escapeHTML(inspiration.label)}</em>`;
+	return `<div class="guide">
+<div class="output-title">${t('How we build')}</div>
+<p class="prose">${t('A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.')}</p>
+<p class="guide-meta">${t('Inspired by')} ${credit} · ${t('updated')} <time datetime="${updated}">${formatArticleDate(updated)}</time></p>
+<nav class="guide-index" aria-label="${t('Guide contents')}">
+	<div class="utils-category">${t('Practices')}</div><ol role="list">${guideIndexHTML(practices)}</ol>
+	<div class="utils-category">${t('Pitfalls')}</div><ol role="list">${guideIndexHTML(pitfalls)}</ol>
+</nav>
+${practices.map(guideSectionHTML).join('')}
+<div class="output-title output-title-spaced">${t('Pitfalls we hit')}</div>
+${pitfalls.map(guideSectionHTML).join('')}
+<div class="output-title output-title-spaced">${t('Next up')}</div>
+<ul class="guide-roadmap" role="list">${roadmap.map((item) => `<li><span class="guide-roadmap-title">${inlineMarkup(item.title)}</span><p>${inlineMarkup(item.summary)}</p></li>`).join('')}</ul>
+</div>`;
+}
+
+/**
+ * Copies the code of the snippet that holds `button`. When the clipboard is
+ * unavailable (insecure context, denied permission) the code is selected
+ * instead, so the reader can copy it by hand.
+ * @param {HTMLElement} button
+ */
+async function copySnippet(button) {
+	const code = button.closest('.guide-snippet')?.querySelector('code');
+	if (!code) return;
+	try {
+		await navigator.clipboard.writeText(code.textContent ?? '');
+		flashActionLabel(button);
+	} catch {
+		const range = document.createRange();
+		range.selectNodeContents(code);
+		const selection = window.getSelection();
+		selection?.removeAllRanges();
+		selection?.addRange(range);
+		flashActionLabel(button, t('selected: copy it'));
+	}
+}
+
+/** @param {HTMLElement} trigger @param {string} id */
+function scrollToGuideSection(trigger, id) {
+	trigger.closest('.guide')?.querySelector(`[data-guide-id="${id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function contactHTML() {
 	return `<div class="output-title">${t("Let's build something useful")}</div>
 <div class="key-value"><span class="label">email</span><a class="terminal-link" href="${links.email}">albertobarrago@gmail.com</a>
@@ -765,6 +921,7 @@ function treeHTML() {
 ├── <button class="inline-command file" data-command="experience">experience.log</button>
 ├── <button class="inline-command directory" data-command="projects">projects/</button>
 ├── <button class="inline-command directory" data-command="articles">articles/</button>
+├── <button class="inline-command file" data-command="howwebuild">how-we-build.md</button>
 ├── <button class="inline-command directory" data-command="utils">utils/</button>
 ├── <button class="inline-command file" data-command="contact">contact.vcf</button>
 ├── <button class="inline-command file" data-command="cv">albertobarrago_cv.pdf</button>
@@ -864,7 +1021,7 @@ ${fields.map(([label, value]) =>
 }
 
 function lsHTML() {
-	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="articles">articles/</button><button class="inline-command directory" data-command="utils">utils/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
+	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="articles">articles/</button><button class="inline-command file" data-command="howwebuild">how-we-build.md</button><button class="inline-command directory" data-command="utils">utils/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
 }
 
 /** @param {readonly string[]} art @param {number} intensity @returns {string} */
@@ -976,7 +1133,7 @@ function executeCommand(rawCommand) {
 
 	const renderers = /** @type {Record<string, () => string>} */ ({
 		help: helpHTML, skills: skillsHTML, experience: experienceHTML,
-		projects: projectsHTML, utils: utilsHTML, contact: contactHTML, games: gamesHTML,
+		projects: projectsHTML, howwebuild: howWeBuildHTML, utils: utilsHTML, contact: contactHTML, games: gamesHTML,
 		ls: lsHTML, tree: treeHTML, neofetch: neofetchHTML,
 	});
 	if (renderers[command]) {
@@ -1261,6 +1418,36 @@ app.addEventListener('click', (event) => {
 		copyArticleLink(copyTarget.dataset.slug, copyTarget);
 		return;
 	}
+	const diagramTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="open-diagram"]'));
+	// Modified or middle clicks keep the link's default: the SVG in a new tab.
+	if (diagramTarget && !(event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)) {
+		event.preventDefault();
+		openDiagramViewer(Number(diagramTarget.dataset.diagram), diagramTarget);
+		return;
+	}
+	if (target.closest('[data-action="diagram-prev"]')) {
+		showDiagram(diagramIndex - 1);
+		return;
+	}
+	if (target.closest('[data-action="diagram-next"]')) {
+		showDiagram(diagramIndex + 1);
+		return;
+	}
+	// The close button, or a click on the empty stage around the diagram.
+	if (target.closest('[data-action="close-diagram"]') || target.classList.contains('diagram-viewer-stage')) {
+		closeDiagramViewer();
+		return;
+	}
+	const snippetCopyTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="copy-snippet"]'));
+	if (snippetCopyTarget) {
+		copySnippet(snippetCopyTarget);
+		return;
+	}
+	const guideTarget = /** @type {HTMLElement | null} */ (target.closest('[data-action="goto-guide"]'));
+	if (guideTarget?.dataset.target) {
+		scrollToGuideSection(guideTarget, guideTarget.dataset.target);
+		return;
+	}
 	if (target.closest('[data-action="toggle-toc"]')) {
 		document.getElementById('reader-toc')?.classList.toggle('is-open');
 		return;
@@ -1286,6 +1473,15 @@ app.addEventListener('pointercancel', releaseGameControl);
 app.addEventListener('lostpointercapture', releaseGameControl);
 window.addEventListener('blur', releaseAllGameControls);
 document.addEventListener('keydown', (event) => {
+	// The viewer sits above everything else, so it owns these keys while open.
+	if (document.getElementById('diagram-viewer')) {
+		if (event.key === 'Escape') closeDiagramViewer();
+		else if (event.key === 'ArrowLeft') showDiagram(diagramIndex - 1);
+		else if (event.key === 'ArrowRight') showDiagram(diagramIndex + 1);
+		else return;
+		event.preventDefault();
+		return;
+	}
 	if (event.key === 'Escape' && document.getElementById('game-overlay')) exitGame();
 	if (event.key === 'Escape' && document.getElementById('article-reader')) closeArticleReader();
 	else if (event.key === 'Escape' && document.getElementById('blog-index')) {

@@ -23,14 +23,14 @@ No linter is configured. Type checking is JSDoc-based through `jsconfig.json` (e
 Single-page app with event delegation on a single root handler using `data-*` attributes. No framework.
 
 - **Entry point**: `index.html` imports `src/js/app.js` as ES module
-- **Data layer**: `src/js/index.js`: portfolio content (profile, skills, experience, projects, Homebrew formulae, utils, links)
+- **Data layer**: `src/js/index.js`: portfolio content (profile, skills, experience, projects, Homebrew formulae, utils, links, "How we build" guide)
 - **App controller**: `src/js/app.js`: boot, one `*HTML()` template function per command, `executeCommand` dispatching through the `renderers` map, Tab completion from `COMMAND_NAMES`, overlays (blog index, article reader, games)
 - **i18n**: `src/js/i18n.js`: language from the path (`/it/` is Italian), `t()` looks up the Italian string for an English source string, plus path helpers (`articlePath`, `privacyPath`, ...)
 - **Articles**: Markdown in `src/content/articles/` (Italian versions in `src/content/articles/it/`), front matter `title`, `date`, `tags`, `label`. Rendered to HTML at build/dev time by the Vite plugin in `vite.config.js` (`marked`, Node only), loaded by `src/js/articles.js`
 - **Prerender**: `scripts/prerender-articles.mjs` runs after `vite build` and writes a static page per article and for the blog index (meta, Open Graph, JSON-LD, `<noscript>` body), plus `sitemap.xml` and `feed.xml`
 - **Games**: `src/js/games/`: self-contained Canvas modules (Space Invaders, Tetris, Pong, Flappy Bird), each init function returns a cleanup function
 - **Styles**: `src/styles/main.css` (reset) + `src/styles/page.css` (design tokens on `:root`, component styles, CRT overlay, mobile layout at 680px)
-- **Static assets**: `static/` is Vite's `publicDir`, copied as is (favicon, CV PDF, robots.txt, privacy pages, app update feeds under `static/updates/`)
+- **Static assets**: `static/` is Vite's `publicDir`, copied as is (favicon, CV PDF, robots.txt, privacy pages, app update feeds under `static/updates/`, guide diagrams under `static/how-we-build/`)
 
 ## Markasso for Mac release notes
 
@@ -46,6 +46,10 @@ Single-page app with event delegation on a single root handler using `data-*` at
 - **Content is data**: sections render from arrays in `index.js`; adding an item means editing data, not templates
 - **Game registry**: `GAME_INIT` maps game names to factory functions
 - **Local storage** for game high scores and blog filters
+
+## "How we build" guide
+
+The `howwebuild` command renders `howWeBuild` from `src/js/index.js`: a guide organized by practice (and pitfalls), each with `why`, `steps` and blocks to copy, plus a short roadmap. Types and the inline markup helper live in `src/js/how-we-build.js`. Prose goes through `t()`; the copyable blocks are raw files in `src/content/how-we-build/`, imported with `?raw`, and stay in English. To update a block, edit its file; to add a practice, add an object to the data. `src/js/how-we-build.test.js` checks the data, the Italian translations, and that blocks contain no personal paths, emails or private config (the site is public). Diagrams are SVGs drawn with Markasso and exported to `static/how-we-build/`, with the Markasso source (`.markasso`, open it with File > Open or the Markasso MCP `diagram_open`) next to each SVG so it can be reopened and re-exported. Diagram labels are English only.
 
 ## Git Workflow
 

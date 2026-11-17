@@ -1,0 +1,12 @@
+// A real browser opens the app in the system language: on an Italian Mac the
+// "Rectangle" tool is titled "Rettangolo", and a selector on the label breaks.
+
+// Fragile: depends on the UI language.
+document.querySelector('#toolbar button[title^="Rectangle"]');
+
+// Robust: depends on structure or on attributes you own.
+document.querySelector('#toolbar [data-tool="rectangle"]');
+document.querySelector('#toolbar button:nth-of-type(3)');
+
+// If the app has no stable hooks yet, force the locale instead
+// (Playwright: contextOptions.locale = "en-US") and say so in the verify skill.
