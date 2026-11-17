@@ -51,8 +51,8 @@
 		}
 		</script>
 
-  <script type="module" crossorigin src="/assets/index-CuY8qoes.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BPmgbKRA.css">
+  <script type="module" crossorigin src="/assets/index-DdZanZPq.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BQ45ftWU.css">
 <link rel="alternate" hreflang="en" href="https://albz.it/how-we-build/" />
 <link rel="alternate" hreflang="it" href="https://albz.it/it/how-we-build/" />
 <link rel="alternate" hreflang="x-default" href="https://albz.it/how-we-build/" />
@@ -80,7 +80,7 @@
 	<p class="guide-why">An agent does what its instructions make cheap. Without written rules it declares victory on a green build, retries a flaky test until it passes, or edits the test instead of the code. A few explicit lines in the global CLAUDE.md change the default for every session.</p>
 	<div class="guide-label">how</div>
 	<ol class="guide-steps" role="list"><li>Put the rules in the global <code>~/.claude/CLAUDE.md</code>, so they apply to every repo, and keep project specifics in the repo&#039;s own CLAUDE.md.</li><li>Verify by running: the repo&#039;s <code>verify</code> skill when there is one, otherwise drive the real app.</li><li>Three rounds, then stop: after three failed fix attempts the agent hands over the failing output and what it tried.</li><li>Keep the checks out of reach: a change must never weaken the tests, lint config or <code>verify</code> skill that judge it in the same commit.</li></ol>
-	<div class="guide-snippet"><div class="guide-snippet-title">Excerpt for your CLAUDE.md</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>## Verification
+	<div class="guide-snippet"><div class="guide-snippet-title">Excerpt for your CLAUDE.md</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>## Verification
 - After any non-trivial change: run build/typecheck and relevant tests before declaring it done
 - If you can&#039;t verify, say so explicitly instead of assuming it works
 - Don&#039;t edit tests just to make them pass: if a test fails, understand why before touching it
@@ -104,7 +104,7 @@
 	<p class="guide-why">&quot;Run the app&quot; means something different in every repo. A <code>verify</code> skill writes it down once: the cheap checks, how to boot the real thing, which flows to drive and what to expect, so the agent collects evidence instead of guessing.</p>
 	<div class="guide-label">how</div>
 	<ol class="guide-steps" role="list"><li>Copy the template to <code>&lt;repo&gt;/.claude/skills/verify/SKILL.md</code> and replace every placeholder; delete the sections that do not apply.</li><li>Track it in git: ignore <code>.claude/*</code> but not <code>.claude/skills/</code>.</li><li>Run it twice in a row on a clean main before trusting it: it is your smoke test harness, it must be fast and deterministic.</li><li>Say what is out of scope (paid API calls, deploys, what the tools cannot see) and when to ask a human instead.</li><li>Every new project starts with <code>.claude/skills/verify</code> from the template, on day one.</li><li>In work or client repos you don&#039;t own, keep the skill local with <code>.git/info/exclude</code> and never commit it.</li></ol>
-	<div class="guide-snippet"><div class="guide-snippet-title">Template</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>---
+	<div class="guide-snippet"><div class="guide-snippet-title">Template</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>---
 name: verify
 description: Verify a change to &lt;PROJECT&gt; end to end before saying &quot;ready for testing&quot; or committing. Runs the cheap checks first, then drives the real &lt;app|CLI|service&gt; and reports the evidence plus the Verified trailer value.
 ---
@@ -165,7 +165,7 @@ cp &lt;path-to-your-template&gt;/SKILL.md .claude/skills/verify/SKILL.md
 # .git/info/exclude works like .gitignore but is never shared.
 echo &quot;.claude/skills/verify/&quot; &gt;&gt; .git/info/exclude
 git status --short .claude   # must print nothing
-</code></pre></div><div class="guide-snippet"><div class="guide-snippet-title">Section for an end-to-end Playwright suite</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>## 2. End-to-end (Playwright)
+</code></pre></div><div class="guide-snippet"><div class="guide-snippet-title">Section for an end-to-end Playwright suite</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>## 2. End-to-end (Playwright)
 
 Before running the suite, make sure the port in `playwright.config` is free. With `reuseExistingServer: true`, Playwright happily tests whatever already answers on that port: another project, or this project on another branch.
 
@@ -178,7 +178,7 @@ Before running the suite, make sure the port in `playwright.config` is free. Wit
 - `BROWSER=none` keeps `vite --open` from opening browser windows during the run.
 - `Executable doesn&#039;t exist at ...` means the browser build for this Playwright version is missing. It is setup, not a test failure: run `npx playwright install chromium`, then run the suite again. Do not count it as one of the three rounds.
 - Use selectors that do not depend on the UI language (roles with stable names, `data-*` hooks), or set `use: { locale: &#039;en-US&#039; }` in the config.
-</code></pre></div><details class="guide-snippet"><summary class="guide-snippet-title">Real example: Markasso, a web app driven through Telemaco</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>---
+</code></pre></div><details class="guide-snippet"><summary class="guide-snippet-title">Real example: Markasso, a web app driven through Telemaco</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>---
 name: verify
 description: Verify a change to Markasso before saying &quot;ready for testing&quot; or committing. Runs typecheck, Biome (check only) and vitest, the MCP build when mcp/ changed, then boots the web app on a private dev server and checks it loads cleanly with Telemaco. Reports the evidence plus the Verified trailer value.
 ---
@@ -239,7 +239,7 @@ Reply with:
 - each command with its exit code, and the vitest totals;
 - the Telemaco results for steps 2.1 to 2.3;
 - the `Verified:` trailer value: `verify` when steps 1 and 2 passed, `tests` when only step 1 ran, `manual` when the user checked a visible change, `none (&lt;reason&gt;)` otherwise.
-</code></pre><p class="guide-origin">from <a class="terminal-link" href="https://github.com/AlbertoBarrago/markasso" target="_blank" rel="noopener noreferrer">Markasso ↗</a></p></details><details class="guide-snippet"><summary class="guide-snippet-title">Real example: Themis, a CLI driven in a temp project</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>---
+</code></pre><p class="guide-origin">from <a class="terminal-link" href="https://github.com/AlbertoBarrago/markasso" target="_blank" rel="noopener noreferrer">Markasso ↗</a></p></details><details class="guide-snippet"><summary class="guide-snippet-title">Real example: Themis, a CLI driven in a temp project</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>---
 name: verify
 description: Verify a change to Themis end to end before saying &quot;ready for testing&quot; or committing. Runs npm run check, rebuilds dist/, then drives the real CLI (check, init, status) in a temp project and reports the evidence plus the Verified trailer value.
 ---

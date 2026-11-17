@@ -51,8 +51,8 @@
 		}
 		</script>
 
-  <script type="module" crossorigin src="/assets/index-CuY8qoes.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-BPmgbKRA.css">
+  <script type="module" crossorigin src="/assets/index-DdZanZPq.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BQ45ftWU.css">
 <link rel="alternate" hreflang="en" href="https://albz.it/how-we-build/" />
 <link rel="alternate" hreflang="it" href="https://albz.it/it/how-we-build/" />
 <link rel="alternate" hreflang="x-default" href="https://albz.it/how-we-build/" />
@@ -80,7 +80,7 @@
 	<p class="guide-why">Un agente fa ciò che le istruzioni gli rendono facile. Senza regole scritte dichiara vittoria con una build verde, ripete un test instabile finché passa, o modifica il test invece del codice. Poche righe esplicite nel CLAUDE.md globale cambiano il comportamento predefinito di ogni sessione.</p>
 	<div class="guide-label">come</div>
 	<ol class="guide-steps" role="list"><li>Metti le regole nel <code>~/.claude/CLAUDE.md</code> globale, così valgono per ogni repository, e lascia le specifiche di progetto nel CLAUDE.md del repository.</li><li>Verificare eseguendo: la skill <code>verify</code> del repository quando c’è, altrimenti pilotare la vera app.</li><li>Tre tentativi, poi stop: dopo tre correzioni fallite l’agente consegna l’output dell’errore e cosa ha provato.</li><li>Tieni i controlli fuori portata: una modifica non deve mai indebolire, nello stesso commit, i test, la configurazione di lint o la skill <code>verify</code> che la giudicano.</li></ol>
-	<div class="guide-snippet"><div class="guide-snippet-title">Estratto per il tuo CLAUDE.md</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>## Verification
+	<div class="guide-snippet"><div class="guide-snippet-title">Estratto per il tuo CLAUDE.md</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>## Verification
 - After any non-trivial change: run build/typecheck and relevant tests before declaring it done
 - If you can&#039;t verify, say so explicitly instead of assuming it works
 - Don&#039;t edit tests just to make them pass: if a test fails, understand why before touching it
@@ -104,7 +104,7 @@
 	<p class="guide-why">&quot;Esegui l’app&quot; significa una cosa diversa in ogni repository. Una skill <code>verify</code> lo scrive una volta sola: i controlli rapidi, come avviare il programma vero, quali flussi pilotare e cosa aspettarsi, così l’agente raccoglie prove invece di tirare a indovinare.</p>
 	<div class="guide-label">come</div>
 	<ol class="guide-steps" role="list"><li>Copia il modello in <code>&lt;repo&gt;/.claude/skills/verify/SKILL.md</code> e sostituisci ogni segnaposto; elimina le sezioni che non servono.</li><li>Tienila in git: ignora <code>.claude/*</code> ma non <code>.claude/skills/</code>.</li><li>Eseguila due volte di fila su un main pulito prima di fidarti: è il tuo smoke test, deve essere veloce e deterministica.</li><li>Scrivi cosa è fuori ambito (chiamate API a pagamento, deploy, ciò che gli strumenti non vedono) e quando invece chiedere a una persona.</li><li>Ogni nuovo progetto parte con <code>.claude/skills/verify</code> dal modello, fin dal primo giorno.</li><li>Nei repository di lavoro o di clienti che non sono tuoi, tieni la skill in locale con <code>.git/info/exclude</code> e non committarla mai.</li></ol>
-	<div class="guide-snippet"><div class="guide-snippet-title">Modello</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>---
+	<div class="guide-snippet"><div class="guide-snippet-title">Modello</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>---
 name: verify
 description: Verify a change to &lt;PROJECT&gt; end to end before saying &quot;ready for testing&quot; or committing. Runs the cheap checks first, then drives the real &lt;app|CLI|service&gt; and reports the evidence plus the Verified trailer value.
 ---
@@ -165,7 +165,7 @@ cp &lt;path-to-your-template&gt;/SKILL.md .claude/skills/verify/SKILL.md
 # .git/info/exclude works like .gitignore but is never shared.
 echo &quot;.claude/skills/verify/&quot; &gt;&gt; .git/info/exclude
 git status --short .claude   # must print nothing
-</code></pre></div><div class="guide-snippet"><div class="guide-snippet-title">Sezione per una suite end-to-end con Playwright</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>## 2. End-to-end (Playwright)
+</code></pre></div><div class="guide-snippet"><div class="guide-snippet-title">Sezione per una suite end-to-end con Playwright</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>## 2. End-to-end (Playwright)
 
 Before running the suite, make sure the port in `playwright.config` is free. With `reuseExistingServer: true`, Playwright happily tests whatever already answers on that port: another project, or this project on another branch.
 
@@ -178,7 +178,7 @@ Before running the suite, make sure the port in `playwright.config` is free. Wit
 - `BROWSER=none` keeps `vite --open` from opening browser windows during the run.
 - `Executable doesn&#039;t exist at ...` means the browser build for this Playwright version is missing. It is setup, not a test failure: run `npx playwright install chromium`, then run the suite again. Do not count it as one of the three rounds.
 - Use selectors that do not depend on the UI language (roles with stable names, `data-*` hooks), or set `use: { locale: &#039;en-US&#039; }` in the config.
-</code></pre></div><details class="guide-snippet"><summary class="guide-snippet-title">Esempio reale: Markasso, un’app web pilotata con Telemaco</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>---
+</code></pre></div><details class="guide-snippet"><summary class="guide-snippet-title">Esempio reale: Markasso, un’app web pilotata con Telemaco</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>---
 name: verify
 description: Verify a change to Markasso before saying &quot;ready for testing&quot; or committing. Runs typecheck, Biome (check only) and vitest, the MCP build when mcp/ changed, then boots the web app on a private dev server and checks it loads cleanly with Telemaco. Reports the evidence plus the Verified trailer value.
 ---
@@ -239,7 +239,7 @@ Reply with:
 - each command with its exit code, and the vitest totals;
 - the Telemaco results for steps 2.1 to 2.3;
 - the `Verified:` trailer value: `verify` when steps 1 and 2 passed, `tests` when only step 1 ran, `manual` when the user checked a visible change, `none (&lt;reason&gt;)` otherwise.
-</code></pre><p class="guide-origin">da <a class="terminal-link" href="https://github.com/AlbertoBarrago/markasso" target="_blank" rel="noopener noreferrer">Markasso ↗</a></p></details><details class="guide-snippet"><summary class="guide-snippet-title">Esempio reale: Themis, una CLI pilotata in un progetto temporaneo</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>---
+</code></pre><p class="guide-origin">da <a class="terminal-link" href="https://github.com/AlbertoBarrago/markasso" target="_blank" rel="noopener noreferrer">Markasso ↗</a></p></details><details class="guide-snippet"><summary class="guide-snippet-title">Esempio reale: Themis, una CLI pilotata in un progetto temporaneo</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>---
 name: verify
 description: Verify a change to Themis end to end before saying &quot;ready for testing&quot; or committing. Runs npm run check, rebuilds dist/, then drives the real CLI (check, init, status) in a temp project and reports the evidence plus the Verified trailer value.
 ---
