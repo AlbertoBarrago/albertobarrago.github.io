@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Come costruiamo | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="Una guida pratica a come lavoro con gli agenti di codice. Ogni pratica spiega perché conta, come si fa, e ti dà un blocco da copiare." />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/it/how-we-build/" />
+	<meta property="og:title" content="Come costruiamo | Alberto Barrago" />
+	<meta property="og:description" content="Una guida pratica a come lavoro con gli agenti di codice. Ogni pratica spiega perché conta, come si fa, e ti dà un blocco da copiare." />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Come costruiamo | Alberto Barrago" />
+	<meta name="twitter:description" content="Una guida pratica a come lavoro con gli agenti di codice. Ogni pratica spiega perché conta, come si fa, e ti dà un blocco da copiare." />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/it/how-we-build/" />
+
+	<!-- RSS feed -->
+	<link rel="alternate" type="application/rss+xml" title="Alberto Barrago | Articles" href="/feed.xml" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-CuY8qoes.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-BPmgbKRA.css">
+<link rel="alternate" hreflang="en" href="https://albz.it/how-we-build/" />
+<link rel="alternate" hreflang="it" href="https://albz.it/it/how-we-build/" />
+<link rel="alternate" hreflang="x-default" href="https://albz.it/how-we-build/" />
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"TechArticle","headline":"Come costruiamo","description":"Una guida pratica a come lavoro con gli agenti di codice. Ogni pratica spiega perché conta, come si fa, e ti dà un blocco da copiare.","datePublished":"2026-11-17","dateModified":"2026-11-17","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/it/how-we-build/","mainEntityOfPage":"https://albz.it/it/how-we-build/","inLanguage":"it"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article class="guide">
+<header class="guide-header">
+	<h1 class="blog-title" id="guide-title" tabindex="-1">Come costruiamo</h1>
+	<p class="blog-intro">Una guida pratica a come lavoro con gli agenti di codice. Ogni pratica spiega perché conta, come si fa, e ti dà un blocco da copiare.</p>
+	<p class="guide-meta">Ispirata a <em>Verification loops, del team di Claude Code di Anthropic</em> · aggiornata il <time datetime="2026-11-17">17/11/2026</time> · 6 pratiche · 4 insidie</p>
+	<aside class="guide-latest"><span class="guide-label">Ultima modifica</span> <time datetime="2026-11-17">17/11/2026</time><p>Prima edizione: sei pratiche, quattro insidie e una roadmap, su una pagina tutta sua con un link per ogni sezione.</p><a class="reader-nav-link" href="#changelog">tutte le modifiche →</a></aside>
+</header>
+<nav class="guide-contents" aria-label="Indice della guida"><div class="guide-toc-group">Pratiche</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#claude-md-rules">Regole di verifica nel CLAUDE.md</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verify-skill">Una skill verify in ogni repository</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verified-trailer">Un trailer Verified su ogni commit</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#browser-tool">Scegliere lo strumento browser</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#second-opinion">Un secondo parere con Codex o opencode</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#themis-gates">Themis: cancelli e un contratto bloccato</a></li></ol>
+<div class="guide-toc-group">Insidie</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#dev-server-port">La porta del dev server è di qualcun altro</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#telemaco-no-layout">Telemaco ha un DOM, non un layout</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#ui-language">Un browser vero parla la lingua del sistema</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#lint-untracked">Le cartelle locali dell’editor fanno fallire il linter</a></li></ol>
+<div class="guide-toc-group">Altro</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#next-up">Prossimi passi</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#changelog">Registro delle modifiche</a></li></ol></nav>
+<h2 class="guide-part">Pratiche</h2>
+<section class="guide-section" aria-labelledby="claude-md-rules">
+	<h2 class="guide-title" id="claude-md-rules"><span class="guide-number">01</span><span>Regole di verifica nel CLAUDE.md</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-adopted">adottata</span><span>aggiunta il <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#claude-md-rules">#</a></p>
+	<div class="guide-label">perché</div>
+	<p class="guide-why">Un agente fa ciò che le istruzioni gli rendono facile. Senza regole scritte dichiara vittoria con una build verde, ripete un test instabile finché passa, o modifica il test invece del codice. Poche righe esplicite nel CLAUDE.md globale cambiano il comportamento predefinito di ogni sessione.</p>
+	<div class="guide-label">come</div>
+	<ol class="guide-steps" role="list"><li>Metti le regole nel <code>~/.claude/CLAUDE.md</code> globale, così valgono per ogni repository, e lascia le specifiche di progetto nel CLAUDE.md del repository.</li><li>Verificare eseguendo: la skill <code>verify</code> del repository quando c’è, altrimenti pilotare la vera app.</li><li>Tre tentativi, poi stop: dopo tre correzioni fallite l’agente consegna l’output dell’errore e cosa ha provato.</li><li>Tieni i controlli fuori portata: una modifica non deve mai indebolire, nello stesso commit, i test, la configurazione di lint o la skill <code>verify</code> che la giudicano.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Estratto per il tuo CLAUDE.md</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>## Verification
+- After any non-trivial change: run build/typecheck and relevant tests before declaring it done
+- If you can&#039;t verify, say so explicitly instead of assuming it works
+- Don&#039;t edit tests just to make them pass: if a test fails, understand why before touching it
+- Add/update tests when changing public behavior
+- **Verify by running**: if the repo has a `.claude/skills/verify` skill, run it before saying &quot;ready for testing&quot;. Otherwise drive the real app (a browser automation tool for anything web) when the change is user-visible. Always state how the change was verified
+- **Three rounds, then stop**: if a check still fails after three fix attempts, stop and bring me in with the failing output and what you tried
+- **Flaky tests**: never add retries, sleeps or skips to make them pass. Find the root cause; if you can&#039;t, propose deleting the test with the reason written down, and wait for my confirmation
+- **Checks are out of reach**: a change must not weaken or rewrite, in the same commit, the existing tests, lint/typecheck config or `verify` skill that judge it (adding new tests for new behavior is fine). If an existing check genuinely needs changing, do it in a separate commit and flag it to me
+
+## Commit Messages
+- Every commit ends with a `Verified:` trailer stating how the change was checked: `verify` (verify skill or end-to-end run), `tests` (automated tests only), `manual` (I tested it), or `none (&lt;reason&gt;)`. It is a verification stamp, not an attribution line
+</code></pre></div>
+	<figure class="guide-figure">
+	<a href="/how-we-build/verification-loop.svg" target="_blank" rel="noopener" data-action="open-diagram" data-diagram="0" aria-label="Apri il diagramma: Il ciclo descritto da queste regole."><img src="/how-we-build/verification-loop.svg" alt="Diagramma di flusso: l’agente fa una modifica e la verifica eseguendo l’app. Se passa, la modifica è pronta per il test con il timbro Verified sul commit. Altrimenti l’agente corregge il codice e verifica di nuovo, fino a tre tentativi, poi si ferma e coinvolge la persona." loading="lazy" decoding="async"></a>
+	<figcaption>Il ciclo descritto da queste regole. <a class="terminal-link" href="/how-we-build/verification-loop.markasso" download>sorgente Markasso</a></figcaption>
+</figure>
+</section><section class="guide-section" aria-labelledby="verify-skill">
+	<h2 class="guide-title" id="verify-skill"><span class="guide-number">02</span><span>Una skill verify in ogni repository</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-adopted">adottata</span><span>aggiunta il <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#verify-skill">#</a></p>
+	<div class="guide-label">perché</div>
+	<p class="guide-why">&quot;Esegui l’app&quot; significa una cosa diversa in ogni repository. Una skill <code>verify</code> lo scrive una volta sola: i controlli rapidi, come avviare il programma vero, quali flussi pilotare e cosa aspettarsi, così l’agente raccoglie prove invece di tirare a indovinare.</p>
+	<div class="guide-label">come</div>
+	<ol class="guide-steps" role="list"><li>Copia il modello in <code>&lt;repo&gt;/.claude/skills/verify/SKILL.md</code> e sostituisci ogni segnaposto; elimina le sezioni che non servono.</li><li>Tienila in git: ignora <code>.claude/*</code> ma non <code>.claude/skills/</code>.</li><li>Eseguila due volte di fila su un main pulito prima di fidarti: è il tuo smoke test, deve essere veloce e deterministica.</li><li>Scrivi cosa è fuori ambito (chiamate API a pagamento, deploy, ciò che gli strumenti non vedono) e quando invece chiedere a una persona.</li><li>Ogni nuovo progetto parte con <code>.claude/skills/verify</code> dal modello, fin dal primo giorno.</li><li>Nei repository di lavoro o di clienti che non sono tuoi, tieni la skill in locale con <code>.git/info/exclude</code> e non committarla mai.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Modello</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>---
+name: verify
+description: Verify a change to &lt;PROJECT&gt; end to end before saying &quot;ready for testing&quot; or committing. Runs the cheap checks first, then drives the real &lt;app|CLI|service&gt; and reports the evidence plus the Verified trailer value.
+---
+
+&lt;!--
+Copy it to &lt;repo&gt;/.claude/skills/verify/SKILL.md, replace every &lt;PLACEHOLDER&gt;,
+delete the sections that do not apply and this comment. Make sure .claude/skills/
+is tracked by git (ignore .claude/* but not .claude/skills/).
+Keep it fast and deterministic: run it twice in a row on a clean main before trusting it.
+--&gt;
+
+# Verify &lt;PROJECT&gt;
+
+Run the steps in order and stop at the first failure. Fix the code, not the check.
+
+## Rules
+
+- Never add retries, sleeps or skips, and never edit the existing tests, lint/typecheck config or this skill to make a step pass.
+- If a step still fails after three fix attempts, stop and report the failing output and what was tried.
+- Clean up what you started (servers, temp dirs) even when a step fails.
+
+## 1. Cheap checks
+
+    &lt;typecheck command&gt;
+    &lt;lint command, check-only, no auto-fix&gt;
+    &lt;test command&gt;
+
+## 2. Run it
+
+&lt;How to start the real thing: dev server, built CLI, local service. Where it listens, how to tell it is ready, how to stop it.&gt;
+
+Servers: pick a free port at runtime with `--strictPort` (or equivalent), fail the wait loop if your process dies, and check an identifying marker (page title, health payload) before testing. Other sessions and agents run their own servers: never reuse or stop one you did not start.
+
+Smoke flows (always):
+
+1. &lt;Flow&gt;: &lt;steps&gt;. Expected: &lt;observable result&gt;.
+2. &lt;Flow that must fail&gt;: &lt;steps&gt;. Expected: &lt;error, exit code&gt;.
+
+Flows for the changed area: &lt;where the feature map lives, e.g. docs/MANUAL.md&gt;. Pick the flows that cover the diff and check their expected results.
+
+Out of scope: &lt;commands this skill must not run, e.g. paid API calls, deploys&gt;.
+
+## 3. Report
+
+Reply with:
+
+- each command run with its exit code;
+- the evidence for every flow (output excerpt, screenshot path);
+- the `Verified:` trailer value: `verify` when steps 1 and 2 passed, `tests` when only step 1 ran, `none (&lt;reason&gt;)` otherwise.
+</code></pre></div><div class="guide-snippet"><div class="guide-snippet-title">Avvio del progetto, e skill solo locali per i repository non tuoi</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># New project: start with a verify skill from day one.
+mkdir -p .claude/skills/verify
+cp &lt;path-to-your-template&gt;/SKILL.md .claude/skills/verify/SKILL.md
+# Track the skill, ignore the rest of .claude/ (in .gitignore):
+#   .claude/*
+#   !.claude/skills/
+
+# Work or client repo you don&#039;t own: keep the skill local, never commit it.
+# .git/info/exclude works like .gitignore but is never shared.
+echo &quot;.claude/skills/verify/&quot; &gt;&gt; .git/info/exclude
+git status --short .claude   # must print nothing
+</code></pre></div><div class="guide-snippet"><div class="guide-snippet-title">Sezione per una suite end-to-end con Playwright</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>## 2. End-to-end (Playwright)
+
+Before running the suite, make sure the port in `playwright.config` is free. With `reuseExistingServer: true`, Playwright happily tests whatever already answers on that port: another project, or this project on another branch.
+
+    PORT=&lt;port from playwright.config webServer.url&gt;
+    if lsof -tiTCP:$PORT -sTCP:LISTEN &gt;/dev/null; then
+      echo &quot;port $PORT is busy: stop, do not test someone else&#039;s server&quot;; exit 1
+    fi
+    BROWSER=none npx playwright test
+
+- `BROWSER=none` keeps `vite --open` from opening browser windows during the run.
+- `Executable doesn&#039;t exist at ...` means the browser build for this Playwright version is missing. It is setup, not a test failure: run `npx playwright install chromium`, then run the suite again. Do not count it as one of the three rounds.
+- Use selectors that do not depend on the UI language (roles with stable names, `data-*` hooks), or set `use: { locale: &#039;en-US&#039; }` in the config.
+</code></pre></div><details class="guide-snippet"><summary class="guide-snippet-title">Esempio reale: Markasso, un’app web pilotata con Telemaco</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>---
+name: verify
+description: Verify a change to Markasso before saying &quot;ready for testing&quot; or committing. Runs typecheck, Biome (check only) and vitest, the MCP build when mcp/ changed, then boots the web app on a private dev server and checks it loads cleanly with Telemaco. Reports the evidence plus the Verified trailer value.
+---
+
+# Verify Markasso
+
+Run the steps in order from the repo root and stop at the first failure. Fix the code, not the check.
+
+## Rules
+
+- Never add retries, sleeps or skips, and never edit the existing tests, `biome.json`, `tsconfig*.json`, `vitest.config.ts` or this skill to make a step pass.
+- If a step still fails after three fix attempts, stop and report the failing output and what was tried.
+- Use `pnpm lint:ci`, never `pnpm lint`: the latter rewrites files.
+- Never reuse or stop a dev server you did not start: other sessions and agents run their own (5173 is usually the user&#039;s). Start your own on a free port picked at runtime and always stop it, even when a step fails.
+
+## 1. Cheap checks
+
+    pnpm typecheck
+    pnpm lint:ci
+    pnpm test
+
+`pnpm test` also runs `mcp/tests/`. If the diff touches `mcp/`, also build the server:
+
+    pnpm mcp:build
+
+## 2. Boot smoke (Telemaco)
+
+Start a private dev server on a free port and wait until it answers. The loop fails if the server dies, so a port taken in the meantime can never make you test someone else&#039;s server:
+
+    PORT=$(node -e &quot;const s=require(&#039;net&#039;).createServer();s.listen(0,()=&gt;{console.log(s.address().port);s.close()})&quot;)
+    pnpm dev --port $PORT --strictPort &gt; &lt;scratchpad&gt;/markasso-dev.log 2&gt;&amp;1 &amp;
+    PID=$!
+    until curl -fs -o /dev/null http://localhost:$PORT/; do
+      kill -0 $PID 2&gt;/dev/null || { tail -20 &lt;scratchpad&gt;/markasso-dev.log; exit 1; }
+      sleep 0.5
+    done
+    echo $PORT
+
+With the Telemaco MCP tools:
+
+1. `browser_navigate` to `http://localhost:$PORT/` with `waitUntil: networkidle0`. Expected: title starts with `Markasso` (any other title means you reached a server that is not yours: stop).
+2. `browser_console_messages`. Expected: no errors.
+3. `browser_evaluate`:
+
+       ({ canvas: !!document.getElementById(&#039;main&#039;), toolbarButtons: document.querySelectorAll(&#039;#toolbar button&#039;).length, rectangle: !!document.querySelector(&#039;#toolbar button[title^=&quot;Rectangle&quot;]&#039;) })
+
+   Expected: `canvas: true`, `toolbarButtons` greater than 0, `rectangle: true`.
+4. `browser_close`, then stop the server:
+
+       kill $(lsof -tiTCP:$PORT -sTCP:LISTEN)
+
+Out of scope: drawing or any interaction on the canvas. Telemaco has no layout engine (`getBoundingClientRect` returns placeholder values), so canvas hit-testing cannot be driven from it; canvas behavior is covered by the vitest suite. When the change is a visible canvas or UI behavior, say so in the report and ask the user for a manual check (`Verified: manual` once they confirm).
+
+## 3. Report
+
+Reply with:
+
+- each command with its exit code, and the vitest totals;
+- the Telemaco results for steps 2.1 to 2.3;
+- the `Verified:` trailer value: `verify` when steps 1 and 2 passed, `tests` when only step 1 ran, `manual` when the user checked a visible change, `none (&lt;reason&gt;)` otherwise.
+</code></pre><p class="guide-origin">da <a class="terminal-link" href="https://github.com/AlbertoBarrago/markasso" target="_blank" rel="noopener noreferrer">Markasso ↗</a></p></details><details class="guide-snippet"><summary class="guide-snippet-title">Esempio reale: Themis, una CLI pilotata in un progetto temporaneo</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code"><code>---
+name: verify
+description: Verify a change to Themis end to end before saying &quot;ready for testing&quot; or committing. Runs npm run check, rebuilds dist/, then drives the real CLI (check, init, status) in a temp project and reports the evidence plus the Verified trailer value.
+---
+
+# Verify Themis
+
+Run the steps in order from the repo root and stop at the first failure. Fix the code, not the check.
+
+## Rules
+
+- Never add retries, sleeps or skips, and never edit the existing tests, `biome.json`, `tsconfig*.json`, `vitest.config.ts` or this skill to make a step pass.
+- If a step still fails after three fix attempts, stop and report the failing output and what was tried.
+- Never delete `dist/`: `~/.local/bin/themis` links to `dist/cli/main.js`. Rebuilding in place is fine.
+- Do not run commands that call agents (`plan`, `tests`, `run`, `retro`): they cost money and minutes. Their logic is covered by the vitest suite with `FakeAgentRunner`/`FakeExecutor`.
+- Always remove the temp directory, even when a step fails.
+
+## 1. Cheap checks
+
+    npm run check
+
+(typecheck, Biome, vitest including `tests/e2e/`).
+
+## 2. Build
+
+    npm run build
+
+## 3. Drive the real CLI
+
+Run in bash (the commands rely on bash arrays and `PIPESTATUS`):
+
+    bash -c &#039;
+    set -u
+    C=(node &quot;$PWD/dist/cli/main.js&quot;)
+    T=$(mktemp -d)
+    trap &quot;rm -rf \&quot;$T\&quot;&quot; EXIT
+
+    &quot;${C[@]}&quot; check examples/webhook-service/spec.md; echo &quot;check-valid exit=$?&quot;
+
+    printf -- &quot;---\nthemis: 0.2\nstack: node-ts\n---\n# X\n&quot; &gt; &quot;$T/bad.md&quot;
+    &quot;${C[@]}&quot; check &quot;$T/bad.md&quot;; echo &quot;check-invalid exit=$?&quot;
+
+    cp examples/getting-started/spec.md &quot;$T/&quot;
+    cd &quot;$T&quot; &amp;&amp; git init -q
+    &quot;${C[@]}&quot; init; echo &quot;init exit=$?&quot;
+    &quot;${C[@]}&quot; status --json; echo &quot;status exit=$?&quot;
+    ls .themis
+    &#039;
+
+Expected:
+
+| Flow | Expected |
+|---|---|
+| check-valid | exit 0, `valid (6 acceptance criteria, ...)` |
+| check-invalid | exit 1, errors `invalid-field`, `unsupported-version`, `no-acceptance-criteria` |
+| init | exit 0, writes `.themis/agents/*.md`, `.gitignore`, installs dependencies (needs network for `npm install`), ends with `next: themis plan` |
+| status | exit 0, JSON with `spec.ok: true`, `plan: &quot;absent&quot;`, `contract.state: &quot;absent&quot;` |
+| .themis | contains `agents`, `guard.mjs`, `local.json`, `verify.sh` |
+
+If the change touches a command not listed above (for example `new`, `approve`, a new flag or a new diagnostic), add a run of that command against the temp project, with its expected exit code and output, to the report.
+
+## 4. Report
+
+Reply with:
+
+- each command with its exit code;
+- the relevant output lines for every flow, and any deviation from the table;
+- the `Verified:` trailer value: `verify` when steps 1 to 3 passed, `tests` when only step 1 ran, `none (&lt;reason&gt;)` otherwise.
+</code></pre><p class="guide-origin">da <a class="terminal-link" href="https://github.com/AlbertoBarrago/themis" target="_blank" rel="noopener noreferrer">Themis ↗</a></p></details>
+	
+</section><section class="guide-section" aria-labelledby="verified-trailer">
+	<h2 class="guide-title" id="verified-trailer"><span class="guide-number">03</span><span>Un trailer Verified su ogni commit</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-adopted">adottata</span><span>aggiunta il <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#verified-trailer">#</a></p>
+	<div class="guide-label">perché</div>
+	<p class="guide-why">A posteriori nessuno ricorda se un commit è stato eseguito, testato o solo compilato. Un trailer di una riga lo registra, e siccome <code>none</code> è ammesso, i commit non verificati restano onesti e facili da trovare.</p>
+	<div class="guide-label">come</div>
+	<ol class="guide-steps" role="list"><li>Chiudi ogni messaggio di commit con <code>Verified: verify</code>, <code>tests</code>, <code>manual</code> o <code>none (&lt;reason&gt;)</code>.</li><li>Lascia che sia il report della skill <code>verify</code> a dire all’agente quale valore usare.</li><li>Interrogalo con i trailer di <code>git log</code>: non serve altro.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Formato e query</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># The last line of every commit message says how the change was checked:
+#   Verified: verify          verify skill or end-to-end run passed
+#   Verified: tests           automated tests only
+#   Verified: manual          a human tried it
+#   Verified: none (&lt;reason&gt;) not verified, and why
+git commit -m &quot;feat: add how we build guide&quot; -m &quot;Verified: tests&quot;
+
+# How was each recent commit verified?
+git log -20 --format=&#039;%h %&lt;(10,trunc)%(trailers:key=Verified,valueonly,separator=%x20) %s&#039;
+
+# Commits that shipped unverified, with their reason
+git log --grep=&#039;^Verified: none&#039; --format=&#039;%h %s  [%(trailers:key=Verified,valueonly,separator=%x20)]&#039;
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="browser-tool">
+	<h2 class="guide-title" id="browser-tool"><span class="guide-number">04</span><span>Scegliere lo strumento browser</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in prova</span><span>aggiunta il <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#browser-tool">#</a></p>
+	<div class="guide-label">perché</div>
+	<p class="guide-why">Una skill verify vale quanto il browser che la pilota. Abbiamo fatto un test vero sul canvas di Markasso: disegnare un rettangolo e controllare che finisca nel localStorage. I risultati hanno deciso quale strumento fa cosa.</p>
+	<div class="guide-label">come</div>
+	<ol class="guide-steps" role="list"><li>Telemaco: FAIL. Nessun motore di layout, e <code>browser_evaluate</code> non aspetta le Promise.</li><li>chrome-devtools-mcp: PASS solo con eventi sintetici inviati da uno script, perché non ha il trascinamento a coordinate; circa 36 s.</li><li>Playwright MCP: PASS con input reale del mouse (<code>browser_mouse_drag_xy</code>), circa 24 s. Al primo tentativo ha perfino colpito un pannello sopra il canvas, proprio come farebbe un utente vero.</li><li>Decisione: Telemaco resta per leggere il web, cercare e fare fetch stealth; per pilotare le app locali si passa a Playwright MCP. L’adozione è in corso.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Playwright MCP per le app locali</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># Playwright MCP to drive local apps with real mouse and keyboard input.
+# --isolated: in-memory profile, so parallel sessions don&#039;t fight over one profile.
+# --caps=vision: coordinate tools such as browser_mouse_drag_xy, needed for canvas work.
+# --config: forces the en-US locale, so the app&#039;s UI language doesn&#039;t follow the system.
+cat &gt; playwright-mcp.json &lt;&lt;&#039;JSON&#039;
+{
+  &quot;browser&quot;: {
+    &quot;browserName&quot;: &quot;chromium&quot;,
+    &quot;contextOptions&quot;: { &quot;locale&quot;: &quot;en-US&quot; }
+  }
+}
+JSON
+
+claude mcp add playwright -- npx @playwright/mcp@latest \
+  --isolated --caps=vision --config &quot;$PWD/playwright-mcp.json&quot;
+</code></pre><p class="guide-origin">da <a class="terminal-link" href="https://github.com/microsoft/playwright-mcp" target="_blank" rel="noopener noreferrer">Playwright MCP ↗</a></p></div>
+	
+</section><section class="guide-section" aria-labelledby="second-opinion">
+	<h2 class="guide-title" id="second-opinion"><span class="guide-number">05</span><span>Un secondo parere con Codex o opencode</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in prova</span><span>aggiunta il <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#second-opinion">#</a></p>
+	<div class="guide-label">perché</div>
+	<p class="guide-why">Un agente che rivede il proprio diff ne condivide i punti ciechi. Un secondo modello con un prompt nuovo trova bug diversi, a patto di dargli il codice e non la tua conclusione, e di trattare il suo output come un input, non come la verità.</p>
+	<div class="guide-label">come</div>
+	<ol class="guide-steps" role="list"><li>Codex è il reviewer a lungo termine per le review profonde e critiche; i modelli gratuiti di opencode lo affiancano come esperimento su diff più piccoli e task circoscritti.</li><li>Chiedi prima di eseguirlo, e di’ cosa invii e perché.</li><li>Sola lettura per default: l’agente <code>plan</code> di opencode o la sandbox <code>read-only</code> di Codex. Scrittura solo dentro un worktree git separato.</li><li>Usa solo modelli il cui fornitore non conserva i dati e non ci addestra, e non inviare mai segreti o codice di clienti che non puoi condividere.</li><li>Verifica ogni segnalazione sul codice, correggi ciò che è reale, e annota cosa hai scartato e perché.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Comandi</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># Two reviewers with different roles:
+#   Codex     the long-term reviewer for deep and critical reviews (a branch, a plan, security);
+#   opencode  free models, run alongside as an experiment on smaller diffs and scoped tasks.
+
+# Review a diff, read-only: opencode&#039;s built-in `plan` agent cannot edit files.
+# Pick a model whose provider keeps no data and does not train on it.
+git diff &gt; /tmp/change.diff
+opencode run --agent plan -m &lt;model&gt; \
+  &quot;Review the diff in /tmp/change.diff for correctness bugs, unescaped input and missing tests. \
+Give each finding a file:line, a severity (must-fix / should-fix / nit) and a concrete failure scenario. \
+Do not edit files.&quot; &gt; review.md
+
+# Delegate a scoped task with write access, only inside a separate git worktree.
+opencode run -w &lt;worktree-name&gt; -m &lt;model&gt; &quot;&lt;task, files, what is already ruled out&gt;&quot;
+
+# Codex for deep or critical reviews: read-only sandbox, findings written to a file.
+codex exec -s read-only -C . -o codex.md &quot;&lt;same review prompt&gt;&quot;
+codex review --uncommitted
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="themis-gates">
+	<h2 class="guide-title" id="themis-gates"><span class="guide-number">06</span><span>Themis: cancelli e un contratto bloccato</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-adopted">adottata</span><span>aggiunta il <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#themis-gates">#</a></p>
+	<div class="guide-label">perché</div>
+	<p class="guide-why">Per lavori più grandi le regole non bastano: l’agente non deve poter spostare la porta. Themis trasforma una specifica in test di accettazione, li blocca tramite digest, e solo allora lascia scrivere agli agenti il codice che un verifier separato giudica.</p>
+	<div class="guide-label">come</div>
+	<ol class="guide-steps" role="list"><li>Scrivi la specifica: obiettivo, passi di verifica, limiti, criteri di accettazione.</li><li>Approva il piano (cancello 1) e i test (cancello 2): approvare i test registra i digest di test, specifica, verifier e configurazione in <code>.themis/lock.json</code>, e una guardia rifiuta qualsiasi modifica.</li><li>Esegui: ogni task lavora nel proprio worktree; l’exit code del verifier dice se riprovare o se è bloccato, e <code>max_iterations</code> limita i tentativi.</li><li>Chiudi con una retro (cancello 3): gli errori sfuggiti diventano modifiche alle istruzioni degli agenti.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Il flusso a cancelli</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code>themis new                # spec skeleton: goal, verify steps, limits, acceptance criteria
+themis check              # every problem with line, column and field
+themis init               # generates the judge: verifier + guard, no AI involved
+
+themis plan               # planner agent proposes the task graph
+themis approve plan       # gate 1: does the plan make sense?
+
+themis tests              # test-author agent writes tests/acceptance/
+git add -A &amp;&amp; git commit -m &quot;themis contract&quot;
+themis approve tests      # gate 2: digests of tests, spec, verifier and config go into .themis/lock.json
+git add -A &amp;&amp; git commit -m &quot;lock contract&quot;
+
+themis run                # each task in its own worktree, verifier exit 1 = retry, 2 = blocked
+themis status             # gates, tasks, iterations against max_iterations, cost
+
+themis retro              # retro agent turns misses into instruction changes
+themis approve retro      # gate 3: apply them, then commit .themis/agents/
+</code></pre><p class="guide-origin">da <a class="terminal-link" href="https://github.com/AlbertoBarrago/themis" target="_blank" rel="noopener noreferrer">Themis ↗</a></p></div>
+	<figure class="guide-figure">
+	<a href="/how-we-build/themis-pipeline.svg" target="_blank" rel="noopener" data-action="open-diagram" data-diagram="1" aria-label="Apri il diagramma: La pipeline a cancelli di Themis: i controlli sono bloccati prima che il worker inizi."><img src="/how-we-build/themis-pipeline.svg" alt="Diagramma di flusso della pipeline di Themis: specifica, piano, contratto bloccato, worker, verifier con tentativi e una guardia sui controlli bloccati, fallito o bloccato dopo il numero massimo di iterazioni, reviewer sul diff del commit, merge, retro." loading="lazy" decoding="async"></a>
+	<figcaption>La pipeline a cancelli di Themis: i controlli sono bloccati prima che il worker inizi. <a class="terminal-link" href="/how-we-build/themis-pipeline.markasso" download>sorgente Markasso</a></figcaption>
+</figure>
+</section>
+<h2 class="guide-part">Insidie che abbiamo incontrato</h2>
+<section class="guide-section" aria-labelledby="dev-server-port">
+	<h2 class="guide-title" id="dev-server-port"><span class="guide-number">01</span><span>La porta del dev server è di qualcun altro</span></h2>
+	<p class="guide-section-meta"><span>aggiunta il <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#dev-server-port">#</a></p>
+	<div class="guide-label">perché</div>
+	<p class="guide-why">Più sessioni e agenti girano insieme. Un agente che trova occupata la porta 5173 può testare tranquillamente il server avviato da un altro agente, su codice diverso, e riportare un successo che non vale nulla.</p>
+	<div class="guide-label">come</div>
+	<ol class="guide-steps" role="list"><li>Scegli una porta libera al momento e avvia con <code>--strictPort</code>, così una collisione fallisce invece di spostarsi in silenzio.</li><li>Fai fallire il ciclo di attesa se il tuo processo muore.</li><li>Prima di testare controlla un segno che il server è tuo (il titolo della pagina, una risposta di health), e non fermare mai un server che non hai avviato tu.</li><li>Playwright con una porta fissa e <code>reuseExistingServer</code> ha la stessa trappola: controlla che la porta sia libera prima di lanciare la suite.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Porta libera, rigida, controllata</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># Never test a dev server you did not start: another session or agent may own the port.
+PORT=$(node -e &quot;const s=require(&#039;net&#039;).createServer();s.listen(0,()=&gt;{console.log(s.address().port);s.close()})&quot;)
+npm run dev -- --port $PORT --strictPort &gt; dev.log 2&gt;&amp;1 &amp;
+PID=$!
+until curl -fs -o /dev/null http://localhost:$PORT/; do
+  kill -0 $PID 2&gt;/dev/null || { tail -20 dev.log; exit 1; }   # server died: fail, don&#039;t wait forever
+  sleep 0.5
+done
+
+# Before testing, check a marker that proves the server is yours (here, the page title).
+curl -fs http://localhost:$PORT/ | grep -q &#039;&lt;title&gt;My App&#039; || { echo &quot;not my server&quot;; exit 1; }
+
+# ... run the checks, then always stop what you started.
+kill $PID
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="telemaco-no-layout">
+	<h2 class="guide-title" id="telemaco-no-layout"><span class="guide-number">02</span><span>Telemaco ha un DOM, non un layout</span></h2>
+	<p class="guide-section-meta"><span>aggiunta il <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#telemaco-no-layout">#</a></p>
+	<div class="guide-label">perché</div>
+	<p class="guide-why">Telemaco esegue JavaScript e DOM reali ma non ha un motore di layout: le dimensioni sono segnaposto e gli stili calcolati tornano ai valori predefiniti. Hit-testing sul canvas e controlli visivi non si possono pilotare da lì, <code>browser_evaluate</code> ritorna prima che una Promise si risolva, e fingere il contrario produce falsi successi.</p>
+	<div class="guide-label">come</div>
+	<ol class="guide-steps" role="list"><li>Controlla struttura e stato: titoli, numero di elementi, testo, errori in console.</li><li>Pilota i form tramite il DOM, per esempio <code>form.requestSubmit()</code>.</li><li>Copri la logica del canvas con test unitari, e chiedi a una persona i controlli visivi e su schermo da telefono (<code>Verified: manual</code>).</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Un controllo solo sul DOM</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">javascript</span></div><pre class="guide-code"><code>// Telemaco runs real JavaScript and a real DOM, but has no layout engine:
+// getBoundingClientRect returns placeholders and getComputedStyle returns defaults.
+// So assert on structure and state, never on pixels, sizes or computed colors.
+// browser_evaluate does not await Promises: return plain values, and read async
+// results in a second call (store them on window in the first one).
+
+// 1. browser_navigate to http://localhost:$PORT/ and check the title first.
+document.title.startsWith(&#039;My App&#039;) || &#039;not my server: stop&#039;;
+
+// 2. browser_evaluate: drive the app through the DOM and return evidence.
+(() =&gt; {
+  const input = document.querySelector(&#039;#search&#039;);
+  input.value = &#039;invoices&#039;;
+  input.form.requestSubmit();          // fires the app&#039;s own submit handler
+  return {
+    results: document.querySelectorAll(&#039;.result&#039;).length,
+    empty: !!document.querySelector(&#039;.empty-state&#039;),
+  };
+})();
+
+// Out of scope: canvas drawing and hit-testing, visual layout, phone widths.
+// Cover canvas logic with unit tests; ask a human for the visual check (Verified: manual).
+</code></pre><p class="guide-origin">da <a class="terminal-link" href="https://github.com/AlbertoBarrago/telemaco" target="_blank" rel="noopener noreferrer">Telemaco ↗</a></p></div>
+	
+</section><section class="guide-section" aria-labelledby="ui-language">
+	<h2 class="guide-title" id="ui-language"><span class="guide-number">03</span><span>Un browser vero parla la lingua del sistema</span></h2>
+	<p class="guide-section-meta"><span>aggiunta il <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#ui-language">#</a></p>
+	<div class="guide-label">perché</div>
+	<p class="guide-why">Un Chrome vero apre l’app nella lingua del sistema. Su un Mac in italiano un selettore come <code>title^=&quot;Rectangle&quot;</code> non trova nulla, perché il pulsante ora si chiama &quot;Rettangolo&quot;, e il controllo fallisce per un motivo che non c’entra con la modifica.</p>
+	<div class="guide-label">come</div>
+	<ol class="guide-steps" role="list"><li>Preferisci selettori che non dipendono dalla lingua: struttura, ruoli, attributi <code>data-*</code> che controlli tu.</li><li>Quando l’app non ha ancora appigli stabili, forza il locale <code>en-US</code> nello strumento browser e scrivilo nella skill verify.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Selettori fragili e robusti</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">javascript</span></div><pre class="guide-code"><code>// A real browser opens the app in the system language: on an Italian Mac the
+// &quot;Rectangle&quot; tool is titled &quot;Rettangolo&quot;, and a selector on the label breaks.
+
+// Fragile: depends on the UI language.
+document.querySelector(&#039;#toolbar button[title^=&quot;Rectangle&quot;]&#039;);
+
+// Robust: depends on structure or on attributes you own.
+document.querySelector(&#039;#toolbar [data-tool=&quot;rectangle&quot;]&#039;);
+document.querySelector(&#039;#toolbar button:nth-of-type(3)&#039;);
+
+// If the app has no stable hooks yet, force the locale instead
+// (Playwright: contextOptions.locale = &quot;en-US&quot;) and say so in the verify skill.
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="lint-untracked">
+	<h2 class="guide-title" id="lint-untracked"><span class="guide-number">04</span><span>Le cartelle locali dell’editor fanno fallire il linter</span></h2>
+	<p class="guide-section-meta"><span>aggiunta il <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#lint-untracked">#</a></p>
+	<div class="guide-label">perché</div>
+	<p class="guide-why"><code>biome check .</code> attraversa ogni cartella del working tree, comprese le impostazioni locali dell’editor e le cartelle temporanee che non fanno parte del progetto, e fallisce su di esse. L’agente allora &quot;corregge&quot; file che nessuno gli ha chiesto di toccare, o segnala un lint rosso che non è reale.</p>
+	<div class="guide-label">come</div>
+	<ol class="guide-steps" role="list"><li>Fai il lint esattamente di ciò che git conosce: file tracciati più quelli nuovi non ignorati.</li><li>Usa quel comando nella skill verify, così persone e agenti eseguono lo stesso controllo.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Lint solo di ciò che git traccia</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># `biome check .` also walks untracked local folders (editor settings, scratch dirs)
+# and fails on files that are not part of the project.
+# Lint exactly what git knows about: tracked files plus new, non-ignored ones.
+git ls-files -z -co --exclude-standard \
+  | xargs -0 pnpm exec biome check --files-ignore-unknown=true --no-errors-on-unmatched
+</code></pre></div>
+	
+</section>
+<section class="guide-closing" aria-labelledby="next-up">
+	<h2 class="guide-part" id="next-up">Prossimi passi</h2>
+	<ul class="guide-roadmap" role="list"><li><span class="guide-roadmap-title">Hook di stop in modalità osservazione</span><p>Un hook globale che registra quando una sessione finisce senza verifica, senza ancora bloccare nulla, così i falsi positivi emergono prima che diventi vincolante.</p></li><li><span class="guide-roadmap-title">Un REVIEW.md per repository</span><p>Cosa deve guardare il reviewer per questo codice, letto sempre dal branch di base così una modifica non può riscrivere le proprie regole di review.</p></li><li><span class="guide-roadmap-title">Un reviewer, più passaggi</span><p>Affinare un solo reviewer e dare a ogni passaggio i risultati e gli errori dei precedenti, invece di accumulare reviewer in parallelo.</p></li><li><span class="guide-roadmap-title">Una checklist di affidabilità attivata dal diff</span><p>Voci di checklist con un trigger leggibile dal diff, abbinate tramite il raggio d’azione di Serval, così su ogni modifica girano solo i pochi controlli pertinenti.</p></li><li><span class="guide-roadmap-title">Adottare Playwright MCP</span><p>Spostare da Telemaco a Playwright MCP le skill verify che pilotano app locali, a partire da Markasso.</p></li><li><span class="guide-roadmap-title">Audit di Telemaco</span><p>Snellire Telemaco riducendolo a ciò che fa meglio: leggere il web, cercare e fare fetch stealth.</p></li></ul>
+</section>
+<section class="guide-closing" aria-labelledby="changelog">
+	<h2 class="guide-part" id="changelog">Registro delle modifiche</h2>
+	<ol class="guide-changelog" role="list"><li><time datetime="2026-11-17">17/11/2026</time><p>Prima edizione: sei pratiche, quattro insidie e una roadmap, su una pagina tutta sua con un link per ogni sezione.</p></li></ol>
+</section>
+</article></noscript></div>
+
+	<!-- Cloudflare Web Analytics: cookieless, no consent banner required -->
+	<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"
+		data-cf-beacon='{"token": "64eea3ab6ba4461e880aa8ec2d58bfc3"}'></script>
+</body>
+
+</html>
