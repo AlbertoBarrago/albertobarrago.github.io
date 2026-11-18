@@ -275,7 +275,13 @@ describe('guide view', () => {
 	});
 
 	it('shows a badge only on fresh sections', () => {
-		const guide = { ...howWeBuild, pitfalls: [...howWeBuild.pitfalls, fixtureSection({ id: 'later', added: '2026-12-01', snippets: [] })] };
+		// Fixture sections only: real sections turn fresh whenever the guide is updated.
+		const guide = {
+			...howWeBuild,
+			published: '2026-11-01',
+			practices: [fixtureSection({ id: 'first-edition', added: '2026-11-01' })],
+			pitfalls: [fixtureSection({ id: 'later', added: '2026-12-01' })],
+		};
 		const html = guideArticleHTML(guide, { interactive: true, today: '2026-12-02' });
 		expect(html.match(/class="guide-badge"/g)).toHaveLength(1);
 	});
