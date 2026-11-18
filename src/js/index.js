@@ -14,6 +14,9 @@ import verifySkillPlaywrightE2e from "../content/how-we-build/verify-skill-playw
 import playwrightMcpSetup from "../content/how-we-build/playwright-mcp-setup.sh?raw";
 import languageIndependentSelectors from "../content/how-we-build/language-independent-selectors.txt?raw";
 import biomeTrackedFiles from "../content/how-we-build/biome-tracked-files.sh?raw";
+import verifyGateHook from "../content/how-we-build/verify-gate-hook.sh?raw";
+import reviewMdTemplate from "../content/how-we-build/review-md-template.md?raw";
+import secretKeyChecks from "../content/how-we-build/secret-key-checks.sh?raw";
 
 const name = "Alberto Barrago";
 const role = "Senior Software Engineer";
@@ -270,6 +273,7 @@ const howWeBuild = {
 		{
 			id: "claude-md-rules",
 			added: "2026-11-17",
+			updated: "2026-11-18",
 			status: "adopted",
 			title: t("Verification rules in CLAUDE.md"),
 			why: t("An agent does what its instructions make cheap. Without written rules it declares victory on a green build, retries a flaky test until it passes, or edits the test instead of the code. A few explicit lines in the global CLAUDE.md change the default for every session."),
@@ -277,7 +281,7 @@ const howWeBuild = {
 				t("Put the rules in the global `~/.claude/CLAUDE.md`, so they apply to every repo, and keep project specifics in the repo's own CLAUDE.md."),
 				t("Verify by running: the repo's `verify` skill when there is one, otherwise drive the real app."),
 				t("Three rounds, then stop: after three failed fix attempts the agent hands over the failing output and what it tried."),
-				t("Keep the checks out of reach: a change must never weaken the tests, lint config or `verify` skill that judge it in the same commit.")
+				t("Keep the checks out of reach: a change must never weaken the tests, lint config, `verify` skill or `REVIEW.md` that judge it in the same commit.")
 			],
 			snippets: [
 				{ id: "claude-md-rules", title: t("Excerpt for your CLAUDE.md"), language: "markdown", code: claudeMdRules }
@@ -343,8 +347,25 @@ const howWeBuild = {
 			]
 		},
 		{
+			id: "verify-gate",
+			added: "2026-11-18",
+			status: "trial",
+			title: t("A Stop hook that watches before it blocks"),
+			why: t("Rules say \"verify before you are done\", but nothing tells you how often a session ends without it. A Stop hook can measure that. Blocking straight away would punish every false positive, so the first version only watches and writes down what it saw."),
+			steps: [
+				t("Run it at the end of every turn: it reads the session transcript and logs one verdict per edited repo, `verify`, `commands`, `docs-only` or `none`."),
+				t("Count only the edits of the current session, so other sessions on the same repo cannot raise false alarms."),
+				t("Never block, never print, always exit 0: a broken hook must not break the session."),
+				t("Read the report after a week or two, fix the false positives, and only then decide whether to block turns that end on `none`.")
+			],
+			snippets: [
+				{ id: "verify-gate-hook", title: t("Registration and report"), language: "bash", code: verifyGateHook }
+			]
+		},
+		{
 			id: "browser-tool",
 			added: "2026-11-17",
+			updated: "2026-11-18",
 			status: "trial",
 			title: t("Choosing the browser tool"),
 			why: t("A verify skill is only as good as the browser that drives it. We ran one real test on Markasso's canvas: draw a rectangle, then check that it landed in localStorage. The results decided which tool does what."),
@@ -352,7 +373,7 @@ const howWeBuild = {
 				t("Telemaco: FAIL. No layout engine, and `browser_evaluate` does not await Promises."),
 				t("chrome-devtools-mcp: PASS only with synthetic events dispatched from a script, since it has no drag at coordinates; about 36 s."),
 				t("Playwright MCP: PASS with real mouse input (`browser_mouse_drag_xy`), about 24 s. On the first try it even hit a panel lying over the canvas, exactly as a real user would."),
-				t("Decision: Telemaco stays for reading the web, search and stealth fetches; driving local apps moves to Playwright MCP. The adoption is in progress.")
+				t("Decision, now written in the global CLAUDE.md: Telemaco stays for reading the web, search and stealth fetches; driving and verifying local apps moves to Playwright MCP, pinned, headless and isolated. Moving the existing verify skills is in progress.")
 			],
 			snippets: [
 				{
@@ -367,18 +388,39 @@ const howWeBuild = {
 		{
 			id: "second-opinion",
 			added: "2026-11-17",
+			updated: "2026-11-18",
 			status: "trial",
 			title: t("A second opinion with Codex or opencode"),
 			why: t("An agent reviewing its own diff shares its own blind spots. A second model with a fresh prompt finds a different set of bugs, as long as you give it the code, not your conclusion, and treat its output as input, not truth."),
 			steps: [
-				t("Codex is the long-term reviewer for deep and critical reviews; opencode's free models run alongside as an experiment on smaller diffs and scoped tasks."),
+				t("Codex is the long-term reviewer for deep and critical reviews, one call per review because its quota is limited; opencode's free models take smaller diffs, control runs and scoped tasks."),
+				t("Size the model to the task: light for a quick question, standard for a small or medium diff, deep for a branch, a plan or a debug session, where two free models run in parallel and you cross-check them."),
 				t("Ask before running it, and say what you send and why."),
+				t("When the repo has a `REVIEW.md`, send it read from the base branch and ask the reviewer to apply the rules whose trigger matches the diff."),
 				t("Read-only by default: opencode's `plan` agent or Codex's `read-only` sandbox. Write access only inside a separate git worktree."),
+				t("A subagent that works on another repo creates its own worktree there with `git worktree add`: the agent tool's worktree isolation only covers the session's repo."),
 				t("Use only models whose provider keeps no data and does not train on it, and never send secrets or client code you may not share."),
 				t("Verify every finding against the code, fix what is real, and write down what you rejected and why.")
 			],
 			snippets: [
 				{ id: "second-opinion", title: t("Commands"), language: "bash", code: secondOpinion }
+			]
+		},
+		{
+			id: "review-md",
+			added: "2026-11-18",
+			status: "trial",
+			title: t("A REVIEW.md the change cannot rewrite"),
+			why: t("A generic review prompt finds generic issues. A `REVIEW.md` tells the reviewer what breaks in this code, and because it is always read from the base branch, a change cannot soften the rules that judge it."),
+			steps: [
+				t("Give the reviewer the diff plus `git show <base>:REVIEW.md`, never the copy in the branch under review."),
+				t("Every rule comes from a real bug, citing the fix commits, or from a stated project constraint. No generic advice."),
+				t("Make each rule checkable from a diff: a trigger on paths, a concrete check, and why it exists."),
+				t("Keep it under about 15 rules: add or sharpen one when a bug slips through review, delete the ones that never trigger or only produce noise."),
+				t("Change `REVIEW.md` in its own commit, never together with the code it judges.")
+			],
+			snippets: [
+				{ id: "review-md-template", title: t("Template"), language: "markdown", code: reviewMdTemplate }
 			]
 		},
 		{
@@ -473,15 +515,32 @@ const howWeBuild = {
 			snippets: [
 				{ id: "biome-tracked-files", title: t("Lint only what git tracks"), language: "bash", code: biomeTrackedFiles }
 			]
+		},
+		{
+			id: "secrets-in-transcript",
+			added: "2026-11-18",
+			title: t("A secret printed once is already gone"),
+			why: t("Whatever an agent prints enters the transcript, and the transcript goes to the model provider. A quick `cat .env` or a loose `grep` to check that a key exists is enough to ship its value out of your machine, and deleting the message afterwards does not take it back."),
+			steps: [
+				t("Write the rule in the global CLAUDE.md: never print anything that can hold a secret, so no `cat`, `head`, `env`, `printenv`, `echo` or plain `grep` on it."),
+				t("Check a key by name or count only: `grep -q`, `grep -c`, or the list of key names."),
+				t("Anchor the pattern to the exact key: a loose one matches other keys and prints their values."),
+				t("If a value does get printed, the agent says so at once and the secret is rotated, not just deleted from the chat.")
+			],
+			snippets: [
+				{ id: "secret-key-checks", title: t("Checks that print no values"), language: "bash", code: secretKeyChecks }
+			]
 		}
 	],
 	roadmap: [
 		{
 			title: t("Stop hook in observe mode"),
+			sectionId: "verify-gate",
 			summary: t("A global hook that logs when a session ends without verification, without blocking anything yet, so false positives surface before it ever enforces.")
 		},
 		{
 			title: t("A REVIEW.md per repo"),
+			sectionId: "review-md",
 			summary: t("What the reviewer should look at for this code, always read from the base branch so a change cannot rewrite its own review rules.")
 		},
 		{
@@ -502,6 +561,11 @@ const howWeBuild = {
 		}
 	],
 	changelog: [
+		{
+			date: "2026-11-18",
+			summary: t("Two new practices, a Stop hook in observe mode and a REVIEW.md read from the base branch, and a pitfall on secrets in the transcript. The second opinion now sizes the model to the task, the browser tool decision is in the global rules, and the Playwright setup matches the real one."),
+			sections: ["verify-gate", "review-md", "secrets-in-transcript", "second-opinion", "browser-tool", "claude-md-rules"]
+		},
 		{
 			date: "2026-11-17",
 			summary: t("First edition: six practices, four pitfalls and a roadmap, on a page of its own with a link for every section.")
