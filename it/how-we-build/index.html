@@ -51,13 +51,13 @@
 		}
 		</script>
 
-  <script type="module" crossorigin src="/assets/index-DdZanZPq.js"></script>
+  <script type="module" crossorigin src="/assets/index-CRrc_Rd8.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-BQ45ftWU.css">
 <link rel="alternate" hreflang="en" href="https://albz.it/how-we-build/" />
 <link rel="alternate" hreflang="it" href="https://albz.it/it/how-we-build/" />
 <link rel="alternate" hreflang="x-default" href="https://albz.it/how-we-build/" />
 	<script type="application/ld+json">
-		{"@context":"https://schema.org","@type":"TechArticle","headline":"Come costruiamo","description":"Una guida pratica a come lavoro con gli agenti di codice. Ogni pratica spiega perché conta, come si fa, e ti dà un blocco da copiare.","datePublished":"2026-11-17","dateModified":"2026-11-17","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/it/how-we-build/","mainEntityOfPage":"https://albz.it/it/how-we-build/","inLanguage":"it"}
+		{"@context":"https://schema.org","@type":"TechArticle","headline":"Come costruiamo","description":"Una guida pratica a come lavoro con gli agenti di codice. Ogni pratica spiega perché conta, come si fa, e ti dà un blocco da copiare.","datePublished":"2026-11-17","dateModified":"2026-11-18","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/it/how-we-build/","mainEntityOfPage":"https://albz.it/it/how-we-build/","inLanguage":"it"}
 	</script>
 </head>
 
@@ -66,20 +66,20 @@
 <header class="guide-header">
 	<h1 class="blog-title" id="guide-title" tabindex="-1">Come costruiamo</h1>
 	<p class="blog-intro">Una guida pratica a come lavoro con gli agenti di codice. Ogni pratica spiega perché conta, come si fa, e ti dà un blocco da copiare.</p>
-	<p class="guide-meta">Ispirata a <em>Verification loops, del team di Claude Code di Anthropic</em> · aggiornata il <time datetime="2026-11-17">17/11/2026</time> · 6 pratiche · 4 insidie</p>
-	<aside class="guide-latest"><span class="guide-label">Ultima modifica</span> <time datetime="2026-11-17">17/11/2026</time><p>Prima edizione: sei pratiche, quattro insidie e una roadmap, su una pagina tutta sua con un link per ogni sezione.</p><a class="reader-nav-link" href="#changelog">tutte le modifiche →</a></aside>
+	<p class="guide-meta">Ispirata a <em>Verification loops, del team di Claude Code di Anthropic</em> · aggiornata il <time datetime="2026-11-18">18/11/2026</time> · 8 pratiche · 5 insidie</p>
+	<aside class="guide-latest"><span class="guide-label">Ultima modifica</span> <time datetime="2026-11-18">18/11/2026</time><p>Due nuove pratiche, un hook Stop in modalità osservazione e un REVIEW.md letto dal branch di base, e un’insidia sui segreti nel transcript. Il secondo parere ora sceglie il modello in base al compito, la decisione sullo strumento browser è nelle regole globali, e la configurazione di Playwright corrisponde a quella reale.</p><a class="reader-nav-link" href="#changelog">tutte le modifiche →</a></aside>
 </header>
-<nav class="guide-contents" aria-label="Indice della guida"><div class="guide-toc-group">Pratiche</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#claude-md-rules">Regole di verifica nel CLAUDE.md</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verify-skill">Una skill verify in ogni repository</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verified-trailer">Un trailer Verified su ogni commit</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#browser-tool">Scegliere lo strumento browser</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#second-opinion">Un secondo parere con Codex o opencode</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#themis-gates">Themis: cancelli e un contratto bloccato</a></li></ol>
-<div class="guide-toc-group">Insidie</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#dev-server-port">La porta del dev server è di qualcun altro</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#telemaco-no-layout">Telemaco ha un DOM, non un layout</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#ui-language">Un browser vero parla la lingua del sistema</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#lint-untracked">Le cartelle locali dell’editor fanno fallire il linter</a></li></ol>
+<nav class="guide-contents" aria-label="Indice della guida"><div class="guide-toc-group">Pratiche</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#claude-md-rules">Regole di verifica nel CLAUDE.md <span class="guide-toc-dot" aria-label="(aggiornata di recente)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verify-skill">Una skill verify in ogni repository</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verified-trailer">Un trailer Verified su ogni commit</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verify-gate">Un hook Stop che osserva prima di bloccare <span class="guide-toc-dot" aria-label="(aggiornata di recente)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#browser-tool">Scegliere lo strumento browser <span class="guide-toc-dot" aria-label="(aggiornata di recente)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#second-opinion">Un secondo parere con Codex o opencode <span class="guide-toc-dot" aria-label="(aggiornata di recente)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#review-md">Un REVIEW.md che la modifica non può riscrivere <span class="guide-toc-dot" aria-label="(aggiornata di recente)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#themis-gates">Themis: cancelli e un contratto bloccato</a></li></ol>
+<div class="guide-toc-group">Insidie</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#dev-server-port">La porta del dev server è di qualcun altro</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#telemaco-no-layout">Telemaco ha un DOM, non un layout</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#ui-language">Un browser vero parla la lingua del sistema</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#lint-untracked">Le cartelle locali dell’editor fanno fallire il linter</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#secrets-in-transcript">Un segreto stampato una volta è già perso <span class="guide-toc-dot" aria-label="(aggiornata di recente)">●</span></a></li></ol>
 <div class="guide-toc-group">Altro</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#next-up">Prossimi passi</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#changelog">Registro delle modifiche</a></li></ol></nav>
 <h2 class="guide-part">Pratiche</h2>
 <section class="guide-section" aria-labelledby="claude-md-rules">
 	<h2 class="guide-title" id="claude-md-rules"><span class="guide-number">01</span><span>Regole di verifica nel CLAUDE.md</span></h2>
-	<p class="guide-section-meta"><span class="guide-status is-adopted">adottata</span><span>aggiunta il <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#claude-md-rules">#</a></p>
+	<p class="guide-section-meta"><span class="guide-status is-adopted">adottata</span><span class="guide-badge">aggiornata di recente</span><span>aggiornata il <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#claude-md-rules">#</a></p>
 	<div class="guide-label">perché</div>
 	<p class="guide-why">Un agente fa ciò che le istruzioni gli rendono facile. Senza regole scritte dichiara vittoria con una build verde, ripete un test instabile finché passa, o modifica il test invece del codice. Poche righe esplicite nel CLAUDE.md globale cambiano il comportamento predefinito di ogni sessione.</p>
 	<div class="guide-label">come</div>
-	<ol class="guide-steps" role="list"><li>Metti le regole nel <code>~/.claude/CLAUDE.md</code> globale, così valgono per ogni repository, e lascia le specifiche di progetto nel CLAUDE.md del repository.</li><li>Verificare eseguendo: la skill <code>verify</code> del repository quando c’è, altrimenti pilotare la vera app.</li><li>Tre tentativi, poi stop: dopo tre correzioni fallite l’agente consegna l’output dell’errore e cosa ha provato.</li><li>Tieni i controlli fuori portata: una modifica non deve mai indebolire, nello stesso commit, i test, la configurazione di lint o la skill <code>verify</code> che la giudicano.</li></ol>
+	<ol class="guide-steps" role="list"><li>Metti le regole nel <code>~/.claude/CLAUDE.md</code> globale, così valgono per ogni repository, e lascia le specifiche di progetto nel CLAUDE.md del repository.</li><li>Verificare eseguendo: la skill <code>verify</code> del repository quando c’è, altrimenti pilotare la vera app.</li><li>Tre tentativi, poi stop: dopo tre correzioni fallite l’agente consegna l’output dell’errore e cosa ha provato.</li><li>Tieni i controlli fuori portata: una modifica non deve mai indebolire, nello stesso commit, i test, la configurazione di lint, la skill <code>verify</code> o il <code>REVIEW.md</code> che la giudicano.</li></ol>
 	<div class="guide-snippet"><div class="guide-snippet-title">Estratto per il tuo CLAUDE.md</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>## Verification
 - After any non-trivial change: run build/typecheck and relevant tests before declaring it done
 - If you can&#039;t verify, say so explicitly instead of assuming it works
@@ -88,7 +88,7 @@
 - **Verify by running**: if the repo has a `.claude/skills/verify` skill, run it before saying &quot;ready for testing&quot;. Otherwise drive the real app (a browser automation tool for anything web) when the change is user-visible. Always state how the change was verified
 - **Three rounds, then stop**: if a check still fails after three fix attempts, stop and bring me in with the failing output and what you tried
 - **Flaky tests**: never add retries, sleeps or skips to make them pass. Find the root cause; if you can&#039;t, propose deleting the test with the reason written down, and wait for my confirmation
-- **Checks are out of reach**: a change must not weaken or rewrite, in the same commit, the existing tests, lint/typecheck config or `verify` skill that judge it (adding new tests for new behavior is fine). If an existing check genuinely needs changing, do it in a separate commit and flag it to me
+- **Checks are out of reach**: a change must not weaken or rewrite, in the same commit, the existing tests, lint/typecheck config, `verify` skill or `REVIEW.md` that judge it (adding new tests for new behavior is fine). If an existing check genuinely needs changing, do it in a separate commit and flag it to me
 
 ## Commit Messages
 - Every commit ends with a `Verified:` trailer stating how the change was checked: `verify` (verify skill or end-to-end run), `tests` (automated tests only), `manual` (I tested it), or `none (&lt;reason&gt;)`. It is a verification stamp, not an attribution line
@@ -330,46 +330,102 @@ git log -20 --format=&#039;%h %&lt;(10,trunc)%(trailers:key=Verified,valueonly,s
 git log --grep=&#039;^Verified: none&#039; --format=&#039;%h %s  [%(trailers:key=Verified,valueonly,separator=%x20)]&#039;
 </code></pre></div>
 	
+</section><section class="guide-section" aria-labelledby="verify-gate">
+	<h2 class="guide-title" id="verify-gate"><span class="guide-number">04</span><span>Un hook Stop che osserva prima di bloccare</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in prova</span><span class="guide-badge">nuova</span><span>aggiunta il <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#verify-gate">#</a></p>
+	<div class="guide-label">perché</div>
+	<p class="guide-why">Le regole dicono &quot;verifica prima di dire che hai finito&quot;, ma niente ti dice quanto spesso una sessione finisce senza farlo. Un hook Stop può misurarlo. Bloccare subito punirebbe ogni falso positivo, quindi la prima versione si limita a osservare e ad annotare ciò che ha visto.</p>
+	<div class="guide-label">come</div>
+	<ol class="guide-steps" role="list"><li>Eseguilo alla fine di ogni turno: legge il transcript della sessione e registra un verdetto per ogni repository modificato, <code>verify</code>, <code>commands</code>, <code>docs-only</code> o <code>none</code>.</li><li>Conta solo le modifiche della sessione corrente, così altre sessioni sullo stesso repository non possono generare falsi allarmi.</li><li>Non bloccare mai, non stampare mai, esci sempre con 0: un hook rotto non deve rompere la sessione.</li><li>Leggi il report dopo una o due settimane, correggi i falsi positivi, e solo allora decidi se bloccare i turni che finiscono con <code>none</code>.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Registrazione e report</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># A Stop hook that only watches: it runs at the end of every turn, never
+# blocks, never prints, always exits 0. It reads the session transcript and
+# appends one JSON line per repo the turn edited, with a verdict:
+#
+#   verify     the repo&#039;s `verify` skill ran after the last edit
+#   commands   a test/build/lint/typecheck command ran after the last edit
+#   docs-only  only documentation files were edited
+#   none       code was edited and nothing checked it afterwards
+#
+# Only edits made by this session count (Edit, Write, NotebookEdit calls in
+# its own transcript), so other sessions on the same repo raise no false alarms.
+
+# Merge this into the &quot;hooks&quot; object of ~/.claude/settings.json, next to your
+# other hooks: do not overwrite the file. The guard matters: a Stop hook that
+# exits 2 sends the agent back to work, and python3 exits 2 when the script is
+# missing, so a hook meant to only watch would block every turn.
+{
+  &quot;Stop&quot;: [
+    {
+      &quot;hooks&quot;: [
+        {
+          &quot;type&quot;: &quot;command&quot;,
+          &quot;command&quot;: &quot;f=\&quot;$HOME/.claude/hooks/verify-gate.py\&quot;; [ -f \&quot;$f\&quot; ] &amp;&amp; python3 \&quot;$f\&quot;; exit 0&quot;,
+          &quot;timeout&quot;: 10
+        }
+      ]
+    }
+  ]
+}
+
+# After a week or two, read the verdicts per repo before deciding to enforce:
+python3 ~/.claude/hooks/verify-gate.py --report
+</code></pre></div>
+	
 </section><section class="guide-section" aria-labelledby="browser-tool">
-	<h2 class="guide-title" id="browser-tool"><span class="guide-number">04</span><span>Scegliere lo strumento browser</span></h2>
-	<p class="guide-section-meta"><span class="guide-status is-trial">in prova</span><span>aggiunta il <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#browser-tool">#</a></p>
+	<h2 class="guide-title" id="browser-tool"><span class="guide-number">05</span><span>Scegliere lo strumento browser</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in prova</span><span class="guide-badge">aggiornata di recente</span><span>aggiornata il <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#browser-tool">#</a></p>
 	<div class="guide-label">perché</div>
 	<p class="guide-why">Una skill verify vale quanto il browser che la pilota. Abbiamo fatto un test vero sul canvas di Markasso: disegnare un rettangolo e controllare che finisca nel localStorage. I risultati hanno deciso quale strumento fa cosa.</p>
 	<div class="guide-label">come</div>
-	<ol class="guide-steps" role="list"><li>Telemaco: FAIL. Nessun motore di layout, e <code>browser_evaluate</code> non aspetta le Promise.</li><li>chrome-devtools-mcp: PASS solo con eventi sintetici inviati da uno script, perché non ha il trascinamento a coordinate; circa 36 s.</li><li>Playwright MCP: PASS con input reale del mouse (<code>browser_mouse_drag_xy</code>), circa 24 s. Al primo tentativo ha perfino colpito un pannello sopra il canvas, proprio come farebbe un utente vero.</li><li>Decisione: Telemaco resta per leggere il web, cercare e fare fetch stealth; per pilotare le app locali si passa a Playwright MCP. L’adozione è in corso.</li></ol>
+	<ol class="guide-steps" role="list"><li>Telemaco: FAIL. Nessun motore di layout, e <code>browser_evaluate</code> non aspetta le Promise.</li><li>chrome-devtools-mcp: PASS solo con eventi sintetici inviati da uno script, perché non ha il trascinamento a coordinate; circa 36 s.</li><li>Playwright MCP: PASS con input reale del mouse (<code>browser_mouse_drag_xy</code>), circa 24 s. Al primo tentativo ha perfino colpito un pannello sopra il canvas, proprio come farebbe un utente vero.</li><li>Decisione, ora scritta nel CLAUDE.md globale: Telemaco resta per leggere il web, cercare e fare fetch stealth; per pilotare e verificare le app locali si passa a Playwright MCP, con versione fissata, headless e isolato. Lo spostamento delle skill verify esistenti è in corso.</li></ol>
 	<div class="guide-snippet"><div class="guide-snippet-title">Playwright MCP per le app locali</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># Playwright MCP to drive local apps with real mouse and keyboard input.
-# --isolated: in-memory profile, so parallel sessions don&#039;t fight over one profile.
-# --caps=vision: coordinate tools such as browser_mouse_drag_xy, needed for canvas work.
-# --config: forces the en-US locale, so the app&#039;s UI language doesn&#039;t follow the system.
-cat &gt; playwright-mcp.json &lt;&lt;&#039;JSON&#039;
-{
-  &quot;browser&quot;: {
-    &quot;browserName&quot;: &quot;chromium&quot;,
-    &quot;contextOptions&quot;: { &quot;locale&quot;: &quot;en-US&quot; }
-  }
-}
-JSON
+# Pin the version: the server is fetched by npx on every start.
+# Pick the current one with `npm view @playwright/mcp version`.
+# --scope user:   one setup for every project, not just the current one.
+# --headless:     no window stealing focus while you work.
+# --isolated:     in-memory profile, so parallel sessions don&#039;t fight over one profile.
+#                 It also means first-run dialogs show up on every launch.
+# --caps vision:  coordinate tools such as browser_mouse_drag_xy, needed for canvas work.
+# --output-dir:   screenshots and traces go to a cache folder, not into the repo.
+PLAYWRIGHT_MCP_VERSION=0.0.85
+claude mcp add --scope user playwright -- npx -y &quot;@playwright/mcp@$PLAYWRIGHT_MCP_VERSION&quot; \
+  --browser chrome --headless --isolated --caps vision \
+  --viewport-size 1280x800 --output-dir &quot;$HOME/.cache/playwright-mcp&quot;
 
-claude mcp add playwright -- npx @playwright/mcp@latest \
-  --isolated --caps=vision --config &quot;$PWD/playwright-mcp.json&quot;
+# The browser follows the system locale, so the app&#039;s UI may be translated:
+# select by ids, classes, roles or shortcuts, never by visible text.
+# If the app has no stable hooks yet, force a locale with a config file:
+#   { &quot;browser&quot;: { &quot;contextOptions&quot;: { &quot;locale&quot;: &quot;en-US&quot; } } }
+# and add --config &quot;$PWD/playwright-mcp.json&quot; to the command above.
 </code></pre><p class="guide-origin">da <a class="terminal-link" href="https://github.com/microsoft/playwright-mcp" target="_blank" rel="noopener noreferrer">Playwright MCP ↗</a></p></div>
 	
 </section><section class="guide-section" aria-labelledby="second-opinion">
-	<h2 class="guide-title" id="second-opinion"><span class="guide-number">05</span><span>Un secondo parere con Codex o opencode</span></h2>
-	<p class="guide-section-meta"><span class="guide-status is-trial">in prova</span><span>aggiunta il <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#second-opinion">#</a></p>
+	<h2 class="guide-title" id="second-opinion"><span class="guide-number">06</span><span>Un secondo parere con Codex o opencode</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in prova</span><span class="guide-badge">aggiornata di recente</span><span>aggiornata il <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#second-opinion">#</a></p>
 	<div class="guide-label">perché</div>
 	<p class="guide-why">Un agente che rivede il proprio diff ne condivide i punti ciechi. Un secondo modello con un prompt nuovo trova bug diversi, a patto di dargli il codice e non la tua conclusione, e di trattare il suo output come un input, non come la verità.</p>
 	<div class="guide-label">come</div>
-	<ol class="guide-steps" role="list"><li>Codex è il reviewer a lungo termine per le review profonde e critiche; i modelli gratuiti di opencode lo affiancano come esperimento su diff più piccoli e task circoscritti.</li><li>Chiedi prima di eseguirlo, e di’ cosa invii e perché.</li><li>Sola lettura per default: l’agente <code>plan</code> di opencode o la sandbox <code>read-only</code> di Codex. Scrittura solo dentro un worktree git separato.</li><li>Usa solo modelli il cui fornitore non conserva i dati e non ci addestra, e non inviare mai segreti o codice di clienti che non puoi condividere.</li><li>Verifica ogni segnalazione sul codice, correggi ciò che è reale, e annota cosa hai scartato e perché.</li></ol>
+	<ol class="guide-steps" role="list"><li>Codex è il reviewer a lungo termine per le review profonde e critiche, con una sola chiamata per review perché la sua quota è limitata; i modelli gratuiti di opencode si occupano dei diff più piccoli, delle esecuzioni di controllo e dei task circoscritti.</li><li>Scegli il modello in base al compito: leggero per una domanda veloce, standard per un diff piccolo o medio, profondo per un branch, un piano o una sessione di debug, dove due modelli gratuiti girano in parallelo e ne confronti i risultati.</li><li>Chiedi prima di eseguirlo, e di’ cosa invii e perché.</li><li>Quando il repository ha un <code>REVIEW.md</code>, prendilo dal branch di base, invialo e chiedi al reviewer di applicare le regole il cui trigger corrisponde al diff.</li><li>Sola lettura per default: l’agente <code>plan</code> di opencode o la sandbox <code>read-only</code> di Codex. Scrittura solo dentro un worktree git separato.</li><li>Un subagent che lavora su un altro repository crea lì il proprio worktree con <code>git worktree add</code>: l’isolamento a worktree dello strumento agent copre solo il repository della sessione.</li><li>Usa solo modelli il cui fornitore non conserva i dati e non ci addestra, e non inviare mai segreti o codice di clienti che non puoi condividere.</li><li>Verifica ogni segnalazione sul codice, correggi ciò che è reale, e annota cosa hai scartato e perché.</li></ol>
 	<div class="guide-snippet"><div class="guide-snippet-title">Comandi</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># Two reviewers with different roles:
 #   Codex     the long-term reviewer for deep and critical reviews (a branch, a plan, security);
-#   opencode  free models, run alongside as an experiment on smaller diffs and scoped tasks.
+#             one call per review, its subscription quota is limited.
+#   opencode  free models for smaller diffs, control runs and scoped tasks.
+
+# Size the model to the task, and use only providers that keep no data and do not train on it:
+#   light     explain a snippet, a small question, a trivial edit      one small free model
+#   standard  review of a small or medium diff, a scoped task           one stronger free model
+#   deep      branch review, debug after failed hypotheses, a plan      Codex, or two free models
+#                                                                       in parallel, cross-checked
 
 # Review a diff, read-only: opencode&#039;s built-in `plan` agent cannot edit files.
-# Pick a model whose provider keeps no data and does not train on it.
-git diff &gt; /tmp/change.diff
+# If the repo has a REVIEW.md, send it from the base branch, never from the working tree.
+# `git diff main` covers commits and uncommitted work; an empty diff is no review.
+git diff main &gt; /tmp/change.diff
+test -s /tmp/change.diff || echo &quot;empty diff: nothing to review&quot;
+git show main:REVIEW.md &gt; /tmp/review-rules.md 2&gt;/dev/null
 opencode run --agent plan -m &lt;model&gt; \
   &quot;Review the diff in /tmp/change.diff for correctness bugs, unescaped input and missing tests. \
+If /tmp/review-rules.md is not empty, apply the rules whose trigger matches a path in the diff. \
 Give each finding a file:line, a severity (must-fix / should-fix / nit) and a concrete failure scenario. \
 Do not edit files.&quot; &gt; review.md
 
@@ -378,11 +434,52 @@ opencode run -w &lt;worktree-name&gt; -m &lt;model&gt; &quot;&lt;task, files, wh
 
 # Codex for deep or critical reviews: read-only sandbox, findings written to a file.
 codex exec -s read-only -C . -o codex.md &quot;&lt;same review prompt&gt;&quot;
-codex review --uncommitted
+# `codex review --base main` is quicker but takes no rules file: prefer `codex exec`
+# with the same prompt when the repo has a REVIEW.md.
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="review-md">
+	<h2 class="guide-title" id="review-md"><span class="guide-number">07</span><span>Un REVIEW.md che la modifica non può riscrivere</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in prova</span><span class="guide-badge">nuova</span><span>aggiunta il <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#review-md">#</a></p>
+	<div class="guide-label">perché</div>
+	<p class="guide-why">Un prompt di review generico trova problemi generici. Un <code>REVIEW.md</code> dice al reviewer cosa si rompe in questo codice, e siccome viene sempre letto dal branch di base, una modifica non può ammorbidire le regole che la giudicano.</p>
+	<div class="guide-label">come</div>
+	<ol class="guide-steps" role="list"><li>Dai al reviewer il diff insieme a <code>git show &lt;base&gt;:REVIEW.md</code>, mai la copia nel branch sotto review.</li><li>Ogni regola nasce da un bug reale, citando i commit che lo correggono, o da un vincolo di progetto dichiarato. Niente consigli generici.</li><li>Rendi ogni regola verificabile da un diff: un trigger sui percorsi, un controllo concreto, e il motivo per cui esiste.</li><li>Tienilo sotto le 15 regole circa: aggiungine o affinane una quando un bug sfugge alla review, elimina quelle che non scattano mai o producono solo rumore.</li><li>Modifica <code>REVIEW.md</code> in un commit a parte, mai insieme al codice che giudica.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Modello</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>&lt;!--
+Copy it to &lt;repo&gt;/REVIEW.md, replace the placeholders, delete this comment.
+
+How it is used: the reviewer (Codex, opencode, /code-review) gets the diff plus
+this file read from the base branch (`git show &lt;base&gt;:REVIEW.md`), never from
+the branch under review, so a change cannot rewrite the rules that judge it.
+Change REVIEW.md in its own commit, never together with the code it judges.
+
+Writing rules:
+- Every rule comes from a real bug (cite the fix commits) or a stated project
+  constraint (cite CLAUDE.md, an ADR, a spec). No generic advice.
+- A rule must be checkable from a diff: concrete trigger paths, concrete check.
+- Keep it under about 15 rules. When a bug slips through review, add or sharpen
+  a rule; when a rule never triggers or only produces noise, delete it.
+--&gt;
+
+# Review guide: &lt;PROJECT&gt;
+
+Check only the rules whose trigger matches a path in the diff. For each finding, name the rule (R1, R2, ...) or say &quot;outside REVIEW.md&quot; when it is a bug no rule covers. Report real defects with a concrete failure scenario; skip anything listed under &quot;Do not flag&quot;.
+
+## Rules
+
+### R1: &lt;short title&gt;
+Trigger: &lt;paths or globs&gt;
+Check: &lt;what must hold in the diff&gt;
+Why: &lt;the failure it prevents&gt; (fixes: &lt;sha&gt;, &lt;sha&gt; | source: &lt;CLAUDE.md, ADR, spec section&gt;)
+
+## Do not flag
+
+- Formatting, import order and lint-level style: &lt;linter&gt; enforces them in CI.
+- &lt;Deliberate convention that looks wrong but is intended, with its source.&gt;
 </code></pre></div>
 	
 </section><section class="guide-section" aria-labelledby="themis-gates">
-	<h2 class="guide-title" id="themis-gates"><span class="guide-number">06</span><span>Themis: cancelli e un contratto bloccato</span></h2>
+	<h2 class="guide-title" id="themis-gates"><span class="guide-number">08</span><span>Themis: cancelli e un contratto bloccato</span></h2>
 	<p class="guide-section-meta"><span class="guide-status is-adopted">adottata</span><span>aggiunta il <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#themis-gates">#</a></p>
 	<div class="guide-label">perché</div>
 	<p class="guide-why">Per lavori più grandi le regole non bastano: l’agente non deve poter spostare la porta. Themis trasforma una specifica in test di accettazione, li blocca tramite digest, e solo allora lascia scrivere agli agenti il codice che un verifier separato giudica.</p>
@@ -501,14 +598,46 @@ git ls-files -z -co --exclude-standard \
   | xargs -0 pnpm exec biome check --files-ignore-unknown=true --no-errors-on-unmatched
 </code></pre></div>
 	
+</section><section class="guide-section" aria-labelledby="secrets-in-transcript">
+	<h2 class="guide-title" id="secrets-in-transcript"><span class="guide-number">05</span><span>Un segreto stampato una volta è già perso</span></h2>
+	<p class="guide-section-meta"><span class="guide-badge">nuova</span><span>aggiunta il <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#secrets-in-transcript">#</a></p>
+	<div class="guide-label">perché</div>
+	<p class="guide-why">Tutto ciò che un agente stampa entra nel transcript, e il transcript va al fornitore del modello. Basta un <code>cat .env</code> veloce o un <code>grep</code> troppo largo per controllare che una chiave esista, e il suo valore lascia la tua macchina; cancellare il messaggio dopo non lo riporta indietro.</p>
+	<div class="guide-label">come</div>
+	<ol class="guide-steps" role="list"><li>Scrivi la regola nel CLAUDE.md globale: mai stampare qualcosa che può contenere un segreto, quindi niente <code>cat</code>, <code>head</code>, <code>env</code>, <code>printenv</code>, <code>echo</code> o <code>grep</code> semplice su di esso.</li><li>Controlla una chiave solo per nome o per conteggio: <code>grep -q</code>, <code>grep -c</code>, o l’elenco dei nomi delle chiavi.</li><li>Ancora il pattern alla chiave esatta: uno troppo largo trova altre chiavi e ne stampa i valori.</li><li>Se un valore viene stampato comunque, l’agente lo dice subito e il segreto va ruotato, non solo cancellato dalla chat.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Controlli che non stampano valori</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># Everything that enters the transcript goes to the model provider and cannot
+# be taken back. Check secrets by name or count, never by value.
+ENV_FILE=path/to/your/env/file
+
+# Never: these print values into the conversation.
+#   cat &quot;$ENV_FILE&quot;    grep TOKEN &quot;$ENV_FILE&quot;    env    printenv    echo &quot;$API_KEY&quot;
+
+test -r &quot;$ENV_FILE&quot; || echo &quot;cannot read $ENV_FILE&quot;
+
+# Is the key there? Exit code only.
+grep -q &#039;^STRIPE_API_KEY=&#039; &quot;$ENV_FILE&quot; &amp;&amp; echo present || echo missing
+
+# How many times is it defined? A count, no value.
+grep -c &#039;^STRIPE_API_KEY=&#039; &quot;$ENV_FILE&quot;
+
+# Which keys exist? Names only.
+grep -o &#039;^[A-Z_]*=&#039; &quot;$ENV_FILE&quot;
+
+# Anchor the pattern to the exact key, and still never print the line:
+#   grep STRIPE &quot;$ENV_FILE&quot;                  also hits STRIPE_WEBHOOK_SECRET, and prints its value
+#   grep -c &#039;^STRIPE_API_KEY=&#039; &quot;$ENV_FILE&quot;   one key, a count, no value
+
+# If a value does get printed: say so at once and rotate the secret.
+</code></pre></div>
+	
 </section>
 <section class="guide-closing" aria-labelledby="next-up">
 	<h2 class="guide-part" id="next-up">Prossimi passi</h2>
-	<ul class="guide-roadmap" role="list"><li><span class="guide-roadmap-title">Hook di stop in modalità osservazione</span><p>Un hook globale che registra quando una sessione finisce senza verifica, senza ancora bloccare nulla, così i falsi positivi emergono prima che diventi vincolante.</p></li><li><span class="guide-roadmap-title">Un REVIEW.md per repository</span><p>Cosa deve guardare il reviewer per questo codice, letto sempre dal branch di base così una modifica non può riscrivere le proprie regole di review.</p></li><li><span class="guide-roadmap-title">Un reviewer, più passaggi</span><p>Affinare un solo reviewer e dare a ogni passaggio i risultati e gli errori dei precedenti, invece di accumulare reviewer in parallelo.</p></li><li><span class="guide-roadmap-title">Una checklist di affidabilità attivata dal diff</span><p>Voci di checklist con un trigger leggibile dal diff, abbinate tramite il raggio d’azione di Serval, così su ogni modifica girano solo i pochi controlli pertinenti.</p></li><li><span class="guide-roadmap-title">Adottare Playwright MCP</span><p>Spostare da Telemaco a Playwright MCP le skill verify che pilotano app locali, a partire da Markasso.</p></li><li><span class="guide-roadmap-title">Audit di Telemaco</span><p>Snellire Telemaco riducendolo a ciò che fa meglio: leggere il web, cercare e fare fetch stealth.</p></li></ul>
+	<ul class="guide-roadmap" role="list"><li><span class="guide-roadmap-title"><a class="reader-nav-link" href="#verify-gate">Hook di stop in modalità osservazione</a></span><p>Un hook globale che registra quando una sessione finisce senza verifica, senza ancora bloccare nulla, così i falsi positivi emergono prima che diventi vincolante.</p></li><li><span class="guide-roadmap-title"><a class="reader-nav-link" href="#review-md">Un REVIEW.md per repository</a></span><p>Cosa deve guardare il reviewer per questo codice, letto sempre dal branch di base così una modifica non può riscrivere le proprie regole di review.</p></li><li><span class="guide-roadmap-title">Un reviewer, più passaggi</span><p>Affinare un solo reviewer e dare a ogni passaggio i risultati e gli errori dei precedenti, invece di accumulare reviewer in parallelo.</p></li><li><span class="guide-roadmap-title">Una checklist di affidabilità attivata dal diff</span><p>Voci di checklist con un trigger leggibile dal diff, abbinate tramite il raggio d’azione di Serval, così su ogni modifica girano solo i pochi controlli pertinenti.</p></li><li><span class="guide-roadmap-title">Adottare Playwright MCP</span><p>Spostare da Telemaco a Playwright MCP le skill verify che pilotano app locali, a partire da Markasso.</p></li><li><span class="guide-roadmap-title">Audit di Telemaco</span><p>Snellire Telemaco riducendolo a ciò che fa meglio: leggere il web, cercare e fare fetch stealth.</p></li></ul>
 </section>
 <section class="guide-closing" aria-labelledby="changelog">
 	<h2 class="guide-part" id="changelog">Registro delle modifiche</h2>
-	<ol class="guide-changelog" role="list"><li><time datetime="2026-11-17">17/11/2026</time><p>Prima edizione: sei pratiche, quattro insidie e una roadmap, su una pagina tutta sua con un link per ogni sezione.</p></li></ol>
+	<ol class="guide-changelog" role="list"><li><time datetime="2026-11-18">18/11/2026</time><p>Due nuove pratiche, un hook Stop in modalità osservazione e un REVIEW.md letto dal branch di base, e un’insidia sui segreti nel transcript. Il secondo parere ora sceglie il modello in base al compito, la decisione sullo strumento browser è nelle regole globali, e la configurazione di Playwright corrisponde a quella reale.</p><p class="guide-changelog-sections"><a class="reader-nav-link" href="#verify-gate">Un hook Stop che osserva prima di bloccare</a> · <a class="reader-nav-link" href="#review-md">Un REVIEW.md che la modifica non può riscrivere</a> · <a class="reader-nav-link" href="#secrets-in-transcript">Un segreto stampato una volta è già perso</a> · <a class="reader-nav-link" href="#second-opinion">Un secondo parere con Codex o opencode</a> · <a class="reader-nav-link" href="#browser-tool">Scegliere lo strumento browser</a> · <a class="reader-nav-link" href="#claude-md-rules">Regole di verifica nel CLAUDE.md</a></p></li><li><time datetime="2026-11-17">17/11/2026</time><p>Prima edizione: sei pratiche, quattro insidie e una roadmap, su una pagina tutta sua con un link per ogni sezione.</p></li></ol>
 </section>
 </article></noscript></div>
 

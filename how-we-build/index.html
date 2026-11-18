@@ -51,13 +51,13 @@
 		}
 		</script>
 
-  <script type="module" crossorigin src="/assets/index-DdZanZPq.js"></script>
+  <script type="module" crossorigin src="/assets/index-CRrc_Rd8.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-BQ45ftWU.css">
 <link rel="alternate" hreflang="en" href="https://albz.it/how-we-build/" />
 <link rel="alternate" hreflang="it" href="https://albz.it/it/how-we-build/" />
 <link rel="alternate" hreflang="x-default" href="https://albz.it/how-we-build/" />
 	<script type="application/ld+json">
-		{"@context":"https://schema.org","@type":"TechArticle","headline":"How we build","description":"A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.","datePublished":"2026-11-17","dateModified":"2026-11-17","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/how-we-build/","mainEntityOfPage":"https://albz.it/how-we-build/","inLanguage":"en"}
+		{"@context":"https://schema.org","@type":"TechArticle","headline":"How we build","description":"A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.","datePublished":"2026-11-17","dateModified":"2026-11-18","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/how-we-build/","mainEntityOfPage":"https://albz.it/how-we-build/","inLanguage":"en"}
 	</script>
 </head>
 
@@ -66,20 +66,20 @@
 <header class="guide-header">
 	<h1 class="blog-title" id="guide-title" tabindex="-1">How we build</h1>
 	<p class="blog-intro">A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.</p>
-	<p class="guide-meta">Inspired by <em>Verification loops, by the Claude Code team at Anthropic</em> · updated <time datetime="2026-11-17">17/11/2026</time> · 6 practices · 4 pitfalls</p>
-	<aside class="guide-latest"><span class="guide-label">Latest change</span> <time datetime="2026-11-17">17/11/2026</time><p>First edition: six practices, four pitfalls and a roadmap, on a page of its own with a link for every section.</p><a class="reader-nav-link" href="#changelog">see every change →</a></aside>
+	<p class="guide-meta">Inspired by <em>Verification loops, by the Claude Code team at Anthropic</em> · updated <time datetime="2026-11-18">18/11/2026</time> · 8 practices · 5 pitfalls</p>
+	<aside class="guide-latest"><span class="guide-label">Latest change</span> <time datetime="2026-11-18">18/11/2026</time><p>Two new practices, a Stop hook in observe mode and a REVIEW.md read from the base branch, and a pitfall on secrets in the transcript. The second opinion now sizes the model to the task, the browser tool decision is in the global rules, and the Playwright setup matches the real one.</p><a class="reader-nav-link" href="#changelog">see every change →</a></aside>
 </header>
-<nav class="guide-contents" aria-label="Guide contents"><div class="guide-toc-group">Practices</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#claude-md-rules">Verification rules in CLAUDE.md</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verify-skill">A verify skill in every repo</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verified-trailer">A Verified trailer on every commit</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#browser-tool">Choosing the browser tool</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#second-opinion">A second opinion with Codex or opencode</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#themis-gates">Themis: gates and a locked contract</a></li></ol>
-<div class="guide-toc-group">Pitfalls</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#dev-server-port">The dev server port belongs to someone else</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#telemaco-no-layout">Telemaco has a DOM, not a layout</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#ui-language">A real browser speaks the system language</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#lint-untracked">Untracked editor folders break the linter</a></li></ol>
+<nav class="guide-contents" aria-label="Guide contents"><div class="guide-toc-group">Practices</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#claude-md-rules">Verification rules in CLAUDE.md <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verify-skill">A verify skill in every repo</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verified-trailer">A Verified trailer on every commit</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verify-gate">A Stop hook that watches before it blocks <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#browser-tool">Choosing the browser tool <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#second-opinion">A second opinion with Codex or opencode <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#review-md">A REVIEW.md the change cannot rewrite <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#themis-gates">Themis: gates and a locked contract</a></li></ol>
+<div class="guide-toc-group">Pitfalls</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#dev-server-port">The dev server port belongs to someone else</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#telemaco-no-layout">Telemaco has a DOM, not a layout</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#ui-language">A real browser speaks the system language</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#lint-untracked">Untracked editor folders break the linter</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#secrets-in-transcript">A secret printed once is already gone <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li></ol>
 <div class="guide-toc-group">More</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#next-up">Next up</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#changelog">Changelog</a></li></ol></nav>
 <h2 class="guide-part">Practices</h2>
 <section class="guide-section" aria-labelledby="claude-md-rules">
 	<h2 class="guide-title" id="claude-md-rules"><span class="guide-number">01</span><span>Verification rules in CLAUDE.md</span></h2>
-	<p class="guide-section-meta"><span class="guide-status is-adopted">adopted</span><span>added <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#claude-md-rules">#</a></p>
+	<p class="guide-section-meta"><span class="guide-status is-adopted">adopted</span><span class="guide-badge">recently updated</span><span>updated <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#claude-md-rules">#</a></p>
 	<div class="guide-label">why</div>
 	<p class="guide-why">An agent does what its instructions make cheap. Without written rules it declares victory on a green build, retries a flaky test until it passes, or edits the test instead of the code. A few explicit lines in the global CLAUDE.md change the default for every session.</p>
 	<div class="guide-label">how</div>
-	<ol class="guide-steps" role="list"><li>Put the rules in the global <code>~/.claude/CLAUDE.md</code>, so they apply to every repo, and keep project specifics in the repo&#039;s own CLAUDE.md.</li><li>Verify by running: the repo&#039;s <code>verify</code> skill when there is one, otherwise drive the real app.</li><li>Three rounds, then stop: after three failed fix attempts the agent hands over the failing output and what it tried.</li><li>Keep the checks out of reach: a change must never weaken the tests, lint config or <code>verify</code> skill that judge it in the same commit.</li></ol>
+	<ol class="guide-steps" role="list"><li>Put the rules in the global <code>~/.claude/CLAUDE.md</code>, so they apply to every repo, and keep project specifics in the repo&#039;s own CLAUDE.md.</li><li>Verify by running: the repo&#039;s <code>verify</code> skill when there is one, otherwise drive the real app.</li><li>Three rounds, then stop: after three failed fix attempts the agent hands over the failing output and what it tried.</li><li>Keep the checks out of reach: a change must never weaken the tests, lint config, <code>verify</code> skill or <code>REVIEW.md</code> that judge it in the same commit.</li></ol>
 	<div class="guide-snippet"><div class="guide-snippet-title">Excerpt for your CLAUDE.md</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>## Verification
 - After any non-trivial change: run build/typecheck and relevant tests before declaring it done
 - If you can&#039;t verify, say so explicitly instead of assuming it works
@@ -88,7 +88,7 @@
 - **Verify by running**: if the repo has a `.claude/skills/verify` skill, run it before saying &quot;ready for testing&quot;. Otherwise drive the real app (a browser automation tool for anything web) when the change is user-visible. Always state how the change was verified
 - **Three rounds, then stop**: if a check still fails after three fix attempts, stop and bring me in with the failing output and what you tried
 - **Flaky tests**: never add retries, sleeps or skips to make them pass. Find the root cause; if you can&#039;t, propose deleting the test with the reason written down, and wait for my confirmation
-- **Checks are out of reach**: a change must not weaken or rewrite, in the same commit, the existing tests, lint/typecheck config or `verify` skill that judge it (adding new tests for new behavior is fine). If an existing check genuinely needs changing, do it in a separate commit and flag it to me
+- **Checks are out of reach**: a change must not weaken or rewrite, in the same commit, the existing tests, lint/typecheck config, `verify` skill or `REVIEW.md` that judge it (adding new tests for new behavior is fine). If an existing check genuinely needs changing, do it in a separate commit and flag it to me
 
 ## Commit Messages
 - Every commit ends with a `Verified:` trailer stating how the change was checked: `verify` (verify skill or end-to-end run), `tests` (automated tests only), `manual` (I tested it), or `none (&lt;reason&gt;)`. It is a verification stamp, not an attribution line
@@ -330,46 +330,102 @@ git log -20 --format=&#039;%h %&lt;(10,trunc)%(trailers:key=Verified,valueonly,s
 git log --grep=&#039;^Verified: none&#039; --format=&#039;%h %s  [%(trailers:key=Verified,valueonly,separator=%x20)]&#039;
 </code></pre></div>
 	
+</section><section class="guide-section" aria-labelledby="verify-gate">
+	<h2 class="guide-title" id="verify-gate"><span class="guide-number">04</span><span>A Stop hook that watches before it blocks</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in trial</span><span class="guide-badge">new</span><span>added <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#verify-gate">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">Rules say &quot;verify before you are done&quot;, but nothing tells you how often a session ends without it. A Stop hook can measure that. Blocking straight away would punish every false positive, so the first version only watches and writes down what it saw.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Run it at the end of every turn: it reads the session transcript and logs one verdict per edited repo, <code>verify</code>, <code>commands</code>, <code>docs-only</code> or <code>none</code>.</li><li>Count only the edits of the current session, so other sessions on the same repo cannot raise false alarms.</li><li>Never block, never print, always exit 0: a broken hook must not break the session.</li><li>Read the report after a week or two, fix the false positives, and only then decide whether to block turns that end on <code>none</code>.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Registration and report</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># A Stop hook that only watches: it runs at the end of every turn, never
+# blocks, never prints, always exits 0. It reads the session transcript and
+# appends one JSON line per repo the turn edited, with a verdict:
+#
+#   verify     the repo&#039;s `verify` skill ran after the last edit
+#   commands   a test/build/lint/typecheck command ran after the last edit
+#   docs-only  only documentation files were edited
+#   none       code was edited and nothing checked it afterwards
+#
+# Only edits made by this session count (Edit, Write, NotebookEdit calls in
+# its own transcript), so other sessions on the same repo raise no false alarms.
+
+# Merge this into the &quot;hooks&quot; object of ~/.claude/settings.json, next to your
+# other hooks: do not overwrite the file. The guard matters: a Stop hook that
+# exits 2 sends the agent back to work, and python3 exits 2 when the script is
+# missing, so a hook meant to only watch would block every turn.
+{
+  &quot;Stop&quot;: [
+    {
+      &quot;hooks&quot;: [
+        {
+          &quot;type&quot;: &quot;command&quot;,
+          &quot;command&quot;: &quot;f=\&quot;$HOME/.claude/hooks/verify-gate.py\&quot;; [ -f \&quot;$f\&quot; ] &amp;&amp; python3 \&quot;$f\&quot;; exit 0&quot;,
+          &quot;timeout&quot;: 10
+        }
+      ]
+    }
+  ]
+}
+
+# After a week or two, read the verdicts per repo before deciding to enforce:
+python3 ~/.claude/hooks/verify-gate.py --report
+</code></pre></div>
+	
 </section><section class="guide-section" aria-labelledby="browser-tool">
-	<h2 class="guide-title" id="browser-tool"><span class="guide-number">04</span><span>Choosing the browser tool</span></h2>
-	<p class="guide-section-meta"><span class="guide-status is-trial">in trial</span><span>added <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#browser-tool">#</a></p>
+	<h2 class="guide-title" id="browser-tool"><span class="guide-number">05</span><span>Choosing the browser tool</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in trial</span><span class="guide-badge">recently updated</span><span>updated <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#browser-tool">#</a></p>
 	<div class="guide-label">why</div>
 	<p class="guide-why">A verify skill is only as good as the browser that drives it. We ran one real test on Markasso&#039;s canvas: draw a rectangle, then check that it landed in localStorage. The results decided which tool does what.</p>
 	<div class="guide-label">how</div>
-	<ol class="guide-steps" role="list"><li>Telemaco: FAIL. No layout engine, and <code>browser_evaluate</code> does not await Promises.</li><li>chrome-devtools-mcp: PASS only with synthetic events dispatched from a script, since it has no drag at coordinates; about 36 s.</li><li>Playwright MCP: PASS with real mouse input (<code>browser_mouse_drag_xy</code>), about 24 s. On the first try it even hit a panel lying over the canvas, exactly as a real user would.</li><li>Decision: Telemaco stays for reading the web, search and stealth fetches; driving local apps moves to Playwright MCP. The adoption is in progress.</li></ol>
+	<ol class="guide-steps" role="list"><li>Telemaco: FAIL. No layout engine, and <code>browser_evaluate</code> does not await Promises.</li><li>chrome-devtools-mcp: PASS only with synthetic events dispatched from a script, since it has no drag at coordinates; about 36 s.</li><li>Playwright MCP: PASS with real mouse input (<code>browser_mouse_drag_xy</code>), about 24 s. On the first try it even hit a panel lying over the canvas, exactly as a real user would.</li><li>Decision, now written in the global CLAUDE.md: Telemaco stays for reading the web, search and stealth fetches; driving and verifying local apps moves to Playwright MCP, pinned, headless and isolated. Moving the existing verify skills is in progress.</li></ol>
 	<div class="guide-snippet"><div class="guide-snippet-title">Playwright MCP for local apps</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># Playwright MCP to drive local apps with real mouse and keyboard input.
-# --isolated: in-memory profile, so parallel sessions don&#039;t fight over one profile.
-# --caps=vision: coordinate tools such as browser_mouse_drag_xy, needed for canvas work.
-# --config: forces the en-US locale, so the app&#039;s UI language doesn&#039;t follow the system.
-cat &gt; playwright-mcp.json &lt;&lt;&#039;JSON&#039;
-{
-  &quot;browser&quot;: {
-    &quot;browserName&quot;: &quot;chromium&quot;,
-    &quot;contextOptions&quot;: { &quot;locale&quot;: &quot;en-US&quot; }
-  }
-}
-JSON
+# Pin the version: the server is fetched by npx on every start.
+# Pick the current one with `npm view @playwright/mcp version`.
+# --scope user:   one setup for every project, not just the current one.
+# --headless:     no window stealing focus while you work.
+# --isolated:     in-memory profile, so parallel sessions don&#039;t fight over one profile.
+#                 It also means first-run dialogs show up on every launch.
+# --caps vision:  coordinate tools such as browser_mouse_drag_xy, needed for canvas work.
+# --output-dir:   screenshots and traces go to a cache folder, not into the repo.
+PLAYWRIGHT_MCP_VERSION=0.0.85
+claude mcp add --scope user playwright -- npx -y &quot;@playwright/mcp@$PLAYWRIGHT_MCP_VERSION&quot; \
+  --browser chrome --headless --isolated --caps vision \
+  --viewport-size 1280x800 --output-dir &quot;$HOME/.cache/playwright-mcp&quot;
 
-claude mcp add playwright -- npx @playwright/mcp@latest \
-  --isolated --caps=vision --config &quot;$PWD/playwright-mcp.json&quot;
+# The browser follows the system locale, so the app&#039;s UI may be translated:
+# select by ids, classes, roles or shortcuts, never by visible text.
+# If the app has no stable hooks yet, force a locale with a config file:
+#   { &quot;browser&quot;: { &quot;contextOptions&quot;: { &quot;locale&quot;: &quot;en-US&quot; } } }
+# and add --config &quot;$PWD/playwright-mcp.json&quot; to the command above.
 </code></pre><p class="guide-origin">from <a class="terminal-link" href="https://github.com/microsoft/playwright-mcp" target="_blank" rel="noopener noreferrer">Playwright MCP ↗</a></p></div>
 	
 </section><section class="guide-section" aria-labelledby="second-opinion">
-	<h2 class="guide-title" id="second-opinion"><span class="guide-number">05</span><span>A second opinion with Codex or opencode</span></h2>
-	<p class="guide-section-meta"><span class="guide-status is-trial">in trial</span><span>added <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#second-opinion">#</a></p>
+	<h2 class="guide-title" id="second-opinion"><span class="guide-number">06</span><span>A second opinion with Codex or opencode</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in trial</span><span class="guide-badge">recently updated</span><span>updated <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#second-opinion">#</a></p>
 	<div class="guide-label">why</div>
 	<p class="guide-why">An agent reviewing its own diff shares its own blind spots. A second model with a fresh prompt finds a different set of bugs, as long as you give it the code, not your conclusion, and treat its output as input, not truth.</p>
 	<div class="guide-label">how</div>
-	<ol class="guide-steps" role="list"><li>Codex is the long-term reviewer for deep and critical reviews; opencode&#039;s free models run alongside as an experiment on smaller diffs and scoped tasks.</li><li>Ask before running it, and say what you send and why.</li><li>Read-only by default: opencode&#039;s <code>plan</code> agent or Codex&#039;s <code>read-only</code> sandbox. Write access only inside a separate git worktree.</li><li>Use only models whose provider keeps no data and does not train on it, and never send secrets or client code you may not share.</li><li>Verify every finding against the code, fix what is real, and write down what you rejected and why.</li></ol>
+	<ol class="guide-steps" role="list"><li>Codex is the long-term reviewer for deep and critical reviews, one call per review because its quota is limited; opencode&#039;s free models take smaller diffs, control runs and scoped tasks.</li><li>Size the model to the task: light for a quick question, standard for a small or medium diff, deep for a branch, a plan or a debug session, where two free models run in parallel and you cross-check them.</li><li>Ask before running it, and say what you send and why.</li><li>When the repo has a <code>REVIEW.md</code>, send it read from the base branch and ask the reviewer to apply the rules whose trigger matches the diff.</li><li>Read-only by default: opencode&#039;s <code>plan</code> agent or Codex&#039;s <code>read-only</code> sandbox. Write access only inside a separate git worktree.</li><li>A subagent that works on another repo creates its own worktree there with <code>git worktree add</code>: the agent tool&#039;s worktree isolation only covers the session&#039;s repo.</li><li>Use only models whose provider keeps no data and does not train on it, and never send secrets or client code you may not share.</li><li>Verify every finding against the code, fix what is real, and write down what you rejected and why.</li></ol>
 	<div class="guide-snippet"><div class="guide-snippet-title">Commands</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># Two reviewers with different roles:
 #   Codex     the long-term reviewer for deep and critical reviews (a branch, a plan, security);
-#   opencode  free models, run alongside as an experiment on smaller diffs and scoped tasks.
+#             one call per review, its subscription quota is limited.
+#   opencode  free models for smaller diffs, control runs and scoped tasks.
+
+# Size the model to the task, and use only providers that keep no data and do not train on it:
+#   light     explain a snippet, a small question, a trivial edit      one small free model
+#   standard  review of a small or medium diff, a scoped task           one stronger free model
+#   deep      branch review, debug after failed hypotheses, a plan      Codex, or two free models
+#                                                                       in parallel, cross-checked
 
 # Review a diff, read-only: opencode&#039;s built-in `plan` agent cannot edit files.
-# Pick a model whose provider keeps no data and does not train on it.
-git diff &gt; /tmp/change.diff
+# If the repo has a REVIEW.md, send it from the base branch, never from the working tree.
+# `git diff main` covers commits and uncommitted work; an empty diff is no review.
+git diff main &gt; /tmp/change.diff
+test -s /tmp/change.diff || echo &quot;empty diff: nothing to review&quot;
+git show main:REVIEW.md &gt; /tmp/review-rules.md 2&gt;/dev/null
 opencode run --agent plan -m &lt;model&gt; \
   &quot;Review the diff in /tmp/change.diff for correctness bugs, unescaped input and missing tests. \
+If /tmp/review-rules.md is not empty, apply the rules whose trigger matches a path in the diff. \
 Give each finding a file:line, a severity (must-fix / should-fix / nit) and a concrete failure scenario. \
 Do not edit files.&quot; &gt; review.md
 
@@ -378,11 +434,52 @@ opencode run -w &lt;worktree-name&gt; -m &lt;model&gt; &quot;&lt;task, files, wh
 
 # Codex for deep or critical reviews: read-only sandbox, findings written to a file.
 codex exec -s read-only -C . -o codex.md &quot;&lt;same review prompt&gt;&quot;
-codex review --uncommitted
+# `codex review --base main` is quicker but takes no rules file: prefer `codex exec`
+# with the same prompt when the repo has a REVIEW.md.
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="review-md">
+	<h2 class="guide-title" id="review-md"><span class="guide-number">07</span><span>A REVIEW.md the change cannot rewrite</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in trial</span><span class="guide-badge">new</span><span>added <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#review-md">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">A generic review prompt finds generic issues. A <code>REVIEW.md</code> tells the reviewer what breaks in this code, and because it is always read from the base branch, a change cannot soften the rules that judge it.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Give the reviewer the diff plus <code>git show &lt;base&gt;:REVIEW.md</code>, never the copy in the branch under review.</li><li>Every rule comes from a real bug, citing the fix commits, or from a stated project constraint. No generic advice.</li><li>Make each rule checkable from a diff: a trigger on paths, a concrete check, and why it exists.</li><li>Keep it under about 15 rules: add or sharpen one when a bug slips through review, delete the ones that never trigger or only produce noise.</li><li>Change <code>REVIEW.md</code> in its own commit, never together with the code it judges.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Template</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>&lt;!--
+Copy it to &lt;repo&gt;/REVIEW.md, replace the placeholders, delete this comment.
+
+How it is used: the reviewer (Codex, opencode, /code-review) gets the diff plus
+this file read from the base branch (`git show &lt;base&gt;:REVIEW.md`), never from
+the branch under review, so a change cannot rewrite the rules that judge it.
+Change REVIEW.md in its own commit, never together with the code it judges.
+
+Writing rules:
+- Every rule comes from a real bug (cite the fix commits) or a stated project
+  constraint (cite CLAUDE.md, an ADR, a spec). No generic advice.
+- A rule must be checkable from a diff: concrete trigger paths, concrete check.
+- Keep it under about 15 rules. When a bug slips through review, add or sharpen
+  a rule; when a rule never triggers or only produces noise, delete it.
+--&gt;
+
+# Review guide: &lt;PROJECT&gt;
+
+Check only the rules whose trigger matches a path in the diff. For each finding, name the rule (R1, R2, ...) or say &quot;outside REVIEW.md&quot; when it is a bug no rule covers. Report real defects with a concrete failure scenario; skip anything listed under &quot;Do not flag&quot;.
+
+## Rules
+
+### R1: &lt;short title&gt;
+Trigger: &lt;paths or globs&gt;
+Check: &lt;what must hold in the diff&gt;
+Why: &lt;the failure it prevents&gt; (fixes: &lt;sha&gt;, &lt;sha&gt; | source: &lt;CLAUDE.md, ADR, spec section&gt;)
+
+## Do not flag
+
+- Formatting, import order and lint-level style: &lt;linter&gt; enforces them in CI.
+- &lt;Deliberate convention that looks wrong but is intended, with its source.&gt;
 </code></pre></div>
 	
 </section><section class="guide-section" aria-labelledby="themis-gates">
-	<h2 class="guide-title" id="themis-gates"><span class="guide-number">06</span><span>Themis: gates and a locked contract</span></h2>
+	<h2 class="guide-title" id="themis-gates"><span class="guide-number">08</span><span>Themis: gates and a locked contract</span></h2>
 	<p class="guide-section-meta"><span class="guide-status is-adopted">adopted</span><span>added <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#themis-gates">#</a></p>
 	<div class="guide-label">why</div>
 	<p class="guide-why">For larger work, rules are not enough: the agent must not be able to move the goalposts. Themis turns a spec into acceptance tests, locks them by digest, and only then lets agents write code that a separate verifier judges.</p>
@@ -501,14 +598,46 @@ git ls-files -z -co --exclude-standard \
   | xargs -0 pnpm exec biome check --files-ignore-unknown=true --no-errors-on-unmatched
 </code></pre></div>
 	
+</section><section class="guide-section" aria-labelledby="secrets-in-transcript">
+	<h2 class="guide-title" id="secrets-in-transcript"><span class="guide-number">05</span><span>A secret printed once is already gone</span></h2>
+	<p class="guide-section-meta"><span class="guide-badge">new</span><span>added <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#secrets-in-transcript">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">Whatever an agent prints enters the transcript, and the transcript goes to the model provider. A quick <code>cat .env</code> or a loose <code>grep</code> to check that a key exists is enough to ship its value out of your machine, and deleting the message afterwards does not take it back.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Write the rule in the global CLAUDE.md: never print anything that can hold a secret, so no <code>cat</code>, <code>head</code>, <code>env</code>, <code>printenv</code>, <code>echo</code> or plain <code>grep</code> on it.</li><li>Check a key by name or count only: <code>grep -q</code>, <code>grep -c</code>, or the list of key names.</li><li>Anchor the pattern to the exact key: a loose one matches other keys and prints their values.</li><li>If a value does get printed, the agent says so at once and the secret is rotated, not just deleted from the chat.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Checks that print no values</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># Everything that enters the transcript goes to the model provider and cannot
+# be taken back. Check secrets by name or count, never by value.
+ENV_FILE=path/to/your/env/file
+
+# Never: these print values into the conversation.
+#   cat &quot;$ENV_FILE&quot;    grep TOKEN &quot;$ENV_FILE&quot;    env    printenv    echo &quot;$API_KEY&quot;
+
+test -r &quot;$ENV_FILE&quot; || echo &quot;cannot read $ENV_FILE&quot;
+
+# Is the key there? Exit code only.
+grep -q &#039;^STRIPE_API_KEY=&#039; &quot;$ENV_FILE&quot; &amp;&amp; echo present || echo missing
+
+# How many times is it defined? A count, no value.
+grep -c &#039;^STRIPE_API_KEY=&#039; &quot;$ENV_FILE&quot;
+
+# Which keys exist? Names only.
+grep -o &#039;^[A-Z_]*=&#039; &quot;$ENV_FILE&quot;
+
+# Anchor the pattern to the exact key, and still never print the line:
+#   grep STRIPE &quot;$ENV_FILE&quot;                  also hits STRIPE_WEBHOOK_SECRET, and prints its value
+#   grep -c &#039;^STRIPE_API_KEY=&#039; &quot;$ENV_FILE&quot;   one key, a count, no value
+
+# If a value does get printed: say so at once and rotate the secret.
+</code></pre></div>
+	
 </section>
 <section class="guide-closing" aria-labelledby="next-up">
 	<h2 class="guide-part" id="next-up">Next up</h2>
-	<ul class="guide-roadmap" role="list"><li><span class="guide-roadmap-title">Stop hook in observe mode</span><p>A global hook that logs when a session ends without verification, without blocking anything yet, so false positives surface before it ever enforces.</p></li><li><span class="guide-roadmap-title">A REVIEW.md per repo</span><p>What the reviewer should look at for this code, always read from the base branch so a change cannot rewrite its own review rules.</p></li><li><span class="guide-roadmap-title">One reviewer, several rounds</span><p>Tune a single reviewer and feed each round the findings and failures of the previous ones, instead of stacking parallel reviewers.</p></li><li><span class="guide-roadmap-title">A diff-triggered reliability checklist</span><p>Checklist items with a trigger readable from a diff, matched through Serval&#039;s blast radius, so only the few relevant checks run on each change.</p></li><li><span class="guide-roadmap-title">Adopt Playwright MCP</span><p>Move the verify skills that drive local apps from Telemaco to Playwright MCP, starting with Markasso.</p></li><li><span class="guide-roadmap-title">Audit Telemaco</span><p>Slim Telemaco down to what it does best: reading the web, search and stealth fetches.</p></li></ul>
+	<ul class="guide-roadmap" role="list"><li><span class="guide-roadmap-title"><a class="reader-nav-link" href="#verify-gate">Stop hook in observe mode</a></span><p>A global hook that logs when a session ends without verification, without blocking anything yet, so false positives surface before it ever enforces.</p></li><li><span class="guide-roadmap-title"><a class="reader-nav-link" href="#review-md">A REVIEW.md per repo</a></span><p>What the reviewer should look at for this code, always read from the base branch so a change cannot rewrite its own review rules.</p></li><li><span class="guide-roadmap-title">One reviewer, several rounds</span><p>Tune a single reviewer and feed each round the findings and failures of the previous ones, instead of stacking parallel reviewers.</p></li><li><span class="guide-roadmap-title">A diff-triggered reliability checklist</span><p>Checklist items with a trigger readable from a diff, matched through Serval&#039;s blast radius, so only the few relevant checks run on each change.</p></li><li><span class="guide-roadmap-title">Adopt Playwright MCP</span><p>Move the verify skills that drive local apps from Telemaco to Playwright MCP, starting with Markasso.</p></li><li><span class="guide-roadmap-title">Audit Telemaco</span><p>Slim Telemaco down to what it does best: reading the web, search and stealth fetches.</p></li></ul>
 </section>
 <section class="guide-closing" aria-labelledby="changelog">
 	<h2 class="guide-part" id="changelog">Changelog</h2>
-	<ol class="guide-changelog" role="list"><li><time datetime="2026-11-17">17/11/2026</time><p>First edition: six practices, four pitfalls and a roadmap, on a page of its own with a link for every section.</p></li></ol>
+	<ol class="guide-changelog" role="list"><li><time datetime="2026-11-18">18/11/2026</time><p>Two new practices, a Stop hook in observe mode and a REVIEW.md read from the base branch, and a pitfall on secrets in the transcript. The second opinion now sizes the model to the task, the browser tool decision is in the global rules, and the Playwright setup matches the real one.</p><p class="guide-changelog-sections"><a class="reader-nav-link" href="#verify-gate">A Stop hook that watches before it blocks</a> · <a class="reader-nav-link" href="#review-md">A REVIEW.md the change cannot rewrite</a> · <a class="reader-nav-link" href="#secrets-in-transcript">A secret printed once is already gone</a> · <a class="reader-nav-link" href="#second-opinion">A second opinion with Codex or opencode</a> · <a class="reader-nav-link" href="#browser-tool">Choosing the browser tool</a> · <a class="reader-nav-link" href="#claude-md-rules">Verification rules in CLAUDE.md</a></p></li><li><time datetime="2026-11-17">17/11/2026</time><p>First edition: six practices, four pitfalls and a roadmap, on a page of its own with a link for every section.</p></li></ol>
 </section>
 </article></noscript></div>
 
