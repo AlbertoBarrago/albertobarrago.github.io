@@ -1012,6 +1012,18 @@ summary.guide-snippet-title::marker {
 	font-size: 0.78rem;
 }
 
+/* Overrides the name row layout that `.project-item > div` applies. */
+.project-item > .project-badges {
+	justify-content: flex-start;
+	align-items: center;
+	margin-top: 0.6rem;
+}
+
+.project-badges img {
+	display: block;
+	height: 20px;
+}
+
 .brew-install {
 	margin-top: 0.5rem !important;
 }

@@ -325,7 +325,8 @@ function projectsHTML() {
 	return `<div class="output-title">${t("Selected projects")}</div>
 <div class="project-list">${openSource.map((project) => `<article class="project-item">
 	<div><a class="terminal-link project-name" href="${project.url}" target="_blank" rel="noopener noreferrer">${project.name} ↗</a><span class="project-language">${project.language}</span></div>
-	<p>${project.description}</p>
+	<p>${project.description}</p>${project.badges?.length ? `
+	<div class="project-badges">${project.badges.map((badge) => `<a href="${badge.href}" target="_blank" rel="noopener noreferrer"><img height="20" src="${badge.src}" alt="${badge.alt}" loading="lazy" /></a>`).join('')}</div>` : ''}
 </article>`).join('')}</div>
 <div class="output-title output-title-spaced">${t("Homebrew formulae")}</div>
 <p class="prose">${t("Command-line tools I've packaged and maintain via Homebrew taps.")}</p>

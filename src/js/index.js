@@ -69,13 +69,25 @@ const experience = [
 	}
 ];
 
-/** @type {{ name: string, description: string, url: string, language: string }[]} */
+/**
+ * @typedef {{ href: string, src: string, alt: string }} ProjectBadge
+ * An external badge image (e.g. a directory listing score) shown on a project card.
+ */
+
+/** @type {{ name: string, description: string, url: string, language: string, badges?: ProjectBadge[] }[]} */
 const openSource = [
 	{
 		name: "Markasso",
 		description: t("A fast, minimal, keyboard-first whiteboard engine for the browser. Marker + Picasso. No framework. No runtime. Just canvas."),
 		url: "https://markasso.it",
-		language: "TypeScript (0 deps)"
+		language: "TypeScript (0 deps)",
+		badges: [
+			{
+				href: "https://mcprush.com/to/markasso-mcp?ref=badge",
+				src: "https://mcprush.com/badge/markasso-mcp/score.svg",
+				alt: t("Markasso MCP on mcprush")
+			}
+		]
 	},
 	{
 		name: "Iris",
