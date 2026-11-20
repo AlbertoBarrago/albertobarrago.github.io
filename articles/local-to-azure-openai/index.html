@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>From Ollama to Azure OpenAI in a Day, All of It Scripted | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="Notes from a migration: a RAG assistant built and measured locally, moved onto a large client's cloud models without creating anything by hand in the…" />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/articles/local-to-azure-openai/" />
+	<meta property="og:title" content="From Ollama to Azure OpenAI in a Day, All of It Scripted | Alberto Barrago" />
+	<meta property="og:description" content="Notes from a migration: a RAG assistant built and measured locally, moved onto a large client's cloud models without creating anything by hand in the…" />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="From Ollama to Azure OpenAI in a Day, All of It Scripted | Alberto Barrago" />
+	<meta name="twitter:description" content="Notes from a migration: a RAG assistant built and measured locally, moved onto a large client's cloud models without creating anything by hand in the…" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/articles/local-to-azure-openai/" />
+
+	<!-- RSS feed -->
+	<link rel="alternate" type="application/rss+xml" title="Alberto Barrago | Articles" href="/feed.xml" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-B6Wi4QHA.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DGiZZ_Fi.css">
+<link rel="alternate" hreflang="en" href="https://albz.it/articles/local-to-azure-openai/" />
+<link rel="alternate" hreflang="it" href="https://albz.it/it/articles/local-to-azure-openai/" />
+<link rel="alternate" hreflang="x-default" href="https://albz.it/articles/local-to-azure-openai/" />
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"Article","headline":"From Ollama to Azure OpenAI in a Day, All of It Scripted","datePublished":"2026-11-20","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/articles/local-to-azure-openai/","mainEntityOfPage":"https://albz.it/articles/local-to-azure-openai/","inLanguage":"en"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article><h1>From Ollama to Azure OpenAI in a Day, All of It Scripted</h1><p>2026-11-20 · AI-assisted, human-reviewed</p><p><em>Notes from a migration: a RAG assistant built and measured locally, moved onto a large client&#39;s cloud models without creating anything by hand in the portal.</em></p>
+<p>For months the assistant ran on my Mac: Ollama, bge-m3 for embeddings, gemma3:12b for chat, an Elasticsearch index and an evaluation set of 50 questions. Then it was time to move it onto the client&#39;s Azure models, with a three-line brief: get in, create what you need, and if you lack permissions, say so. And make all of it scriptable and repeatable.</p>
+<p>That last sentence turned out to be the important one. Here is what I learned in a day.</p>
+<h2>Reconnaissance first, read-only</h2>
+<p>Before creating a single resource I spent an hour with the Azure CLI just looking: roles, subscription, registered providers, model catalog and quotas in the EU regions.</p>
+<p>First surprise: you join the client&#39;s tenant as a guest, and the portal shows your home directory. &quot;Nothing is there&quot; until you switch directory.</p>
+<p>Second surprise, the one that mattered: the models picked a few weeks earlier were still in the catalog, but with no quota you could activate. Batch only. The plan changed before I wrote a line, and two newer models took their place: gpt-5.4-mini as the main one, gpt-5.5 for comparison.</p>
+<p>Found later, the same fact would have meant redoing the work. And the manual exploration immediately became a script, <code>discover.sh</code>, that anyone can run again.</p>
+<h2>Decisions, written in code</h2>
+<p>The infrastructure is Bicep: native to Azure, no state file to look after, and <code>what-if</code> to preview a change before applying it. Some decisions I wanted to be hard to undo by accident:</p>
+<ul>
+<li><strong>Data stays in the EU</strong>: DataZone Standard EU deployments, so prompts and responses are processed inside the EU data zone. The Bicep type accepts only that SKU: moving to Global takes a reviewed change, not one word edited in a parameter file.</li>
+<li><strong>Pinned model versions</strong>, no automatic upgrades: benchmarks stay comparable.</li>
+<li><strong>The key lives in Key Vault</strong>, never in deployment outputs, never printed, not even by the smoke test.</li>
+<li><strong>Who can call the models is a list in the parameter file</strong>, not a click in the portal: you read it in git, with a date and a reason.</li>
+</ul>
+<p>Everything goes through <code>deploy.sh</code>: what-if, confirm, apply. Running it again changes nothing when nothing changed.</p>
+<h2>Real errors only show up in a real deploy</h2>
+<p>The what-if was clean. The first deploy failed anyway.</p>
+<p>Azure reports the AI account as &quot;created&quot; before it is actually ready, and reading its key failed with <code>RequestConflict</code>. The models and the vault were there, the secret was not. At first I read that <code>Failed</code> as a retry that had succeeded: wrong, and I said so. The fix was a dependency: the secret is written after the model deployments, when the account is certainly ready. Without it, every new environment, production included, would have broken at the same point.</p>
+<p>Two smaller snags, useful all the same. A <code>[y/N]</code> prompt run without a terminal got end of input and exited silently: now it says so and suggests <code>--yes</code>. And two deploys started in parallel: Azure rejected the second one, no harm done.</p>
+<h2>Abstractions written months ago pay off</h2>
+<p>In the backend, chat and embeddings were already two interfaces, and the index mapping took its dimensions from the active provider. The migration meant adding two implementations, picked by a configuration property. No refactor.</p>
+<p>The details that mattered:</p>
+<ul>
+<li>gpt-5.5 rejects <code>temperature: 0.1</code> and accepts only the default: temperature is configured per model, and sent only when set.</li>
+<li>Azure&#39;s embeddings have 3072 dimensions against bge-m3&#39;s 1024: that takes a new index, and the old one stays for comparisons.</li>
+<li>Returned vectors are sorted by <code>index</code>, not by position. On a 429 the client waits as long as <code>Retry-After</code> says, but only during a reindex: a user&#39;s question should fail fast.</li>
+<li>If the endpoint or the key is missing, the backend refuses to start. A failed boot beats a 503 on every question.</li>
+</ul>
+<h2>Measure again, don&#39;t assume</h2>
+<p>Change the embedding model and the score distribution changes too. The relevance threshold, which drops off-topic questions before they reach the model, was tuned on the old one. I measured it again with 8 off-topic questions (&quot;a carbonara recipe&quot;) and 10 on-topic ones: between the highest off-topic score and the lowest on-topic one there is a gap of 0.05, and the old threshold sits right in it. Confirmed, but now it is a measurement, not a hope.</p>
+<p>Then the benchmark: the same 50 questions, three runs, graded by hand.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>gemma3:12b, local</th>
+<th>gpt-5.4-mini</th>
+<th>gpt-5.5</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Score</td>
+<td>93/100</td>
+<td>95, 95, 95</td>
+<td>99, 99, 99</td>
+</tr>
+<tr>
+<td>Serious errors</td>
+<td>at least one</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Median time</td>
+<td>about 17 s</td>
+<td>1.4 s</td>
+<td>5.5 s</td>
+</tr>
+</tbody></table>
+<p>The most useful number is not the score, it is the stability. Three identical runs say the partial answers are structural (retrieval, prompt), not sampling bad luck. Indeed, one of them no model can fix: the right document never reaches the sources.</p>
+<p>The final pick was not mine to make, and rightly so. gpt-5.5 fixes four of the five partial answers, but it costs about ten times as much per question (a couple of euro cents against two tenths of a cent) and it is four times slower. Quality against cost and speed is the client&#39;s call: until then gpt-5.5 is the default, and switching is one line of configuration.</p>
+<h2>A second opinion, verified</h2>
+<p>The diff of the scripts, and later the backend&#39;s, went through a second model, read-only and explicitly forbidden from running commands. About half of its findings were real: a README that taught a command printing the key, a smoke test that could go green without making a single call, the API key inside a Lombok-generated <code>toString()</code>. I rejected the rest after checking them against the code. That is the only way a second opinion is worth having.</p>
+<p>Before the merge, the whole body of work (seventy commits) went through a deeper review with Codex. Fifteen findings, seven of them merge blockers, none of them noise. The most serious were domain logic defects no test had seen: content marked as no longer valid was indexed as if it were current. Next to them, the classics you write in a hurry: the assistant endpoint open to every role instead of operators only, question text in the audit logs, images and links in the model&#39;s Markdown rendered as HTML, a saved answer in the browser that survived a change of user in the same tab. Seven fixes, seven separate commits, then the merge. The broader findings, about answer correctness on complex cases, are planned for the production phase instead of being rushed in.</p>
+<h2>Monitoring pays off on first use</h2>
+<p>The last script reads Azure Monitor: requests and tokens per model, HTTP outcomes. On its first run it showed four 500 errors on embeddings during the reindex: they were why two documents were missing from the new index. The provider retried only on 429, now it retries on 5xx too. A resumable reindex recovered the two documents, and the new index now matches the old one document by document. Over a few thousand requests, the &quot;rare&quot; error happens.</p>
+<p>The same metrics, priced with the official price list, give the real cost of the day: about 5 euros in total, two full reindexes and every benchmark included. One full reindex costs about a euro. (A CLI gotcha: without an explicit <code>--end-time</code>, Azure Monitor returns empty series.)</p>
+<p>And &quot;if you lack permissions, say so&quot;? The monthly budget with alerts is written in the Bicep, but with our roles Azure answers that we cannot read prices. So it became optional, and whoever handles billing will turn it on. Meanwhile the real cap is each deployment&#39;s capacity: past it, Azure answers 429 and does not bill.</p>
+<h2>The handover</h2>
+<p>The backend knows nothing about Azure until the cluster tells it: three configuration values and one secret, loaded by a mechanism that was already there, no code to change. The values are ready and go to the people who run the platform, with two notes: the key goes in the Secret, not the ConfigMap, and it never travels through chat. Along with them, an operations guide for colleagues.</p>
+<p>To the question &quot;so is everything exposed to the internet now?&quot; the answer was short: only the model endpoint, protected by a key. The backend and the data stay where they were, and an IP allowlist is optional hardening.</p>
+<p>One known limit remains, written down rather than hidden: a question about a single paragraph of a very long text does not retrieve that paragraph. It is a retrieval problem, and no model solves it on its own.</p>
+<h2>What I take home</h2>
+<ul>
+<li>Anything you do by hand in the portal is debt: if it is not in a script, you will redo it for the next environment.</li>
+<li>Read-only reconnaissance comes first, because it can change the plan.</li>
+<li>What-if does not see races: only a real deploy finds them.</li>
+<li>The right interfaces, written when nobody needed them, are what make a one-day migration possible.</li>
+<li>A deep review before the merge finds what tests don&#39;t know to look for: the domain logic.</li>
+<li>When you misread a result, say so out loud and fix it. It costs less than defending it.</li>
+</ul>
+</article></noscript></div>
+
+	<!-- Cloudflare Web Analytics: cookieless, no consent banner required -->
+	<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"
+		data-cf-beacon='{"token": "64eea3ab6ba4461e880aa8ec2d58bfc3"}'></script>
+</body>
+
+</html>

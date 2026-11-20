@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Da Ollama ad Azure OpenAI in un giorno, tutto scriptabile | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="Note da una migrazione: un assistente RAG costruito e misurato in locale, portato sui modelli cloud di un grosso cliente senza creare niente a mano nel…" />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/it/articles/local-to-azure-openai/" />
+	<meta property="og:title" content="Da Ollama ad Azure OpenAI in un giorno, tutto scriptabile | Alberto Barrago" />
+	<meta property="og:description" content="Note da una migrazione: un assistente RAG costruito e misurato in locale, portato sui modelli cloud di un grosso cliente senza creare niente a mano nel…" />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Da Ollama ad Azure OpenAI in un giorno, tutto scriptabile | Alberto Barrago" />
+	<meta name="twitter:description" content="Note da una migrazione: un assistente RAG costruito e misurato in locale, portato sui modelli cloud di un grosso cliente senza creare niente a mano nel…" />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/it/articles/local-to-azure-openai/" />
+
+	<!-- RSS feed -->
+	<link rel="alternate" type="application/rss+xml" title="Alberto Barrago | Articles" href="/feed.xml" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-B6Wi4QHA.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DGiZZ_Fi.css">
+<link rel="alternate" hreflang="en" href="https://albz.it/articles/local-to-azure-openai/" />
+<link rel="alternate" hreflang="it" href="https://albz.it/it/articles/local-to-azure-openai/" />
+<link rel="alternate" hreflang="x-default" href="https://albz.it/articles/local-to-azure-openai/" />
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"Article","headline":"Da Ollama ad Azure OpenAI in un giorno, tutto scriptabile","datePublished":"2026-11-20","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/it/articles/local-to-azure-openai/","mainEntityOfPage":"https://albz.it/it/articles/local-to-azure-openai/","inLanguage":"it"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article><h1>Da Ollama ad Azure OpenAI in un giorno, tutto scriptabile</h1><p>2026-11-20 · Testo assistito da AI, rivisto dall’autore</p><p><em>Note da una migrazione: un assistente RAG costruito e misurato in locale, portato sui modelli cloud di un grosso cliente senza creare niente a mano nel portale.</em></p>
+<p>Per mesi l&#39;assistente ha girato sul mio Mac: Ollama, bge-m3 per gli embedding, gemma3:12b per la chat, un indice Elasticsearch e un set di valutazione da 50 domande. Poi è arrivato il momento di portarlo sui modelli Azure del cliente, con una consegna di tre righe: entra, creati quello che serve, se non hai i permessi avvisa. E rendi tutto scriptabile e replicabile.</p>
+<p>L&#39;ultima frase si è rivelata la più importante. Ecco cosa ho imparato in una giornata.</p>
+<h2>Prima la ricognizione, in sola lettura</h2>
+<p>Prima di creare qualsiasi risorsa ho passato un&#39;ora con la Azure CLI a guardare e basta: ruoli, sottoscrizione, provider registrati, catalogo dei modelli e quote nelle regioni UE.</p>
+<p>Prima sorpresa: si entra come ospite nel tenant del cliente, e il portale mostra la tua directory di casa. &quot;Non si vede nulla&quot; finché non cambi directory.</p>
+<p>Seconda sorpresa, quella che conta: i modelli scelti qualche settimana prima erano ancora in catalogo, ma senza una quota attivabile. Solo batch. Il piano è cambiato prima di scrivere una riga, e due modelli più recenti hanno preso il loro posto: gpt-5.4-mini come principale, gpt-5.5 per il confronto.</p>
+<p>Fatta dopo, la stessa scoperta avrebbe voluto dire rifare il lavoro. E l&#39;esplorazione a mano è diventata subito uno script, <code>discover.sh</code>, che chiunque può rilanciare.</p>
+<h2>Le scelte, scritte nel codice</h2>
+<p>L&#39;infrastruttura è in Bicep: nativo di Azure, nessun file di stato da custodire, e <code>what-if</code> per vedere cosa cambierà prima di applicarlo. Alcune decisioni volevo renderle difficili da annullare per sbaglio:</p>
+<ul>
+<li><strong>Dati in UE</strong>: deployment DataZone Standard EU, così prompt e risposte restano nella zona dati europea. Il tipo Bicep accetta solo quella SKU: passare a Global richiede una modifica rivista, non una parola cambiata in un file di parametri.</li>
+<li><strong>Versioni dei modelli bloccate</strong>, senza aggiornamenti automatici: i benchmark restano confrontabili.</li>
+<li><strong>La chiave nel Key Vault</strong>, mai negli output del deployment, mai stampata, neanche dallo smoke test.</li>
+<li><strong>Chi ha accesso ai modelli è un elenco nel file dei parametri</strong>, non un clic nel portale: si legge in git, con data e motivo.</li>
+</ul>
+<p>Tutto passa da <code>deploy.sh</code>: what-if, conferma, applica. Rilanciarlo non cambia niente se niente è cambiato.</p>
+<h2>Gli errori veri arrivano solo dal deploy vero</h2>
+<p>Il what-if era pulito. Il primo deploy è fallito lo stesso.</p>
+<p>Azure dichiara l&#39;account AI &quot;creato&quot; prima che sia davvero pronto, e la lettura della chiave falliva con <code>RequestConflict</code>. I modelli e il vault c&#39;erano, il segreto no. In un primo momento ho letto quel <code>Failed</code> come un tentativo ripetuto andato a buon fine: sbagliato, e l&#39;ho detto. La correzione è stata una dipendenza: il segreto viene scritto dopo i deployment dei modelli, quando l&#39;account è certamente pronto. Senza, ogni ambiente nuovo, produzione compresa, si sarebbe rotto nello stesso punto.</p>
+<p>Due intoppi minori, utili lo stesso. Una conferma <code>[y/N]</code> lanciata senza terminale riceveva fine input e usciva in silenzio: ora lo dice e suggerisce <code>--yes</code>. E due deploy partiti in parallelo: il secondo è stato rifiutato da Azure, senza danni.</p>
+<h2>Le astrazioni scritte mesi prima ripagano</h2>
+<p>Nel backend, chat ed embedding erano già due interfacce, e il mapping dell&#39;indice prendeva le dimensioni dal provider attivo. La migrazione è stata aggiungere due implementazioni, scelte da una proprietà di configurazione. Nessun refactor.</p>
+<p>I dettagli che hanno contato:</p>
+<ul>
+<li>gpt-5.5 rifiuta <code>temperature: 0.1</code> e accetta solo il default: la temperatura va configurata per modello, e inviata solo se presente.</li>
+<li>Gli embedding di Azure hanno 3072 dimensioni contro le 1024 di bge-m3: serve un indice nuovo, e il vecchio resta per i confronti.</li>
+<li>I vettori restituiti vanno ordinati per <code>index</code>, non per posizione. Sui 429 si aspetta quanto dice <code>Retry-After</code>, ma solo durante il reindex: una domanda dell&#39;utente deve fallire subito.</li>
+<li>Se mancano endpoint o chiave, il backend non parte. Meglio un avvio fallito che un 503 a ogni domanda.</li>
+</ul>
+<h2>Misurare di nuovo, non presumere</h2>
+<p>Cambiato il modello di embedding, cambia la distribuzione dei punteggi. La soglia di pertinenza, che scarta le domande fuori tema prima che arrivino al modello, era tarata sul vecchio. L&#39;ho rimisurata con 8 domande fuori tema (&quot;ricetta della carbonara&quot;) e 10 in tema: tra il punteggio fuori tema più alto e quello in tema più basso c&#39;è un varco di 0,05, e la vecchia soglia cade nel mezzo. Confermata, ma ora è un dato, non una speranza.</p>
+<p>Poi il benchmark: le stesse 50 domande, tre giri, voto dato a mano.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>gemma3:12b in locale</th>
+<th>gpt-5.4-mini</th>
+<th>gpt-5.5</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Voto</td>
+<td>93/100</td>
+<td>95, 95, 95</td>
+<td>99, 99, 99</td>
+</tr>
+<tr>
+<td>Errori gravi</td>
+<td>almeno uno</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Tempo mediano</td>
+<td>circa 17 s</td>
+<td>1,4 s</td>
+<td>5,5 s</td>
+</tr>
+</tbody></table>
+<p>Il dato più utile non è il punteggio, è la stabilità. Tre giri identici dicono che le risposte parziali sono difetti strutturali (recupero, prompt), non sfortuna del campionamento. Una di queste, infatti, nessun modello può risolverla: il documento giusto non arriva tra le fonti.</p>
+<p>La scelta finale non l&#39;ho fatta io, ed è giusto così. gpt-5.5 corregge quattro risposte parziali su cinque, ma costa circa dieci volte tanto a domanda (un paio di centesimi contro due decimi di centesimo) ed è quattro volte più lento. Qualità contro costo e velocità è una decisione del cliente: nel frattempo gpt-5.5 è il default, e cambiarlo è una riga di configurazione.</p>
+<h2>Un secondo parere, verificato</h2>
+<p>Il diff degli script, e poi quello del backend, sono passati da un secondo modello, in sola lettura e con il divieto esplicito di eseguire comandi. Circa metà dei rilievi erano veri: un README che insegnava un comando che stampava la chiave, uno smoke test che poteva risultare verde senza aver fatto chiamate, la chiave API dentro un <code>toString()</code> generato da Lombok. Gli altri li ho scartati dopo averli verificati sul codice. Un secondo parere vale solo così.</p>
+<p>Prima del merge, tutto il lavoro (settanta commit) è passato da una review più profonda, con Codex. Quindici rilievi, sette da bloccare il merge, nessuno di rumore. I più seri erano difetti di logica del dominio che nessun test aveva visto: contenuti marcati come non più validi finivano nell&#39;indice come se fossero in vigore. Accanto, i classici che si scrivono in fretta: l&#39;endpoint dell&#39;assistente aperto a tutti i ruoli invece che agli operatori, il testo delle domande negli audit log, immagini e link nel Markdown del modello resi come HTML, una risposta salvata nel browser che sopravviveva al cambio di utente nella stessa scheda. Sette fix, sette commit separati, poi il merge. I rilievi più ampi, che toccano la correttezza delle risposte su casi complessi, sono pianificati per la fase di produzione invece che infilati in fretta.</p>
+<h2>Il monitoraggio ripaga al primo uso</h2>
+<p>L&#39;ultimo script legge Azure Monitor: richieste e token per modello, esiti HTTP. Al primo lancio ha mostrato quattro errori 500 sugli embedding durante il reindex: erano la causa dei due documenti mancanti nell&#39;indice nuovo. Il provider ritentava solo sui 429, ora anche sui 5xx. Un reindex riprendibile ha recuperato i due documenti, e il nuovo indice ora corrisponde al vecchio documento per documento. Su qualche migliaio di richieste, l&#39;errore &quot;raro&quot; capita.</p>
+<p>Le stesse metriche, con il listino ufficiale, danno il costo vero della giornata: circa 5 euro in tutto, due reindex completi e tutti i benchmark compresi. Un reindex completo costa circa un euro. (Trucco della CLI: senza un <code>--end-time</code> esplicito, Azure Monitor restituisce serie vuote.)</p>
+<p>E il &quot;se non hai i permessi, avvisa&quot;? Il budget mensile con gli avvisi è scritto nel Bicep, ma con i nostri ruoli Azure risponde che non possiamo leggere i prezzi. Così è diventato opzionale, e lo attiverà chi gestisce la fatturazione. Nel frattempo il tetto vero è la capacità di ogni deployment: oltre, Azure risponde 429 e non fattura.</p>
+<h2>Il passaggio di consegne</h2>
+<p>Il backend non sa niente di Azure finché il cluster non glielo dice: tre valori di configurazione e un segreto, caricati da un meccanismo che c&#39;era già, nessuna riga di codice da cambiare. I valori sono pronti e passano a chi gestisce la piattaforma, con due note: la chiave va nel Secret, non nella ConfigMap, e non viaggia in chat. Insieme, una guida operativa per i colleghi.</p>
+<p>Alla domanda &quot;quindi adesso è tutto esposto su internet?&quot; la risposta è stata breve: solo l&#39;endpoint del modello, protetto da chiave. Backend e dati restano dove erano, e una allowlist di IP è un rinforzo opzionale.</p>
+<p>Resta un limite noto, scritto e non nascosto: una domanda su un singolo paragrafo di un testo molto lungo non recupera quel paragrafo. È un problema di recupero, e nessun modello lo risolve da solo.</p>
+<h2>Cosa mi porto a casa</h2>
+<ul>
+<li>Tutto quello che fai a mano nel portale è debito: se non è in uno script, il prossimo ambiente lo rifarai da capo.</li>
+<li>La ricognizione in sola lettura viene prima, perché può cambiare il piano.</li>
+<li>Il what-if non vede le corse: le trova solo il deploy vero.</li>
+<li>Le interfacce giuste, scritte quando non servivano, sono quelle che rendono possibile una migrazione in un giorno.</li>
+<li>Una review profonda prima del merge trova quello che i test non sanno cercare: la logica del dominio.</li>
+<li>Quando leggi male un risultato, dillo ad alta voce e correggi. Costa meno che difenderlo.</li>
+</ul>
+</article></noscript></div>
+
+	<!-- Cloudflare Web Analytics: cookieless, no consent banner required -->
+	<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"
+		data-cf-beacon='{"token": "64eea3ab6ba4461e880aa8ec2d58bfc3"}'></script>
+</body>
+
+</html>
