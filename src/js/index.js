@@ -1,24 +1,24 @@
 import { t } from './i18n.js';
 import pkg from "../../package.json";
-import claudeMdRules from "../content/how-we-build/claude-md-verification-rules.md?raw";
-import verifySkillTemplate from "../content/how-we-build/verify-skill-template.md?raw";
-import verifySkillMarkasso from "../content/how-we-build/verify-skill-markasso.md?raw";
-import verifySkillThemis from "../content/how-we-build/verify-skill-themis.md?raw";
-import verifiedTrailer from "../content/how-we-build/verified-trailer.sh?raw";
-import secondOpinion from "../content/how-we-build/second-opinion.sh?raw";
-import themisGates from "../content/how-we-build/themis-gates.sh?raw";
-import devServerFreePort from "../content/how-we-build/dev-server-free-port.sh?raw";
-import telemacoDomCheck from "../content/how-we-build/telemaco-dom-check.txt?raw";
-import verifySkillKickoff from "../content/how-we-build/verify-skill-kickoff.sh?raw";
-import verifySkillPlaywrightE2e from "../content/how-we-build/verify-skill-playwright-e2e.md?raw";
-import playwrightMcpSetup from "../content/how-we-build/playwright-mcp-setup.sh?raw";
-import languageIndependentSelectors from "../content/how-we-build/language-independent-selectors.txt?raw";
-import biomeTrackedFiles from "../content/how-we-build/biome-tracked-files.sh?raw";
-import verifyGateHook from "../content/how-we-build/verify-gate-hook.sh?raw";
-import reviewMdTemplate from "../content/how-we-build/review-md-template.md?raw";
-import secretKeyChecks from "../content/how-we-build/secret-key-checks.sh?raw";
-import improvementLog from "../content/how-we-build/improvement-log.md?raw";
-import globalSettingsGuard from "../content/how-we-build/global-settings-guard.sh?raw";
+import claudeMdRules from "../content/agent-playbook/claude-md-verification-rules.md?raw";
+import verifySkillTemplate from "../content/agent-playbook/verify-skill-template.md?raw";
+import verifySkillMarkasso from "../content/agent-playbook/verify-skill-markasso.md?raw";
+import verifySkillThemis from "../content/agent-playbook/verify-skill-themis.md?raw";
+import verifiedTrailer from "../content/agent-playbook/verified-trailer.sh?raw";
+import secondOpinion from "../content/agent-playbook/second-opinion.sh?raw";
+import themisGates from "../content/agent-playbook/themis-gates.sh?raw";
+import devServerFreePort from "../content/agent-playbook/dev-server-free-port.sh?raw";
+import telemacoDomCheck from "../content/agent-playbook/telemaco-dom-check.txt?raw";
+import verifySkillKickoff from "../content/agent-playbook/verify-skill-kickoff.sh?raw";
+import verifySkillPlaywrightE2e from "../content/agent-playbook/verify-skill-playwright-e2e.md?raw";
+import playwrightMcpSetup from "../content/agent-playbook/playwright-mcp-setup.sh?raw";
+import languageIndependentSelectors from "../content/agent-playbook/language-independent-selectors.txt?raw";
+import biomeTrackedFiles from "../content/agent-playbook/biome-tracked-files.sh?raw";
+import verifyGateHook from "../content/agent-playbook/verify-gate-hook.sh?raw";
+import reviewMdTemplate from "../content/agent-playbook/review-md-template.md?raw";
+import secretKeyChecks from "../content/agent-playbook/secret-key-checks.sh?raw";
+import improvementLog from "../content/agent-playbook/improvement-log.md?raw";
+import globalSettingsGuard from "../content/agent-playbook/global-settings-guard.sh?raw";
 
 const name = "Alberto Barrago";
 const role = "Senior Software Engineer";
@@ -272,15 +272,15 @@ const utils = [
 ];
 
 /**
- * The "How we build" guide (command `howwebuild`, page /how-we-build/):
+ * The "Agent Playbook" guide (command `playbook`, page /agent-playbook/):
  * practices for working with coding agents. When the advice in a section
  * changes, bump its `updated` date and add a changelog entry (newest first). Prose goes through t(); copyable blocks are raw files in
- * src/content/how-we-build/ and stay in English. Public site: only my own open
+ * src/content/agent-playbook/ and stay in English. Public site: only my own open
  * projects, never client work, internal URLs, personal paths or contacts
- * (how-we-build.test.js checks the blocks).
- * @type {import('./how-we-build.js').HowWeBuildGuide}
+ * (agent-playbook.test.js checks the blocks).
+ * @type {import('./agent-playbook.js').AgentPlaybook}
  */
-const howWeBuild = {
+const agentPlaybook = {
 	published: "2026-11-17",
 	inspiration: { label: t("Verification loops, by the Claude Code team at Anthropic") },
 	practices: [
@@ -302,8 +302,8 @@ const howWeBuild = {
 			],
 			diagrams: [
 				{
-					src: "/how-we-build/verification-loop.svg",
-					source: "/how-we-build/verification-loop.markasso",
+					src: "/agent-playbook/verification-loop.svg",
+					source: "/agent-playbook/verification-loop.markasso",
 					alt: t("Flowchart: the agent makes a change and verifies it by running the app. If it passes, the change is ready for testing with a Verified commit stamp. If not, the agent fixes the code and verifies again, up to three rounds, then stops and brings in the human."),
 					caption: t("The loop these rules describe.")
 				}
@@ -481,8 +481,8 @@ const howWeBuild = {
 			],
 			diagrams: [
 				{
-					src: "/how-we-build/themis-pipeline.svg",
-					source: "/how-we-build/themis-pipeline.markasso",
+					src: "/agent-playbook/themis-pipeline.svg",
+					source: "/agent-playbook/themis-pipeline.markasso",
 					alt: t("Flowchart of the Themis pipeline: spec, plan, locked contract, worker, verifier with retries and a guard on the locked checks, failed or blocked after max iterations, reviewer on the committed diff, merge, retro."),
 					caption: t("The Themis gated pipeline: the checks are locked before the worker starts.")
 				}
@@ -618,6 +618,10 @@ const howWeBuild = {
 	changelog: [
 		{
 			date: "2026-11-20",
+			summary: t("New name: How we build is now the Agent Playbook, at /agent-playbook/ with the `playbook` command. Old links and deep links still work: they redirect to the same section.")
+		},
+		{
+			date: "2026-11-20",
 			summary: t("The roadmap caught up with reality: Playwright MCP now drives the verify skills and Telemaco has been slimmed down, so both items point to the browser tool section, whose Markasso example is now the real Playwright skill."),
 			sections: ["browser-tool"]
 		},
@@ -664,7 +668,7 @@ export {
 	openSource,
 	brewFormulas,
 	utils,
-	howWeBuild,
+	agentPlaybook,
 	links,
 	version,
 	downloadCv

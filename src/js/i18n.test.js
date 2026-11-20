@@ -15,8 +15,8 @@ describe('language URLs', () => {
 		expect(articlePath('iris', 'it')).toBe('/it/articles/iris/');
 	});
 	it('serves the guide page under each language prefix', () => {
-		expect(guidePath('en')).toBe('/how-we-build/');
-		expect(guidePath('it')).toBe('/it/how-we-build/');
+		expect(guidePath('en')).toBe('/agent-playbook/');
+		expect(guidePath('it')).toBe('/it/agent-playbook/');
 	});
 	it('points to the static privacy page in each language', () => {
 		expect(privacyPath('en')).toBe('/privacy/');

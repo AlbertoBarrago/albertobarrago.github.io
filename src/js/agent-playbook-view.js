@@ -1,6 +1,6 @@
 /**
- * @file HTML for the "How we build" guide: the page body, its contents and
- * the summary card the `howwebuild` command leaves in the terminal log.
+ * @file HTML for the "Agent Playbook" guide: the page body, its contents and
+ * the summary card the `playbook` command leaves in the terminal log.
  *
  * Pure string templates with no DOM access, so the same markup serves the
  * client overlay and the prerendered page (scripts/prerender-articles.mjs
@@ -11,11 +11,11 @@
 
 import { t, formatDate } from './i18n.js';
 import { escapeHTML } from './utils.js';
-import { inlineMarkup, guideDiagrams, guideLastModified, guideSections, sectionFreshness } from './how-we-build.js';
+import { inlineMarkup, guideDiagrams, guideLastModified, guideSections, sectionFreshness } from './agent-playbook.js';
 
-/** @typedef {import('./how-we-build.js').HowWeBuildGuide} HowWeBuildGuide */
-/** @typedef {import('./how-we-build.js').GuideSection} GuideSection */
-/** @typedef {import('./how-we-build.js').GuideSnippet} GuideSnippet */
+/** @typedef {import('./agent-playbook.js').AgentPlaybook} AgentPlaybook */
+/** @typedef {import('./agent-playbook.js').GuideSection} GuideSection */
+/** @typedef {import('./agent-playbook.js').GuideSnippet} GuideSnippet */
 
 /**
  * @typedef {{ interactive: boolean, today: string }} GuideRenderOptions
@@ -72,7 +72,7 @@ function snippetHTML(snippet, interactive) {
 /**
  * Status chip, freshness badge and dates of a section.
  * @param {GuideSection} section
- * @param {HowWeBuildGuide} guide
+ * @param {AgentPlaybook} guide
  * @param {GuideRenderOptions} options
  * @returns {string}
  */
@@ -95,7 +95,7 @@ function sectionMetaHTML(section, guide, { interactive, today }) {
  * each part starts, as it does for article chapters.
  * @param {GuideSection} section
  * @param {number} index position inside its part (practices or pitfalls)
- * @param {HowWeBuildGuide} guide
+ * @param {AgentPlaybook} guide
  * @param {GuideRenderOptions} options
  * @returns {string}
  */
@@ -120,7 +120,7 @@ function sectionHTML(section, index, guide, options) {
 /**
  * Contents of the guide, grouped by part. Interactive entries reuse the
  * article reader's TOC classes, so the same scrollspy highlights them.
- * @param {HowWeBuildGuide} guide
+ * @param {AgentPlaybook} guide
  * @param {GuideRenderOptions} options
  * @returns {string}
  */
@@ -146,7 +146,7 @@ export function guideContentsHTML(guide, options) {
 
 /**
  * "Inspired by ... · updated <date> · 6 practices · 4 pitfalls".
- * @param {HowWeBuildGuide} guide
+ * @param {AgentPlaybook} guide
  * @returns {string}
  */
 function guideMetaHTML(guide) {
@@ -160,7 +160,7 @@ function guideMetaHTML(guide) {
 /**
  * The guide page body: header with the latest change, practices, pitfalls,
  * roadmap and changelog.
- * @param {HowWeBuildGuide} guide
+ * @param {AgentPlaybook} guide
  * @param {GuideRenderOptions} options
  * @returns {string}
  */
@@ -180,7 +180,7 @@ export function guideArticleHTML(guide, options) {
 		: ''}</li>`).join('');
 	return `<article class="guide">
 <header class="guide-header">
-	<h1 class="blog-title" id="guide-title" tabindex="-1">${t('How we build')}</h1>
+	<h1 class="blog-title" id="guide-title" tabindex="-1">${t('Agent Playbook')}</h1>
 	<p class="blog-intro">${t('A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.')}</p>
 	${guideMetaHTML(guide)}
 	${latestChange}
@@ -202,9 +202,9 @@ ${guide.pitfalls.map((section, index) => sectionHTML(section, index, guide, opti
 }
 
 /**
- * What the `howwebuild` command leaves in the terminal log: a short summary
+ * What the `playbook` command leaves in the terminal log: a short summary
  * with links into the guide page. Buttons only: the log is never prerendered.
- * @param {HowWeBuildGuide} guide
+ * @param {AgentPlaybook} guide
  * @returns {string}
  */
 export function guideCardHTML(guide) {
@@ -213,7 +213,7 @@ export function guideCardHTML(guide) {
 		`<li><button class="reader-nav-link" type="button" data-action="open-guide" data-target="${section.id}">${inlineMarkup(section.title)}</button></li>`
 	).join('')}</ol>`;
 	return `<div class="guide-card">
-<div class="output-title">${t('How we build')}</div>
+<div class="output-title">${t('Agent Playbook')}</div>
 <p class="prose">${t('A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.')}</p>
 ${guideMetaHTML(guide)}
 <nav class="guide-index" aria-label="${t('Guide contents')}">

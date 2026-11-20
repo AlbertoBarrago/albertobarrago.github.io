@@ -1,23 +1,23 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { inlineMarkup, guideDiagrams, wrapIndex, daysBetween, sectionFreshness, guideLastModified, isoDay, FRESH_DAYS } from './how-we-build.js';
-import { guideArticleHTML, guideCardHTML, guideContentsHTML, ROADMAP_ID, CHANGELOG_ID } from './how-we-build-view.js';
-import { howWeBuild } from './index.js';
+import { inlineMarkup, guideDiagrams, wrapIndex, daysBetween, sectionFreshness, guideLastModified, isoDay, FRESH_DAYS } from './agent-playbook.js';
+import { guideArticleHTML, guideCardHTML, guideContentsHTML, ROADMAP_ID, CHANGELOG_ID } from './agent-playbook-view.js';
+import { agentPlaybook } from './index.js';
 
 afterEach(() => { vi.unstubAllGlobals(); vi.resetModules(); });
 
 const ROOT = join(import.meta.dirname, '../..');
 const STATIC_DIR = join(ROOT, 'static');
-const SNIPPETS_DIR = join(ROOT, 'src/content/how-we-build');
+const SNIPPETS_DIR = join(ROOT, 'src/content/agent-playbook');
 
-/** @param {import('./how-we-build.js').HowWeBuildGuide} guide */
+/** @param {import('./agent-playbook.js').AgentPlaybook} guide */
 const sectionsOf = (guide) => [...guide.practices, ...guide.pitfalls];
 
 /**
  * Every prose string of the guide (what t() translates), in a stable order.
  * Snippet code and product names are excluded: they stay in English.
- * @param {import('./how-we-build.js').HowWeBuildGuide} guide
+ * @param {import('./agent-playbook.js').AgentPlaybook} guide
  * @returns {string[]}
  */
 function proseOf(guide) {
@@ -34,7 +34,7 @@ function proseOf(guide) {
 	];
 }
 
-const snippets = sectionsOf(howWeBuild).flatMap((section) => section.snippets);
+const snippets = sectionsOf(agentPlaybook).flatMap((section) => section.snippets);
 
 describe('inlineMarkup', () => {
 	it('renders backtick spans as code', () => {
@@ -70,22 +70,22 @@ describe('diagram viewer helpers', () => {
 	});
 
 	it('finds the real guide diagrams', () => {
-		expect(guideDiagrams(howWeBuild).map((entry) => entry.src)).toEqual([
-			'/how-we-build/verification-loop.svg',
-			'/how-we-build/themis-pipeline.svg',
+		expect(guideDiagrams(agentPlaybook).map((entry) => entry.src)).toEqual([
+			'/agent-playbook/verification-loop.svg',
+			'/agent-playbook/themis-pipeline.svg',
 		]);
 	});
 });
 
-describe('howWeBuild guide data', () => {
+describe('agentPlaybook guide data', () => {
 	it('has unique kebab-case section ids, used as navigation targets', () => {
-		const ids = sectionsOf(howWeBuild).map((section) => section.id);
+		const ids = sectionsOf(agentPlaybook).map((section) => section.id);
 		expect(new Set(ids).size).toBe(ids.length);
 		for (const id of ids) expect(id).toMatch(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 	});
 
 	it('gives every section a why, at least one step and at least one block to copy', () => {
-		for (const section of sectionsOf(howWeBuild)) {
+		for (const section of sectionsOf(agentPlaybook)) {
 			expect(section.why.length, section.id).toBeGreaterThan(0);
 			expect(section.steps.length, section.id).toBeGreaterThan(0);
 			expect(section.snippets.length, section.id).toBeGreaterThan(0);
@@ -98,7 +98,7 @@ describe('howWeBuild guide data', () => {
 		for (const snippet of snippets) expect(snippet.code.trim().length, snippet.id).toBeGreaterThan(0);
 	});
 
-	it('uses every block file in src/content/how-we-build/', () => {
+	it('uses every block file in src/content/agent-playbook/', () => {
 		const used = new Set(snippets.map((snippet) => snippet.code));
 		for (const file of readdirSync(SNIPPETS_DIR)) {
 			expect(used.has(readFileSync(join(SNIPPETS_DIR, file), 'utf8')), file).toBe(true);
@@ -114,7 +114,7 @@ describe('howWeBuild guide data', () => {
 	});
 
 	it('points every diagram at an SVG and its Markasso source committed under static/', () => {
-		for (const diagram of sectionsOf(howWeBuild).flatMap((section) => section.diagrams ?? [])) {
+		for (const diagram of sectionsOf(agentPlaybook).flatMap((section) => section.diagrams ?? [])) {
 			expect(diagram.src).toMatch(/\.svg$/);
 			expect(diagram.source).toMatch(/\.markasso$/);
 			expect(existsSync(join(STATIC_DIR, diagram.src)), diagram.src).toBe(true);
@@ -123,15 +123,15 @@ describe('howWeBuild guide data', () => {
 	});
 
 	it('uses no em or en dashes, in prose or blocks', () => {
-		const texts = [...proseOf(howWeBuild), ...snippets.map((snippet) => snippet.code)];
+		const texts = [...proseOf(agentPlaybook), ...snippets.map((snippet) => snippet.code)];
 		for (const text of texts) expect(text).not.toMatch(/[\u2013\u2014]/);
 	});
 
 	it('translates every prose string into Italian', async () => {
 		vi.stubGlobal('location', { pathname: '/it/' });
 		vi.resetModules();
-		const { howWeBuild: italianGuide } = await import('./index.js');
-		const english = proseOf(howWeBuild);
+		const { agentPlaybook: italianGuide } = await import('./index.js');
+		const english = proseOf(agentPlaybook);
 		const italian = proseOf(italianGuide);
 		expect(italian).toHaveLength(english.length);
 		italian.forEach((text, index) => {
@@ -143,7 +143,7 @@ describe('howWeBuild guide data', () => {
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
-/** @param {Partial<import('./how-we-build.js').GuideSection>} fields */
+/** @param {Partial<import('./agent-playbook.js').GuideSection>} fields */
 const fixtureSection = (fields) => ({ id: 'x', title: 'X', added: '2026-01-01', why: '', steps: [], snippets: [], ...fields });
 
 describe('guide freshness', () => {
@@ -188,14 +188,14 @@ describe('guide freshness', () => {
 	});
 });
 
-describe('howWeBuild guide data over time', () => {
-	const ids = new Set(sectionsOf(howWeBuild).map((section) => section.id));
+describe('agentPlaybook guide data over time', () => {
+	const ids = new Set(sectionsOf(agentPlaybook).map((section) => section.id));
 
 	it('dates every section, never updated before it was added', () => {
-		expect(howWeBuild.published).toMatch(ISO_DATE);
-		for (const section of sectionsOf(howWeBuild)) {
+		expect(agentPlaybook.published).toMatch(ISO_DATE);
+		for (const section of sectionsOf(agentPlaybook)) {
 			expect(section.added, section.id).toMatch(ISO_DATE);
-			expect(section.added >= howWeBuild.published, section.id).toBe(true);
+			expect(section.added >= agentPlaybook.published, section.id).toBe(true);
 			if (section.updated) {
 				expect(section.updated, section.id).toMatch(ISO_DATE);
 				expect(section.updated >= section.added, section.id).toBe(true);
@@ -204,20 +204,20 @@ describe('howWeBuild guide data over time', () => {
 	});
 
 	it('gives a known status to every practice and none to pitfalls', () => {
-		for (const practice of howWeBuild.practices) expect(['adopted', 'trial'], practice.id).toContain(practice.status);
-		for (const pitfall of howWeBuild.pitfalls) expect(pitfall.status, pitfall.id).toBeUndefined();
+		for (const practice of agentPlaybook.practices) expect(['adopted', 'trial'], practice.id).toContain(practice.status);
+		for (const pitfall of agentPlaybook.pitfalls) expect(pitfall.status, pitfall.id).toBeUndefined();
 	});
 
 	it('keeps the changelog dated, newest first and pointing at real sections', () => {
-		expect(howWeBuild.changelog.length).toBeGreaterThan(0);
-		const dates = howWeBuild.changelog.map((entry) => entry.date);
+		expect(agentPlaybook.changelog.length).toBeGreaterThan(0);
+		const dates = agentPlaybook.changelog.map((entry) => entry.date);
 		for (const date of dates) expect(date).toMatch(ISO_DATE);
 		expect(dates).toEqual([...dates].sort().reverse());
-		for (const id of howWeBuild.changelog.flatMap((entry) => entry.sections ?? [])) expect(ids.has(id), id).toBe(true);
+		for (const id of agentPlaybook.changelog.flatMap((entry) => entry.sections ?? [])) expect(ids.has(id), id).toBe(true);
 	});
 
 	it('links roadmap items only to real sections', () => {
-		for (const item of howWeBuild.roadmap) if (item.sectionId) expect(ids.has(item.sectionId), item.sectionId).toBe(true);
+		for (const item of agentPlaybook.roadmap) if (item.sectionId) expect(ids.has(item.sectionId), item.sectionId).toBe(true);
 	});
 
 	it('reserves the closing fragments for the roadmap and the changelog', () => {
@@ -228,9 +228,9 @@ describe('howWeBuild guide data over time', () => {
 	it('translates the changelog into Italian, without dashes', async () => {
 		vi.stubGlobal('location', { pathname: '/it/' });
 		vi.resetModules();
-		const { howWeBuild: italianGuide } = await import('./index.js');
+		const { agentPlaybook: italianGuide } = await import('./index.js');
 		italianGuide.changelog.forEach((entry, index) => {
-			const english = howWeBuild.changelog[index].summary;
+			const english = agentPlaybook.changelog[index].summary;
 			expect(english).not.toMatch(/[\u2013\u2014]/);
 			expect(entry.summary, english).not.toBe(english);
 			expect(entry.summary).not.toMatch(/[\u2013\u2014]/);
@@ -239,28 +239,28 @@ describe('howWeBuild guide data over time', () => {
 });
 
 describe('guide view', () => {
-	const today = howWeBuild.published;
+	const today = agentPlaybook.published;
 
 	it('renders every section, the roadmap and the changelog as linkable parts', () => {
-		const html = guideArticleHTML(howWeBuild, { interactive: true, today });
-		for (const id of [...sectionsOf(howWeBuild).map((section) => section.id), ROADMAP_ID, CHANGELOG_ID]) {
+		const html = guideArticleHTML(agentPlaybook, { interactive: true, today });
+		for (const id of [...sectionsOf(agentPlaybook).map((section) => section.id), ROADMAP_ID, CHANGELOG_ID]) {
 			expect(html, id).toContain(`id="${id}"`);
 		}
 	});
 
 	it('keeps the copy controls for the browser and drops them for the static page', () => {
-		const interactive = guideArticleHTML(howWeBuild, { interactive: true, today });
-		const fallback = guideArticleHTML(howWeBuild, { interactive: false, today });
+		const interactive = guideArticleHTML(agentPlaybook, { interactive: true, today });
+		const fallback = guideArticleHTML(agentPlaybook, { interactive: false, today });
 		expect(interactive).toContain('data-action="copy-snippet"');
 		expect(fallback).not.toContain('data-action="copy-snippet"');
 		expect(fallback).not.toContain('data-action="goto-guide"');
-		expect(fallback).toContain(`href="#${howWeBuild.practices[0].id}"`);
+		expect(fallback).toContain(`href="#${agentPlaybook.practices[0].id}"`);
 	});
 
 	it('lists every part in the contents, in page order', () => {
-		const html = guideContentsHTML(howWeBuild, { interactive: true, today });
+		const html = guideContentsHTML(agentPlaybook, { interactive: true, today });
 		const targets = [...html.matchAll(/data-target="([^"]+)"/g)].map((match) => match[1]);
-		expect(targets).toEqual([...sectionsOf(howWeBuild).map((section) => section.id), ROADMAP_ID, CHANGELOG_ID]);
+		expect(targets).toEqual([...sectionsOf(agentPlaybook).map((section) => section.id), ROADMAP_ID, CHANGELOG_ID]);
 	});
 
 	it('wraps prose blocks and keeps code blocks on their own lines', () => {
@@ -268,7 +268,7 @@ describe('guide view', () => {
 			{ id: 'prompt', title: 'Prompt', language: 'markdown', code: '# Rules' },
 			{ id: 'cmd', title: 'Command', language: 'bash', code: 'npm test' },
 		];
-		const guide = { ...howWeBuild, practices: [fixtureSection({ snippets })], pitfalls: [] };
+		const guide = { ...agentPlaybook, practices: [fixtureSection({ snippets })], pitfalls: [] };
 		const html = guideArticleHTML(guide, { interactive: true, today });
 		expect(html).toContain('<pre class="guide-code is-prose"><code># Rules');
 		expect(html).toContain('<pre class="guide-code"><code>npm test');
@@ -277,7 +277,7 @@ describe('guide view', () => {
 	it('shows a badge only on fresh sections', () => {
 		// Fixture sections only: real sections turn fresh whenever the guide is updated.
 		const guide = {
-			...howWeBuild,
+			...agentPlaybook,
 			published: '2026-11-01',
 			practices: [fixtureSection({ id: 'first-edition', added: '2026-11-01' })],
 			pitfalls: [fixtureSection({ id: 'later', added: '2026-12-01' })],
@@ -287,7 +287,7 @@ describe('guide view', () => {
 	});
 
 	it('links the terminal card to every section of the guide page', () => {
-		const html = guideCardHTML(howWeBuild);
-		for (const section of sectionsOf(howWeBuild)) expect(html).toContain(`data-action="open-guide" data-target="${section.id}"`);
+		const html = guideCardHTML(agentPlaybook);
+		for (const section of sectionsOf(agentPlaybook)) expect(html).toContain(`data-action="open-guide" data-target="${section.id}"`);
 	});
 });

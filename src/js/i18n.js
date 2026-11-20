@@ -15,9 +15,9 @@ export function articlesIndexPath(lang = language) {
 	return `${lang === 'it' ? '/it' : ''}/articles/`;
 }
 
-/** Path of the "How we build" guide page; sections are `#<section id>` fragments. */
+/** Path of the "Agent Playbook" guide page; sections are `#<section id>` fragments. */
 export function guidePath(lang = language) {
-	return `${lang === 'it' ? '/it' : ''}/how-we-build/`;
+	return `${lang === 'it' ? '/it' : ''}/agent-playbook/`;
 }
 
 /** Static privacy policy page, outside the app (see static/privacy/). */
@@ -153,7 +153,7 @@ const italian = {
 	"no matches for": "nessun risultato per",
 	"reset filters": "azzera filtri",
 	"A practical guide to working with coding agents": "Una guida pratica per lavorare con gli agenti di codice",
-	"How we build": "Come costruiamo",
+	"Agent Playbook": "Agent Playbook",
 	"A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.": "Una guida pratica a come lavoro con gli agenti di codice. Ogni pratica spiega perché conta, come si fa, e ti dà un blocco da copiare.",
 	"Inspired by": "Ispirata a",
 	"updated": "aggiornata il",
@@ -304,6 +304,7 @@ const italian = {
 	"The hook only warns and always exits 0: the human decides whether to commit the change or move it into the project.": "L’hook si limita ad avvisare ed esce sempre con 0: è la persona a decidere se committare la modifica o spostarla nel progetto.",
 	"Rule and hook": "Regola e hook",
 	"The roadmap caught up with reality: Playwright MCP now drives the verify skills and Telemaco has been slimmed down, so both items point to the browser tool section, whose Markasso example is now the real Playwright skill.": "La roadmap si è rimessa in pari con la realtà: Playwright MCP ora pilota le skill verify e Telemaco è stato snellito, quindi entrambe le voci rimandano alla sezione sullo strumento browser, il cui esempio di Markasso è ora la vera skill con Playwright.",
+	"New name: How we build is now the Agent Playbook, at /agent-playbook/ with the `playbook` command. Old links and deep links still work: they redirect to the same section.": "Nuovo nome: How we build ora è l’Agent Playbook, su /agent-playbook/ con il comando `playbook`. I vecchi link, anche quelli a una sezione, continuano a funzionare: portano alla stessa sezione.",
 	"A hook that asks before every commit": "Un hook che chiede prima di ogni commit",
 	"The rule says never commit without the human's ok, and the agent still slipped once. A hook on `git commit` that always asks would make it enforced instead of remembered.": "La regola dice di non fare mai commit senza l’ok della persona, eppure l’agente è scivolato una volta. Un hook su `git commit` che chiede sempre conferma la renderebbe imposta invece che ricordata.",
 	"A new practice, an improvement log for the setup itself, and a pitfall on project settings leaking into the shared global file. Read-only reviews now forbid writing commands too, and a repo without a REVIEW.md gets a first version proposed from its fix commits.": "Una nuova pratica, un registro dei miglioramenti per il setup stesso, e un’insidia sulle impostazioni di progetto che finiscono nel file globale condiviso. Le review in sola lettura ora vietano anche i comandi che scrivono, e a un repository senza REVIEW.md viene proposta una prima versione ricavata dai suoi commit di fix.",
