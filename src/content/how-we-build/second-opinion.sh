@@ -9,7 +9,9 @@
 #   deep      branch review, debug after failed hypotheses, a plan      Codex, or two free models
 #                                                                       in parallel, cross-checked
 
-# Review a diff, read-only: opencode's built-in `plan` agent cannot edit files.
+# Review a diff, read-only: opencode's built-in `plan` agent cannot edit files,
+# but it can still run shell commands. The prompt forbids every writing command,
+# and no review runs while a build or test run is using the same tree.
 # If the repo has a REVIEW.md, send it from the base branch, never from the working tree.
 # `git diff main` covers commits and uncommitted work; an empty diff is no review.
 git diff main > /tmp/change.diff
@@ -19,7 +21,8 @@ opencode run --agent plan -m <model> \
   "Review the diff in /tmp/change.diff for correctness bugs, unescaped input and missing tests. \
 If /tmp/review-rules.md is not empty, apply the rules whose trigger matches a path in the diff. \
 Give each finding a file:line, a severity (must-fix / should-fix / nit) and a concrete failure scenario. \
-Do not edit files." > review.md
+Do not edit files. Do not run build, clean, install or any other command that writes; \
+if you must compile, use a separate build directory." > review.md
 
 # Delegate a scoped task with write access, only inside a separate git worktree.
 opencode run -w <worktree-name> -m <model> "<task, files, what is already ruled out>"

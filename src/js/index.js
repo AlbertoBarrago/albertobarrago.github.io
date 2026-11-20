@@ -17,6 +17,8 @@ import biomeTrackedFiles from "../content/how-we-build/biome-tracked-files.sh?ra
 import verifyGateHook from "../content/how-we-build/verify-gate-hook.sh?raw";
 import reviewMdTemplate from "../content/how-we-build/review-md-template.md?raw";
 import secretKeyChecks from "../content/how-we-build/secret-key-checks.sh?raw";
+import improvementLog from "../content/how-we-build/improvement-log.md?raw";
+import globalSettingsGuard from "../content/how-we-build/global-settings-guard.sh?raw";
 
 const name = "Alberto Barrago";
 const role = "Senior Software Engineer";
@@ -400,7 +402,7 @@ const howWeBuild = {
 		{
 			id: "second-opinion",
 			added: "2026-11-17",
-			updated: "2026-11-18",
+			updated: "2026-11-20",
 			status: "trial",
 			title: t("A second opinion with Codex or opencode"),
 			why: t("An agent reviewing its own diff shares its own blind spots. A second model with a fresh prompt finds a different set of bugs, as long as you give it the code, not your conclusion, and treat its output as input, not truth."),
@@ -410,6 +412,7 @@ const howWeBuild = {
 				t("Ask before running it, and say what you send and why."),
 				t("When the repo has a `REVIEW.md`, send it read from the base branch and ask the reviewer to apply the rules whose trigger matches the diff."),
 				t("Read-only by default: opencode's `plan` agent or Codex's `read-only` sandbox. Write access only inside a separate git worktree."),
+				t("Read-only is not harmless: the `plan` agent blocks file edits, not shell commands. The prompt forbids build, clean, install and any other writing command, compiling uses a separate build directory, and no review runs while a build or test run is using the same tree."),
 				t("A subagent that works on another repo creates its own worktree there with `git worktree add`: the agent tool's worktree isolation only covers the session's repo."),
 				t("Use only models whose provider keeps no data and does not train on it, and never send secrets or client code you may not share."),
 				t("Verify every finding against the code, fix what is real, and write down what you rejected and why.")
@@ -421,6 +424,7 @@ const howWeBuild = {
 		{
 			id: "review-md",
 			added: "2026-11-18",
+			updated: "2026-11-20",
 			status: "trial",
 			title: t("A REVIEW.md the change cannot rewrite"),
 			why: t("A generic review prompt finds generic issues. A `REVIEW.md` tells the reviewer what breaks in this code, and because it is always read from the base branch, a change cannot soften the rules that judge it."),
@@ -429,10 +433,29 @@ const howWeBuild = {
 				t("Every rule comes from a real bug, citing the fix commits, or from a stated project constraint. No generic advice."),
 				t("Make each rule checkable from a diff: a trigger on paths, a concrete check, and why it exists."),
 				t("Keep it under about 15 rules: add or sharpen one when a bug slips through review, delete the ones that never trigger or only produce noise."),
+				t("No `REVIEW.md` yet? When the agent proposes a review, it also proposes a first version built from the `fix:` commits in `git log`, citing their hashes. It only proposes: the file is written after a human says yes."),
+				t("When a fix corrects a bug that an earlier review missed, the agent proposes the rule to add or sharpen: trigger, check, and the fix commit."),
 				t("Change `REVIEW.md` in its own commit, never together with the code it judges.")
 			],
 			snippets: [
 				{ id: "review-md-template", title: t("Template"), language: "markdown", code: reviewMdTemplate }
+			]
+		},
+		{
+			id: "improvement-log",
+			added: "2026-11-20",
+			status: "trial",
+			title: t("An improvement log for the setup itself"),
+			why: t("Rules get skipped, hooks miss a case, a release step stays manual until it breaks. Fixed on the spot, each lesson is lost; fixed in the middle of another task, it widens the diff. A short log keeps them in one place until each gets its own fix."),
+			steps: [
+				t("Keep one file next to the agent's rules, one entry per issue: what happened, the proposed fix, a status (`open`, `done <sha or PR>`, `dropped (<reason>)`)."),
+				t("The agent adds an entry when something breaks, a rule gets skipped, or a step turns out manual and fragile, and says so in one line."),
+				t("Each fix is its own task and branch; close the entry with its commit or PR."),
+				t("When there is time to improve the setup, start from the `open` entries instead of from memory."),
+				t("Prefer fixes that make a rule enforced rather than remembered: a hook or a script check beats another line of instructions.")
+			],
+			snippets: [
+				{ id: "improvement-log", title: t("Template"), language: "markdown", code: improvementLog }
 			]
 		},
 		{
@@ -542,6 +565,20 @@ const howWeBuild = {
 			snippets: [
 				{ id: "secret-key-checks", title: t("Checks that print no values"), language: "bash", code: secretKeyChecks }
 			]
+		},
+		{
+			id: "global-settings-drift",
+			added: "2026-11-20",
+			title: t("Project settings leak into the global file"),
+			why: t("Keeping the agent's global settings in a git repo, symlinked on every machine, gives you the same setup everywhere. It also means that a permission or an environment block written for one project silently lands in every session on every machine, and nobody notices until it gets in the way."),
+			steps: [
+				t("Write the rule in the global CLAUDE.md: project-specific settings go in the project's `.claude/settings.local.json`, never in the global file."),
+				t("Add a `SessionStart` hook that warns when the shared settings file has uncommitted changes, so drift shows up at the start of the next session."),
+				t("The hook only warns and always exits 0: the human decides whether to commit the change or move it into the project.")
+			],
+			snippets: [
+				{ id: "global-settings-guard", title: t("Rule and hook"), language: "bash", code: globalSettingsGuard }
+			]
 		}
 	],
 	roadmap: [
@@ -568,11 +605,20 @@ const howWeBuild = {
 			summary: t("Move the verify skills that drive local apps from Telemaco to Playwright MCP, starting with Markasso.")
 		},
 		{
+			title: t("A hook that asks before every commit"),
+			summary: t("The rule says never commit without the human's ok, and the agent still slipped once. A hook on `git commit` that always asks would make it enforced instead of remembered.")
+		},
+		{
 			title: t("Audit Telemaco"),
 			summary: t("Slim Telemaco down to what it does best: reading the web, search and stealth fetches.")
 		}
 	],
 	changelog: [
+		{
+			date: "2026-11-20",
+			summary: t("A new practice, an improvement log for the setup itself, and a pitfall on project settings leaking into the shared global file. Read-only reviews now forbid writing commands too, and a repo without a REVIEW.md gets a first version proposed from its fix commits."),
+			sections: ["improvement-log", "global-settings-drift", "second-opinion", "review-md"]
+		},
 		{
 			date: "2026-11-18",
 			summary: t("Two new practices, a Stop hook in observe mode and a REVIEW.md read from the base branch, and a pitfall on secrets in the transcript. The second opinion now sizes the model to the task, the browser tool decision is in the global rules, and the Playwright setup matches the real one."),
