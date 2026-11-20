@@ -329,7 +329,7 @@ const howWeBuild = {
 				{ id: "verify-skill-playwright-e2e", title: t("Section for an end-to-end Playwright suite"), language: "markdown", code: verifySkillPlaywrightE2e },
 				{
 					id: "verify-skill-markasso",
-					title: t("Real example: Markasso, a web app driven through Telemaco"),
+					title: t("Real example: Markasso, a web app driven through Playwright MCP"),
 					language: "markdown",
 					code: verifySkillMarkasso,
 					origin: { label: "Markasso", url: "https://github.com/AlbertoBarrago/markasso" },
@@ -379,7 +379,7 @@ const howWeBuild = {
 		{
 			id: "browser-tool",
 			added: "2026-11-17",
-			updated: "2026-11-18",
+			updated: "2026-11-20",
 			status: "trial",
 			title: t("Choosing the browser tool"),
 			why: t("A verify skill is only as good as the browser that drives it. We ran one real test on Markasso's canvas: draw a rectangle, then check that it landed in localStorage. The results decided which tool does what."),
@@ -387,7 +387,7 @@ const howWeBuild = {
 				t("Telemaco: FAIL. No layout engine, and `browser_evaluate` does not await Promises."),
 				t("chrome-devtools-mcp: PASS only with synthetic events dispatched from a script, since it has no drag at coordinates; about 36 s."),
 				t("Playwright MCP: PASS with real mouse input (`browser_mouse_drag_xy`), about 24 s. On the first try it even hit a panel lying over the canvas, exactly as a real user would."),
-				t("Decision, now written in the global CLAUDE.md: Telemaco stays for reading the web, search and stealth fetches; driving and verifying local apps moves to Playwright MCP, pinned, headless and isolated. Moving the existing verify skills is in progress.")
+				t("Decision, written in the global CLAUDE.md: Telemaco stays for reading the web, search and stealth fetches; driving and verifying local apps moved to Playwright MCP, pinned, headless and isolated. Markasso's verify skill now draws on the canvas with real mouse input, and Telemaco 0.3.0 dropped everything else: no CDP server, no scrape, no remote.")
 			],
 			snippets: [
 				{
@@ -593,6 +593,16 @@ const howWeBuild = {
 			summary: t("What the reviewer should look at for this code, always read from the base branch so a change cannot rewrite its own review rules.")
 		},
 		{
+			title: t("Adopt Playwright MCP"),
+			sectionId: "browser-tool",
+			summary: t("Done: the verify skills that drive local apps moved from Telemaco to Playwright MCP, starting with Markasso.")
+		},
+		{
+			title: t("Audit Telemaco"),
+			sectionId: "browser-tool",
+			summary: t("Done in Telemaco 0.3.0: it keeps what it does best, reading the web, search and stealth fetches through the CLI and the MCP server, and the CDP server, scrape and remote are gone.")
+		},
+		{
 			title: t("One reviewer, several rounds"),
 			summary: t("Tune a single reviewer and feed each round the findings and failures of the previous ones, instead of stacking parallel reviewers.")
 		},
@@ -601,19 +611,16 @@ const howWeBuild = {
 			summary: t("Checklist items with a trigger readable from a diff, matched through Serval's blast radius, so only the few relevant checks run on each change.")
 		},
 		{
-			title: t("Adopt Playwright MCP"),
-			summary: t("Move the verify skills that drive local apps from Telemaco to Playwright MCP, starting with Markasso.")
-		},
-		{
 			title: t("A hook that asks before every commit"),
 			summary: t("The rule says never commit without the human's ok, and the agent still slipped once. A hook on `git commit` that always asks would make it enforced instead of remembered.")
-		},
-		{
-			title: t("Audit Telemaco"),
-			summary: t("Slim Telemaco down to what it does best: reading the web, search and stealth fetches.")
 		}
 	],
 	changelog: [
+		{
+			date: "2026-11-20",
+			summary: t("The roadmap caught up with reality: Playwright MCP now drives the verify skills and Telemaco has been slimmed down, so both items point to the browser tool section, whose Markasso example is now the real Playwright skill."),
+			sections: ["browser-tool"]
+		},
 		{
 			date: "2026-11-20",
 			summary: t("A new practice, an improvement log for the setup itself, and a pitfall on project settings leaking into the shared global file. Read-only reviews now forbid writing commands too, and a repo without a REVIEW.md gets a first version proposed from its fix commits."),
