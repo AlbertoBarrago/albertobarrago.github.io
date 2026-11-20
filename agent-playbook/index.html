@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Agent Playbook | Alberto Barrago</title>
+	<link rel="icon" href="/favicon.ico" sizes="any" />
+	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0b0f14" />
+
+	<!-- SEO Meta Tags -->
+	<meta name="description" content="A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy." />
+	<meta name="keywords"
+		content="Alberto Barrago, Senior Software Engineer, JavaScript, Node.js, React, Angular, DevOps, CI/CD, AI Integration" />
+	<meta name="author" content="Alberto Barrago" />
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="article" />
+	<meta property="og:url" content="https://albz.it/agent-playbook/" />
+	<meta property="og:title" content="Agent Playbook | Alberto Barrago" />
+	<meta property="og:description" content="A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy." />
+	<meta property="og:image" content="https://github.com/albertobarrago.png" />
+
+	<!-- Twitter -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Agent Playbook | Alberto Barrago" />
+	<meta name="twitter:description" content="A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy." />
+
+	<!-- Canonical URL -->
+	<link rel="canonical" href="https://albz.it/agent-playbook/" />
+
+	<!-- RSS feed -->
+	<link rel="alternate" type="application/rss+xml" title="Alberto Barrago | Articles" href="/feed.xml" />
+
+	<!-- Schema.org -->
+	<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Person",
+			"name": "Alberto Barrago",
+			"description": "Senior Software Engineer and product builder designing reliable production systems across web, mobile, cloud, and AI.",
+			"image": "https://github.com/albertobarrago.png",
+			"url": "https://albz.it/",
+			"email": "albertobarrago@gmail.com",
+			"jobTitle": "Senior Software Engineer",
+			"knowsAbout": ["JavaScript", "Node.js", "React", "Angular", "DevOps", "CI/CD", "AI Integration"],
+			"sameAs": ["https://github.com/AlbertoBarrago"]
+		}
+		</script>
+
+  <script type="module" crossorigin src="/assets/index-DrkYCN41.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DGiZZ_Fi.css">
+<link rel="alternate" hreflang="en" href="https://albz.it/agent-playbook/" />
+<link rel="alternate" hreflang="it" href="https://albz.it/it/agent-playbook/" />
+<link rel="alternate" hreflang="x-default" href="https://albz.it/agent-playbook/" />
+	<script type="application/ld+json">
+		{"@context":"https://schema.org","@type":"TechArticle","headline":"Agent Playbook","description":"A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.","datePublished":"2026-11-17","dateModified":"2026-11-20","author":{"@type":"Person","name":"Alberto Barrago","url":"https://albz.it"},"url":"https://albz.it/agent-playbook/","mainEntityOfPage":"https://albz.it/agent-playbook/","inLanguage":"en"}
+	</script>
+</head>
+
+<body>
+	<div id="app"><noscript><article class="guide">
+<header class="guide-header">
+	<h1 class="blog-title" id="guide-title" tabindex="-1">Agent Playbook</h1>
+	<p class="blog-intro">A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.</p>
+	<p class="guide-meta">Inspired by <em>Verification loops, by the Claude Code team at Anthropic</em> · updated <time datetime="2026-11-20">20/11/2026</time> · 9 practices · 6 pitfalls</p>
+	<aside class="guide-latest"><span class="guide-label">Latest change</span> <time datetime="2026-11-20">20/11/2026</time><p>New name: How we build is now the Agent Playbook, at /agent-playbook/ with the <code>playbook</code> command. Old links and deep links still work: they redirect to the same section.</p><a class="reader-nav-link" href="#changelog">see every change →</a></aside>
+</header>
+<nav class="guide-contents" aria-label="Guide contents"><div class="guide-toc-group">Practices</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#claude-md-rules">Verification rules in CLAUDE.md <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verify-skill">A verify skill in every repo</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verified-trailer">A Verified trailer on every commit</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verify-gate">A Stop hook that watches before it blocks <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#browser-tool">Choosing the browser tool <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#second-opinion">A second opinion with Codex or opencode <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#review-md">A REVIEW.md the change cannot rewrite <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#improvement-log">An improvement log for the setup itself <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#themis-gates">Themis: gates and a locked contract</a></li></ol>
+<div class="guide-toc-group">Pitfalls</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#dev-server-port">The dev server port belongs to someone else</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#telemaco-no-layout">Telemaco has a DOM, not a layout</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#ui-language">A real browser speaks the system language</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#lint-untracked">Untracked editor folders break the linter</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#secrets-in-transcript">A secret printed once is already gone <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#global-settings-drift">Project settings leak into the global file <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li></ol>
+<div class="guide-toc-group">More</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#next-up">Next up</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#changelog">Changelog</a></li></ol></nav>
+<h2 class="guide-part">Practices</h2>
+<section class="guide-section" aria-labelledby="claude-md-rules">
+	<h2 class="guide-title" id="claude-md-rules"><span class="guide-number">01</span><span>Verification rules in CLAUDE.md</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-adopted">adopted</span><span class="guide-badge">recently updated</span><span>updated <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#claude-md-rules">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">An agent does what its instructions make cheap. Without written rules it declares victory on a green build, retries a flaky test until it passes, or edits the test instead of the code. A few explicit lines in the global CLAUDE.md change the default for every session.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Put the rules in the global <code>~/.claude/CLAUDE.md</code>, so they apply to every repo, and keep project specifics in the repo&#039;s own CLAUDE.md.</li><li>Verify by running: the repo&#039;s <code>verify</code> skill when there is one, otherwise drive the real app.</li><li>Three rounds, then stop: after three failed fix attempts the agent hands over the failing output and what it tried.</li><li>Keep the checks out of reach: a change must never weaken the tests, lint config, <code>verify</code> skill or <code>REVIEW.md</code> that judge it in the same commit.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Excerpt for your CLAUDE.md</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>## Verification
+- After any non-trivial change: run build/typecheck and relevant tests before declaring it done
+- If you can&#039;t verify, say so explicitly instead of assuming it works
+- Don&#039;t edit tests just to make them pass: if a test fails, understand why before touching it
+- Add/update tests when changing public behavior
+- **Verify by running**: if the repo has a `.claude/skills/verify` skill, run it before saying &quot;ready for testing&quot;. Otherwise drive the real app (a browser automation tool for anything web) when the change is user-visible. Always state how the change was verified
+- **Three rounds, then stop**: if a check still fails after three fix attempts, stop and bring me in with the failing output and what you tried
+- **Flaky tests**: never add retries, sleeps or skips to make them pass. Find the root cause; if you can&#039;t, propose deleting the test with the reason written down, and wait for my confirmation
+- **Checks are out of reach**: a change must not weaken or rewrite, in the same commit, the existing tests, lint/typecheck config, `verify` skill or `REVIEW.md` that judge it (adding new tests for new behavior is fine). If an existing check genuinely needs changing, do it in a separate commit and flag it to me
+
+## Commit Messages
+- Every commit ends with a `Verified:` trailer stating how the change was checked: `verify` (verify skill or end-to-end run), `tests` (automated tests only), `manual` (I tested it), or `none (&lt;reason&gt;)`. It is a verification stamp, not an attribution line
+</code></pre></div>
+	<figure class="guide-figure">
+	<a href="/agent-playbook/verification-loop.svg" target="_blank" rel="noopener" data-action="open-diagram" data-diagram="0" aria-label="Open diagram: The loop these rules describe."><img src="/agent-playbook/verification-loop.svg" alt="Flowchart: the agent makes a change and verifies it by running the app. If it passes, the change is ready for testing with a Verified commit stamp. If not, the agent fixes the code and verifies again, up to three rounds, then stops and brings in the human." loading="lazy" decoding="async"></a>
+	<figcaption>The loop these rules describe. <a class="terminal-link" href="/agent-playbook/verification-loop.markasso" download>Markasso source</a></figcaption>
+</figure>
+</section><section class="guide-section" aria-labelledby="verify-skill">
+	<h2 class="guide-title" id="verify-skill"><span class="guide-number">02</span><span>A verify skill in every repo</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-adopted">adopted</span><span>added <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#verify-skill">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">&quot;Run the app&quot; means something different in every repo. A <code>verify</code> skill writes it down once: the cheap checks, how to boot the real thing, which flows to drive and what to expect, so the agent collects evidence instead of guessing.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Copy the template to <code>&lt;repo&gt;/.claude/skills/verify/SKILL.md</code> and replace every placeholder; delete the sections that do not apply.</li><li>Track it in git: ignore <code>.claude/*</code> but not <code>.claude/skills/</code>.</li><li>Run it twice in a row on a clean main before trusting it: it is your smoke test harness, it must be fast and deterministic.</li><li>Say what is out of scope (paid API calls, deploys, what the tools cannot see) and when to ask a human instead.</li><li>Every new project starts with <code>.claude/skills/verify</code> from the template, on day one.</li><li>In work or client repos you don&#039;t own, keep the skill local with <code>.git/info/exclude</code> and never commit it.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Template</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>---
+name: verify
+description: Verify a change to &lt;PROJECT&gt; end to end before saying &quot;ready for testing&quot; or committing. Runs the cheap checks first, then drives the real &lt;app|CLI|service&gt; and reports the evidence plus the Verified trailer value.
+---
+
+&lt;!--
+Copy it to &lt;repo&gt;/.claude/skills/verify/SKILL.md, replace every &lt;PLACEHOLDER&gt;,
+delete the sections that do not apply and this comment. Make sure .claude/skills/
+is tracked by git (ignore .claude/* but not .claude/skills/).
+Keep it fast and deterministic: run it twice in a row on a clean main before trusting it.
+--&gt;
+
+# Verify &lt;PROJECT&gt;
+
+Run the steps in order and stop at the first failure. Fix the code, not the check.
+
+## Rules
+
+- Never add retries, sleeps or skips, and never edit the existing tests, lint/typecheck config or this skill to make a step pass.
+- If a step still fails after three fix attempts, stop and report the failing output and what was tried.
+- Clean up what you started (servers, temp dirs) even when a step fails.
+
+## 1. Cheap checks
+
+    &lt;typecheck command&gt;
+    &lt;lint command, check-only, no auto-fix&gt;
+    &lt;test command&gt;
+
+## 2. Run it
+
+&lt;How to start the real thing: dev server, built CLI, local service. Where it listens, how to tell it is ready, how to stop it.&gt;
+
+Servers: pick a free port at runtime with `--strictPort` (or equivalent), fail the wait loop if your process dies, and check an identifying marker (page title, health payload) before testing. Other sessions and agents run their own servers: never reuse or stop one you did not start.
+
+Smoke flows (always):
+
+1. &lt;Flow&gt;: &lt;steps&gt;. Expected: &lt;observable result&gt;.
+2. &lt;Flow that must fail&gt;: &lt;steps&gt;. Expected: &lt;error, exit code&gt;.
+
+Flows for the changed area: &lt;where the feature map lives, e.g. docs/MANUAL.md&gt;. Pick the flows that cover the diff and check their expected results.
+
+Out of scope: &lt;commands this skill must not run, e.g. paid API calls, deploys&gt;.
+
+## 3. Report
+
+Reply with:
+
+- each command run with its exit code;
+- the evidence for every flow (output excerpt, screenshot path);
+- the `Verified:` trailer value: `verify` when steps 1 and 2 passed, `tests` when only step 1 ran, `none (&lt;reason&gt;)` otherwise.
+</code></pre></div><div class="guide-snippet"><div class="guide-snippet-title">Kickoff, and local-only skills for repos you don&#039;t own</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># New project: start with a verify skill from day one.
+mkdir -p .claude/skills/verify
+cp &lt;path-to-your-template&gt;/SKILL.md .claude/skills/verify/SKILL.md
+# Track the skill, ignore the rest of .claude/ (in .gitignore):
+#   .claude/*
+#   !.claude/skills/
+
+# Work or client repo you don&#039;t own: keep the skill local, never commit it.
+# .git/info/exclude works like .gitignore but is never shared.
+echo &quot;.claude/skills/verify/&quot; &gt;&gt; .git/info/exclude
+git status --short .claude   # must print nothing
+</code></pre></div><div class="guide-snippet"><div class="guide-snippet-title">Section for an end-to-end Playwright suite</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>## 2. End-to-end (Playwright)
+
+Before running the suite, make sure the port in `playwright.config` is free. With `reuseExistingServer: true`, Playwright happily tests whatever already answers on that port: another project, or this project on another branch.
+
+    PORT=&lt;port from playwright.config webServer.url&gt;
+    if lsof -tiTCP:$PORT -sTCP:LISTEN &gt;/dev/null; then
+      echo &quot;port $PORT is busy: stop, do not test someone else&#039;s server&quot;; exit 1
+    fi
+    BROWSER=none npx playwright test
+
+- `BROWSER=none` keeps `vite --open` from opening browser windows during the run.
+- `Executable doesn&#039;t exist at ...` means the browser build for this Playwright version is missing. It is setup, not a test failure: run `npx playwright install chromium`, then run the suite again. Do not count it as one of the three rounds.
+- Use selectors that do not depend on the UI language (roles with stable names, `data-*` hooks), or set `use: { locale: &#039;en-US&#039; }` in the config.
+</code></pre></div><details class="guide-snippet"><summary class="guide-snippet-title">Real example: Markasso, a web app driven through Playwright MCP</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>---
+name: verify
+description: Verify a change to Markasso before saying &quot;ready for testing&quot; or committing. Runs typecheck, Biome (check only) and vitest, the MCP build when mcp/ changed, then boots the web app on a private dev server and drives it in a real browser with Playwright MCP (boot smoke plus drawing on the canvas). Reports the evidence plus the Verified trailer value.
+---
+
+# Verify Markasso
+
+Run the steps in order from the repo root and stop at the first failure. Fix the code, not the check.
+
+## Rules
+
+- Never add retries, sleeps or skips, and never edit the existing tests, `biome.json`, `tsconfig*.json`, `vitest.config.ts` or this skill to make a step pass.
+- If a step still fails after three fix attempts, stop and report the failing output and what was tried.
+- Use `pnpm lint:ci`, never `pnpm lint`: the latter rewrites files.
+- Never reuse or stop a dev server you did not start: other sessions and agents run their own (5173 is usually the user&#039;s). Start your own on a free port picked at runtime and always stop it, even when a step fails.
+
+## 1. Cheap checks
+
+    pnpm typecheck
+    pnpm lint:ci
+    pnpm test
+
+`pnpm test` also runs `mcp/tests/`. If the diff touches `mcp/`, also build the server:
+
+    pnpm mcp:build
+
+## 2. Run it in a real browser (Playwright MCP)
+
+Start a private dev server on a free port and wait until it answers. The loop fails if the server dies, so a port taken in the meantime can never make you test someone else&#039;s server:
+
+    PORT=$(node -e &quot;const s=require(&#039;net&#039;).createServer();s.listen(0,()=&gt;{console.log(s.address().port);s.close()})&quot;)
+    pnpm dev --port $PORT --strictPort &gt; &lt;scratchpad&gt;/markasso-dev.log 2&gt;&amp;1 &amp;
+    PID=$!
+    until curl -fs -o /dev/null http://localhost:$PORT/; do
+      kill -0 $PID 2&gt;/dev/null || { tail -20 &lt;scratchpad&gt;/markasso-dev.log; exit 1; }
+      sleep 0.5
+    done
+    echo $PORT
+
+With the Playwright MCP tools (`mcp__playwright__*`: headless Chrome, isolated profile, 1280x800 viewport, real mouse input). The browser UI language follows the system, so never select by translated text: use ids, shortcuts and the shortcut hint in titles (`(R /`).
+
+Boot smoke:
+
+1. `browser_navigate` to `http://localhost:$PORT/`. Expected: title starts with `Markasso` (any other title means you reached a server that is not yours: stop).
+2. `browser_console_messages`. Expected: no errors.
+3. `browser_evaluate`:
+
+       () =&gt; ({ canvas: !!document.getElementById(&#039;main&#039;), toolbarButtons: document.querySelectorAll(&#039;#toolbar button&#039;).length, rectangle: !!document.querySelector(&#039;#toolbar button[title*=&quot;(R /&quot;]&#039;) })
+
+   Expected: `canvas: true`, `toolbarButtons` greater than 0, `rectangle: true`.
+
+Canvas flow (draw a rectangle):
+
+4. The isolated profile always opens the welcome dialog, and it swallows keyboard shortcuts. Dismiss it with `browser_evaluate` `() =&gt; { document.querySelector(&#039;.wl-cta&#039;)?.click(); }`, `browser_wait_for` 0.5 seconds, then `browser_press_key` `r` to pick the Rectangle tool.
+5. `browser_mouse_drag_xy` from (400, 200) to (540, 300). Stay right of x = 260: the style panel covers the left edge of the canvas, and a drag that starts on it selects text instead of drawing.
+6. `browser_wait_for` 1.5 seconds (the session save is debounced), then `browser_evaluate`:
+
+       () =&gt; (JSON.parse(localStorage.getItem(&#039;markasso-session&#039;) ?? &#039;{&quot;elements&quot;:[]}&#039;).elements).map((e) =&gt; ({ type: e.type, x: Math.round(e.x), y: Math.round(e.y), w: Math.round(e.width), h: Math.round(e.height) }))
+
+   Expected: exactly one element of type `rectangle`, about 140 x 100.
+7. `browser_take_screenshot` as evidence. Playwright MCP only writes under its output directory (set with `--output-dir` in your MCP server config): leave the file name to it and report the path it returns.
+
+Flows for the changed area: `docs/MANUAL.md` is the feature map (tools, shortcuts, menus). Pick the flows that cover the diff and drive them the same way: keyboard shortcuts and coordinates on the canvas, state checks through `localStorage` or the DOM.
+
+8. `browser_close`, then stop the server:
+
+       kill $(lsof -tiTCP:$PORT -sTCP:LISTEN)
+
+## 3. Report
+
+Reply with:
+
+- each command with its exit code, and the vitest totals;
+- the results of steps 2.1 to 2.6 and the screenshot path;
+- the `Verified:` trailer value: `verify` when steps 1 and 2 passed, `tests` when only step 1 ran, `manual` when the user checked a visible change, `none (&lt;reason&gt;)` otherwise.
+</code></pre><p class="guide-origin">from <a class="terminal-link" href="https://github.com/AlbertoBarrago/markasso" target="_blank" rel="noopener noreferrer">Markasso ↗</a></p></details><details class="guide-snippet"><summary class="guide-snippet-title">Real example: Themis, a CLI driven in a temp project</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>---
+name: verify
+description: Verify a change to Themis end to end before saying &quot;ready for testing&quot; or committing. Runs npm run check, rebuilds dist/, then drives the real CLI (check, init, status) in a temp project and reports the evidence plus the Verified trailer value.
+---
+
+# Verify Themis
+
+Run the steps in order from the repo root and stop at the first failure. Fix the code, not the check.
+
+## Rules
+
+- Never add retries, sleeps or skips, and never edit the existing tests, `biome.json`, `tsconfig*.json`, `vitest.config.ts` or this skill to make a step pass.
+- If a step still fails after three fix attempts, stop and report the failing output and what was tried.
+- Never delete `dist/`: `~/.local/bin/themis` links to `dist/cli/main.js`. Rebuilding in place is fine.
+- Do not run commands that call agents (`plan`, `tests`, `run`, `retro`): they cost money and minutes. Their logic is covered by the vitest suite with `FakeAgentRunner`/`FakeExecutor`.
+- Always remove the temp directory, even when a step fails.
+
+## 1. Cheap checks
+
+    npm run check
+
+(typecheck, Biome, vitest including `tests/e2e/`).
+
+## 2. Build
+
+    npm run build
+
+## 3. Drive the real CLI
+
+Run in bash (the commands rely on bash arrays and `PIPESTATUS`):
+
+    bash -c &#039;
+    set -u
+    C=(node &quot;$PWD/dist/cli/main.js&quot;)
+    T=$(mktemp -d)
+    trap &quot;rm -rf \&quot;$T\&quot;&quot; EXIT
+
+    &quot;${C[@]}&quot; check examples/webhook-service/spec.md; echo &quot;check-valid exit=$?&quot;
+
+    printf -- &quot;---\nthemis: 0.2\nstack: node-ts\n---\n# X\n&quot; &gt; &quot;$T/bad.md&quot;
+    &quot;${C[@]}&quot; check &quot;$T/bad.md&quot;; echo &quot;check-invalid exit=$?&quot;
+
+    cp examples/getting-started/spec.md &quot;$T/&quot;
+    cd &quot;$T&quot; &amp;&amp; git init -q
+    &quot;${C[@]}&quot; init; echo &quot;init exit=$?&quot;
+    &quot;${C[@]}&quot; status --json; echo &quot;status exit=$?&quot;
+    ls .themis
+    &#039;
+
+Expected:
+
+| Flow | Expected |
+|---|---|
+| check-valid | exit 0, `valid (6 acceptance criteria, ...)` |
+| check-invalid | exit 1, errors `invalid-field`, `unsupported-version`, `no-acceptance-criteria` |
+| init | exit 0, writes `.themis/agents/*.md`, `.gitignore`, installs dependencies (needs network for `npm install`), ends with `next: themis plan` |
+| status | exit 0, JSON with `spec.ok: true`, `plan: &quot;absent&quot;`, `contract.state: &quot;absent&quot;` |
+| .themis | contains `agents`, `guard.mjs`, `local.json`, `verify.sh` |
+
+If the change touches a command not listed above (for example `new`, `approve`, a new flag or a new diagnostic), add a run of that command against the temp project, with its expected exit code and output, to the report.
+
+## 4. Report
+
+Reply with:
+
+- each command with its exit code;
+- the relevant output lines for every flow, and any deviation from the table;
+- the `Verified:` trailer value: `verify` when steps 1 to 3 passed, `tests` when only step 1 ran, `none (&lt;reason&gt;)` otherwise.
+</code></pre><p class="guide-origin">from <a class="terminal-link" href="https://github.com/AlbertoBarrago/themis" target="_blank" rel="noopener noreferrer">Themis ↗</a></p></details>
+	
+</section><section class="guide-section" aria-labelledby="verified-trailer">
+	<h2 class="guide-title" id="verified-trailer"><span class="guide-number">03</span><span>A Verified trailer on every commit</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-adopted">adopted</span><span>added <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#verified-trailer">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">After the fact, nobody remembers whether a commit was run, tested or just built. A one-line trailer records it, and because <code>none</code> is allowed, unverified commits stay honest and easy to find.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>End every commit message with <code>Verified: verify</code>, <code>tests</code>, <code>manual</code> or <code>none (&lt;reason&gt;)</code>.</li><li>Let the <code>verify</code> skill&#039;s report tell the agent which value to use.</li><li>Query it with <code>git log</code> trailers: no tooling needed.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Format and queries</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># The last line of every commit message says how the change was checked:
+#   Verified: verify          verify skill or end-to-end run passed
+#   Verified: tests           automated tests only
+#   Verified: manual          a human tried it
+#   Verified: none (&lt;reason&gt;) not verified, and why
+git commit -m &quot;feat: add the agent playbook&quot; -m &quot;Verified: tests&quot;
+
+# How was each recent commit verified?
+git log -20 --format=&#039;%h %&lt;(10,trunc)%(trailers:key=Verified,valueonly,separator=%x20) %s&#039;
+
+# Commits that shipped unverified, with their reason
+git log --grep=&#039;^Verified: none&#039; --format=&#039;%h %s  [%(trailers:key=Verified,valueonly,separator=%x20)]&#039;
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="verify-gate">
+	<h2 class="guide-title" id="verify-gate"><span class="guide-number">04</span><span>A Stop hook that watches before it blocks</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in trial</span><span class="guide-badge">new</span><span>added <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#verify-gate">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">Rules say &quot;verify before you are done&quot;, but nothing tells you how often a session ends without it. A Stop hook can measure that. Blocking straight away would punish every false positive, so the first version only watches and writes down what it saw.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Run it at the end of every turn: it reads the session transcript and logs one verdict per edited repo, <code>verify</code>, <code>commands</code>, <code>docs-only</code> or <code>none</code>.</li><li>Count only the edits of the current session, so other sessions on the same repo cannot raise false alarms.</li><li>Never block, never print, always exit 0: a broken hook must not break the session.</li><li>Read the report after a week or two, fix the false positives, and only then decide whether to block turns that end on <code>none</code>.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Registration and report</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># A Stop hook that only watches: it runs at the end of every turn, never
+# blocks, never prints, always exits 0. It reads the session transcript and
+# appends one JSON line per repo the turn edited, with a verdict:
+#
+#   verify     the repo&#039;s `verify` skill ran after the last edit
+#   commands   a test/build/lint/typecheck command ran after the last edit
+#   docs-only  only documentation files were edited
+#   none       code was edited and nothing checked it afterwards
+#
+# Only edits made by this session count (Edit, Write, NotebookEdit calls in
+# its own transcript), so other sessions on the same repo raise no false alarms.
+
+# Merge this into the &quot;hooks&quot; object of ~/.claude/settings.json, next to your
+# other hooks: do not overwrite the file. The guard matters: a Stop hook that
+# exits 2 sends the agent back to work, and python3 exits 2 when the script is
+# missing, so a hook meant to only watch would block every turn.
+{
+  &quot;Stop&quot;: [
+    {
+      &quot;hooks&quot;: [
+        {
+          &quot;type&quot;: &quot;command&quot;,
+          &quot;command&quot;: &quot;f=\&quot;$HOME/.claude/hooks/verify-gate.py\&quot;; [ -f \&quot;$f\&quot; ] &amp;&amp; python3 \&quot;$f\&quot;; exit 0&quot;,
+          &quot;timeout&quot;: 10
+        }
+      ]
+    }
+  ]
+}
+
+# After a week or two, read the verdicts per repo before deciding to enforce:
+python3 ~/.claude/hooks/verify-gate.py --report
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="browser-tool">
+	<h2 class="guide-title" id="browser-tool"><span class="guide-number">05</span><span>Choosing the browser tool</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in trial</span><span class="guide-badge">recently updated</span><span>updated <time datetime="2026-11-20">20/11/2026</time></span><a class="guide-anchor" href="#browser-tool">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">A verify skill is only as good as the browser that drives it. We ran one real test on Markasso&#039;s canvas: draw a rectangle, then check that it landed in localStorage. The results decided which tool does what.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Telemaco: FAIL. No layout engine, and <code>browser_evaluate</code> does not await Promises.</li><li>chrome-devtools-mcp: PASS only with synthetic events dispatched from a script, since it has no drag at coordinates; about 36 s.</li><li>Playwright MCP: PASS with real mouse input (<code>browser_mouse_drag_xy</code>), about 24 s. On the first try it even hit a panel lying over the canvas, exactly as a real user would.</li><li>Decision, written in the global CLAUDE.md: Telemaco stays for reading the web, search and stealth fetches; driving and verifying local apps moved to Playwright MCP, pinned, headless and isolated. Markasso&#039;s verify skill now draws on the canvas with real mouse input, and Telemaco 0.3.0 dropped everything else: no CDP server, no scrape, no remote.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Playwright MCP for local apps</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># Playwright MCP to drive local apps with real mouse and keyboard input.
+# Pin the version: the server is fetched by npx on every start.
+# Pick the current one with `npm view @playwright/mcp version`.
+# --scope user:   one setup for every project, not just the current one.
+# --headless:     no window stealing focus while you work.
+# --isolated:     in-memory profile, so parallel sessions don&#039;t fight over one profile.
+#                 It also means first-run dialogs show up on every launch.
+# --caps vision:  coordinate tools such as browser_mouse_drag_xy, needed for canvas work.
+# --output-dir:   screenshots and traces go to a cache folder, not into the repo.
+PLAYWRIGHT_MCP_VERSION=0.0.85
+claude mcp add --scope user playwright -- npx -y &quot;@playwright/mcp@$PLAYWRIGHT_MCP_VERSION&quot; \
+  --browser chrome --headless --isolated --caps vision \
+  --viewport-size 1280x800 --output-dir &quot;$HOME/.cache/playwright-mcp&quot;
+
+# The browser follows the system locale, so the app&#039;s UI may be translated:
+# select by ids, classes, roles or shortcuts, never by visible text.
+# If the app has no stable hooks yet, force a locale with a config file:
+#   { &quot;browser&quot;: { &quot;contextOptions&quot;: { &quot;locale&quot;: &quot;en-US&quot; } } }
+# and add --config &quot;$PWD/playwright-mcp.json&quot; to the command above.
+</code></pre><p class="guide-origin">from <a class="terminal-link" href="https://github.com/microsoft/playwright-mcp" target="_blank" rel="noopener noreferrer">Playwright MCP ↗</a></p></div>
+	
+</section><section class="guide-section" aria-labelledby="second-opinion">
+	<h2 class="guide-title" id="second-opinion"><span class="guide-number">06</span><span>A second opinion with Codex or opencode</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in trial</span><span class="guide-badge">recently updated</span><span>updated <time datetime="2026-11-20">20/11/2026</time></span><a class="guide-anchor" href="#second-opinion">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">An agent reviewing its own diff shares its own blind spots. A second model with a fresh prompt finds a different set of bugs, as long as you give it the code, not your conclusion, and treat its output as input, not truth.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Codex is the long-term reviewer for deep and critical reviews, one call per review because its quota is limited; opencode&#039;s free models take smaller diffs, control runs and scoped tasks.</li><li>Size the model to the task: light for a quick question, standard for a small or medium diff, deep for a branch, a plan or a debug session, where two free models run in parallel and you cross-check them.</li><li>Ask before running it, and say what you send and why.</li><li>When the repo has a <code>REVIEW.md</code>, send it read from the base branch and ask the reviewer to apply the rules whose trigger matches the diff.</li><li>Read-only by default: opencode&#039;s <code>plan</code> agent or Codex&#039;s <code>read-only</code> sandbox. Write access only inside a separate git worktree.</li><li>Read-only is not harmless: the <code>plan</code> agent blocks file edits, not shell commands. The prompt forbids build, clean, install and any other writing command, compiling uses a separate build directory, and no review runs while a build or test run is using the same tree.</li><li>A subagent that works on another repo creates its own worktree there with <code>git worktree add</code>: the agent tool&#039;s worktree isolation only covers the session&#039;s repo.</li><li>Use only models whose provider keeps no data and does not train on it, and never send secrets or client code you may not share.</li><li>Verify every finding against the code, fix what is real, and write down what you rejected and why.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Commands</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># Two reviewers with different roles:
+#   Codex     the long-term reviewer for deep and critical reviews (a branch, a plan, security);
+#             one call per review, its subscription quota is limited.
+#   opencode  free models for smaller diffs, control runs and scoped tasks.
+
+# Size the model to the task, and use only providers that keep no data and do not train on it:
+#   light     explain a snippet, a small question, a trivial edit      one small free model
+#   standard  review of a small or medium diff, a scoped task           one stronger free model
+#   deep      branch review, debug after failed hypotheses, a plan      Codex, or two free models
+#                                                                       in parallel, cross-checked
+
+# Review a diff, read-only: opencode&#039;s built-in `plan` agent cannot edit files,
+# but it can still run shell commands. The prompt forbids every writing command,
+# and no review runs while a build or test run is using the same tree.
+# If the repo has a REVIEW.md, send it from the base branch, never from the working tree.
+# `git diff main` covers commits and uncommitted work; an empty diff is no review.
+git diff main &gt; /tmp/change.diff
+test -s /tmp/change.diff || echo &quot;empty diff: nothing to review&quot;
+git show main:REVIEW.md &gt; /tmp/review-rules.md 2&gt;/dev/null
+opencode run --agent plan -m &lt;model&gt; \
+  &quot;Review the diff in /tmp/change.diff for correctness bugs, unescaped input and missing tests. \
+If /tmp/review-rules.md is not empty, apply the rules whose trigger matches a path in the diff. \
+Give each finding a file:line, a severity (must-fix / should-fix / nit) and a concrete failure scenario. \
+Do not edit files. Do not run build, clean, install or any other command that writes; \
+if you must compile, use a separate build directory.&quot; &gt; review.md
+
+# Delegate a scoped task with write access, only inside a separate git worktree.
+opencode run -w &lt;worktree-name&gt; -m &lt;model&gt; &quot;&lt;task, files, what is already ruled out&gt;&quot;
+
+# Codex for deep or critical reviews: read-only sandbox, findings written to a file.
+codex exec -s read-only -C . -o codex.md &quot;&lt;same review prompt&gt;&quot;
+# `codex review --base main` is quicker but takes no rules file: prefer `codex exec`
+# with the same prompt when the repo has a REVIEW.md.
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="review-md">
+	<h2 class="guide-title" id="review-md"><span class="guide-number">07</span><span>A REVIEW.md the change cannot rewrite</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in trial</span><span class="guide-badge">new</span><span>updated <time datetime="2026-11-20">20/11/2026</time></span><a class="guide-anchor" href="#review-md">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">A generic review prompt finds generic issues. A <code>REVIEW.md</code> tells the reviewer what breaks in this code, and because it is always read from the base branch, a change cannot soften the rules that judge it.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Give the reviewer the diff plus <code>git show &lt;base&gt;:REVIEW.md</code>, never the copy in the branch under review.</li><li>Every rule comes from a real bug, citing the fix commits, or from a stated project constraint. No generic advice.</li><li>Make each rule checkable from a diff: a trigger on paths, a concrete check, and why it exists.</li><li>Keep it under about 15 rules: add or sharpen one when a bug slips through review, delete the ones that never trigger or only produce noise.</li><li>No <code>REVIEW.md</code> yet? When the agent proposes a review, it also proposes a first version built from the <code>fix:</code> commits in <code>git log</code>, citing their hashes. It only proposes: the file is written after a human says yes.</li><li>When a fix corrects a bug that an earlier review missed, the agent proposes the rule to add or sharpen: trigger, check, and the fix commit.</li><li>Change <code>REVIEW.md</code> in its own commit, never together with the code it judges.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Template</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>&lt;!--
+Copy it to &lt;repo&gt;/REVIEW.md, replace the placeholders, delete this comment.
+
+How it is used: the reviewer (Codex, opencode, /code-review) gets the diff plus
+this file read from the base branch (`git show &lt;base&gt;:REVIEW.md`), never from
+the branch under review, so a change cannot rewrite the rules that judge it.
+Change REVIEW.md in its own commit, never together with the code it judges.
+
+Writing rules:
+- Every rule comes from a real bug (cite the fix commits) or a stated project
+  constraint (cite CLAUDE.md, an ADR, a spec). No generic advice.
+- A rule must be checkable from a diff: concrete trigger paths, concrete check.
+- Keep it under about 15 rules. When a bug slips through review, add or sharpen
+  a rule; when a rule never triggers or only produces noise, delete it.
+--&gt;
+
+# Review guide: &lt;PROJECT&gt;
+
+Check only the rules whose trigger matches a path in the diff. For each finding, name the rule (R1, R2, ...) or say &quot;outside REVIEW.md&quot; when it is a bug no rule covers. Report real defects with a concrete failure scenario; skip anything listed under &quot;Do not flag&quot;.
+
+## Rules
+
+### R1: &lt;short title&gt;
+Trigger: &lt;paths or globs&gt;
+Check: &lt;what must hold in the diff&gt;
+Why: &lt;the failure it prevents&gt; (fixes: &lt;sha&gt;, &lt;sha&gt; | source: &lt;CLAUDE.md, ADR, spec section&gt;)
+
+## Do not flag
+
+- Formatting, import order and lint-level style: &lt;linter&gt; enforces them in CI.
+- &lt;Deliberate convention that looks wrong but is intended, with its source.&gt;
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="improvement-log">
+	<h2 class="guide-title" id="improvement-log"><span class="guide-number">08</span><span>An improvement log for the setup itself</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in trial</span><span class="guide-badge">new</span><span>added <time datetime="2026-11-20">20/11/2026</time></span><a class="guide-anchor" href="#improvement-log">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">Rules get skipped, hooks miss a case, a release step stays manual until it breaks. Fixed on the spot, each lesson is lost; fixed in the middle of another task, it widens the diff. A short log keeps them in one place until each gets its own fix.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Keep one file next to the agent&#039;s rules, one entry per issue: what happened, the proposed fix, a status (<code>open</code>, <code>done &lt;sha or PR&gt;</code>, <code>dropped (&lt;reason&gt;)</code>).</li><li>The agent adds an entry when something breaks, a rule gets skipped, or a step turns out manual and fragile, and says so in one line.</li><li>Each fix is its own task and branch; close the entry with its commit or PR.</li><li>When there is time to improve the setup, start from the <code>open</code> entries instead of from memory.</li><li>Prefer fixes that make a rule enforced rather than remembered: a hook or a script check beats another line of instructions.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Template</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code># Improvement log
+
+What in this setup (rules, hooks, scripts, release flows) should get better.
+One entry per issue, newest at the bottom. Each fix is its own task and branch.
+
+Status: `open`, `done &lt;sha or PR&gt;`, or `dropped (&lt;reason&gt;)`.
+
+## YYYY-MM-DD: &lt;short title of what went wrong&gt;
+
+- **What happened:** the agent committed before the user confirmed, against
+  the commit rule. Caught at once, nothing was pushed.
+- **Proposal:** a hook on `git commit` that always asks for confirmation, so
+  the rule no longer depends on the agent remembering it.
+- **Status:** open
+
+## YYYY-MM-DD: &lt;a release step that is still manual&gt;
+
+- **What happened:** the release script tagged a version with no changelog
+  section; someone noticed by hand.
+- **Proposal:** the script refuses to start when the changelog has no section
+  for the version.
+- **Status:** done &lt;sha or PR&gt;
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="themis-gates">
+	<h2 class="guide-title" id="themis-gates"><span class="guide-number">09</span><span>Themis: gates and a locked contract</span></h2>
+	<p class="guide-section-meta"><span class="guide-status is-adopted">adopted</span><span>added <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#themis-gates">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">For larger work, rules are not enough: the agent must not be able to move the goalposts. Themis turns a spec into acceptance tests, locks them by digest, and only then lets agents write code that a separate verifier judges.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Write the spec: goal, verify steps, limits, acceptance criteria.</li><li>Approve the plan (gate 1) and the tests (gate 2): approving the tests records the digests of tests, spec, verifier and config in <code>.themis/lock.json</code>, and a guard rejects any change to them.</li><li>Run: each task works in its own worktree; the verifier&#039;s exit code says retry or blocked, and <code>max_iterations</code> caps the attempts.</li><li>Close with a retro (gate 3): misses become changes to the agents&#039; instructions.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">The gated flow</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code>themis new                # spec skeleton: goal, verify steps, limits, acceptance criteria
+themis check              # every problem with line, column and field
+themis init               # generates the judge: verifier + guard, no AI involved
+
+themis plan               # planner agent proposes the task graph
+themis approve plan       # gate 1: does the plan make sense?
+
+themis tests              # test-author agent writes tests/acceptance/
+git add -A &amp;&amp; git commit -m &quot;themis contract&quot;
+themis approve tests      # gate 2: digests of tests, spec, verifier and config go into .themis/lock.json
+git add -A &amp;&amp; git commit -m &quot;lock contract&quot;
+
+themis run                # each task in its own worktree, verifier exit 1 = retry, 2 = blocked
+themis status             # gates, tasks, iterations against max_iterations, cost
+
+themis retro              # retro agent turns misses into instruction changes
+themis approve retro      # gate 3: apply them, then commit .themis/agents/
+</code></pre><p class="guide-origin">from <a class="terminal-link" href="https://github.com/AlbertoBarrago/themis" target="_blank" rel="noopener noreferrer">Themis ↗</a></p></div>
+	<figure class="guide-figure">
+	<a href="/agent-playbook/themis-pipeline.svg" target="_blank" rel="noopener" data-action="open-diagram" data-diagram="1" aria-label="Open diagram: The Themis gated pipeline: the checks are locked before the worker starts."><img src="/agent-playbook/themis-pipeline.svg" alt="Flowchart of the Themis pipeline: spec, plan, locked contract, worker, verifier with retries and a guard on the locked checks, failed or blocked after max iterations, reviewer on the committed diff, merge, retro." loading="lazy" decoding="async"></a>
+	<figcaption>The Themis gated pipeline: the checks are locked before the worker starts. <a class="terminal-link" href="/agent-playbook/themis-pipeline.markasso" download>Markasso source</a></figcaption>
+</figure>
+</section>
+<h2 class="guide-part">Pitfalls we hit</h2>
+<section class="guide-section" aria-labelledby="dev-server-port">
+	<h2 class="guide-title" id="dev-server-port"><span class="guide-number">01</span><span>The dev server port belongs to someone else</span></h2>
+	<p class="guide-section-meta"><span>added <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#dev-server-port">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">Several sessions and agents run at once. An agent that finds port 5173 busy may happily test the server another agent started, on different code, and report a pass that means nothing.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Pick a free port at runtime and start with <code>--strictPort</code>, so a race fails instead of silently moving.</li><li>Fail the wait loop if your own process dies.</li><li>Check a marker that proves the server is yours (the page title, a health payload) before testing, and never stop a server you did not start.</li><li>Playwright with a fixed port and <code>reuseExistingServer</code> has the same trap: check that the port is free before the suite runs.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Free port, strict, checked</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># Never test a dev server you did not start: another session or agent may own the port.
+PORT=$(node -e &quot;const s=require(&#039;net&#039;).createServer();s.listen(0,()=&gt;{console.log(s.address().port);s.close()})&quot;)
+npm run dev -- --port $PORT --strictPort &gt; dev.log 2&gt;&amp;1 &amp;
+PID=$!
+until curl -fs -o /dev/null http://localhost:$PORT/; do
+  kill -0 $PID 2&gt;/dev/null || { tail -20 dev.log; exit 1; }   # server died: fail, don&#039;t wait forever
+  sleep 0.5
+done
+
+# Before testing, check a marker that proves the server is yours (here, the page title).
+curl -fs http://localhost:$PORT/ | grep -q &#039;&lt;title&gt;My App&#039; || { echo &quot;not my server&quot;; exit 1; }
+
+# ... run the checks, then always stop what you started.
+kill $PID
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="telemaco-no-layout">
+	<h2 class="guide-title" id="telemaco-no-layout"><span class="guide-number">02</span><span>Telemaco has a DOM, not a layout</span></h2>
+	<p class="guide-section-meta"><span>added <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#telemaco-no-layout">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">Telemaco runs real JavaScript and a real DOM but no layout engine: sizes are placeholders and computed styles come back as defaults. Canvas hit-testing and visual checks cannot be driven from it, <code>browser_evaluate</code> returns before a Promise settles, and pretending otherwise produces false passes.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Assert on structure and state: titles, element counts, text, console errors.</li><li>Drive forms through the DOM, for example <code>form.requestSubmit()</code>.</li><li>Cover canvas logic with unit tests, and ask a human for visual and phone-width checks (<code>Verified: manual</code>).</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">A DOM-only check</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">javascript</span></div><pre class="guide-code"><code>// Telemaco runs real JavaScript and a real DOM, but has no layout engine:
+// getBoundingClientRect returns placeholders and getComputedStyle returns defaults.
+// So assert on structure and state, never on pixels, sizes or computed colors.
+// browser_evaluate does not await Promises: return plain values, and read async
+// results in a second call (store them on window in the first one).
+
+// 1. browser_navigate to http://localhost:$PORT/ and check the title first.
+document.title.startsWith(&#039;My App&#039;) || &#039;not my server: stop&#039;;
+
+// 2. browser_evaluate: drive the app through the DOM and return evidence.
+(() =&gt; {
+  const input = document.querySelector(&#039;#search&#039;);
+  input.value = &#039;invoices&#039;;
+  input.form.requestSubmit();          // fires the app&#039;s own submit handler
+  return {
+    results: document.querySelectorAll(&#039;.result&#039;).length,
+    empty: !!document.querySelector(&#039;.empty-state&#039;),
+  };
+})();
+
+// Out of scope: canvas drawing and hit-testing, visual layout, phone widths.
+// Cover canvas logic with unit tests; ask a human for the visual check (Verified: manual).
+</code></pre><p class="guide-origin">from <a class="terminal-link" href="https://github.com/AlbertoBarrago/telemaco" target="_blank" rel="noopener noreferrer">Telemaco ↗</a></p></div>
+	
+</section><section class="guide-section" aria-labelledby="ui-language">
+	<h2 class="guide-title" id="ui-language"><span class="guide-number">03</span><span>A real browser speaks the system language</span></h2>
+	<p class="guide-section-meta"><span>added <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#ui-language">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">A real Chrome opens the app in the system language. On an Italian Mac a selector like <code>title^=&quot;Rectangle&quot;</code> finds nothing, because the button now reads &quot;Rettangolo&quot;, and the check fails for a reason that has nothing to do with the change.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Prefer selectors that do not depend on the language: structure, roles, <code>data-*</code> hooks you own.</li><li>When the app has no stable hooks yet, force the <code>en-US</code> locale in the browser tool and say so in the verify skill.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Fragile and robust selectors</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">javascript</span></div><pre class="guide-code"><code>// A real browser opens the app in the system language: on an Italian Mac the
+// &quot;Rectangle&quot; tool is titled &quot;Rettangolo&quot;, and a selector on the label breaks.
+
+// Fragile: depends on the UI language.
+document.querySelector(&#039;#toolbar button[title^=&quot;Rectangle&quot;]&#039;);
+
+// Robust: depends on structure or on attributes you own.
+document.querySelector(&#039;#toolbar [data-tool=&quot;rectangle&quot;]&#039;);
+document.querySelector(&#039;#toolbar button:nth-of-type(3)&#039;);
+
+// If the app has no stable hooks yet, force the locale instead
+// (Playwright: contextOptions.locale = &quot;en-US&quot;) and say so in the verify skill.
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="lint-untracked">
+	<h2 class="guide-title" id="lint-untracked"><span class="guide-number">04</span><span>Untracked editor folders break the linter</span></h2>
+	<p class="guide-section-meta"><span>added <time datetime="2026-11-17">17/11/2026</time></span><a class="guide-anchor" href="#lint-untracked">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why"><code>biome check .</code> walks every folder in the working tree, including local editor settings and scratch directories that are not part of the project, and fails on them. The agent then &quot;fixes&quot; files nobody asked it to touch, or reports a red lint that is not real.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Lint exactly what git knows about: tracked files plus new, non-ignored ones.</li><li>Use that command in the verify skill, so humans and agents run the same check.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Lint only what git tracks</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># `biome check .` also walks untracked local folders (editor settings, scratch dirs)
+# and fails on files that are not part of the project.
+# Lint exactly what git knows about: tracked files plus new, non-ignored ones.
+git ls-files -z -co --exclude-standard \
+  | xargs -0 pnpm exec biome check --files-ignore-unknown=true --no-errors-on-unmatched
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="secrets-in-transcript">
+	<h2 class="guide-title" id="secrets-in-transcript"><span class="guide-number">05</span><span>A secret printed once is already gone</span></h2>
+	<p class="guide-section-meta"><span class="guide-badge">new</span><span>added <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#secrets-in-transcript">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">Whatever an agent prints enters the transcript, and the transcript goes to the model provider. A quick <code>cat .env</code> or a loose <code>grep</code> to check that a key exists is enough to ship its value out of your machine, and deleting the message afterwards does not take it back.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Write the rule in the global CLAUDE.md: never print anything that can hold a secret, so no <code>cat</code>, <code>head</code>, <code>env</code>, <code>printenv</code>, <code>echo</code> or plain <code>grep</code> on it.</li><li>Check a key by name or count only: <code>grep -q</code>, <code>grep -c</code>, or the list of key names.</li><li>Anchor the pattern to the exact key: a loose one matches other keys and prints their values.</li><li>If a value does get printed, the agent says so at once and the secret is rotated, not just deleted from the chat.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Checks that print no values</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># Everything that enters the transcript goes to the model provider and cannot
+# be taken back. Check secrets by name or count, never by value.
+ENV_FILE=path/to/your/env/file
+
+# Never: these print values into the conversation.
+#   cat &quot;$ENV_FILE&quot;    grep TOKEN &quot;$ENV_FILE&quot;    env    printenv    echo &quot;$API_KEY&quot;
+
+test -r &quot;$ENV_FILE&quot; || echo &quot;cannot read $ENV_FILE&quot;
+
+# Is the key there? Exit code only.
+grep -q &#039;^STRIPE_API_KEY=&#039; &quot;$ENV_FILE&quot; &amp;&amp; echo present || echo missing
+
+# How many times is it defined? A count, no value.
+grep -c &#039;^STRIPE_API_KEY=&#039; &quot;$ENV_FILE&quot;
+
+# Which keys exist? Names only.
+grep -o &#039;^[A-Z_]*=&#039; &quot;$ENV_FILE&quot;
+
+# Anchor the pattern to the exact key, and still never print the line:
+#   grep STRIPE &quot;$ENV_FILE&quot;                  also hits STRIPE_WEBHOOK_SECRET, and prints its value
+#   grep -c &#039;^STRIPE_API_KEY=&#039; &quot;$ENV_FILE&quot;   one key, a count, no value
+
+# If a value does get printed: say so at once and rotate the secret.
+</code></pre></div>
+	
+</section><section class="guide-section" aria-labelledby="global-settings-drift">
+	<h2 class="guide-title" id="global-settings-drift"><span class="guide-number">06</span><span>Project settings leak into the global file</span></h2>
+	<p class="guide-section-meta"><span class="guide-badge">new</span><span>added <time datetime="2026-11-20">20/11/2026</time></span><a class="guide-anchor" href="#global-settings-drift">#</a></p>
+	<div class="guide-label">why</div>
+	<p class="guide-why">Keeping the agent&#039;s global settings in a git repo, symlinked on every machine, gives you the same setup everywhere. It also means that a permission or an environment block written for one project silently lands in every session on every machine, and nobody notices until it gets in the way.</p>
+	<div class="guide-label">how</div>
+	<ol class="guide-steps" role="list"><li>Write the rule in the global CLAUDE.md: project-specific settings go in the project&#039;s <code>.claude/settings.local.json</code>, never in the global file.</li><li>Add a <code>SessionStart</code> hook that warns when the shared settings file has uncommitted changes, so drift shows up at the start of the next session.</li><li>The hook only warns and always exits 0: the human decides whether to commit the change or move it into the project.</li></ol>
+	<div class="guide-snippet"><div class="guide-snippet-title">Rule and hook</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># The global settings file lives in a git repo and is symlinked on every machine:
+#   ~/.claude/settings.json -&gt; &lt;your-config-repo&gt;/claude/settings.json
+# Project-specific settings (permissions, domains, auto mode environment) go in
+# the project instead, and stay out of git:
+#   &lt;repo&gt;/.claude/settings.local.json
+
+# A SessionStart hook in the global settings: if the shared file has uncommitted
+# changes, the agent sees a warning before anything else. It never blocks.
+{
+  &quot;hooks&quot;: {
+    &quot;SessionStart&quot;: [
+      {
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;d=\&quot;$HOME/path/to/your-config-repo\&quot;; [ -d \&quot;$d/.git\&quot; ] || exit 0; git -C \&quot;$d\&quot; diff --quiet -- claude/settings.json &amp;&amp; exit 0; echo &#039;WARNING: the shared global settings have uncommitted changes. Tell the user and show the diff stat. Project settings belong in the project .claude/settings.local.json.&#039;; exit 0&quot;,
+            &quot;timeout&quot;: 5
+          }
+        ]
+      }
+    ]
+  }
+}
+
+# The matching rule in the global CLAUDE.md:
+#   Never write project-specific settings into the global settings file:
+#   it is shared between machines. Use the project&#039;s .claude/settings.local.json.
+</code></pre></div>
+	
+</section>
+<section class="guide-closing" aria-labelledby="next-up">
+	<h2 class="guide-part" id="next-up">Next up</h2>
+	<ul class="guide-roadmap" role="list"><li><span class="guide-roadmap-title"><a class="reader-nav-link" href="#verify-gate">Stop hook in observe mode</a></span><p>A global hook that logs when a session ends without verification, without blocking anything yet, so false positives surface before it ever enforces.</p></li><li><span class="guide-roadmap-title"><a class="reader-nav-link" href="#review-md">A REVIEW.md per repo</a></span><p>What the reviewer should look at for this code, always read from the base branch so a change cannot rewrite its own review rules.</p></li><li><span class="guide-roadmap-title"><a class="reader-nav-link" href="#browser-tool">Adopt Playwright MCP</a></span><p>Done: the verify skills that drive local apps moved from Telemaco to Playwright MCP, starting with Markasso.</p></li><li><span class="guide-roadmap-title"><a class="reader-nav-link" href="#browser-tool">Audit Telemaco</a></span><p>Done in Telemaco 0.3.0: it keeps what it does best, reading the web, search and stealth fetches through the CLI and the MCP server, and the CDP server, scrape and remote are gone.</p></li><li><span class="guide-roadmap-title">One reviewer, several rounds</span><p>Tune a single reviewer and feed each round the findings and failures of the previous ones, instead of stacking parallel reviewers.</p></li><li><span class="guide-roadmap-title">A diff-triggered reliability checklist</span><p>Checklist items with a trigger readable from a diff, matched through Serval&#039;s blast radius, so only the few relevant checks run on each change.</p></li><li><span class="guide-roadmap-title">A hook that asks before every commit</span><p>The rule says never commit without the human&#039;s ok, and the agent still slipped once. A hook on <code>git commit</code> that always asks would make it enforced instead of remembered.</p></li></ul>
+</section>
+<section class="guide-closing" aria-labelledby="changelog">
+	<h2 class="guide-part" id="changelog">Changelog</h2>
+	<ol class="guide-changelog" role="list"><li><time datetime="2026-11-20">20/11/2026</time><p>New name: How we build is now the Agent Playbook, at /agent-playbook/ with the <code>playbook</code> command. Old links and deep links still work: they redirect to the same section.</p></li><li><time datetime="2026-11-20">20/11/2026</time><p>The roadmap caught up with reality: Playwright MCP now drives the verify skills and Telemaco has been slimmed down, so both items point to the browser tool section, whose Markasso example is now the real Playwright skill.</p><p class="guide-changelog-sections"><a class="reader-nav-link" href="#browser-tool">Choosing the browser tool</a></p></li><li><time datetime="2026-11-20">20/11/2026</time><p>A new practice, an improvement log for the setup itself, and a pitfall on project settings leaking into the shared global file. Read-only reviews now forbid writing commands too, and a repo without a REVIEW.md gets a first version proposed from its fix commits.</p><p class="guide-changelog-sections"><a class="reader-nav-link" href="#improvement-log">An improvement log for the setup itself</a> · <a class="reader-nav-link" href="#global-settings-drift">Project settings leak into the global file</a> · <a class="reader-nav-link" href="#second-opinion">A second opinion with Codex or opencode</a> · <a class="reader-nav-link" href="#review-md">A REVIEW.md the change cannot rewrite</a></p></li><li><time datetime="2026-11-18">18/11/2026</time><p>Two new practices, a Stop hook in observe mode and a REVIEW.md read from the base branch, and a pitfall on secrets in the transcript. The second opinion now sizes the model to the task, the browser tool decision is in the global rules, and the Playwright setup matches the real one.</p><p class="guide-changelog-sections"><a class="reader-nav-link" href="#verify-gate">A Stop hook that watches before it blocks</a> · <a class="reader-nav-link" href="#review-md">A REVIEW.md the change cannot rewrite</a> · <a class="reader-nav-link" href="#secrets-in-transcript">A secret printed once is already gone</a> · <a class="reader-nav-link" href="#second-opinion">A second opinion with Codex or opencode</a> · <a class="reader-nav-link" href="#browser-tool">Choosing the browser tool</a> · <a class="reader-nav-link" href="#claude-md-rules">Verification rules in CLAUDE.md</a></p></li><li><time datetime="2026-11-17">17/11/2026</time><p>First edition: six practices, four pitfalls and a roadmap, on a page of its own with a link for every section.</p></li></ol>
+</section>
+</article></noscript></div>
+
+	<!-- Cloudflare Web Analytics: cookieless, no consent banner required -->
+	<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"
+		data-cf-beacon='{"token": "64eea3ab6ba4461e880aa8ec2d58bfc3"}'></script>
+</body>
+
+</html>
