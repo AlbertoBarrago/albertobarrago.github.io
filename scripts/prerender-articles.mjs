@@ -7,8 +7,9 @@
  * each article, while the client-side app still owns the interactive
  * reading experience once JS loads.
  *
- * It also prerenders the "How we build" guide (/how-we-build/ and
- * /it/how-we-build/) from the same data and templates the client uses.
+ * It also prerenders the "Agent Playbook" guide (/agent-playbook/ and
+ * /it/agent-playbook/) from the same data and templates the client uses, and
+ * leaves redirect pages at its former URLs (/how-we-build/, /it/how-we-build/).
  */
 
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
@@ -16,6 +17,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from 'vite';
 import { parseFrontmatter, renderMarkdownToHTML } from './markdown.mjs';
+import { renderRedirectPage } from './redirect-page.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -189,17 +191,17 @@ async function loadGuidePages() {
 				writable: true,
 			});
 			server.moduleGraph.invalidateAll();
-			const { howWeBuild } = await server.ssrLoadModule('/src/js/index.js');
+			const { agentPlaybook } = await server.ssrLoadModule('/src/js/index.js');
 			const { t } = await server.ssrLoadModule('/src/js/i18n.js');
-			const { guideLastModified, isoDay } = await server.ssrLoadModule('/src/js/how-we-build.js');
-			const { guideArticleHTML } = await server.ssrLoadModule('/src/js/how-we-build-view.js');
+			const { guideLastModified, isoDay } = await server.ssrLoadModule('/src/js/agent-playbook.js');
+			const { guideArticleHTML } = await server.ssrLoadModule('/src/js/agent-playbook-view.js');
 			pages.push({
 				language,
-				title: `${t('How we build')} | Alberto Barrago`,
+				title: `${t('Agent Playbook')} | Alberto Barrago`,
 				description: t('A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.'),
-				published: howWeBuild.published,
-				modified: guideLastModified(howWeBuild),
-				html: guideArticleHTML(howWeBuild, { interactive: false, today: isoDay() }),
+				published: agentPlaybook.published,
+				modified: guideLastModified(agentPlaybook),
+				html: guideArticleHTML(agentPlaybook, { interactive: false, today: isoDay() }),
 			});
 		}
 		return pages;
@@ -211,7 +213,7 @@ async function loadGuidePages() {
 
 /** @param {string} shell @param {GuidePage} guide @returns {string} */
 function renderGuidePage(shell, guide) {
-	const path = `${guide.language === 'it' ? '/it' : ''}/how-we-build/`;
+	const path = `${guide.language === 'it' ? '/it' : ''}/agent-playbook/`;
 	const url = `${SITE_URL}${path}`;
 	let page = applyPageMeta(shell, { language: guide.language, url, title: guide.title, description: guide.description, type: 'article' });
 	const schema = `\t<script type="application/ld+json">
@@ -228,7 +230,7 @@ function renderGuidePage(shell, guide) {
 			inLanguage: guide.language,
 		})}
 	</script>\n</head>`;
-	page = page.replace('</head>', `${alternateLinks('/how-we-build/', '/it/how-we-build/')}${schema}`);
+	page = page.replace('</head>', `${alternateLinks('/agent-playbook/', '/it/agent-playbook/')}${schema}`);
 	return page.replace('<div id="app"></div>', `<div id="app"><noscript>${guide.html}</noscript></div>`);
 }
 
@@ -245,7 +247,7 @@ function renderSitemap(articles, guideModified) {
 		`  <url>\n    <loc>${SITE_URL}/articles/</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
 		`  <url>\n    <loc>${SITE_URL}/it/articles/</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
 		...['', '/it'].map((prefix) =>
-			`  <url>\n    <loc>${SITE_URL}${prefix}/how-we-build/</loc>\n    <lastmod>${guideModified}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`
+			`  <url>\n    <loc>${SITE_URL}${prefix}/agent-playbook/</loc>\n    <lastmod>${guideModified}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`
 		),
 		`  <url>\n    <loc>${SITE_URL}/iris/</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>`,
 		`  <url>\n    <loc>${SITE_URL}/privacy/</loc>\n    <changefreq>yearly</changefreq>\n    <priority>0.3</priority>\n  </url>`,
@@ -346,9 +348,15 @@ async function main() {
 
 	const guidePages = await loadGuidePages();
 	for (const guide of guidePages) {
-		const dir = join(BUILD_DIR, guide.language === 'it' ? 'it' : '', 'how-we-build');
+		const dir = join(BUILD_DIR, guide.language === 'it' ? 'it' : '', 'agent-playbook');
 		mkdirSync(dir, { recursive: true });
 		writeFileSync(join(dir, 'index.html'), renderGuidePage(shell, guide));
+	}
+	// The guide was "How we build" until 2026-11-20: keep shared links working.
+	for (const prefix of ['', 'it']) {
+		const dir = join(BUILD_DIR, prefix, 'how-we-build');
+		mkdirSync(dir, { recursive: true });
+		writeFileSync(join(dir, 'index.html'), renderRedirectPage(`${prefix ? `/${prefix}` : ''}/agent-playbook/`, SITE_URL));
 	}
 
 	writeFileSync(join(BUILD_DIR, 'sitemap.xml'), renderSitemap([...articles, ...italianArticles], guidePages[0].modified));

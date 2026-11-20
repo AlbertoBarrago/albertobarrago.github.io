@@ -1,10 +1,10 @@
 /**
- * @file Types and pure helpers for the "How we build" guide (command
- * `howwebuild`, page /how-we-build/): practices for working with coding
+ * @file Types and pure helpers for the "Agent Playbook" guide (command
+ * `playbook`, page /agent-playbook/): practices for working with coding
  * agents, each with the why, the how and blocks to copy. The content is data
  * in index.js and the copyable blocks are raw files in
- * src/content/how-we-build/, so updating the guide never needs a template
- * change. The HTML lives in how-we-build-view.js.
+ * src/content/agent-playbook/, so updating the guide never needs a template
+ * change. The HTML lives in agent-playbook-view.js.
  */
 
 import { escapeHTML } from './utils.js';
@@ -65,7 +65,7 @@ import { escapeHTML } from './utils.js';
  *   pitfalls: GuideSection[],
  *   roadmap: GuideRoadmapItem[],
  *   changelog: GuideChangelogEntry[],
- * }} HowWeBuildGuide
+ * }} AgentPlaybook
  */
 
 /** @typedef {'new' | 'updated'} GuideFreshness */
@@ -86,7 +86,7 @@ export function inlineMarkup(text) {
 
 /**
  * Practices then pitfalls: every section, in page order.
- * @param {HowWeBuildGuide} guide
+ * @param {AgentPlaybook} guide
  * @returns {GuideSection[]}
  */
 export function guideSections(guide) {
@@ -137,7 +137,7 @@ export function sectionFreshness(section, published, today) {
  * The guide's "last updated" date: the latest of its first edition, every
  * section's added/updated date and every changelog entry, so it never needs
  * a manual bump.
- * @param {HowWeBuildGuide} guide
+ * @param {AgentPlaybook} guide
  * @returns {string}
  */
 export function guideLastModified(guide) {
@@ -152,7 +152,7 @@ export function guideLastModified(guide) {
 /**
  * Every diagram of the guide, in page order (practices, then pitfalls): the
  * slides of the diagram viewer.
- * @param {HowWeBuildGuide} guide
+ * @param {AgentPlaybook} guide
  * @returns {GuideDiagram[]}
  */
 export function guideDiagrams(guide) {

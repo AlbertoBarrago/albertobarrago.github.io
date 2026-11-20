@@ -7,10 +7,10 @@ import { language, locale, homePath, articlePath, articlesIndexPath, guidePath, 
 
 import {
 	name, role, location, profile, skills, experience,
-	openSource, brewFormulas, utils, howWeBuild, links, version, downloadCv,
+	openSource, brewFormulas, utils, agentPlaybook, links, version, downloadCv,
 } from './index.js';
-import { inlineMarkup, guideDiagrams, guideSections, isoDay, wrapIndex } from './how-we-build.js';
-import { guideArticleHTML, guideCardHTML, guideContentsHTML, ROADMAP_ID, CHANGELOG_ID } from './how-we-build-view.js';
+import { inlineMarkup, guideDiagrams, guideSections, isoDay, wrapIndex } from './agent-playbook.js';
+import { guideArticleHTML, guideCardHTML, guideContentsHTML, ROADMAP_ID, CHANGELOG_ID } from './agent-playbook-view.js';
 import { initSpaceInvaders } from './games/spaceInvaders.js';
 import { initTetris } from './games/tetris.js';
 import { initPong } from './games/pong.js';
@@ -41,7 +41,7 @@ const MUSIC_PICKS = Object.freeze([
 	['The Rapture Pt.III', '&ME'],
 ]);
 const COMMAND_NAMES = Object.freeze([
-	'help', 'about', 'skills', 'experience', 'projects', 'articles', 'howwebuild', 'utils', 'contact', 'cv', 'privacy',
+	'help', 'about', 'skills', 'experience', 'projects', 'articles', 'playbook', 'utils', 'contact', 'cv', 'privacy',
 	'games', 'play', 'ls', 'tree', 'neofetch', 'history', 'date', 'clear', 'rss', 'music',
 ]);
 const MOBILE_COMMANDS = Object.freeze([
@@ -177,7 +177,7 @@ function articlePage(slug) {
 function guidePage() {
 	return {
 		path: guidePath(),
-		title: `${t('How we build')} | Alberto Barrago`,
+		title: `${t('Agent Playbook')} | Alberto Barrago`,
 		description: t('A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.'),
 		type: 'article',
 		alternates: { en: guidePath('en'), it: guidePath('it') },
@@ -272,7 +272,7 @@ function helpHTML() {
 		['experience', t("Professional timeline")],
 		['projects', t("Selected open-source work and Homebrew formulae")],
 		['articles', t("Technical articles and notes")],
-		['howwebuild', t("A practical guide to working with coding agents")],
+		['playbook', t("A practical guide to working with coding agents")],
 		['rss', t("Subscribe to the articles feed")],
 		['music', t("Listen to a track I've picked")],
 		['utils', t("Useful free resources and links")],
@@ -797,7 +797,7 @@ ${utils.map((group) => `<div class="utils-group">
 }
 
 /** Slides of the diagram viewer, in page order. */
-const GUIDE_DIAGRAMS = guideDiagrams(howWeBuild);
+const GUIDE_DIAGRAMS = guideDiagrams(agentPlaybook);
 /** Index of the slide on screen while the viewer is open. */
 let diagramIndex = 0;
 /** @type {HTMLElement | null} Element that opened the viewer, refocused on close. */
@@ -875,7 +875,7 @@ async function copySnippet(button) {
 }
 
 /** Every fragment the guide page answers to, in page order. */
-const GUIDE_TARGETS = Object.freeze([...guideSections(howWeBuild).map((section) => section.id), ROADMAP_ID, CHANGELOG_ID]);
+const GUIDE_TARGETS = Object.freeze([...guideSections(agentPlaybook).map((section) => section.id), ROADMAP_ID, CHANGELOG_ID]);
 
 /** Shell of the guide overlay: topbar, contents sidebar and the page body. */
 function guideReaderHTML() {
@@ -891,15 +891,15 @@ function guideReaderHTML() {
 			</div>
 		</div>
 		<div class="article-reader-body">
-			<nav class="reader-toc" id="guide-toc" aria-label="${t('Guide contents')}"><span class="reader-toc-title">${t('chapters')}</span>${guideContentsHTML(howWeBuild, options)}</nav>
-			<div class="article-reader-main guide-main">${guideArticleHTML(howWeBuild, options)}</div>
+			<nav class="reader-toc" id="guide-toc" aria-label="${t('Guide contents')}"><span class="reader-toc-title">${t('chapters')}</span>${guideContentsHTML(agentPlaybook, options)}</nav>
+			<div class="article-reader-main guide-main">${guideArticleHTML(agentPlaybook, options)}</div>
 		</div>
 	</div>`;
 }
 
 /** @returns {boolean} */
 function isGuideLocation() {
-	return /^(?:\/it)?\/how-we-build\/?$/.test(window.location.pathname);
+	return /^(?:\/it)?\/agent-playbook\/?$/.test(window.location.pathname);
 }
 
 /** @returns {string | undefined} the URL fragment, when it names a part of the guide */
@@ -917,7 +917,7 @@ function scrollGuideTo(id, behavior) {
 
 /**
  * Opens the guide page, or keeps it open, and scrolls to `target`. The URL
- * becomes /how-we-build/#target: pushed when coming from another view,
+ * becomes /agent-playbook/#target: pushed when coming from another view,
  * replaced when only the fragment changes, untouched on boot and
  * back/forward where it is already right.
  * @param {string} [target] a section id, ROADMAP_ID or CHANGELOG_ID
@@ -959,9 +959,9 @@ function closeGuide() {
 	input?.focus({ preventScroll: true });
 }
 
-/** The `howwebuild` command: a summary in the log, then the guide page. */
+/** The `playbook` command: a summary in the log, then the guide page. */
 function showGuide() {
-	appendOutput(guideCardHTML(howWeBuild));
+	appendOutput(guideCardHTML(agentPlaybook));
 	openGuide();
 }
 
@@ -1004,7 +1004,7 @@ function treeHTML() {
 ├── <button class="inline-command file" data-command="experience">experience.log</button>
 ├── <button class="inline-command directory" data-command="projects">projects/</button>
 ├── <button class="inline-command directory" data-command="articles">articles/</button>
-├── <button class="inline-command file" data-command="howwebuild">how-we-build.md</button>
+├── <button class="inline-command file" data-command="playbook">agent-playbook.md</button>
 ├── <button class="inline-command directory" data-command="utils">utils/</button>
 ├── <button class="inline-command file" data-command="contact">contact.vcf</button>
 ├── <button class="inline-command file" data-command="cv">albertobarrago_cv.pdf</button>
@@ -1104,7 +1104,7 @@ ${fields.map(([label, value]) =>
 }
 
 function lsHTML() {
-	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="articles">articles/</button><button class="inline-command file" data-command="howwebuild">how-we-build.md</button><button class="inline-command directory" data-command="utils">utils/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
+	return `<div class="ls-output"><button class="inline-command file" data-command="about">about.txt</button><button class="inline-command directory" data-command="skills">skills/</button><button class="inline-command file" data-command="experience">experience.log</button><button class="inline-command directory" data-command="projects">projects/</button><button class="inline-command directory" data-command="articles">articles/</button><button class="inline-command file" data-command="playbook">agent-playbook.md</button><button class="inline-command directory" data-command="utils">utils/</button><button class="inline-command file" data-command="contact">contact.vcf</button><button class="inline-command directory" data-command="games">games/</button></div>`;
 }
 
 /** @param {readonly string[]} art @param {number} intensity @returns {string} */
@@ -1202,7 +1202,7 @@ function executeCommand(rawCommand) {
 	if (['about', 'whoami', 'cat'].includes(command)) {
 		if (command !== 'cat' || !argument || argument === 'about.txt') appendOutput(aboutHTML());
 		else if (argument === 'contact.vcf') appendOutput(contactHTML());
-		else if (argument === 'how-we-build.md') showGuide();
+		else if (argument === 'agent-playbook.md') showGuide();
 		else if (argument.endsWith('.md') && getArticleHTML(argument.slice(0, -3))) {
 			openArticleReader(argument.slice(0, -3));
 		}
@@ -1215,7 +1215,9 @@ function executeCommand(rawCommand) {
 		return;
 	}
 
-	if (command === 'howwebuild') {
+	// `howwebuild` is the guide's former name: kept as a hidden alias (not in
+	// COMMAND_NAMES, so no Tab completion) for people who learned it.
+	if (command === 'playbook' || command === 'howwebuild') {
 		showGuide();
 		return;
 	}
