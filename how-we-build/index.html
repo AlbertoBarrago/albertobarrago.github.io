@@ -51,7 +51,7 @@
 		}
 		</script>
 
-  <script type="module" crossorigin src="/assets/index-B6Wi4QHA.js"></script>
+  <script type="module" crossorigin src="/assets/index-MWQORllm.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-DGiZZ_Fi.css">
 <link rel="alternate" hreflang="en" href="https://albz.it/how-we-build/" />
 <link rel="alternate" hreflang="it" href="https://albz.it/it/how-we-build/" />
@@ -67,7 +67,7 @@
 	<h1 class="blog-title" id="guide-title" tabindex="-1">How we build</h1>
 	<p class="blog-intro">A practical guide to how I work with coding agents. Each practice says why it matters, how to do it, and gives you a block to copy.</p>
 	<p class="guide-meta">Inspired by <em>Verification loops, by the Claude Code team at Anthropic</em> · updated <time datetime="2026-11-20">20/11/2026</time> · 9 practices · 6 pitfalls</p>
-	<aside class="guide-latest"><span class="guide-label">Latest change</span> <time datetime="2026-11-20">20/11/2026</time><p>A new practice, an improvement log for the setup itself, and a pitfall on project settings leaking into the shared global file. Read-only reviews now forbid writing commands too, and a repo without a REVIEW.md gets a first version proposed from its fix commits.</p><a class="reader-nav-link" href="#changelog">see every change →</a></aside>
+	<aside class="guide-latest"><span class="guide-label">Latest change</span> <time datetime="2026-11-20">20/11/2026</time><p>The roadmap caught up with reality: Playwright MCP now drives the verify skills and Telemaco has been slimmed down, so both items point to the browser tool section, whose Markasso example is now the real Playwright skill.</p><a class="reader-nav-link" href="#changelog">see every change →</a></aside>
 </header>
 <nav class="guide-contents" aria-label="Guide contents"><div class="guide-toc-group">Practices</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#claude-md-rules">Verification rules in CLAUDE.md <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verify-skill">A verify skill in every repo</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verified-trailer">A Verified trailer on every commit</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#verify-gate">A Stop hook that watches before it blocks <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#browser-tool">Choosing the browser tool <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#second-opinion">A second opinion with Codex or opencode <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#review-md">A REVIEW.md the change cannot rewrite <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#improvement-log">An improvement log for the setup itself <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#themis-gates">Themis: gates and a locked contract</a></li></ol>
 <div class="guide-toc-group">Pitfalls</div><ol class="reader-toc-list" role="list"><li class="reader-toc-item"><a class="guide-toc-link" href="#dev-server-port">The dev server port belongs to someone else</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#telemaco-no-layout">Telemaco has a DOM, not a layout</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#ui-language">A real browser speaks the system language</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#lint-untracked">Untracked editor folders break the linter</a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#secrets-in-transcript">A secret printed once is already gone <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li><li class="reader-toc-item"><a class="guide-toc-link" href="#global-settings-drift">Project settings leak into the global file <span class="guide-toc-dot" aria-label="(recently updated)">●</span></a></li></ol>
@@ -178,9 +178,9 @@ Before running the suite, make sure the port in `playwright.config` is free. Wit
 - `BROWSER=none` keeps `vite --open` from opening browser windows during the run.
 - `Executable doesn&#039;t exist at ...` means the browser build for this Playwright version is missing. It is setup, not a test failure: run `npx playwright install chromium`, then run the suite again. Do not count it as one of the three rounds.
 - Use selectors that do not depend on the UI language (roles with stable names, `data-*` hooks), or set `use: { locale: &#039;en-US&#039; }` in the config.
-</code></pre></div><details class="guide-snippet"><summary class="guide-snippet-title">Real example: Markasso, a web app driven through Telemaco</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>---
+</code></pre></div><details class="guide-snippet"><summary class="guide-snippet-title">Real example: Markasso, a web app driven through Playwright MCP</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>---
 name: verify
-description: Verify a change to Markasso before saying &quot;ready for testing&quot; or committing. Runs typecheck, Biome (check only) and vitest, the MCP build when mcp/ changed, then boots the web app on a private dev server and checks it loads cleanly with Telemaco. Reports the evidence plus the Verified trailer value.
+description: Verify a change to Markasso before saying &quot;ready for testing&quot; or committing. Runs typecheck, Biome (check only) and vitest, the MCP build when mcp/ changed, then boots the web app on a private dev server and drives it in a real browser with Playwright MCP (boot smoke plus drawing on the canvas). Reports the evidence plus the Verified trailer value.
 ---
 
 # Verify Markasso
@@ -204,7 +204,7 @@ Run the steps in order from the repo root and stop at the first failure. Fix the
 
     pnpm mcp:build
 
-## 2. Boot smoke (Telemaco)
+## 2. Run it in a real browser (Playwright MCP)
 
 Start a private dev server on a free port and wait until it answers. The loop fails if the server dies, so a port taken in the meantime can never make you test someone else&#039;s server:
 
@@ -217,27 +217,41 @@ Start a private dev server on a free port and wait until it answers. The loop fa
     done
     echo $PORT
 
-With the Telemaco MCP tools:
+With the Playwright MCP tools (`mcp__playwright__*`: headless Chrome, isolated profile, 1280x800 viewport, real mouse input). The browser UI language follows the system, so never select by translated text: use ids, shortcuts and the shortcut hint in titles (`(R /`).
 
-1. `browser_navigate` to `http://localhost:$PORT/` with `waitUntil: networkidle0`. Expected: title starts with `Markasso` (any other title means you reached a server that is not yours: stop).
+Boot smoke:
+
+1. `browser_navigate` to `http://localhost:$PORT/`. Expected: title starts with `Markasso` (any other title means you reached a server that is not yours: stop).
 2. `browser_console_messages`. Expected: no errors.
 3. `browser_evaluate`:
 
-       ({ canvas: !!document.getElementById(&#039;main&#039;), toolbarButtons: document.querySelectorAll(&#039;#toolbar button&#039;).length, rectangle: !!document.querySelector(&#039;#toolbar button[title^=&quot;Rectangle&quot;]&#039;) })
+       () =&gt; ({ canvas: !!document.getElementById(&#039;main&#039;), toolbarButtons: document.querySelectorAll(&#039;#toolbar button&#039;).length, rectangle: !!document.querySelector(&#039;#toolbar button[title*=&quot;(R /&quot;]&#039;) })
 
    Expected: `canvas: true`, `toolbarButtons` greater than 0, `rectangle: true`.
-4. `browser_close`, then stop the server:
+
+Canvas flow (draw a rectangle):
+
+4. The isolated profile always opens the welcome dialog, and it swallows keyboard shortcuts. Dismiss it with `browser_evaluate` `() =&gt; { document.querySelector(&#039;.wl-cta&#039;)?.click(); }`, `browser_wait_for` 0.5 seconds, then `browser_press_key` `r` to pick the Rectangle tool.
+5. `browser_mouse_drag_xy` from (400, 200) to (540, 300). Stay right of x = 260: the style panel covers the left edge of the canvas, and a drag that starts on it selects text instead of drawing.
+6. `browser_wait_for` 1.5 seconds (the session save is debounced), then `browser_evaluate`:
+
+       () =&gt; (JSON.parse(localStorage.getItem(&#039;markasso-session&#039;) ?? &#039;{&quot;elements&quot;:[]}&#039;).elements).map((e) =&gt; ({ type: e.type, x: Math.round(e.x), y: Math.round(e.y), w: Math.round(e.width), h: Math.round(e.height) }))
+
+   Expected: exactly one element of type `rectangle`, about 140 x 100.
+7. `browser_take_screenshot` as evidence. Playwright MCP only writes under its output directory (set with `--output-dir` in your MCP server config): leave the file name to it and report the path it returns.
+
+Flows for the changed area: `docs/MANUAL.md` is the feature map (tools, shortcuts, menus). Pick the flows that cover the diff and drive them the same way: keyboard shortcuts and coordinates on the canvas, state checks through `localStorage` or the DOM.
+
+8. `browser_close`, then stop the server:
 
        kill $(lsof -tiTCP:$PORT -sTCP:LISTEN)
-
-Out of scope: drawing or any interaction on the canvas. Telemaco has no layout engine (`getBoundingClientRect` returns placeholder values), so canvas hit-testing cannot be driven from it; canvas behavior is covered by the vitest suite. When the change is a visible canvas or UI behavior, say so in the report and ask the user for a manual check (`Verified: manual` once they confirm).
 
 ## 3. Report
 
 Reply with:
 
 - each command with its exit code, and the vitest totals;
-- the Telemaco results for steps 2.1 to 2.3;
+- the results of steps 2.1 to 2.6 and the screenshot path;
 - the `Verified:` trailer value: `verify` when steps 1 and 2 passed, `tests` when only step 1 ran, `manual` when the user checked a visible change, `none (&lt;reason&gt;)` otherwise.
 </code></pre><p class="guide-origin">from <a class="terminal-link" href="https://github.com/AlbertoBarrago/markasso" target="_blank" rel="noopener noreferrer">Markasso ↗</a></p></details><details class="guide-snippet"><summary class="guide-snippet-title">Real example: Themis, a CLI driven in a temp project</summary><div class="guide-snippet-bar"><span class="guide-snippet-lang">markdown</span></div><pre class="guide-code is-prose"><code>---
 name: verify
@@ -373,11 +387,11 @@ python3 ~/.claude/hooks/verify-gate.py --report
 	
 </section><section class="guide-section" aria-labelledby="browser-tool">
 	<h2 class="guide-title" id="browser-tool"><span class="guide-number">05</span><span>Choosing the browser tool</span></h2>
-	<p class="guide-section-meta"><span class="guide-status is-trial">in trial</span><span class="guide-badge">recently updated</span><span>updated <time datetime="2026-11-18">18/11/2026</time></span><a class="guide-anchor" href="#browser-tool">#</a></p>
+	<p class="guide-section-meta"><span class="guide-status is-trial">in trial</span><span class="guide-badge">recently updated</span><span>updated <time datetime="2026-11-20">20/11/2026</time></span><a class="guide-anchor" href="#browser-tool">#</a></p>
 	<div class="guide-label">why</div>
 	<p class="guide-why">A verify skill is only as good as the browser that drives it. We ran one real test on Markasso&#039;s canvas: draw a rectangle, then check that it landed in localStorage. The results decided which tool does what.</p>
 	<div class="guide-label">how</div>
-	<ol class="guide-steps" role="list"><li>Telemaco: FAIL. No layout engine, and <code>browser_evaluate</code> does not await Promises.</li><li>chrome-devtools-mcp: PASS only with synthetic events dispatched from a script, since it has no drag at coordinates; about 36 s.</li><li>Playwright MCP: PASS with real mouse input (<code>browser_mouse_drag_xy</code>), about 24 s. On the first try it even hit a panel lying over the canvas, exactly as a real user would.</li><li>Decision, now written in the global CLAUDE.md: Telemaco stays for reading the web, search and stealth fetches; driving and verifying local apps moves to Playwright MCP, pinned, headless and isolated. Moving the existing verify skills is in progress.</li></ol>
+	<ol class="guide-steps" role="list"><li>Telemaco: FAIL. No layout engine, and <code>browser_evaluate</code> does not await Promises.</li><li>chrome-devtools-mcp: PASS only with synthetic events dispatched from a script, since it has no drag at coordinates; about 36 s.</li><li>Playwright MCP: PASS with real mouse input (<code>browser_mouse_drag_xy</code>), about 24 s. On the first try it even hit a panel lying over the canvas, exactly as a real user would.</li><li>Decision, written in the global CLAUDE.md: Telemaco stays for reading the web, search and stealth fetches; driving and verifying local apps moved to Playwright MCP, pinned, headless and isolated. Markasso&#039;s verify skill now draws on the canvas with real mouse input, and Telemaco 0.3.0 dropped everything else: no CDP server, no scrape, no remote.</li></ol>
 	<div class="guide-snippet"><div class="guide-snippet-title">Playwright MCP for local apps</div><div class="guide-snippet-bar"><span class="guide-snippet-lang">bash</span></div><pre class="guide-code"><code># Playwright MCP to drive local apps with real mouse and keyboard input.
 # Pin the version: the server is fetched by npx on every start.
 # Pick the current one with `npm view @playwright/mcp version`.
@@ -703,11 +717,11 @@ grep -o &#039;^[A-Z_]*=&#039; &quot;$ENV_FILE&quot;
 </section>
 <section class="guide-closing" aria-labelledby="next-up">
 	<h2 class="guide-part" id="next-up">Next up</h2>
-	<ul class="guide-roadmap" role="list"><li><span class="guide-roadmap-title"><a class="reader-nav-link" href="#verify-gate">Stop hook in observe mode</a></span><p>A global hook that logs when a session ends without verification, without blocking anything yet, so false positives surface before it ever enforces.</p></li><li><span class="guide-roadmap-title"><a class="reader-nav-link" href="#review-md">A REVIEW.md per repo</a></span><p>What the reviewer should look at for this code, always read from the base branch so a change cannot rewrite its own review rules.</p></li><li><span class="guide-roadmap-title">One reviewer, several rounds</span><p>Tune a single reviewer and feed each round the findings and failures of the previous ones, instead of stacking parallel reviewers.</p></li><li><span class="guide-roadmap-title">A diff-triggered reliability checklist</span><p>Checklist items with a trigger readable from a diff, matched through Serval&#039;s blast radius, so only the few relevant checks run on each change.</p></li><li><span class="guide-roadmap-title">Adopt Playwright MCP</span><p>Move the verify skills that drive local apps from Telemaco to Playwright MCP, starting with Markasso.</p></li><li><span class="guide-roadmap-title">A hook that asks before every commit</span><p>The rule says never commit without the human&#039;s ok, and the agent still slipped once. A hook on <code>git commit</code> that always asks would make it enforced instead of remembered.</p></li><li><span class="guide-roadmap-title">Audit Telemaco</span><p>Slim Telemaco down to what it does best: reading the web, search and stealth fetches.</p></li></ul>
+	<ul class="guide-roadmap" role="list"><li><span class="guide-roadmap-title"><a class="reader-nav-link" href="#verify-gate">Stop hook in observe mode</a></span><p>A global hook that logs when a session ends without verification, without blocking anything yet, so false positives surface before it ever enforces.</p></li><li><span class="guide-roadmap-title"><a class="reader-nav-link" href="#review-md">A REVIEW.md per repo</a></span><p>What the reviewer should look at for this code, always read from the base branch so a change cannot rewrite its own review rules.</p></li><li><span class="guide-roadmap-title"><a class="reader-nav-link" href="#browser-tool">Adopt Playwright MCP</a></span><p>Done: the verify skills that drive local apps moved from Telemaco to Playwright MCP, starting with Markasso.</p></li><li><span class="guide-roadmap-title"><a class="reader-nav-link" href="#browser-tool">Audit Telemaco</a></span><p>Done in Telemaco 0.3.0: it keeps what it does best, reading the web, search and stealth fetches through the CLI and the MCP server, and the CDP server, scrape and remote are gone.</p></li><li><span class="guide-roadmap-title">One reviewer, several rounds</span><p>Tune a single reviewer and feed each round the findings and failures of the previous ones, instead of stacking parallel reviewers.</p></li><li><span class="guide-roadmap-title">A diff-triggered reliability checklist</span><p>Checklist items with a trigger readable from a diff, matched through Serval&#039;s blast radius, so only the few relevant checks run on each change.</p></li><li><span class="guide-roadmap-title">A hook that asks before every commit</span><p>The rule says never commit without the human&#039;s ok, and the agent still slipped once. A hook on <code>git commit</code> that always asks would make it enforced instead of remembered.</p></li></ul>
 </section>
 <section class="guide-closing" aria-labelledby="changelog">
 	<h2 class="guide-part" id="changelog">Changelog</h2>
-	<ol class="guide-changelog" role="list"><li><time datetime="2026-11-20">20/11/2026</time><p>A new practice, an improvement log for the setup itself, and a pitfall on project settings leaking into the shared global file. Read-only reviews now forbid writing commands too, and a repo without a REVIEW.md gets a first version proposed from its fix commits.</p><p class="guide-changelog-sections"><a class="reader-nav-link" href="#improvement-log">An improvement log for the setup itself</a> · <a class="reader-nav-link" href="#global-settings-drift">Project settings leak into the global file</a> · <a class="reader-nav-link" href="#second-opinion">A second opinion with Codex or opencode</a> · <a class="reader-nav-link" href="#review-md">A REVIEW.md the change cannot rewrite</a></p></li><li><time datetime="2026-11-18">18/11/2026</time><p>Two new practices, a Stop hook in observe mode and a REVIEW.md read from the base branch, and a pitfall on secrets in the transcript. The second opinion now sizes the model to the task, the browser tool decision is in the global rules, and the Playwright setup matches the real one.</p><p class="guide-changelog-sections"><a class="reader-nav-link" href="#verify-gate">A Stop hook that watches before it blocks</a> · <a class="reader-nav-link" href="#review-md">A REVIEW.md the change cannot rewrite</a> · <a class="reader-nav-link" href="#secrets-in-transcript">A secret printed once is already gone</a> · <a class="reader-nav-link" href="#second-opinion">A second opinion with Codex or opencode</a> · <a class="reader-nav-link" href="#browser-tool">Choosing the browser tool</a> · <a class="reader-nav-link" href="#claude-md-rules">Verification rules in CLAUDE.md</a></p></li><li><time datetime="2026-11-17">17/11/2026</time><p>First edition: six practices, four pitfalls and a roadmap, on a page of its own with a link for every section.</p></li></ol>
+	<ol class="guide-changelog" role="list"><li><time datetime="2026-11-20">20/11/2026</time><p>The roadmap caught up with reality: Playwright MCP now drives the verify skills and Telemaco has been slimmed down, so both items point to the browser tool section, whose Markasso example is now the real Playwright skill.</p><p class="guide-changelog-sections"><a class="reader-nav-link" href="#browser-tool">Choosing the browser tool</a></p></li><li><time datetime="2026-11-20">20/11/2026</time><p>A new practice, an improvement log for the setup itself, and a pitfall on project settings leaking into the shared global file. Read-only reviews now forbid writing commands too, and a repo without a REVIEW.md gets a first version proposed from its fix commits.</p><p class="guide-changelog-sections"><a class="reader-nav-link" href="#improvement-log">An improvement log for the setup itself</a> · <a class="reader-nav-link" href="#global-settings-drift">Project settings leak into the global file</a> · <a class="reader-nav-link" href="#second-opinion">A second opinion with Codex or opencode</a> · <a class="reader-nav-link" href="#review-md">A REVIEW.md the change cannot rewrite</a></p></li><li><time datetime="2026-11-18">18/11/2026</time><p>Two new practices, a Stop hook in observe mode and a REVIEW.md read from the base branch, and a pitfall on secrets in the transcript. The second opinion now sizes the model to the task, the browser tool decision is in the global rules, and the Playwright setup matches the real one.</p><p class="guide-changelog-sections"><a class="reader-nav-link" href="#verify-gate">A Stop hook that watches before it blocks</a> · <a class="reader-nav-link" href="#review-md">A REVIEW.md the change cannot rewrite</a> · <a class="reader-nav-link" href="#secrets-in-transcript">A secret printed once is already gone</a> · <a class="reader-nav-link" href="#second-opinion">A second opinion with Codex or opencode</a> · <a class="reader-nav-link" href="#browser-tool">Choosing the browser tool</a> · <a class="reader-nav-link" href="#claude-md-rules">Verification rules in CLAUDE.md</a></p></li><li><time datetime="2026-11-17">17/11/2026</time><p>First edition: six practices, four pitfalls and a roadmap, on a page of its own with a link for every section.</p></li></ol>
 </section>
 </article></noscript></div>
 
