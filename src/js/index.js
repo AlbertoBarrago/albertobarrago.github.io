@@ -93,7 +93,7 @@ const openSource = [
 	},
 	{
 		name: "Iris",
-		description: t("A native macOS mail and calendar app with a Rust core: Gmail, Microsoft and any IMAP account in one inbox, with your mail kept on your Mac. On hold: paused for lack of a reply from Google and lack of time."),
+		description: t("A native macOS mail and calendar app with a Rust core: Gmail, Microsoft and any IMAP account in one inbox, with your mail kept on your Mac."),
 		url: "https://github.com/AlbertoBarrago/iris",
 		language: "Swift + Rust"
 	},
