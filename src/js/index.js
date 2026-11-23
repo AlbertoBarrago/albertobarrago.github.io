@@ -19,6 +19,7 @@ import reviewMdTemplate from "../content/agent-playbook/review-md-template.md?ra
 import secretKeyChecks from "../content/agent-playbook/secret-key-checks.sh?raw";
 import improvementLog from "../content/agent-playbook/improvement-log.md?raw";
 import globalSettingsGuard from "../content/agent-playbook/global-settings-guard.sh?raw";
+import prChecksWait from "../content/agent-playbook/pr-checks-wait.sh?raw";
 
 const name = "Alberto Barrago";
 const role = "Senior Software Engineer";
@@ -579,6 +580,20 @@ const agentPlaybook = {
 			snippets: [
 				{ id: "global-settings-guard", title: t("Rule and hook"), language: "bash", code: globalSettingsGuard }
 			]
+		},
+		{
+			id: "pr-checks-not-a-pass",
+			added: "2026-11-23",
+			title: t("\"No checks reported\" is not a pass"),
+			why: t("Right after a pull request is opened, its checks may not be registered yet. An agent that asks for their status at that moment gets an empty list and merges with no CI having run. A review job that errors out, or finishes in a few seconds without reviewing anything, is just as easy to read as green: one such job can keep failing silently for months."),
+			steps: [
+				t("Before merging, watch the checks until they have appeared and finished (`gh pr checks <n> --watch`)."),
+				t("An empty list right after `gh pr create` means \"not registered yet\": retry for about a minute. Treat it as \"no CI\" only when the repo has no workflow that runs on pull requests."),
+				t("A failing review, or one that ran without reviewing (seconds long, no output), is reported to the human and never merged past.")
+			],
+			snippets: [
+				{ id: "pr-checks-wait", title: t("Wait for checks, then merge"), language: "bash", code: prChecksWait }
+			]
 		}
 	],
 	roadmap: [
@@ -613,9 +628,18 @@ const agentPlaybook = {
 		{
 			title: t("A hook that asks before every commit"),
 			summary: t("The rule says never commit without the human's ok, and the agent still slipped once. A hook on `git commit` that always asks would make it enforced instead of remembered.")
+		},
+		{
+			title: t("Guardrails for system-level changes"),
+			summary: t("An agent that changes operating system defaults, such as which app opens a file type, triggers one confirmation dialog per change and can move unrelated defaults with it, like the web browser. The plan: probe a single change first, check the real effect instead of the command's exit status, and keep a backup to roll back to.")
 		}
 	],
 	changelog: [
+		{
+			date: "2026-11-23",
+			summary: t("A new pitfall: \"no checks reported\" right after opening a pull request is not a pass, and a review that ran without reviewing is not green. The roadmap gains guardrails for system-level changes made by an agent."),
+			sections: ["pr-checks-not-a-pass"]
+		},
 		{
 			date: "2026-11-20",
 			summary: t("New name: How we build is now the Agent Playbook, at /agent-playbook/ with the `playbook` command. Old links and deep links still work: they redirect to the same section.")
