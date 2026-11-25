@@ -3,6 +3,15 @@
     <channel>
         <title>Proj22</title>
         <item>
+            <title>0.5.10</title>
+            <pubDate>Wed, 25 Nov 2026 13:44:13 +0000</pubDate>
+            <sparkle:version>17</sparkle:version>
+            <sparkle:shortVersionString>0.5.10</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:releaseNotesLink>https://albz.it/updates/proj22/Proj22-0.5.10-17.md</sparkle:releaseNotesLink>
+            <enclosure url="https://albz.it/updates/proj22/Proj22-0.5.10-17.zip" length="6500153" type="application/octet-stream" sparkle:edSignature="Do2fMUaW9ZILQE8XwRD7bD4KkooDXnhu0lnwBDRjqG7MkJkK7bxbWZCmKjS7Hqvn9n8mxQXV4Az2aAECPquaBQ=="/>
+        </item>
+        <item>
             <title>0.5.9</title>
             <pubDate>Tue, 24 Nov 2026 08:42:32 +0000</pubDate>
             <sparkle:version>16</sparkle:version>
