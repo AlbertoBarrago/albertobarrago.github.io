@@ -1,13 +1,14 @@
 # Two reviewers with different roles:
-#   Codex     the long-term reviewer for deep and critical reviews (a branch, a plan, security);
-#             one call per review, its subscription quota is limited.
-#   opencode  free models for smaller diffs, control runs and scoped tasks.
+#   Codex     the default reviewer: any non-trivial diff, a plan check, a stuck debug session;
+#             one call per review, its quota is limited.
+#   opencode  free models for light questions, delegated edits in a worktree,
+#             and parallel or control runs.
 
 # Size the model to the task, and use only providers that keep no data and do not train on it:
 #   light     explain a snippet, a small question, a trivial edit      one small free model
-#   standard  review of a small or medium diff, a scoped task           one stronger free model
-#   deep      branch review, debug after failed hypotheses, a plan      Codex, or two free models
-#                                                                       in parallel, cross-checked
+#   standard  review of a small or medium diff                          Codex
+#   deep      branch review, debug after failed hypotheses, a plan      Codex, plus two free models
+#                                                                       in parallel as a control run
 
 # Review a diff, read-only: opencode's built-in `plan` agent cannot edit files,
 # but it can still run shell commands. The prompt forbids every writing command,
@@ -27,7 +28,11 @@ if you must compile, use a separate build directory." > review.md
 # Delegate a scoped task with write access, only inside a separate git worktree.
 opencode run -w <worktree-name> -m <model> "<task, files, what is already ruled out>"
 
-# Codex for deep or critical reviews: read-only sandbox, findings written to a file.
-codex exec -s read-only -C . -o codex.md "<same review prompt>"
+# Codex, the default: read-only sandbox, findings written to a file.
+# Nobody is at the keyboard: close stdin, keep the log in a file (never /dev/null),
+# and run it in the background under a timeout, or it can wait for input forever.
+perl -e 'alarm shift; exec @ARGV' 900 \
+  codex exec -s read-only -C . -o codex.md "<same review prompt>" \
+  < /dev/null > codex.log 2>&1 &
 # `codex review --base main` is quicker but takes no rules file: prefer `codex exec`
 # with the same prompt when the repo has a REVIEW.md.

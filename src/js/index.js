@@ -403,13 +403,14 @@ const agentPlaybook = {
 		{
 			id: "second-opinion",
 			added: "2026-11-17",
-			updated: "2026-11-20",
+			updated: "2026-11-26",
 			status: "trial",
 			title: t("A second opinion with Codex or opencode"),
 			why: t("An agent reviewing its own diff shares its own blind spots. A second model with a fresh prompt finds a different set of bugs, as long as you give it the code, not your conclusion, and treat its output as input, not truth."),
 			steps: [
-				t("Codex is the long-term reviewer for deep and critical reviews, one call per review because its quota is limited; opencode's free models take smaller diffs, control runs and scoped tasks."),
-				t("Size the model to the task: light for a quick question, standard for a small or medium diff, deep for a branch, a plan or a debug session, where two free models run in parallel and you cross-check them."),
+				t("Codex is the default reviewer: the first choice for any non-trivial diff, plan check or stuck debug session, one call per review because its quota is limited. opencode's free models take light questions, delegated edits in a worktree, and parallel or control runs."),
+				t("Size the model to the task: a small free model for a quick question, Codex for a diff, a branch, a plan or a debug session, and two free models in parallel, cross-checked, when you want a control run next to it."),
+				t("A reviewer CLI launched from a script or an agent has no one at the keyboard: close its stdin, write its output to a log file, and run it in the background under a timeout. Left waiting for input, it hangs silently and the review never arrives."),
 				t("Ask before running it, and say what you send and why."),
 				t("When the repo has a `REVIEW.md`, send it read from the base branch and ask the reviewer to apply the rules whose trigger matches the diff."),
 				t("Read-only by default: opencode's `plan` agent or Codex's `read-only` sandbox. Write access only inside a separate git worktree."),
@@ -445,12 +446,15 @@ const agentPlaybook = {
 		{
 			id: "improvement-log",
 			added: "2026-11-20",
+			updated: "2026-11-26",
 			status: "trial",
 			title: t("An improvement log for the setup itself"),
 			why: t("Rules get skipped, hooks miss a case, a release step stays manual until it breaks. Fixed on the spot, each lesson is lost; fixed in the middle of another task, it widens the diff. A short log keeps them in one place until each gets its own fix."),
 			steps: [
 				t("Keep one file next to the agent's rules, one entry per issue: what happened, the proposed fix, a status (`open`, `done <sha or PR>`, `dropped (<reason>)`)."),
-				t("The agent adds an entry when something breaks, a rule gets skipped, or a step turns out manual and fragile, and says so in one line."),
+				t("When something breaks, a rule gets skipped, or a step turns out manual and fragile, the agent proposes an entry in one line and writes it only after the human's yes."),
+				t("Log only issues with the setup: a small slip during a personal, one-off task is not a lesson for the rules and stays out."),
+				t("While working on a project, the agent asks before writing anything in the config repo, even when a rule seems to call for it, so setup changes never slip into an unrelated session."),
 				t("Each fix is its own task and branch; close the entry with its commit or PR."),
 				t("When there is time to improve the setup, start from the `open` entries instead of from memory."),
 				t("Prefer fixes that make a rule enforced rather than remembered: a hook or a script check beats another line of instructions.")
@@ -494,13 +498,15 @@ const agentPlaybook = {
 		{
 			id: "dev-server-port",
 			added: "2026-11-17",
+			updated: "2026-11-26",
 			title: t("The dev server port belongs to someone else"),
 			why: t("Several sessions and agents run at once. An agent that finds port 5173 busy may happily test the server another agent started, on different code, and report a pass that means nothing."),
 			steps: [
 				t("Pick a free port at runtime and start with `--strictPort`, so a race fails instead of silently moving."),
 				t("Fail the wait loop if your own process dies."),
 				t("Check a marker that proves the server is yours (the page title, a health payload) before testing, and never stop a server you did not start."),
-				t("Playwright with a fixed port and `reuseExistingServer` has the same trap: check that the port is free before the suite runs.")
+				t("Playwright with a fixed port and `reuseExistingServer` has the same trap: check that the port is free before the suite runs."),
+				t("Start it with `BROWSER=none`: a config with `server.open` opens a desktop tab on every start, and agents start many. Passing `--open false` to Vite is worse, it opens the path `/false`.")
 			],
 			snippets: [
 				{ id: "dev-server-free-port", title: t("Free port, strict, checked"), language: "bash", code: devServerFreePort }
@@ -570,12 +576,15 @@ const agentPlaybook = {
 		{
 			id: "global-settings-drift",
 			added: "2026-11-20",
+			updated: "2026-11-26",
 			title: t("Project settings leak into the global file"),
 			why: t("Keeping the agent's global settings in a git repo, symlinked on every machine, gives you the same setup everywhere. It also means that a permission or an environment block written for one project silently lands in every session on every machine, and nobody notices until it gets in the way."),
 			steps: [
 				t("Write the rule in the global CLAUDE.md: project-specific settings go in the project's `.claude/settings.local.json`, never in the global file."),
-				t("Add a `SessionStart` hook that warns when the shared settings file has uncommitted changes, so drift shows up at the start of the next session."),
-				t("The hook only warns and always exits 0: the human decides whether to commit the change or move it into the project.")
+				t("Check which scopes a setting is actually read from before moving it. Claude Code's auto mode reads its `autoMode` rules only from user settings: a block in a project's settings is ignored without a word. Keep a small user-wide block of facts true everywhere, and turn each project's risks into `permissions.ask` or `deny` rules in its `settings.local.json`, with the context the classifier needs in its CLAUDE.md."),
+				t("Add a hook that warns when the shared settings file has uncommitted changes. Run it on `SessionStart`, `UserPromptSubmit` and `Stop`: a built-in command can rewrite the file mid-session without any tool call, so a start-only or tool-based check misses it."),
+				t("The hook only warns and always exits 0: the human decides whether to commit the change or move it into the project."),
+				t("A hook registered in the shared settings exits quietly when its script is missing: another machine pulls the settings before it has linked the script, and a failing hook on every prompt is worse than a missing check.")
 			],
 			snippets: [
 				{ id: "global-settings-guard", title: t("Rule and hook"), language: "bash", code: globalSettingsGuard }
@@ -632,9 +641,26 @@ const agentPlaybook = {
 		{
 			title: t("Guardrails for system-level changes"),
 			summary: t("An agent that changes operating system defaults, such as which app opens a file type, triggers one confirmation dialog per change and can move unrelated defaults with it, like the web browser. The plan: probe a single change first, check the real effect instead of the command's exit status, and keep a backup to roll back to.")
+		},
+		{
+			title: t("Merges that ask instead of failing"),
+			summary: t("Pushing and opening a pull request already ask for confirmation. Merging has no such rule, so the auto mode classifier refuses it even after an explicit ok and the human has to run it by hand. An `ask` rule for `gh pr merge` turns that refusal into a question.")
+		},
+		{
+			title: t("Pre-commit hooks that never widen a commit"),
+			summary: t("A hook that runs a fixing linter and then `git add -u` sweeps every other modified file into the commit being made, which breaks atomic commits. The plan: hooks that only check, or that restage only the files already staged.")
+		},
+		{
+			title: t("When a test encodes the old behavior"),
+			summary: t("Existing checks change only in a commit of their own, but an assertion on the exact command or arguments being changed fails without the change and passes only with it. The plan: allow that one case in the same commit, never loosened, with each changed check named in the message and the human told first.")
 		}
 	],
 	changelog: [
+		{
+			date: "2026-11-26",
+			summary: t("Codex is now the default second opinion, and reviewer CLIs run with stdin closed, a log file and a timeout. Auto mode rules only work in user settings, so project risks become permission rules. The improvement log asks before writing, agent dev servers open no browser tabs, and the roadmap gains three items."),
+			sections: ["second-opinion", "global-settings-drift", "improvement-log", "dev-server-port"]
+		},
 		{
 			date: "2026-11-23",
 			summary: t("A new pitfall: \"no checks reported\" right after opening a pull request is not a pass, and a review that ran without reviewing is not green. The roadmap gains guardrails for system-level changes made by an agent."),
